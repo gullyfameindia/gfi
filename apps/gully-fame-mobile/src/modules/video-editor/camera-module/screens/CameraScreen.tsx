@@ -88,7 +88,16 @@ const CameraScreen: React.FC<CameraScreenProps> = ({ onBack, onNext, initialClip
   const handleToggleGrid = useCallback(() => setGridEnabled(prev => !prev), []);
 
   const handleAddClip = useCallback((clip: CameraClip | null) => {
+    console.log('[CameraScreen] handleAddClip: Called with clip', {
+      hasClip: !!clip,
+      clipId: clip?.id,
+      clipUri: clip?.uri,
+      clipDuration: clip?.duration,
+      clipType: clip?.type,
+    });
+
     if (!clip) {
+      console.log('[CameraScreen] handleAddClip: No clip provided, resetting refs');
       recordingStartTimeRef.current = null;
       speedChangesRef.current = [];
       return;
@@ -99,6 +108,12 @@ const CameraScreen: React.FC<CameraScreenProps> = ({ onBack, onNext, initialClip
       let videoDuration = clip.duration > 0 ? clip.duration : recordingDuration;
       if (clip.duration === 0 && recordingDuration > 0) clip.duration = recordingDuration;
       
+      console.log('[CameraScreen] handleAddClip: Video clip details', {
+        clipDuration: clip.duration,
+        recordingDuration,
+        videoDuration,
+      });
+
       const changes = [...speedChangesRef.current]; 
       if (changes.length > 0 && videoDuration > 0) {
         const segments: SpeedSegment[] = [];
@@ -116,8 +131,14 @@ const CameraScreen: React.FC<CameraScreenProps> = ({ onBack, onNext, initialClip
     
     recordingStartTimeRef.current = null;
     speedChangesRef.current = [];
-    setClips(prev => [...prev, clip]);
-  }, []);
+    
+    console.log('[CameraScreen] handleAddClip: Adding clip to array. Current clips count:', clips.length);
+    setClips(prev => {
+      const newClips = [...prev, clip];
+      console.log('[CameraScreen] handleAddClip: Updated clips array. New count:', newClips.length);
+      return newClips;
+    });
+  }, [clips.length]);
 
   const handleCapturePressIn = useCallback(() => setIsHoldingCapture(true), []);
 
@@ -163,19 +184,45 @@ const CameraScreen: React.FC<CameraScreenProps> = ({ onBack, onNext, initialClip
 
   const handleCapturePress = useCallback(async () => {
     if (mode === CameraModeEnum.Video) {
-      if (isRecording) {
-        await stopRecording();
-      } else {
-        recordingStartTimeRef.current = Date.now();
-        speedChangesRef.current = [{ time: 0, speed: speed }];
-        currentSpeedRef.current = speed;
-        await startRecording(handleAddClip, timerDuration, speed);
+      try {
+        if (isRecording) {
+          console.log('[CameraScreen] handleCapturePress: Stopping recording');
+          await stopRecording();
+          console.log('[CameraScreen] handleCapturePress: Recording stopped successfully');
+        } else {
+          console.log('[CameraScreen] handleCapturePress: Starting recording');
+          recordingStartTimeRef.current = Date.now();
+          speedChangesRef.current = [{ time: 0, speed: speed }];
+          currentSpeedRef.current = speed;
+          await startRecording(handleAddClip, timerDuration, speed);
+          console.log('[CameraScreen] handleCapturePress: Recording started successfully');
+        }
+      } catch (error) {
+        console.error('[CameraScreen] handleCapturePress: ERROR', {
+          error,
+          message: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+          isRecording,
+        });
+        // Don't crash the app, just show the error
+        alert(`Recording error: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     }
   }, [handleAddClip, isRecording, mode, startRecording, stopRecording, timerDuration, speed, resolution, frameRate, colorMode]);
 
   const handleNextPress = useCallback(() => {
-    if (clips.length > 0) onNext(clips);
+    console.log('[CameraScreen] handleNextPress: Called', {
+      clipsCount: clips.length,
+      clipsArray: clips.map(c => ({ id: c.id, type: c.type, duration: c.duration })),
+    });
+    
+    if (clips.length > 0) {
+      console.log('[CameraScreen] handleNextPress: Calling onNext with clips');
+      onNext(clips);
+    } else {
+      console.warn('[CameraScreen] handleNextPress: No clips available');
+      alert('Please record at least one clip before proceeding');
+    }
   }, [clips, onNext]);
 
   useEffect(() => {
@@ -405,8 +452,8 @@ const styles = StyleSheet.create({
   labelWithBadge: { alignItems: 'flex-start' },
   badge: { backgroundColor: '#0095f6', paddingHorizontal: 4, paddingVertical: 2, borderRadius: 4, marginLeft: 8, marginTop: 2 },
   badgeText: { color: '#FFF', fontSize: 8, fontWeight: 'bold' },
-  bottomArea: { position: 'absolute', bottom: 30, left: 0, right: 0, alignItems: 'center', zIndex: 10 },
-  captureRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingHorizontal: 30, marginBottom: 30 },
+  bottomArea: { position: 'absolute', bottom: 30, left: 0, right: 0, alignItems: 'center', zIndex: 10, paddingTop: 60 },
+  captureRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '100%', paddingHorizontal: 30, marginBottom: 30, marginTop: 40 },
   sideControl: { flex: 1, alignItems: 'flex-start' },
   sideControlCenter: { flex: 1, alignItems: 'center' },
   centerControl: { flex: 1, alignItems: 'center' },
@@ -416,12 +463,12 @@ const styles = StyleSheet.create({
   undoText: { color: '#FFF', fontWeight: '600', fontSize: 15 },
   nextButtonProminent: { backgroundColor: '#FFF', paddingHorizontal: 20, paddingVertical: 12, borderRadius: 24 },
   nextButtonTextProminent: { color: '#000', fontWeight: 'bold', fontSize: 15 },
-  modeSelectorContainer: { height: 40, width: '100%', },
+  modeSelectorContainer: { height: 40, width: '100%', marginTop: 40 },
   modeSelectorScroll: { paddingHorizontal: 50, alignItems: 'center', gap: 24 },
   modePill: { paddingHorizontal: 10 },
   modeText: { color: 'rgba(255,255,255,0.5)', fontSize: 13, fontWeight: '600', letterSpacing: 1 },
   modeTextActive: { color: '#FFF' },
-  cornerControlsRow: { flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 30, position: 'absolute', bottom: -10 }
+  cornerControlsRow: { flexDirection: 'row', justifyContent: 'space-between', width: '100%', paddingHorizontal: 30, position: 'absolute', bottom: -10, marginTop: 40 }
 });
 
 export default CameraScreen;

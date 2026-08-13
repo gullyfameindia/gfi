@@ -52,6 +52,11 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
   const startRecording = useCallback(
     async (onFinished: (clip: CameraClip | null) => void | Promise<void>, maxDurationSeconds?: number, speed?: number): Promise<void> => {
       if (!cameraRef.current || mode !== CameraModeEnum.Video || isRecording) {
+        console.log('[useCamera] startRecording: Cannot start recording', {
+          hasRef: !!cameraRef.current,
+          modeCorrect: mode === CameraModeEnum.Video,
+          isRecording,
+        });
         return;
       }
 
@@ -60,6 +65,7 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
 
       setIsRecording(true);
       isRecordingRef.current = true;
+      console.log('[useCamera] startRecording: Set recording to true');
 
       // Clear any existing timer
       if (maxDurationTimerRef.current) {
@@ -68,18 +74,20 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
       }
 
       try {
+        console.log('[useCamera] startRecording: Starting camera recording');
         const options: CameraRecordingOptions = {};
         const recordingPromise = cameraRef.current.recordAsync(options);
+        console.log('[useCamera] startRecording: Recording promise created');
 
         // Set up auto-stop timer if maxDuration is provided
         if (maxDurationSeconds && maxDurationSeconds > 0) {
           maxDurationTimerRef.current = setTimeout(async () => {
             if (cameraRef.current && isRecordingRef.current) {
               try {
+                console.log('[useCamera] startRecording: Auto-stopping recording after', maxDurationSeconds, 'seconds');
                 await cameraRef.current.stopRecording();
               } catch (error) {
-                // eslint-disable-next-line no-console
-                console.warn('Failed to auto-stop recording', error);
+                console.error('[useCamera] startRecording: Failed to auto-stop recording', error);
               }
             }
           }, maxDurationSeconds * 1000);
@@ -87,6 +95,10 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
 
         recordingPromise
           .then((video: any) => {
+            console.log('[useCamera] startRecording: Recording finished successfully', {
+              hasUri: !!video?.uri,
+              duration: video?.duration,
+            });
             // Clear timer if recording finishes before timeout
             if (maxDurationTimerRef.current) {
               clearTimeout(maxDurationTimerRef.current);
@@ -98,8 +110,10 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
             const duration = (video as { duration?: number }).duration ?? 0;
 
             if (!uri) {
+              console.error('[useCamera] startRecording: No URI in video result');
               void onFinished(null);
             } else {
+              console.log('[useCamera] startRecording: Calling onFinished with clip');
               void onFinished({
                 id: makeId(),
                 uri,
@@ -111,25 +125,32 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
             }
           })
           .catch((error: any) => {
+            console.error('[useCamera] startRecording: Recording promise rejected', {
+              error,
+              message: error?.message,
+              code: error?.code,
+              stack: error?.stack,
+            });
             // Clear timer on error
             if (maxDurationTimerRef.current) {
               clearTimeout(maxDurationTimerRef.current);
               maxDurationTimerRef.current = null;
             }
-            // eslint-disable-next-line no-console
-            console.error('Recording error', error);
             setIsRecording(false);
             isRecordingRef.current = false;
             void onFinished(null);
           });
       } catch (error) {
+        console.error('[useCamera] startRecording: Sync error', {
+          error,
+          message: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+        });
         // Clear timer on error
         if (maxDurationTimerRef.current) {
           clearTimeout(maxDurationTimerRef.current);
           maxDurationTimerRef.current = null;
         }
-        // eslint-disable-next-line no-console
-        console.error('Failed to start recording', error);
         setIsRecording(false);
         isRecordingRef.current = false;
         void onFinished(null);
@@ -140,8 +161,14 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
 
   const stopRecording = useCallback(async (): Promise<void> => {
     if (!cameraRef.current || !isRecording) {
+      console.log('[useCamera] stopRecording: Camera ref or isRecording issue', {
+        hasRef: !!cameraRef.current,
+        isRecording,
+      });
       return;
     }
+
+    console.log('[useCamera] stopRecording: Starting stop recording process');
 
     // Clear auto-stop timer
     if (maxDurationTimerRef.current) {
@@ -152,10 +179,18 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
     isRecordingRef.current = false;
 
     try {
-      await cameraRef.current.stopRecording();
+      console.log('[useCamera] stopRecording: Calling camera.stopRecording()');
+      const result = await cameraRef.current.stopRecording();
+      console.log('[useCamera] stopRecording: Successfully stopped recording', result);
+      setIsRecording(false);
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn('Failed to stop recording', error);
+      console.error('[useCamera] stopRecording: FAILED TO STOP RECORDING', {
+        error,
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      setIsRecording(false);
+      throw error; // Re-throw so CameraScreen can handle it
     }
   }, [isRecording]);
 

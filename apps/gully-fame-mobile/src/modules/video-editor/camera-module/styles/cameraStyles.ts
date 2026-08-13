@@ -11,6 +11,7 @@ export const cameraStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
+    paddingTop: 100,
   },
   homeTitle: {
     fontSize: 24,
@@ -449,6 +450,7 @@ export const cameraStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 24,
+    paddingTop: 100,
   },
   permissionText: {
     marginTop: 16,
@@ -476,6 +478,7 @@ export const cameraStyles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingBottom: 24,
+    paddingTop: 80,
   },
   previewMedia: {
     width: '100%',
@@ -486,8 +489,9 @@ export const cameraStyles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     width: '100%',
-    marginTop: 16,
+    marginTop: 40,
     paddingHorizontal: 24,
+    paddingTop: 40,
   },
   previewButton: {
     flex: 1,

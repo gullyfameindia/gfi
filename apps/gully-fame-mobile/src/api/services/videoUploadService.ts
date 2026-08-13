@@ -2,6 +2,7 @@
  * Video Upload Service
  * KIRO: Complete video upload pipeline integration
  * Handles: Camera → Compression → Upload → Reel Creation
+ * PRODUCTION READY: Error handling, retry logic, state management
  */
 
 import apiClient from "../axios";
@@ -15,10 +16,12 @@ export interface VideoUploadRequest {
   description?: string;
   thumbnail?: string;
   duration: number;
-  resolution: "hd" | "2k" | "4k";
+  resolution: "hd" | "2k" | "4k" | "720p" | "1080p";
   fps: number;
   tags?: string[];
   competitionId?: string;
+  categoryId?: string;
+  hashtags?: string[];
 }
 
 export interface VideoUploadResponse {
@@ -33,76 +36,106 @@ export interface UploadProgress {
   loaded: number;
   total: number;
   percentage: number;
+  stage?: "uploading" | "processing" | "creating" | "saving";
 }
 
 /**
- * Upload video file to server
- * KIRO: Handles multipart form data upload with progress tracking
+ * Upload video file to server with retry logic
+ * KIRO: Handles multipart form data upload with progress tracking and error recovery
  */
 export async function uploadVideoFile(
   videoUri: string,
-  onProgress?: (progress: UploadProgress) => void
+  onProgress?: (progress: UploadProgress) => void,
+  retries = 3
 ): Promise<ApiResponse<{ uploadId: string; videoUrl: string }>> {
-  try {
-    console.log("[videoUploadService] Starting video upload:", videoUri);
+  let lastError: any = null;
 
-    // Get file info
-    const fileInfo = await FileSystem.getInfoAsync(videoUri);
-    if (!fileInfo.exists) {
-      throw new Error("Video file not found");
-    }
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      console.log(`[videoUploadService] Upload attempt ${attempt}/${retries}:`, videoUri);
 
-    // KIRO: Create FormData for multipart upload
-    const formData = new FormData();
-    formData.append("video", {
-      uri: videoUri,
-      type: "video/mp4",
-      name: `video_${Date.now()}.mp4`,
-    } as any);
+      // Validate file exists
+      const fileInfo = await FileSystem.getInfoAsync(videoUri);
+      if (!fileInfo.exists) {
+        throw new Error("Video file not found");
+      }
 
-    // KIRO: Upload with progress tracking
-    const response = await apiClient.post<any>("reels/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      onUploadProgress: (progressEvent) => {
-        const percentage = Math.round((progressEvent.loaded / progressEvent.total) * 100);
-        onProgress?.({
-          loaded: progressEvent.loaded,
-          total: progressEvent.total,
-          percentage,
-        });
-      },
-    });
+      // Check file size (limit to 500MB)
+      const fileSizeInMB = (fileInfo.size || 0) / (1024 * 1024);
+      if (fileSizeInMB > 500) {
+        throw new Error(`Video file too large: ${fileSizeInMB.toFixed(2)}MB (max 500MB)`);
+      }
 
-    const responseData = response.data as any;
+      // Create FormData for multipart upload
+      const formData = new FormData();
+      formData.append("video", {
+        uri: videoUri,
+        type: "video/mp4",
+        name: `video_${Date.now()}.mp4`,
+      } as any);
 
-    if (responseData.code === 1 && responseData.data) {
-      return {
-        success: true,
-        data: {
-          uploadId: responseData.data.uploadId || responseData.data.id,
-          videoUrl: responseData.data.videoUrl || responseData.data.url,
+      // Upload with progress tracking
+      const response = await apiClient.post<any>("reels/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
         },
-        message: responseData.message || "Video uploaded successfully",
-      };
-    }
+        timeout: 120000, // 2 minute timeout for large files
+        onUploadProgress: (progressEvent) => {
+          const percentage = Math.round((progressEvent.loaded / progressEvent.total) * 100);
+          onProgress?.({
+            loaded: progressEvent.loaded,
+            total: progressEvent.total,
+            percentage,
+            stage: "uploading",
+          });
+        },
+      });
 
-    return {
-      success: false,
-      message: responseData.message || "Upload failed",
-      error: "API returned unsuccessful response",
-      data: { uploadId: "", videoUrl: "" },
-    };
-  } catch (error: any) {
-    console.error("[videoUploadService] Upload error:", error.message);
-    return {
-      success: false,
-      message: error.message || "Failed to upload video",
-      error: error.message,
-      data: { uploadId: "", videoUrl: "" },
-    };
+      const responseData = response.data as any;
+
+      if (responseData.code === 1 && responseData.data) {
+        console.log("[videoUploadService] Upload successful");
+        return {
+          success: true,
+          data: {
+            uploadId: responseData.data.uploadId || responseData.data.id,
+            videoUrl: responseData.data.videoUrl || responseData.data.url,
+          },
+          message: responseData.message || "Video uploaded successfully",
+        };
+      }
+
+      throw new Error(responseData.message || "Upload failed: API error");
+    } catch (error: any) {
+      lastError = error;
+      console.error(`[videoUploadService] Attempt ${attempt} failed:`, error.message);
+
+      // Don't retry on certain errors
+      if (
+        error.message?.includes("not found") ||
+        error.message?.includes("too large") ||
+        error.response?.status === 400 ||
+        error.response?.status === 401
+      ) {
+        break;
+      }
+
+      // Wait before retrying (exponential backoff)
+      if (attempt < retries) {
+        const waitTime = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
+        console.log(`[videoUploadService] Retrying in ${waitTime}ms...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+      }
+    }
   }
+
+  console.error("[videoUploadService] All upload attempts failed");
+  return {
+    success: false,
+    message: lastError?.message || "Failed to upload video after multiple attempts",
+    error: lastError?.message,
+    data: { uploadId: "", videoUrl: "" },
+  };
 }
 
 /**
@@ -174,6 +207,7 @@ export async function createReelFromUpload(
 /**
  * Complete video upload pipeline
  * KIRO: Handles entire flow: Upload → Create Reel → Save to Gallery
+ * PRODUCTION READY: Comprehensive error handling and progress tracking
  */
 export async function uploadVideoComplete(
   videoUri: string,
@@ -183,35 +217,71 @@ export async function uploadVideoComplete(
   try {
     console.log("[videoUploadService] Starting complete upload pipeline");
 
-    // Stage 1: Upload video file
+    // Validate input
+    if (!videoUri || !request.title) {
+      return {
+        success: false,
+        message: "Video URI and title are required",
+        error: "Validation error",
+        data: {
+          reelId: "",
+          videoUrl: "",
+          status: "failed",
+          message: "Missing required fields",
+        },
+      };
+    }
+
+    // Stage 1: Upload video file with retry logic
     onProgress?.("uploading", 0);
     const uploadResult = await uploadVideoFile(videoUri, (prog) => {
       onProgress?.("uploading", prog.percentage);
     });
 
-    if (!uploadResult.success) {
-      throw new Error(uploadResult.message);
+    if (!uploadResult.success || !uploadResult.data?.uploadId) {
+      return {
+        success: false,
+        message: uploadResult.message || "Video upload failed",
+        error: uploadResult.error,
+        data: {
+          reelId: "",
+          videoUrl: "",
+          status: "failed",
+          message: uploadResult.message,
+        },
+      };
     }
 
-    // Stage 2: Create reel
-    onProgress?.("creating_reel", 50);
+    // Stage 2: Create reel metadata
+    onProgress?.("creating_reel", 60);
     const reelResult = await createReelFromUpload(uploadResult.data.uploadId, request);
 
     if (!reelResult.success) {
-      throw new Error(reelResult.message);
+      return {
+        success: false,
+        message: reelResult.message || "Failed to create reel",
+        error: reelResult.error,
+        data: {
+          reelId: "",
+          videoUrl: "",
+          status: "failed",
+          message: reelResult.message,
+        },
+      };
     }
 
-    // Stage 3: Save to gallery (optional)
-    onProgress?.("saving_gallery", 90);
+    // Stage 3: Save to gallery (optional, don't fail if it fails)
+    onProgress?.("saving_gallery", 85);
     try {
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status === "granted") {
         await MediaLibrary.saveToLibraryAsync(videoUri);
         console.log("[videoUploadService] Video saved to gallery");
+      } else {
+        console.warn("[videoUploadService] Gallery permission not granted");
       }
     } catch (galleryError) {
       console.warn("[videoUploadService] Failed to save to gallery:", galleryError);
-      // Don't fail the upload if gallery save fails
     }
 
     onProgress?.("completed", 100);
@@ -222,7 +292,7 @@ export async function uploadVideoComplete(
       message: "Video uploaded and reel created successfully",
     };
   } catch (error: any) {
-    console.error("[videoUploadService] Complete upload error:", error.message);
+    console.error("[videoUploadService] Complete upload pipeline error:", error.message);
     return {
       success: false,
       message: error.message || "Upload pipeline failed",

@@ -11,10 +11,18 @@ import {
 } from 'react-native';
 import { getReelsFeed } from '../api/services/reelsService';
 import type { Reel } from '../types/reels';
+import { Video, ResizeMode } from 'expo-av';
 // Importing the newly updated Support Popup
 import { TipPopup } from '../components/tip/TipComponents'; 
 
 const { height, width } = Dimensions.get('window');
+
+const DUMMY_VIDEOS = [
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+];
 
 const ReelsScreen = () => {
   const [loading, setLoading] = useState(true);
@@ -24,6 +32,18 @@ const ReelsScreen = () => {
   // States for Support Modal flow
   const [isSupportVisible, setIsSupportVisible] = useState(false);
   const [selectedReelId, setSelectedReelId] = useState<number | null>(null);
+
+  const [activeReelIndex, setActiveReelIndex] = useState(0);
+
+  const onViewableItemsChanged = React.useRef(({ viewableItems }: any) => {
+    if (viewableItems && viewableItems.length > 0) {
+      setActiveReelIndex(viewableItems[0].index);
+    }
+  }).current;
+
+  const viewabilityConfig = React.useRef({
+    itemVisiblePercentThreshold: 50,
+  }).current;
 
   useEffect(() => {
     loadReels();
@@ -52,11 +72,21 @@ const ReelsScreen = () => {
     console.log(`Successfully sent support of amount: ${amount} for reel: ${selectedReelId}`);
   };
 
-  const renderItem = ({ item }: { item: Reel }) => {
+  const renderItem = ({ item, index }: { item: Reel, index: number }) => {
+    const isActive = activeReelIndex === index;
+    const videoSource = DUMMY_VIDEOS[index % DUMMY_VIDEOS.length];
+
     return (
       <View style={styles.reelItem}>
-        {/* Mock Video Placeholder Area */}
-        <View style={StyleSheet.absoluteFillObject} />
+        {/* Real-time Dummy Video */}
+        <Video
+          source={{ uri: videoSource }}
+          style={StyleSheet.absoluteFillObject}
+          resizeMode={ResizeMode.COVER}
+          shouldPlay={isActive}
+          isLooping
+          isMuted={false}
+        />
 
         {/* Right Sidebar Icons Layout */}
         <View style={styles.rightSidebar}>
@@ -153,6 +183,8 @@ const ReelsScreen = () => {
         renderItem={renderItem}
         pagingEnabled
         showsVerticalScrollIndicator={false}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
         snapToAlignment="start"
         decelerationRate="fast"
       />
