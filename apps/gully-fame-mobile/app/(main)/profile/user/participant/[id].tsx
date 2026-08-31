@@ -24,6 +24,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path, G } from "react-native-svg";
 import { useOtherUserProfile } from "@/components/profile/shared/profileHooks";
 import { StatsSection, UserInfoSection } from "@/components/profile/shared/ProfileComponents";
+import { useFollowStats } from "@/hooks/useFollowStats";
 import {
   UserIconSVG,
   HomeIconSVG,
@@ -128,8 +129,37 @@ export default function UserParticipantProfile() {
   const shareScrollViewRef = useRef<ScrollView>(null);
   const [showMoreShareOptions, setShowMoreShareOptions] = useState(false);
 
+  // ✅ CREATED BY KIRO - Get follow stats with real-time updates
+  const { stats: followStats } = useFollowStats(profileData.id || "");
+
   const handleBackPress = () => {
     router.back();
+  };
+
+  // ✅ CREATED BY KIRO - Navigate to followers list
+  const handleFollowersPress = () => {
+    const currentUserId = profileData.id || profileData._id || "";
+    if (!currentUserId) {
+      Alert.alert("Error", "User ID not available");
+      return;
+    }
+    router.push({
+      pathname: "/(main)/followers",
+      params: { userId: currentUserId, tab: "followers" },
+    } as any);
+  };
+
+  // ✅ CREATED BY KIRO - Navigate to following list
+  const handleFollowingPress = () => {
+    const currentUserId = profileData.id || profileData._id || "";
+    if (!currentUserId) {
+      Alert.alert("Error", "User ID not available");
+      return;
+    }
+    router.push({
+      pathname: "/(main)/followers",
+      params: { userId: currentUserId, tab: "following" },
+    } as any);
   };
 
   const handleShare = async (platform: string) => {

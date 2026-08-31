@@ -71,20 +71,40 @@ export const LevelUpSection = ({
 );
 
 // Stats Section Component
-export const StatsSection = () => (
+export const StatsSection = ({
+    photos = 0,
+    followers = 0,
+    following = 0,
+    onFollowersPress,
+    onFollowingPress,
+}: {
+    photos?: number;
+    followers?: number;
+    following?: number;
+    onFollowersPress?: () => void;
+    onFollowingPress?: () => void;
+}) => (
     <View style={styles.statsContainer}>
         <View style={styles.statItem}>
-            <Text style={styles.statNumber}>45</Text>
-            <Text style={styles.statLabel}>Photos</Text>
+            <Text style={styles.statNumber}>{photos}</Text>
+            <Text style={styles.statLabel}>Posts</Text>
         </View>
-        <View style={styles.statItem}>
-            <Text style={styles.statNumber}>602</Text>
+        <TouchableOpacity 
+            style={styles.statItem}
+            onPress={onFollowersPress}
+            activeOpacity={0.7}
+        >
+            <Text style={styles.statNumber}>{followers}</Text>
             <Text style={styles.statLabel}>Followers</Text>
-        </View>
-        <View style={styles.statItem}>
-            <Text style={styles.statNumber}>290</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+            style={styles.statItem}
+            onPress={onFollowingPress}
+            activeOpacity={0.7}
+        >
+            <Text style={styles.statNumber}>{following}</Text>
             <Text style={styles.statLabel}>Following</Text>
-        </View>
+        </TouchableOpacity>
     </View>
 );
 

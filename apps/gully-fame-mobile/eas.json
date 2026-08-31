@@ -1,39 +1,31 @@
 {
-  "cli": {
-    "version": ">= 13.2.0"
-  },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal",
-      "env": {
-        "NPM_FLAGS": "--legacy-peer-deps",
-        "GRADLE_OPTS": "-Dorg.gradle.jvmargs=-Xmx4096m"
-      },
-      "android": {
-        "gradleCommand": ":app:assembleDebug",
-        "buildType": "apk"
-      },
-      "ios": {
-        "buildConfiguration": "Debug"
-      }
-    },
     "preview": {
-      "distribution": "internal",
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "env": {
+          "EXPO_PUBLIC_ENV": "preview"
+        }
       },
       "ios": {
-        "simulator": true
+        "simulator": true,
+        "env": {
+          "EXPO_PUBLIC_ENV": "preview"
+        }
       }
     },
     "production": {
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "app-bundle",
+        "env": {
+          "EXPO_PUBLIC_ENV": "production"
+        }
+      },
+      "ios": {
+        "env": {
+          "EXPO_PUBLIC_ENV": "production"
+        }
       }
     }
-  },
-  "submit": {
-    "production": {}
   }
 }

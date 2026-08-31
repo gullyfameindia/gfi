@@ -1,5 +1,6 @@
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
+import API_ENDPOINTS from "../endpoints";
 
 export interface Category {
     id: string;
@@ -22,7 +23,7 @@ export async function getCategories(params?: {
 }): Promise<ApiResponse<CategoriesResponse>> {
     const page = params?.page || 1;
     const limit = params?.limit || 50;
-    const endpoint = `/user/categories`;
+    const endpoint = API_ENDPOINTS.CATEGORY.GET_ALL;
 
     try {
         // Categories should be publicly accessible - skip authentication

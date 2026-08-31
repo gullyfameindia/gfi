@@ -30,12 +30,14 @@ import TopPerformer from "@/components/home/TopDancers/TopPerformer";
 import TopTenLeaderboard from "@/components/TopTenLeaderboard/TopTenLeaderboard";
 import SafeImage from "@/components/SafeImage";
 import { apiClient } from "@/api";
-if (
-    Platform.OS === "android" &&
-    UIManager.setLayoutAnimationEnabledExperimental
-) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+// NOTE: setLayoutAnimationEnabledExperimental is deprecated in New Architecture
+// and doesn't have any effect. Use Reanimated for animations instead if needed.
+// if (
+//     Platform.OS === "android" &&
+//     UIManager.setLayoutAnimationEnabledExperimental
+// ) {
+//     UIManager.setLayoutAnimationEnabledExperimental(true);
+// }
 const { height } = Dimensions.get("window");
 
 // --- Formatters ---

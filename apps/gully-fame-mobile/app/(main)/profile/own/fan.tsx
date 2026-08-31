@@ -29,6 +29,8 @@ import {
   StatsSection,
   UserInfoSection,
 } from "@/components/profile/shared/ProfileComponents";
+import { useFollowStats } from "@/hooks/useFollowStats";
+import { useUserReels } from "@/hooks/useUserReels";
 import {
   UserIconSVG,
   HomeIconSVG,
@@ -141,6 +143,12 @@ export default function OwnFanProfile() {
   const [levelUpModalVisible, setLevelUpModalVisible] = useState(false);
   const router = useRouter();
 
+  // ✅ CREATED BY KIRO - Get follow stats with real-time updates
+  const { stats: followStats } = useFollowStats(profileData.id || "");
+
+  // ✅ CREATED BY KIRO - Get user reels dynamically
+  const { reels: userReels, loading: reelsLoading } = useUserReels(profileData.id || "");
+
   // Reload data when screen comes into focus - only if needed
   useFocusEffect(
     React.useCallback(() => {
@@ -153,6 +161,32 @@ export default function OwnFanProfile() {
 
   const handleBackPress = () => {
     router.replace("/(main)" as any);
+  };
+
+  // ✅ CREATED BY KIRO - Navigate to followers list
+  const handleFollowersPress = () => {
+    const currentUserId = profileData.id || profileData._id || "";
+    if (!currentUserId) {
+      Alert.alert("Error", "User ID not available");
+      return;
+    }
+    router.push({
+      pathname: "/(main)/followers",
+      params: { userId: currentUserId, tab: "followers" },
+    } as any);
+  };
+
+  // ✅ CREATED BY KIRO - Navigate to following list
+  const handleFollowingPress = () => {
+    const currentUserId = profileData.id || profileData._id || "";
+    if (!currentUserId) {
+      Alert.alert("Error", "User ID not available");
+      return;
+    }
+    router.push({
+      pathname: "/(main)/followers",
+      params: { userId: currentUserId, tab: "following" },
+    } as any);
   };
 
   const handleEditBio = () => {
@@ -348,7 +382,13 @@ export default function OwnFanProfile() {
           style={styles.contentContainer}
         >
           {/* Stats Section */}
-          <StatsSection />
+          <StatsSection
+            photos={userReels.length}
+            followers={followStats.followers}
+            following={followStats.following}
+            onFollowersPress={handleFollowersPress}
+            onFollowingPress={handleFollowingPress}
+          />
 
           {/* Level-Up Section */}
           <LevelUpSection

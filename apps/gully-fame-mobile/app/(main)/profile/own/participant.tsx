@@ -37,6 +37,8 @@ import {
 } from "@/icons";
 import ProfileBurgerMenuModal from "@/components/modals/ProfileBurgerMenuModal/ProfileBurgerMenuModal";
 import Svg, { Path } from "react-native-svg";
+import { useFollowStats } from "@/hooks/useFollowStats";
+import { useUserReels } from "@/hooks/useUserReels";
 
 const { width } = Dimensions.get("window");
 
@@ -49,18 +51,7 @@ const participantTabs = [
     { name: "MyFame", icon: UserIconSVG, label: "" },
 ];
 
-const formatHandle = (input: string) => {
-    if (!input) return "";
-    // Strip URLs
-    let clean = input.replace(
-        /(https?:\/\/)?(www\.)?(instagram\.com|x\.com|twitter\.com)\/?/g,
-        "",
-    );
-    // Strip existing @ symbols and trailing slashes
-    clean = clean.replace(/^@/, "").replace(/\/$/, "");
-    return `@${clean}`;
-};
-
+// Social Icons
 const XIconSVG = ({ width = 26, height = 26, color = "#fff" }) => (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill={color}>
         <Path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.008 4.076H5.059z" />
@@ -73,62 +64,17 @@ const InstagramIconSVG = ({ width = 26, height = 26, color = "#fff" }) => (
     </Svg>
 );
 
-// Videos and Photos data
-const videos = [
-    { id: 1, image: require("@assets/images/music.png"), width: 1, height: 1 },
-    {
-        id: 2,
-        image: require("@assets/images/trending1.png"),
-        width: 1,
-        height: 2,
-    },
-    {
-        id: 3,
-        image: require("@assets/images/trending2.png"),
-        width: 2,
-        height: 1,
-    },
-    {
-        id: 4,
-        image: require("@assets/images/trending3.png"),
-        width: 1,
-        height: 1,
-    },
-    {
-        id: 5,
-        image: require("@assets/images/trending_reel1.png"),
-        width: 1,
-        height: 2,
-    },
-    {
-        id: 6,
-        image: require("@assets/images/trending_reel2.png"),
-        width: 2,
-        height: 1,
-    },
-];
-
-const photos = [
-    { id: 1, image: require("@assets/images/art.png"), width: 1, height: 1 },
-    {
-        id: 2,
-        image: require("@assets/images/trending1.png"),
-        width: 2,
-        height: 1,
-    },
-    {
-        id: 3,
-        image: require("@assets/images/trending2.png"),
-        width: 1,
-        height: 2,
-    },
-    {
-        id: 4,
-        image: require("@assets/images/trending3.png"),
-        width: 1,
-        height: 1,
-    },
-];
+const formatHandle = (input: string) => {
+    if (!input) return "";
+    // Strip URLs
+    let clean = input.replace(
+        /(https?:\/\/)?(www\.)?(instagram\.com|x\.com|twitter\.com)\/?/g,
+        "",
+    );
+    // Strip existing @ symbols and trailing slashes
+    clean = clean.replace(/^@/, "").replace(/\/$/, "");
+    return `@${clean}`;
+};
 
 export default function OwnParticipantProfile() {
     const { profileData, setProfileData, isLoading, reloadProfile } =
@@ -144,6 +90,12 @@ export default function OwnParticipantProfile() {
     const [tempThreeWords, setTempThreeWords] = useState(["", "", ""]);
     const [levelUpModalVisible, setLevelUpModalVisible] = useState(false);
     const [userRanking, setUserRanking] = useState<number | null>(null);
+
+    // ✅ CREATED BY KIRO - Get follow stats with real-time updates
+    const { stats: followStats } = useFollowStats(profileData.id || "");
+
+    // ✅ CREATED BY KIRO - Get user reels dynamically
+    const { reels: userReels, loading: reelsLoading } = useUserReels(profileData.id || "");
 
     useEffect(() => {
         Animated.loop(
@@ -192,6 +144,32 @@ export default function OwnParticipantProfile() {
 
     const handleBackPress = () => {
         router.replace("/(main)" as any);
+    };
+
+    // ✅ CREATED BY KIRO - Navigate to followers list
+    const handleFollowersPress = () => {
+        const currentUserId = profileData.id || profileData._id || "";
+        if (!currentUserId) {
+            Alert.alert("Error", "User ID not available");
+            return;
+        }
+        router.push({
+            pathname: "/(main)/followers",
+            params: { userId: currentUserId, tab: "followers" },
+        } as any);
+    };
+
+    // ✅ CREATED BY KIRO - Navigate to following list
+    const handleFollowingPress = () => {
+        const currentUserId = profileData.id || profileData._id || "";
+        if (!currentUserId) {
+            Alert.alert("Error", "User ID not available");
+            return;
+        }
+        router.push({
+            pathname: "/(main)/followers",
+            params: { userId: currentUserId, tab: "following" },
+        } as any);
     };
 
     const handleEditBio = () => {
@@ -400,7 +378,13 @@ export default function OwnParticipantProfile() {
                     style={styles.contentContainer}
                 >
                     {/* 1. Stats Section */}
-                    <StatsSection />
+                    <StatsSection
+                        photos={userReels.length}
+                        followers={followStats.followers}
+                        following={followStats.following}
+                        onFollowersPress={handleFollowersPress}
+                        onFollowingPress={handleFollowingPress}
+                    />
 
                     {/* 2. Unified Rank & Progression Card */}
                     <View style={styles.rankCardContainer}>
@@ -503,8 +487,10 @@ export default function OwnParticipantProfile() {
 
                     {/* Grid Content - 2 columns layout */}
                     <View style={styles.gridContainer}>
-                        {(selectedTab === "Videos" ? videos : photos).map(
-                            (item, index) => {
+                        {reelsLoading ? (
+                            <ActivityIndicator size="large" color="#EC9A15" />
+                        ) : userReels.length > 0 ? (
+                            userReels.map((item, index) => {
                                 const baseSize = (width - 28 - 4) / 2;
                                 const itemStyle = {
                                     width: baseSize,
@@ -514,16 +500,24 @@ export default function OwnParticipantProfile() {
                                 };
                                 return (
                                     <TouchableOpacity
-                                        key={item.id}
+                                        key={item._id || index}
                                         style={[styles.gridItem, itemStyle]}
                                     >
                                         <Image
-                                            source={item.image}
-                                            style={styles.gridImage}
+                                            source={{
+                                                uri: item.thumbnail || item.videoUrl,
+                                            }}
+                                            style={styles.gridItemImage}
                                         />
+                                        {/* Play Icon for Videos */}
+                                        <View style={styles.playIconContainer}>
+                                            <Text style={styles.playIcon}>▶</Text>
+                                        </View>
                                     </TouchableOpacity>
                                 );
-                            },
+                            })
+                        ) : (
+                            <Text style={styles.noReelsText}>No reels yet</Text>
                         )}
                     </View>
                 </LinearGradient>

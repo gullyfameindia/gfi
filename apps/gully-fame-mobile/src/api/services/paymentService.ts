@@ -56,7 +56,8 @@ export interface PaymentError {
   };
 }
 
-const RAZORPAY_KEY_ID = 'rzp_test_1DP5mmOlF5G5ag';
+// Load from environment variable - never hardcode payment keys
+const RAZORPAY_KEY_ID = process.env.EXPO_PUBLIC_RAZORPAY_KEY_ID || '';
 
 const getMockUserData = () => ({
   email: 'user@example.com',

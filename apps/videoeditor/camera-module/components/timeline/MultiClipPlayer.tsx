@@ -1,4 +1,4 @@
-import { ResizeMode, Video } from 'expo-av';
+import { Video, ResizeMode } from 'expo-video';
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import type { CameraClip } from '../../types/camera.types';

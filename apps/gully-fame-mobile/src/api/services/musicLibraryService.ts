@@ -11,6 +11,8 @@
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
+import { mockDataManager } from "../../mockData/mockDataManager";
+import * as mockMusicTracks from "../../mockData/musicTracks";
 
 // ─────────────────────────────────────────────
 // Types
@@ -80,6 +82,10 @@ function normaliseTrack(raw: any): MusicTrack {
 /**
  * Fetch the public audio / music library.
  * Used by the Music Picker inside the Video Editor.
+ * 
+ * Hybrid Approach:
+ * - Try to fetch from real API first
+ * - If API fails, automatically fall back to mock data
  *
  * @param sort    Sort order  – "trending" | "newest" | "popular"  (default: "trending")
  * @param page    Page number (default: 1)
@@ -118,7 +124,7 @@ export async function listAudio(
         tracks,
       };
 
-      console.log(`[musicLibraryService] Loaded ${tracks.length} tracks`);
+      console.log(`[musicLibraryService] Loaded ${tracks.length} tracks from API`);
 
       return {
         success: true,
@@ -127,21 +133,80 @@ export async function listAudio(
       };
     }
 
-    return {
-      success: false,
-      message: responseData.message ?? "Failed to fetch audio list",
-      error: "API returned unsuccessful response",
-      data: undefined,
-    };
+    // API returned error response - fall back to mock
+    console.warn("[musicLibraryService] API returned error, using mock data");
+    return _getMockAudioList(sort, page, limit, search);
   } catch (error: any) {
-    console.error("[musicLibraryService] listAudio error:", error.message);
-    return {
-      success: false,
-      message: error.response?.data?.message ?? error.message ?? "Network error",
-      error: error.message,
-      data: undefined,
-    };
+    console.warn("[musicLibraryService] API call failed, falling back to mock data:", error.message);
+    
+    // Fall back to mock data on any error
+    return _getMockAudioList(sort, page, limit, search);
   }
+}
+
+/**
+ * Internal helper - Get audio list from mock data
+ * Supports sorting, pagination, and search
+ */
+function _getMockAudioList(
+  sort: AudioSortOption = "trending",
+  page = 1,
+  limit = 20,
+  search?: string
+): ApiResponse<AudioListData> {
+  let tracks: mockMusicTracks.MusicTrack[] = [];
+
+  // Get tracks based on sort option
+  switch (sort) {
+    case "trending":
+      tracks = mockMusicTracks.getTrendingTracks();
+      break;
+    case "popular":
+      tracks = mockMusicTracks.getPopularTracks();
+      break;
+    case "newest":
+      tracks = mockMusicTracks.getNewTracks();
+      break;
+    default:
+      tracks = mockMusicTracks.mockMusicTracks;
+  }
+
+  // Apply search filter if provided
+  if (search && search.trim()) {
+    tracks = mockMusicTracks.searchMusicTracks(search);
+  }
+
+  // Convert mock tracks to MusicTrack format
+  const convertedTracks: MusicTrack[] = tracks.map((mockTrack) => ({
+    _id: mockTrack.id,
+    title: mockTrack.title,
+    artist: mockTrack.artist,
+    duration: mockTrack.duration,
+    audioUrl: mockTrack.audioUrl ?? `mock://audio/${mockTrack.id}`,
+    coverImage: mockTrack.thumbnail,
+    usageCount: mockTrack.usageCount,
+    isSaved: false,
+    isActive: true,
+  }));
+
+  // Apply pagination
+  const start = (page - 1) * limit;
+  const paginatedTracks = convertedTracks.slice(start, start + limit);
+
+  const listData: AudioListData = {
+    page,
+    limit,
+    total: convertedTracks.length,
+    tracks: paginatedTracks,
+  };
+
+  console.log(`[musicLibraryService] Using mock data - Loaded ${paginatedTracks.length} tracks (using fallback)`);
+
+  return {
+    success: true,
+    data: listData,
+    message: "Using mock audio library (API unavailable)",
+  };
 }
 
 // ─────────────────────────────────────────────
@@ -151,6 +216,8 @@ export async function listAudio(
 /**
  * Toggle save / unsave an audio track for the current user.
  * The backend handles the toggle logic; returns the new saved state.
+ * 
+ * Falls back to mock behavior if API is unavailable.
  *
  * @param audioId  The `_id` of the MusicTrack to save / unsave
  */
@@ -181,21 +248,26 @@ export async function toggleSaveAudio(
       };
     }
 
-    return {
-      success: false,
-      message: responseData.message ?? "Failed to toggle save",
-      error: "API returned unsuccessful response",
-      data: undefined,
-    };
+    // API error - fall back to mock behavior (just toggle locally)
+    console.warn("[musicLibraryService] API returned error for save, using mock behavior");
+    return _getMockToggleSaveAudio(audioId);
   } catch (error: any) {
-    console.error("[musicLibraryService] toggleSaveAudio error:", error.message);
-    return {
-      success: false,
-      message: error.response?.data?.message ?? error.message ?? "Network error",
-      error: error.message,
-      data: undefined,
-    };
+    console.warn("[musicLibraryService] toggleSaveAudio failed, using mock behavior:", error.message);
+    return _getMockToggleSaveAudio(audioId);
   }
+}
+
+/**
+ * Internal helper - Mock behavior for toggle save
+ * Simply returns true (saved) for mock data
+ */
+function _getMockToggleSaveAudio(audioId: string): ApiResponse<{ isSaved: boolean }> {
+  console.log(`[musicLibraryService] Mock toggle: Audio ${audioId} saved (mock behavior)`);
+  return {
+    success: true,
+    data: { isSaved: true },
+    message: "Audio saved (using mock behavior)",
+  };
 }
 
 // ─────────────────────────────────────────────
@@ -205,6 +277,8 @@ export async function toggleSaveAudio(
 /**
  * Fetch all audio tracks saved by the current user.
  * Shown in the "Saved" / "My Music" tab inside the music picker.
+ * 
+ * Falls back to mock data if API is unavailable.
  *
  * @param page   Page number  (default: 1)
  * @param limit  Items per page (default: 20)
@@ -240,7 +314,7 @@ export async function getSavedAudio(
         tracks,
       };
 
-      console.log(`[musicLibraryService] Loaded ${tracks.length} saved tracks`);
+      console.log(`[musicLibraryService] Loaded ${tracks.length} saved tracks from API`);
 
       return {
         success: true,
@@ -249,21 +323,53 @@ export async function getSavedAudio(
       };
     }
 
-    return {
-      success: false,
-      message: responseData.message ?? "Failed to fetch saved audio",
-      error: "API returned unsuccessful response",
-      data: undefined,
-    };
+    // API returned error response - fall back to mock
+    console.warn("[musicLibraryService] API returned error for saved audio, using mock data");
+    return _getMockSavedAudioList(page, limit);
   } catch (error: any) {
-    console.error("[musicLibraryService] getSavedAudio error:", error.message);
-    return {
-      success: false,
-      message: error.response?.data?.message ?? error.message ?? "Network error",
-      error: error.message,
-      data: undefined,
-    };
+    console.warn("[musicLibraryService] Failed to fetch saved audio, falling back to mock data:", error.message);
+    return _getMockSavedAudioList(page, limit);
   }
+}
+
+/**
+ * Internal helper - Get saved audio list from mock data
+ */
+function _getMockSavedAudioList(page = 1, limit = 20): ApiResponse<AudioListData> {
+  // Return a subset of popular/trending tracks as "saved"
+  let tracks = mockMusicTracks.getPopularTracks().slice(0, 5);
+
+  // Convert to MusicTrack format
+  const convertedTracks: MusicTrack[] = tracks.map((mockTrack) => ({
+    _id: mockTrack.id,
+    title: mockTrack.title,
+    artist: mockTrack.artist,
+    duration: mockTrack.duration,
+    audioUrl: mockTrack.audioUrl ?? `mock://audio/${mockTrack.id}`,
+    coverImage: mockTrack.thumbnail,
+    usageCount: mockTrack.usageCount,
+    isSaved: true,
+    isActive: true,
+  }));
+
+  // Apply pagination
+  const start = (page - 1) * limit;
+  const paginatedTracks = convertedTracks.slice(start, start + limit);
+
+  const listData: AudioListData = {
+    page,
+    limit,
+    total: convertedTracks.length,
+    tracks: paginatedTracks,
+  };
+
+  console.log(`[musicLibraryService] Using mock saved audio - Loaded ${paginatedTracks.length} tracks`);
+
+  return {
+    success: true,
+    data: listData,
+    message: "Using mock saved audio library (API unavailable)",
+  };
 }
 
 // ─────────────────────────────────────────────

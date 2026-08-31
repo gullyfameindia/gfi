@@ -10,6 +10,7 @@ import {
   Platform,
   Animated,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { homeScreenStyles as styles } from "@/styles/homeScreenStyles";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -42,6 +43,7 @@ import SafeImage from "@/components/SafeImage";
 import HeroBannerCarousel from "@/components/home/HeroBannerCarousel/HeroBannerCarousel";
 import CategoriesCarousel from "@/components/home/CategoriesCarousel/CategoriesCarousel";
 import { apiClient } from "@/api";
+import { feedService } from "@/api/services/feedService";
 import {
   fallbackCategories,
   upcomingCompetitionsMock,
@@ -61,10 +63,17 @@ export default function GullyFameHome() {
   const [dimensions, setDimensions] = useState(getDimensions());
   const insets = useSafeAreaInsets();
 
+  // Feed Tabs State
+  const [feedTab, setFeedTab] = useState<"trending" | "for-you" | "popular" | "saved">("trending");
+  const [feedLoading, setFeedLoading] = useState(false);
+
   // API States
   const [banners, setBanners] = useState<homePageHeroSlidesAPIData[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [trendingData, setTrendingData] = useState<any[]>([]);
+  const [forYouData, setForYouData] = useState<any[]>([]);
+  const [popularData, setPopularData] = useState<any[]>([]);
+  const [savedData, setSavedData] = useState<any[]>([]);
   const [liveCompetitions, setLiveCompetitions] = useState<any[]>(upcomingCompetitionsMock);
   const [pastCompetitions, setPastCompetitions] = useState<any[]>(pastCompetitionsMock);
   const [upcomingCompetitions, setUpcomingCompeitions] = useState<any[]>(upcomingCompetitionsMock);
@@ -96,11 +105,51 @@ export default function GullyFameHome() {
         if (data.topCompetitors) setTopCompetitors(data.topCompetitors);
       } catch (err) {
         setBanners(heroSlides);
-        // ✅ FIX: Separating the object exposes its true structure in console logs
         console.error("Error fetching home page data:", err);
       }
     }
+
+    // Load feed data from feedService with mock fallback
+    async function loadFeedData() {
+      try {
+        // Load categories
+        const categoriesResult = await feedService.getCategories();
+        if (categoriesResult.success && categoriesResult.data) {
+          setCategories(categoriesResult.data as any[]);
+          console.log(`[HomeScreen] Loaded ${categoriesResult.data.length} categories (${categoriesResult.message})`);
+        }
+
+        // Load trending reels
+        const trendingResult = await feedService.getTrendingReels(1, 10);
+        if (trendingResult.success && trendingResult.data) {
+          setTrendingData(trendingResult.data.reels as any[]);
+          console.log(`[HomeScreen] Loaded ${trendingResult.data.reels.length} trending reels (${trendingResult.message})`);
+        }
+
+        // Load for you reels
+        const forYouResult = await feedService.getForYouReels(1, 10);
+        if (forYouResult.success && forYouResult.data) {
+          setForYouData(forYouResult.data.reels as any[]);
+        }
+
+        // Load popular reels
+        const popularResult = await feedService.getPopularReels(1, 10);
+        if (popularResult.success && popularResult.data) {
+          setPopularData(popularResult.data.reels as any[]);
+        }
+
+        // Load saved reels
+        const savedResult = await feedService.getSavedReels(1, 10);
+        if (savedResult.success && savedResult.data) {
+          setSavedData(savedResult.data.reels as any[]);
+        }
+      } catch (err) {
+        console.error("Error loading feed data:", err);
+      }
+    }
+
     fetchHomePage();
+    loadFeedData();
   }, []);
 
   // Formatted Data Memos
@@ -325,80 +374,124 @@ export default function GullyFameHome() {
         return <CategoriesCarousel categories={categories}></CategoriesCarousel>;
 
       case "trending":
-        if (!trendingData.length) return null;
+        // Show feed tabs and selected feed data
+        const currentFeedData = 
+          feedTab === "trending" ? trendingData :
+          feedTab === "for-you" ? forYouData :
+          feedTab === "popular" ? popularData :
+          savedData;
+
         return (
           <View style={styles.section}>
             <View style={styles.sectionHeaderWithIcon}>
               <View style={styles.sectionTitleRow}>
-                <Text style={styles.sectionTitle}>Trending 🔥</Text>
+                <Text style={styles.sectionTitle}>Feed 🎬</Text>
               </View>
             </View>
-            <View style={styles.subsectionContainer}>
-              <Text style={styles.subsectionTitle}>Trending Reels</Text>
-              <TouchableOpacity
-                style={styles.viewAllContainer}
-                onPress={() =>
-                  router.push("/(main)/competition/live/1?scrollToEntries=true" as any)
-                }
-              >
-                <Text style={styles.viewAllButton}>View All</Text>
-                <CaretRightIcon></CaretRightIcon>
-              </TouchableOpacity>
-            </View>
+
+            {/* Feed Tabs */}
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.trendingScroll}
-              nestedScrollEnabled={true}
+              style={{ marginBottom: 12 }}
+              contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}
             >
-              {trendingData.map((reel, index) => (
-                <View key={reel.id} style={styles.trendingReelCardWrapper}>
-                  <TouchableOpacity
-                    style={styles.trendingReelCard}
-                    onPress={() => {
-                      setSelectedReelIndex(index);
-                      requestAnimationFrame(() => setShowReelViewer(true));
+              {[
+                { id: "trending", label: "Trending 🔥" },
+                { id: "for-you", label: "For You 👤" },
+                { id: "popular", label: "Popular ⭐" },
+                { id: "saved", label: "Saved 💾" },
+              ].map((tab) => (
+                <TouchableOpacity
+                  key={tab.id}
+                  onPress={() => setFeedTab(tab.id as any)}
+                  style={[
+                    {
+                      paddingHorizontal: 14,
+                      paddingVertical: 8,
+                      borderRadius: 20,
+                      backgroundColor: feedTab === tab.id ? "#EC9A15" : "rgba(255,255,255,0.1)",
+                    },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      color: feedTab === tab.id ? "#000" : "#999",
+                      fontSize: 12,
+                      fontWeight: "600",
                     }}
-                    activeOpacity={0.9}
                   >
-                    <ImageBackground
-                      source={require("@assets/images/badge.png")}
-                      style={styles.topBadge}
-                      resizeMode="contain"
-                    >
-                      <View style={styles.topBadgeContent}>
-                        <Text style={styles.topBadgeText}>TOP</Text>
-                        <Text style={styles.topBadgeNumber}>{index + 1}</Text>
-                      </View>
-                    </ImageBackground>
-
-                    <SafeImage
-                      style={styles.trendingReelImage}
-                      imageUrl={`${BASE_URL}${reel.image}`}
-                      defaultImage={require("@assets/images/trending_reel2.png")}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                  <Text style={styles.trendingReelTitleBelow} numberOfLines={1}>
-                    {reel.title}
+                    {tab.label}
                   </Text>
-                  <View style={styles.trendingReelStatsBelow}>
-                    <View style={styles.statItem}>
-                      <ThumbsUpIcon />
-                      {/* ✅ FIX: Number Type coercion wrapper */}
-                      <Text style={styles.statText}>{convertToFormattedString(Number(reel.likes ?? 0))}</Text>
-                    </View>
-                    <View style={styles.statItem}>
-                      <EyeIcon color="#EAB04B" />
-                      {/* ✅ FIX: Number Type coercion wrapper */}
-                      <Text style={styles.statText}>
-                        {convertToFormattedString(Number(reel.views ?? 0))} views
-                      </Text>
-                    </View>
-                  </View>
-                </View>
+                </TouchableOpacity>
               ))}
             </ScrollView>
+
+            {feedLoading ? (
+              <View style={{ paddingVertical: 40, justifyContent: "center", alignItems: "center" }}>
+                <ActivityIndicator size="large" color="#EC9A15" />
+                <Text style={{ color: "#999", marginTop: 12 }}>Loading {feedTab} feed...</Text>
+              </View>
+            ) : currentFeedData && currentFeedData.length > 0 ? (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.trendingScroll}
+                nestedScrollEnabled={true}
+              >
+                {currentFeedData.map((reel, index) => (
+                  <View key={reel.id || index} style={styles.trendingReelCardWrapper}>
+                    <TouchableOpacity
+                      style={styles.trendingReelCard}
+                      onPress={() => {
+                        setSelectedReelIndex(index);
+                        requestAnimationFrame(() => setShowReelViewer(true));
+                      }}
+                      activeOpacity={0.9}
+                    >
+                      <ImageBackground
+                        source={require("@assets/images/badge.png")}
+                        style={styles.topBadge}
+                        resizeMode="contain"
+                      >
+                        <View style={styles.topBadgeContent}>
+                          <Text style={styles.topBadgeText}>TOP</Text>
+                          <Text style={styles.topBadgeNumber}>{index + 1}</Text>
+                        </View>
+                      </ImageBackground>
+
+                      <SafeImage
+                        style={styles.trendingReelImage}
+                        imageUrl={reel.thumbnail || `${BASE_URL}${reel.image}`}
+                        defaultImage={require("@assets/images/trending_reel2.png")}
+                        resizeMode="contain"
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.trendingReelTitleBelow} numberOfLines={1}>
+                      {reel.title}
+                    </Text>
+                    <View style={styles.trendingReelStatsBelow}>
+                      <View style={styles.statItem}>
+                        <ThumbsUpIcon />
+                        <Text style={styles.statText}>
+                          {convertToFormattedString(Number(reel.likes ?? 0))}
+                        </Text>
+                      </View>
+                      <View style={styles.statItem}>
+                        <EyeIcon color="#EAB04B" />
+                        <Text style={styles.statText}>
+                          {convertToFormattedString(Number(reel.views ?? 0))} views
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                ))}
+              </ScrollView>
+            ) : (
+              <View style={{ paddingVertical: 40, justifyContent: "center", alignItems: "center" }}>
+                <Text style={{ color: "#999", fontSize: 14 }}>No reels in {feedTab} feed</Text>
+              </View>
+            )}
           </View>
         );
 

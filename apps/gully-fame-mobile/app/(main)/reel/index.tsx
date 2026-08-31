@@ -39,7 +39,8 @@ try {
   isFFmpegAvailable = false;
 }
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { Video, ResizeMode, Audio } from "expo-av";
+import { Video, ResizeMode } from "expo-video";
+import { Audio } from "expo-audio";
 import Svg, { Path } from "react-native-svg";
 import BottomNav from "../../../src/components/layout/BottomNav";
 import DrawerMenu from "../../../src/components/layout/DrawerMenu";
@@ -58,6 +59,8 @@ import {
   spacing,
   getResponsiveDimensions,
 } from "../../../src/utils/responsive";
+import { followService } from "../../../src/api/services/followService";
+import { followUpdateEmitter } from "../../../src/utils/followEmitter";
 import {
   HomeIconSVG,
   ReelIconSVG,
@@ -88,129 +91,80 @@ const { width, height } = Dimensions.get("window");
 const reelData = [
   {
     id: 1,
+    userId: "660b8e3f1c5d7a4b2f9e1234", // Mock ObjectId
     username: "@Suhani0098000",
     caption: "Good morining every one #goodmorning\nGood morining every\none #goodmorning",
     musicName: "On the way - (alan walker) - music hip hop brand new york",
-    video: { uri: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" },
-    likes: 134,
-    comments: 23,
-    shares: 12,
-    saves: 45,
-    tips: 12,
-    isLiked: false,
-    isSaved: false,
+    video: { uri: "https://download.samplelib.com/mp4/sample-5s.mp4" },
+    likes: 134, comments: 23, shares: 12, saves: 45, tips: 12, isLiked: false, isSaved: false, isFollowed: false,
   },
   {
     id: 2,
+    userId: "660b8e3f1c5d7a4b2f9e1235", // Mock ObjectId
     username: "@DancerPro",
     caption: "Showing off my moves! 💃 #dance #gullyfame",
     musicName: "Original Sound - DancerPro",
-    video: { uri: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" },
-    likes: 256,
-    comments: 45,
-    shares: 23,
-    saves: 67,
-    tips: 28,
-    isLiked: true,
-    isSaved: false,
+    video: { uri: "https://download.samplelib.com/mp4/sample-10s.mp4" },
+    likes: 256, comments: 45, shares: 23, saves: 67, tips: 28, isLiked: true, isSaved: false, isFollowed: false,
   },
   {
     id: 3,
+    userId: "660b8e3f1c5d7a4b2f9e1236", // Mock ObjectId
     username: "@ChefMaster",
     caption: "Cooking up something special! 🍳 #cooking #food",
     musicName: "Cooking Vibes - ChefMaster",
-    video: { uri: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" },
-    likes: 189,
-    comments: 32,
-    shares: 15,
-    saves: 89,
-    tips: 15,
-    isLiked: false,
-    isSaved: true,
+    video: { uri: "https://download.samplelib.com/mp4/sample-15s.mp4" },
+    likes: 189, comments: 32, shares: 15, saves: 89, tips: 15, isLiked: false, isSaved: true, isFollowed: false,
   },
   {
     id: 4,
+    userId: "660b8e3f1c5d7a4b2f9e1237", // Mock ObjectId
     username: "@ComedyKing",
     caption: "Laugh out loud! 😂 #comedy #funny",
     musicName: "Funny Moments - ComedyKing",
-    video: { uri: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
-    likes: 312,
-    comments: 67,
-    shares: 34,
-    saves: 123,
-    tips: 45,
-    isLiked: true,
-    isSaved: true,
+    video: { uri: "https://download.samplelib.com/mp4/sample-20s.mp4" },
+    likes: 312, comments: 67, shares: 34, saves: 123, tips: 45, isLiked: true, isSaved: true, isFollowed: false,
   },
   {
     id: 5,
+    userId: "660b8e3f1c5d7a4b2f9e1238", // Mock ObjectId
     username: "@MusicStar",
     caption: "New track dropping soon! 🎵 #music #newrelease",
     musicName: "Original Sound - MusicStar",
-    video: { uri: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" },
-    likes: 445,
-    comments: 89,
-    shares: 56,
-    saves: 156,
-    tips: 67,
-    isLiked: false,
-    isSaved: false,
+    video: { uri: "https://download.samplelib.com/mp4/sample-30s.mp4" },
+    likes: 445, comments: 89, shares: 56, saves: 156, tips: 67, isLiked: false, isSaved: false, isFollowed: false,
   },
   {
     id: 6,
     username: "@ArtistLife",
     caption: "Creating something beautiful! 🎨 #art #creativity",
     musicName: "Artistic Vibes - ArtistLife",
-    video: { uri: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" },
-    likes: 567,
-    comments: 102,
-    shares: 78,
-    saves: 234,
-    tips: 89,
-    isLiked: true,
-    isSaved: false,
+    video: { uri: "https://www.w3schools.com/html/mov_bbb.mp4" },
+    likes: 567, comments: 102, shares: 78, saves: 234, tips: 89, isLiked: true, isSaved: false, isFollowed: false,
   },
   {
     id: 7,
     username: "@FitnessGuru",
     caption: "Stay fit, stay strong! 💪 #fitness #workout",
     musicName: "Workout Beats - FitnessGuru",
-    video: { uri: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" },
-    likes: 678,
-    comments: 145,
-    shares: 89,
-    saves: 278,
-    tips: 112,
-    isLiked: false,
-    isSaved: true,
+    video: { uri: "https://download.samplelib.com/mp4/sample-5s.mp4" },
+    likes: 678, comments: 145, shares: 89, saves: 278, tips: 112, isLiked: false, isSaved: true, isFollowed: false,
   },
   {
     id: 8,
     username: "@TravelBuddy",
     caption: "Exploring the world! ✈️ #travel #adventure",
     musicName: "Travel Vibes - TravelBuddy",
-    video: { uri: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" },
-    likes: 789,
-    comments: 189,
-    shares: 112,
-    saves: 345,
-    tips: 134,
-    isLiked: true,
-    isSaved: false,
+    video: { uri: "https://download.samplelib.com/mp4/sample-10s.mp4" },
+    likes: 789, comments: 189, shares: 112, saves: 345, tips: 134, isLiked: true, isSaved: false, isFollowed: false,
   },
   {
     id: 9,
     username: "@FoodieLife",
     caption: "Food is love! 🍕 #food #foodie",
     musicName: "Foodie Beats - FoodieLife",
-    video: { uri: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4" },
-    likes: 890,
-    comments: 234,
-    shares: 145,
-    saves: 456,
-    tips: 156,
-    isLiked: false,
-    isSaved: true,
+    video: { uri: "https://download.samplelib.com/mp4/sample-15s.mp4" },
+    likes: 890, comments: 234, shares: 145, saves: 456, tips: 156, isLiked: false, isSaved: true, isFollowed: false,
   },
 ];
 
@@ -254,6 +208,9 @@ export default function GullyReelScreen() {
   const playPauseIconOpacity = useRef(new Animated.Value(0)).current;
   const THEME_COLOR = "#EC9A15";
 
+  // ✅ CREATED BY KIRO - Follow state management for reels
+  const [followingStates, setFollowingStates] = useState<{ [key: string]: boolean }>({});
+
   // Responsive positioning constants
   const BOTTOM_NAV_HEIGHT = scale(60);
   const ACTION_ICONS_BOTTOM = BOTTOM_NAV_HEIGHT + scale(12);
@@ -296,7 +253,7 @@ export default function GullyReelScreen() {
       if (nextAppState !== "active") {
         videoRefs.current.forEach((videoRef) => {
           if (videoRef) {
-            videoRef.pauseAsync().catch(() => {});
+            videoRef.pauseAsync().catch(() => { });
           }
         });
       }
@@ -321,7 +278,7 @@ export default function GullyReelScreen() {
           const videoRef = videoRefs.current.get(reels[reelIndex].id);
           // Add AppState check
           if (videoRef && AppState.currentState === "active") {
-            videoRef.playAsync().catch(() => {});
+            videoRef.playAsync().catch(() => { });
           }
         }, 50);
       }
@@ -338,7 +295,7 @@ export default function GullyReelScreen() {
         // Pause all videos when navigating away
         videoRefs.current.forEach((videoRef) => {
           if (videoRef) {
-            videoRef.pauseAsync().catch(() => {});
+            videoRef.pauseAsync().catch(() => { });
           }
         });
         // Cleanup animations
@@ -368,7 +325,7 @@ export default function GullyReelScreen() {
             // Retry once after a short delay
             setTimeout(() => {
               if (AppState.currentState === "active") {
-                videoRef.playAsync().catch(() => {});
+                videoRef.playAsync().catch(() => { });
               }
             }, 300);
           });
@@ -382,7 +339,7 @@ export default function GullyReelScreen() {
       const shouldPlay = currentVisibleIndex === reelIndex;
 
       if (videoRef && !shouldPlay) {
-        videoRef.pauseAsync().catch(() => {});
+        videoRef.pauseAsync().catch(() => { });
       }
     });
 
@@ -607,10 +564,10 @@ export default function GullyReelScreen() {
         prevReels.map((reel) =>
           reel.id === id
             ? {
-                ...reel,
-                isLiked: !reel.isLiked,
-                likes: reel.isLiked ? reel.likes - 1 : reel.likes + 1,
-              }
+              ...reel,
+              isLiked: !reel.isLiked,
+              likes: reel.isLiked ? reel.likes - 1 : reel.likes + 1,
+            }
             : reel
         )
       );
@@ -727,22 +684,92 @@ export default function GullyReelScreen() {
       prevReels.map((reel) =>
         reel.id === id
           ? {
-              ...reel,
-              isSaved: !reel.isSaved,
-              saves: reel.isSaved ? (reel.saves || 0) - 1 : (reel.saves || 0) + 1,
-            }
+            ...reel,
+            isSaved: !reel.isSaved,
+            saves: reel.isSaved ? (reel.saves || 0) - 1 : (reel.saves || 0) + 1,
+          }
           : reel
       )
     );
   }, []);
 
+  const handleEndReached = useCallback(() => {
+    setReels((prevReels) => {
+      const nextBatch = reelData.map((reel, i) => ({
+        ...reel,
+        id: prevReels.length + i + 1, // naya unique id
+      }));
+      return [...prevReels, ...nextBatch];
+    });
+  }, []);
+
+  // ✅ CREATED BY KIRO - Handle follow user from reel
+  const handleFollowUser = async (userId: string, username: string, reelId: number) => {
+    try {
+      console.log(`[ReelScreen] Following user: ${username} (${userId})`);
+      const response = await followService.followUser(userId);
+
+      if (response.success) {
+        // Update reel object to mark as followed
+        setReels((prevReels) =>
+          prevReels.map((reel) =>
+            reel.id === reelId ? { ...reel, isFollowed: true } : reel
+          )
+        );
+
+        setFollowingStates((prev) => ({
+          ...prev,
+          [userId]: true,
+        }));
+        followUpdateEmitter.emit({ type: "follow", userId });
+        Alert.alert("Success", `Now following ${username}!`);
+        console.log("[ReelScreen] User followed successfully");
+      } else {
+        Alert.alert("Error", response.message || "Failed to follow user");
+      }
+    } catch (error) {
+      console.error("[ReelScreen] Follow error:", error);
+      Alert.alert("Error", "Failed to follow user");
+    }
+  };
+
+  // ✅ CREATED BY KIRO - Handle unfollow user from reel
+  const handleUnfollowUser = async (userId: string, username: string, reelId: number) => {
+    try {
+      console.log(`[ReelScreen] Unfollowing user: ${username} (${userId})`);
+      const response = await followService.unfollowUser(userId);
+
+      if (response.success) {
+        // Update reel object to mark as unfollowed
+        setReels((prevReels) =>
+          prevReels.map((reel) =>
+            reel.id === reelId ? { ...reel, isFollowed: false } : reel
+          )
+        );
+
+        setFollowingStates((prev) => ({
+          ...prev,
+          [userId]: false,
+        }));
+        followUpdateEmitter.emit({ type: "unfollow", userId });
+        Alert.alert("Success", `Unfollowed ${username}`);
+        console.log("[ReelScreen] User unfollowed successfully");
+      } else {
+        Alert.alert("Error", response.message || "Failed to unfollow user");
+      }
+    } catch (error) {
+      console.error("[ReelScreen] Unfollow error:", error);
+      Alert.alert("Error", "Failed to unfollow user");
+    }
+  };
+
   const tabs = [
-  { name: "Home", icon: HomeIconSVG, label: "Home" },
-  { name: "Reel", icon: ReelIconSVG, label: "GullyReel" },
-  { name: "Upload", icon: null, label: "Upload" },
-  { name: "Search", icon: SearchIconSVG, label: "Search" },
-  { name: "MyFame", icon: UserIconSVG, label: "MyFame" },
-];
+    { name: "Home", icon: HomeIconSVG, label: "Home" },
+    { name: "Reel", icon: ReelIconSVG, label: "GullyReel" },
+    { name: "Upload", icon: null, label: "Upload" },
+    { name: "Search", icon: SearchIconSVG, label: "Search" },
+    { name: "MyFame", icon: UserIconSVG, label: "MyFame" },
+  ];
 
   const renderReel = useCallback(
     ({ item: reel, index }: { item: (typeof reelData)[0]; index: number }) => {
@@ -794,7 +821,7 @@ export default function GullyReelScreen() {
                     if (videoRef && AppState.currentState === "active") {
                       setTimeout(() => {
                         if (AppState.currentState === "active") {
-                          videoRef.playAsync().catch(() => {});
+                          videoRef.playAsync().catch(() => { });
                         }
                       }, 100);
                     }
@@ -937,8 +964,19 @@ export default function GullyReelScreen() {
                   <TouchableOpacity>
                     <Text style={styles.username}>{reel.username}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.followButtonBox}>
-                    <Text style={styles.followButtonBoxText}>Follow</Text>
+                  <TouchableOpacity style={styles.followButtonBox}
+                    onPress={() => {
+                      const isFollowing = followingStates[reel.userId];
+                      if (isFollowing) {
+                        handleUnfollowUser(reel.userId, reel.username, reel.id);
+                      } else {
+                        handleFollowUser(reel.userId, reel.username, reel.id);
+                      }
+                    }}
+                  >
+                    <Text style={styles.followButtonBoxText}>
+                      {reel.isFollowed || followingStates[reel.userId] ? "Following" : "Follow"}
+                    </Text>
                   </TouchableOpacity>
                 </View>
 
@@ -1092,6 +1130,8 @@ export default function GullyReelScreen() {
         data={memoizedReels}
         renderItem={renderReel}
         keyExtractor={(item) => item.id.toString()}
+        onEndReached={handleEndReached}
+        onEndReachedThreshold={0.5}
         pagingEnabled
         showsVerticalScrollIndicator={false}
         snapToInterval={height}
@@ -1942,9 +1982,9 @@ export default function GullyReelScreen() {
                   prevReels.map((reel) =>
                     reel.id === currentTipReelId
                       ? {
-                          ...reel,
-                          tips: (reel.tips || 0) + 1,
-                        }
+                        ...reel,
+                        tips: (reel.tips || 0) + 1,
+                      }
                       : reel
                   )
                 );

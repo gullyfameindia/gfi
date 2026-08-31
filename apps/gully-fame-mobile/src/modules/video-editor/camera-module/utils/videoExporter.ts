@@ -1,4 +1,4 @@
-import { Directory, File, Paths } from "expo-file-system";
+import * as FileSystem from "expo-file-system";
 import type { CameraClip, CameraClipArray } from "../types/camera.types";
 import type { AdjustSettings } from "../types/voiceOverlay.types";
 import { applyPresetToVideo, applyPresetToImage, applyOverlaysToVideo, buildAdjustmentFilterChain, buildOverlayEffectFilterChain } from "./ffmpegFilters";
@@ -37,12 +37,13 @@ export async function exportAndCombineClips(
   if (!isFFmpegAvailable) {
     onProgress?.(0.1, "Running in Expo Go mode (simplified export)...");
     
-    const exportsDir = new Directory(Paths.cache, "exports");
-    if (!exportsDir.exists) {
-      exportsDir.create();
+    const exportsDir = `${FileSystem.cacheDirectory}exports`;
+    const dirInfo = await FileSystem.getInfoAsync(exportsDir);
+    if (!dirInfo.exists) {
+      await FileSystem.makeDirectoryAsync(exportsDir, { intermediates: true });
     }
 
-    const baseUri = exportsDir.uri.endsWith("/") ? exportsDir.uri : `${exportsDir.uri}/`;
+    const baseUri = exportsDir.endsWith("/") ? exportsDir : `${exportsDir}/`;
     
     // In Expo Go, just copy the first clip as fallback
     // In a dev build, you'd have full FFmpeg processing
@@ -52,8 +53,10 @@ export async function exportAndCombineClips(
       
       if (clip.type === "video") {
         onProgress?.(0.5, "Preparing video...");
-        const sourceVideo = new File(clip.uri);
-        sourceVideo.copy(outputPath);
+        await FileSystem.copyAsync({
+          from: clip.uri,
+          to: outputPath,
+        });
         onProgress?.(1.0, "Export complete!");
         return outputPath;
       } else {
@@ -68,12 +71,13 @@ export async function exportAndCombineClips(
   }
 
   // Full FFmpeg mode (development build)
-  const exportsDir = new Directory(Paths.cache, "exports");
-  if (!exportsDir.exists) {
-    exportsDir.create();
+  const exportsDir = `${FileSystem.cacheDirectory}exports`;
+  const dirInfo = await FileSystem.getInfoAsync(exportsDir);
+  if (!dirInfo.exists) {
+    await FileSystem.makeDirectoryAsync(exportsDir, { intermediates: true });
   }
 
-  const baseUri = exportsDir.uri.endsWith("/") ? exportsDir.uri : `${exportsDir.uri}/`;
+  const baseUri = exportsDir.endsWith("/") ? exportsDir : `${exportsDir}/`;
   onProgress?.(0.1, "Preparing clips...");
 
   const processedClips: string[] = [];
@@ -142,8 +146,7 @@ export async function exportAndCombineClips(
               // Clean up intermediate filter path if different
               if (filterAppliedPath !== trimmedPath) {
                 try {
-                  const filterFile = new File(filterAppliedPath);
-                  if (filterFile.exists) filterFile.delete();
+                  await FileSystem.deleteAsync(filterAppliedPath, { idempotent: true });
                 } catch (e) {}
               }
             } else {
@@ -177,8 +180,7 @@ export async function exportAndCombineClips(
               // Clean up intermediate adjust path if different
               if (adjustAppliedPath !== filterAppliedPath) {
                 try {
-                  const adjustFile = new File(adjustAppliedPath);
-                  if (adjustFile.exists) adjustFile.delete();
+                  await FileSystem.deleteAsync(adjustAppliedPath, { idempotent: true });
                 } catch (e) {}
               }
             } else {
@@ -195,11 +197,15 @@ export async function exportAndCombineClips(
 
       // If no filters or adjustments applied, copy from trimmed
       if (overlayEffectsAppliedPath === trimmedPath && !filterAppliedPath) {
-        const sourceVideo = new File(trimmedPath);
-        sourceVideo.copy(processedPath);
+        await FileSystem.copyAsync({
+          from: trimmedPath,
+          to: processedPath,
+        });
       } else if (overlayEffectsAppliedPath !== processedPath) {
-        const sourceVideo = new File(overlayEffectsAppliedPath);
-        sourceVideo.copy(processedPath);
+        await FileSystem.copyAsync({
+          from: overlayEffectsAppliedPath,
+          to: processedPath,
+        });
       }
 
       if (clip.speed && clip.speed !== 1) {
@@ -211,8 +217,7 @@ export async function exportAndCombineClips(
           const returnCode = await session.getReturnCode();
 
           if (ReturnCode.isSuccess(returnCode)) {
-            const tempVideo = new File(processedPath);
-            if (tempVideo.exists) tempVideo.delete();
+            await FileSystem.deleteAsync(processedPath, { idempotent: true });
             processedClips.push(spedUpPath);
           } else {
             processedClips.push(processedPath);
@@ -259,8 +264,7 @@ export async function exportAndCombineClips(
     .map((path) => `file '${path.replace(/'/g, "'\\''")}'`)
     .join("\n");
 
-  const concatFile = new File(concatListPath);
-  concatFile.writeAsString(concatList);
+  await FileSystem.writeAsStringAsync(concatListPath, concatList);
 
   const concatOutputPath = `${baseUri}concat_final_${Date.now()}.mp4`;
   const concatCommand = `-f concat -safe 0 -i "${concatListPath}" -c copy -y "${concatOutputPath}"`;
@@ -272,7 +276,7 @@ export async function exportAndCombineClips(
     const returnCode = await session.getReturnCode();
 
     try {
-      if (concatFile.exists) concatFile.delete();
+      await FileSystem.deleteAsync(concatListPath, { idempotent: true });
     } catch (error) {
       console.warn("Cleanup error:", error);
     }
@@ -297,8 +301,7 @@ export async function exportAndCombineClips(
       
       // Purani concat video delete maro space bachane ke liye
       try {
-        const tempVideo = new File(concatOutputPath);
-        if (tempVideo.exists) tempVideo.delete();
+        await FileSystem.deleteAsync(concatOutputPath, { idempotent: true });
       } catch (e) {}
     } catch (error) {
       console.warn("Overlay application failed, using video without overlays:", error);
@@ -324,8 +327,10 @@ export async function exportSingleClip(
       return await applyPresetToVideo(clip.uri, outputPath, clip.filterPreset);
     } else {
       onProgress?.(0.5, "Copying video...");
-      const sourceVideo = new File(clip.uri);
-      sourceVideo.copy(outputPath);
+      await FileSystem.copyAsync({
+        from: clip.uri,
+        to: outputPath,
+      });
       return outputPath;
     }
   } else {
@@ -334,8 +339,10 @@ export async function exportSingleClip(
       return await applyPresetToImage(clip.uri, outputPath, clip.filterPreset);
     } else {
       onProgress?.(0.5, "Copying image...");
-      const sourceImage = new File(clip.uri);
-      sourceImage.copy(outputPath);
+      await FileSystem.copyAsync({
+        from: clip.uri,
+        to: outputPath,
+      });
       return outputPath;
     }
   }

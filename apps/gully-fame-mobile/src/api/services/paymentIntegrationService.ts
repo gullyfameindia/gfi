@@ -2,10 +2,12 @@
  * Payment Integration Service
  * KIRO: Complete payment flow with Razorpay
  * Handles: Coin purchase → Payment → Verification → Wallet update
+ * PRODUCTION READY: All endpoints use centralized API_ENDPOINTS configuration
  */
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
+import API_ENDPOINTS, { replaceParams } from "../endpoints";
 import RazorpayCheckout from "react-native-razorpay";
 
 export interface CoinPackage {

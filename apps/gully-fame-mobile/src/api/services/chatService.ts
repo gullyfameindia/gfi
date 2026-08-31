@@ -1,5 +1,6 @@
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
+import API_ENDPOINTS from "../endpoints";
 export interface ChatListItem {
   chatter_user_id: string;
   latest_message: string;
@@ -76,7 +77,7 @@ export async function getChatList(): Promise<ApiResponse<ChatListResponse>> {
       `${apiClient.defaults.baseURL}/chat/chatlist`,
     );
 
-    const response = await apiClient.get<any>("/chat/chatlist", {
+    const response = await apiClient.get<any>(API_ENDPOINTS.CHAT.GET_CONVERSATIONS, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
@@ -264,7 +265,7 @@ export async function sendChat(
       message: message,
     };
 
-    const response = await apiClient.post<any>("/chat/sendChat", requestBody);
+    const response = await apiClient.post<any>(API_ENDPOINTS.CHAT.SEND_MESSAGE, requestBody);
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
@@ -337,7 +338,7 @@ export async function getChatDetails(
   try {
     console.log("[chatService] GET Chat Details", { chatUserId, page, limit });
 
-    const response = await apiClient.get<any>("/chat/chatDetails", {
+    const response = await apiClient.get<any>(API_ENDPOINTS.CHAT.GET_MESSAGES.replace(":id", chatUserId), {
       params: {
         chat_user_id: chatUserId,
         page: page,

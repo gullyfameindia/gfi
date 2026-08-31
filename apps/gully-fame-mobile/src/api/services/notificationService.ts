@@ -1,5 +1,6 @@
 import apiClient from '../axios';
 import { ApiResponse } from '../types';
+import API_ENDPOINTS, { replaceParams } from '../endpoints';
 
 // ==================== Type Definitions ====================
 
@@ -57,7 +58,7 @@ export async function getNotifications(
   try {
     console.log('[notificationService] GET Notifications', { time, page, limit });
     
-    const response = await apiClient.get<any>('notification/notification', {
+    const response = await apiClient.get<any>(API_ENDPOINTS.NOTIFICATION.GET_ALL, {
       params: {
         time: time,
         page: page,
@@ -187,7 +188,8 @@ export async function updateNotificationStatus(
       status: status,
     };
 
-    const response = await apiClient.put<any>('notification/notification', requestBody);
+    const endpoint = replaceParams(API_ENDPOINTS.NOTIFICATION.MARK_READ, { id: notificationId });
+    const response = await apiClient.put<any>(endpoint, requestBody);
     const responseData = response.data as any;
 
     if (responseData.code === 1) {

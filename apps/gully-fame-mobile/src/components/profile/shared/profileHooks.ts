@@ -5,6 +5,8 @@ import { useLocalSearchParams } from "expo-router";
 import { authService } from "@api/services/authService";
 
 export interface ProfileData {
+    id?: string;
+    _id?: string;
     firstName: string;
     lastName: string;
     bio: string;

@@ -1,8 +1,10 @@
 // Created by Kiro - KYC Verification Service
 // Handles KYC document submission, verification, and status tracking
+// PRODUCTION READY: All endpoints use centralized API_ENDPOINTS configuration
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
+import API_ENDPOINTS from "../endpoints";
 
 export interface KYCDocument {
   type: "aadhar" | "pan" | "passport" | "driving_license" | "voter_id";
@@ -46,7 +48,7 @@ export async function submitKYC(kycData: KYCSubmissionData): Promise<ApiResponse
   try {
     console.log("[kycService] Submitting KYC data");
 
-    const response = await apiClient.post<any>("kyc/submit", kycData);
+    const response = await apiClient.post<any>(API_ENDPOINTS.KYC.SUBMIT, kycData);
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -88,7 +90,7 @@ export async function getKYCStatus(): Promise<ApiResponse<KYCStatus>> {
   try {
     console.log("[kycService] Getting KYC status");
 
-    const response = await apiClient.get<any>("kyc/status");
+    const response = await apiClient.get<any>(API_ENDPOINTS.KYC.GET_STATUS);
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -262,7 +264,7 @@ export async function resubmitKYC(kycData: KYCSubmissionData): Promise<ApiRespon
   try {
     console.log("[kycService] Resubmitting KYC data");
 
-    const response = await apiClient.post<any>("kyc/resubmit", kycData);
+    const response = await apiClient.post<any>(`kyc/resubmit`, kycData);
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {

@@ -34,12 +34,14 @@ import { liveCompetitionStyles as styles } from "@/styles/liveCompetitionStyles"
 import { useUserRole } from "@/contexts/UserRoleContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width, height } = Dimensions.get("window");
-if (
-  Platform.OS === "android" &&
-  UIManager.setLayoutAnimationEnabledExperimental
-) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+// NOTE: setLayoutAnimationEnabledExperimental is deprecated in New Architecture
+// and doesn't have any effect. Use Reanimated for animations instead if needed.
+// if (
+//   Platform.OS === "android" &&
+//   UIManager.setLayoutAnimationEnabledExperimental
+// ) {
+//   UIManager.setLayoutAnimationEnabledExperimental(true);
+// }
 // Helper functions to format Admin data for display
 const formatDate = (dateString: string): string => {
   if (!dateString) return "";

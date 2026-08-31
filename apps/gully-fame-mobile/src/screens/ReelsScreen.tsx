@@ -11,24 +11,27 @@ import {
 } from 'react-native';
 import { getReelsFeed } from '../api/services/reelsService';
 import type { Reel } from '../types/reels';
-import { Video, ResizeMode } from 'expo-av';
+import { Video, ResizeMode } from 'expo-video';
 // Importing the newly updated Support Popup
-import { TipPopup } from '../components/tip/TipComponents'; 
+import { TipPopup } from '../components/tip/TipComponents';
 
 const { height, width } = Dimensions.get('window');
 
+
 const DUMMY_VIDEOS = [
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+  'https://www.w3schools.com/html/mov_bbb.mp4',
+  'https://download.samplelib.com/mp4/sample-5s.mp4',
+  'https://download.samplelib.com/mp4/sample-10s.mp4',
+  'https://download.samplelib.com/mp4/sample-15s.mp4',
+  'https://download.samplelib.com/mp4/sample-20s.mp4',
+  'https://download.samplelib.com/mp4/sample-30s.mp4',
 ];
 
 const ReelsScreen = () => {
   const [loading, setLoading] = useState(true);
   const [reels, setReels] = useState<Reel[]>([]);
   const [error, setError] = useState('');
-  
+
   // States for Support Modal flow
   const [isSupportVisible, setIsSupportVisible] = useState(false);
   const [selectedReelId, setSelectedReelId] = useState<number | null>(null);
@@ -54,9 +57,29 @@ const ReelsScreen = () => {
       setLoading(true);
       setError('');
       const response = await getReelsFeed({ page: 1, limit: 10 });
-      setReels((response.data?.items as any) || []);
+      let fetchedReels = (response.data?.items as any) || [];
+
+      // Inject dummy reels if none are found from the API
+      if (fetchedReels.length === 0) {
+        fetchedReels = DUMMY_VIDEOS.map((url, index) => ({
+          id: `dummy-${index}`,
+          videoUrl: url,
+          caption: `This is dummy reel #${index + 1}! 🕺🔥`,
+          user: { username: `creator_${index + 1}` },
+        }));
+      }
+
+      setReels(fetchedReels);
     } catch (err: any) {
-      setError(err?.message || 'Failed to load reels');
+      // Fallback to dummy data on error
+      const fallbackReels = DUMMY_VIDEOS.map((url, index) => ({
+        id: `dummy-${index}`,
+        videoUrl: url,
+        caption: `Offline dummy reel #${index + 1}! 💃✨`,
+        user: { username: `dancer_${index + 1}` },
+      }));
+      setReels(fallbackReels as any);
+      // setError(err?.message || 'Failed to load reels');
     } finally {
       setLoading(false);
     }
@@ -74,19 +97,28 @@ const ReelsScreen = () => {
 
   const renderItem = ({ item, index }: { item: Reel, index: number }) => {
     const isActive = activeReelIndex === index;
-    const videoSource = DUMMY_VIDEOS[index % DUMMY_VIDEOS.length];
+    const isNearby = Math.abs(activeReelIndex - index) <= 1;
+    const videoSource = (item as any).videoUrl || DUMMY_VIDEOS[index % DUMMY_VIDEOS.length];
+    console.log(`Reel ${index} videoSource:`, videoSource);
+console.log('REEL DEBUG:', JSON.stringify(item));
 
     return (
       <View style={styles.reelItem}>
         {/* Real-time Dummy Video */}
-        <Video
-          source={{ uri: videoSource }}
-          style={StyleSheet.absoluteFillObject}
-          resizeMode={ResizeMode.COVER}
-          shouldPlay={isActive}
-          isLooping
-          isMuted={false}
-        />
+        {isNearby ? (
+          <Video
+            source={{ uri: videoSource }}
+            style={StyleSheet.absoluteFillObject}
+            resizeMode={ResizeMode.COVER}
+            shouldPlay={isActive}
+            isLooping
+            isMuted={false}
+            useNativeControls={false}
+            onError={(e) => console.error(`Video ${index} Error:`, e)}
+          />
+        ) : (
+          <View style={[StyleSheet.absoluteFillObject, { backgroundColor: '#111' }]} />
+        )}
 
         {/* Right Sidebar Icons Layout */}
         <View style={styles.rightSidebar}>
@@ -127,7 +159,7 @@ const ReelsScreen = () => {
           {/* Main Action Buttons Row (Matching the screenshot layout) */}
           <View style={styles.actionButtonsRow}>
             {/* Updated 'Tip' Button ➡️ 'Support' Button */}
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.supportButton}
               activeOpacity={0.8}
               onPress={() => handleSupportPress(item.id)}
@@ -176,7 +208,7 @@ const ReelsScreen = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
-      
+
       <FlatList
         data={reels}
         keyExtractor={(item) => item.id.toString()}

@@ -1,4 +1,4 @@
-import { ResizeMode, Video } from "expo-av";
+import { Video, ResizeMode } from "expo-video";
 import React, { useCallback, useRef, useState } from "react";
 import {
   Dimensions,

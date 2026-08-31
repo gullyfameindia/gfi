@@ -1,8 +1,7 @@
 import apiClient from '../axios';
 import { ApiResponse } from '../types';
+import API_ENDPOINTS from '../endpoints';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://103.194.228.68:3552/v1/api/';
 
 // ==================== Type Definitions ====================
 
@@ -56,7 +55,7 @@ export async function getCurrentUser(): Promise<ApiResponse<User>> {
   try {
     console.log('[userService] GET Current User');
     
-    const response = await apiClient.get<any>('user/profile');
+    const response = await apiClient.get<any>(API_ENDPOINTS.USER.PROFILE);
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -107,7 +106,7 @@ export async function getUserKycStatus(): Promise<ApiResponse<KycStatus>> {
       };
     }
 
-    const response = await apiClient.get<any>(`user/kyc`);
+    const response = await apiClient.get<any>(API_ENDPOINTS.USER.GET_KYC);
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -154,7 +153,7 @@ export async function getUserEarnings(): Promise<ApiResponse<UserEarning[]>> {
   try {
     console.log('[userService] GET User Earnings');
     
-    const response = await apiClient.get<any>('user/earnings');
+    const response = await apiClient.get<any>(API_ENDPOINTS.USER.GET_EARNINGS);
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -197,7 +196,7 @@ export async function getWalletBalance(): Promise<ApiResponse<WalletBalance>> {
   try {
     console.log('[userService] GET Wallet Balance');
     
-    const response = await apiClient.get<any>('user/wallet');
+    const response = await apiClient.get<any>(API_ENDPOINTS.USER.GET_WALLET);
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {

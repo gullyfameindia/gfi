@@ -17,9 +17,11 @@ export let BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 // ✅ NEW CODE - UPDATED PRODUCTION DEPLOYMENT URL
 if (!BASE_URL) {
   BASE_URL = "https://gullyfame.com/v1/api/";
-  console.warn(
-    "[axios] Using production deployment as base URL. To change, set EXPO_PUBLIC_API_BASE_URL in .env"
-  );
+  if (__DEV__) {
+    console.warn(
+      "[axios] Using production deployment as base URL. To change, set EXPO_PUBLIC_API_BASE_URL in .env"
+    );
+  }
 }
 
 const TOKEN_STORAGE_KEY = "authToken";
@@ -50,26 +52,30 @@ declare module "axios" {
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     try {
-      // ✅ KIRO: Edit by kiro - Added detailed logging for debugging mobile builds
-      console.log("[axios] Request Details:", {
-        method: config.method?.toUpperCase(),
-        url: config.url,
-        baseURL: config.baseURL,
-        fullURL: `${config.baseURL}${config.url}`,
-        headers: {
-          "Content-Type": config.headers?.["Content-Type"],
-          "User-Agent": config.headers?.["User-Agent"],
-          "X-Requested-With": config.headers?.["X-Requested-With"],
-          Authorization: config.headers?.Authorization ? "Bearer [TOKEN]" : "None",
-        },
-      });
+      // Log only in development mode
+      if (__DEV__) {
+        console.log("[axios] Request Details:", {
+          method: config.method?.toUpperCase(),
+          url: config.url,
+          baseURL: config.baseURL,
+          fullURL: `${config.baseURL}${config.url}`,
+          headers: {
+            "Content-Type": config.headers?.["Content-Type"],
+            "User-Agent": config.headers?.["User-Agent"],
+            "X-Requested-With": config.headers?.["X-Requested-With"],
+            Authorization: config.headers?.Authorization ? "Bearer [TOKEN]" : "None",
+          },
+        });
+      }
 
       if (!config.skipAuth) {
         const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
         if (token) {
           config.headers = config.headers || {};
           config.headers.Authorization = `Bearer ${token}`;
-          console.log("[axios] Token attached to request");
+          if (__DEV__) {
+            console.log("[axios] Token attached to request");
+          }
         }
       }
       return config;
@@ -86,10 +92,12 @@ apiClient.interceptors.request.use(
 
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    console.log("[axios] Response Success:", {
-      status: response.status,
-      url: response.config.url,
-    });
+    if (__DEV__) {
+      console.log("[axios] Response Success:", {
+        status: response.status,
+        url: response.config.url,
+      });
+    }
     return response;
   },
   async (error: AxiosError) => {
@@ -98,16 +106,18 @@ apiClient.interceptors.response.use(
       _retryCount?: number;
     };
 
-    // ✅ KIRO: Edit by kiro - Added retry logic for network errors (max 2 retries)
+    // Retry logic for network errors (max 2 retries)
     if (!error.response && !originalRequest._retry) {
       originalRequest._retryCount = (originalRequest._retryCount || 0) + 1;
 
       if (originalRequest._retryCount < 2) {
         originalRequest._retry = true;
-        console.log(
-          `[axios] Retrying request (attempt ${originalRequest._retryCount}/2):`,
-          originalRequest.url
-        );
+        if (__DEV__) {
+          console.log(
+            `[axios] Retrying request (attempt ${originalRequest._retryCount}/2):`,
+            originalRequest.url
+          );
+        }
 
         // Wait 1 second before retrying
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -116,12 +126,11 @@ apiClient.interceptors.response.use(
       }
     }
 
-    // ✅ FIXED BY KIRO: Token Refresh Mechanism with proper error handling
-    // Ye code 401 error par token refresh karta hai
+    // Token Refresh Mechanism with proper error handling
     if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.skipAuth) {
       originalRequest._retry = true;
       try {
-        // Refresh token API call karo
+        // Refresh token API call
         const refreshToken = await AsyncStorage.getItem("refreshToken");
 
         if (refreshToken) {
@@ -138,14 +147,16 @@ apiClient.interceptors.response.use(
               await AsyncStorage.setItem(TOKEN_STORAGE_KEY, newToken);
               originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
-              console.log("[axios] Token refreshed successfully");
+              if (__DEV__) {
+                console.log("[axios] Token refreshed successfully");
+              }
               return apiClient(originalRequest);
             }
           }
         }
       } catch (refreshError) {
         console.error("[axios] Token refresh failed:", refreshError);
-        // Refresh fail hua to logout karo
+        // Logout on refresh failure
         await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
         await AsyncStorage.removeItem("refreshToken");
       }
@@ -156,11 +167,11 @@ apiClient.interceptors.response.use(
       }
     }
 
-    if (error.response?.status === 403) {
+    if (error.response?.status === 403 && __DEV__) {
       console.warn("[axios] Forbidden: Access denied");
     }
 
-    if (error.response?.status === 404) {
+    if (error.response?.status === 404 && __DEV__) {
       console.warn("[axios] Not Found:", error.config?.url);
     }
 
@@ -168,11 +179,9 @@ apiClient.interceptors.response.use(
       console.error("[axios] Server Error");
     }
 
-    // ✅ FIXED BY KIRO: Improved network error handling with detailed messages
-    // Ye code network errors ko properly handle karta hai
+    // Improved network error handling
     if (!error.response) {
       // Network errors are expected when API server is down - use warning instead of error
-      // Only log once per session to avoid spam
       if (__DEV__) {
         console.warn(
           "[axios] Network Error (using fallback data):",
@@ -182,8 +191,7 @@ apiClient.interceptors.response.use(
 
       let networkErrorMessage = "Network error: Unable to connect to server.";
 
-      // ✅ FIXED BY KIRO: Detailed error messages based on error type
-      // Ye different network errors ke liye specific messages deta hai
+      // Detailed error messages based on error type
       if (error.code === "ECONNREFUSED") {
         networkErrorMessage =
           "Cannot connect to server. The backend server may be down. Please check if the API server is running.";

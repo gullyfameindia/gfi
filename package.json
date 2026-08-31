@@ -10,7 +10,8 @@
     "start:admin": "cd apps/gully-fame-admin && npm run dev",
     "start:mobile": "cd apps/gully-fame-mobile && npm start",
     "lint": "turbo lint",
-    "clean": "turbo clean"
+    "clean": "turbo clean",
+    "eas-build-pre-install": "corepack enable"
   },
   "workspaces": {
     "packages": [
@@ -28,6 +29,9 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "7.18.6",
+    "@babel/plugin-transform-class-properties": "^8.0.1",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^8.0.1",
+    "@babel/plugin-transform-optional-chaining": "^8.0.1",
     "prettier": "^3.3.0",
     "turbo": "^2.8.9",
     "typescript": "~5.4.0"

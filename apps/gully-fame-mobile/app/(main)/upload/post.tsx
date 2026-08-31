@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { Video, ResizeMode } from "expo-av";
+import { Video, ResizeMode } from "expo-video";
 import Svg, {
   Path,
   Circle,

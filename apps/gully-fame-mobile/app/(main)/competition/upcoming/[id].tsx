@@ -25,12 +25,14 @@ import { apiClient } from "@/api";
 import { upcomingCompetitionStyles as styles } from "@/styles/upcomingCompetitionStyles";
 
 // Enable LayoutAnimation for Android
-if (
-    Platform.OS === "android" &&
-    UIManager.setLayoutAnimationEnabledExperimental
-) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-}
+// NOTE: setLayoutAnimationEnabledExperimental is deprecated in New Architecture
+// and doesn't have any effect. Use Reanimated for animations instead if needed.
+// if (
+//     Platform.OS === "android" &&
+//     UIManager.setLayoutAnimationEnabledExperimental
+// ) {
+//     UIManager.setLayoutAnimationEnabledExperimental(true);
+// }
 const formatPrizeBreakdown = (
     prizeAmount: number,
     winnerSlots: number = 1,

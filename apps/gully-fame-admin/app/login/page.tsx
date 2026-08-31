@@ -62,15 +62,7 @@ export default function LoginPage() {
     }
   };
 
-  const fillDefaultCredentials = () => {
-    if (role === 'admin') {
-      setEmail('admin@gullyfame.com');
-      setPassword('admin123');
-    } else {
-      setEmail('sponsor@gullyfame.com');
-      setPassword('sponsor123');
-    }
-  };
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 to-gray-800">
@@ -122,7 +114,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full rounded-lg border border-gray-300 bg-gray-50 py-2 pl-10 pr-4 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                placeholder="admin@gullyfame.com"
+                placeholder="Enter your email"
                 required
               />
             </div>
@@ -164,18 +156,10 @@ export default function LoginPage() {
         <div className="mt-6 space-y-3">
           {role === 'admin' ? (
           <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
-            <p className="text-sm font-semibold text-blue-900 mb-2">Default Admin Credentials:</p>
+            <p className="text-sm font-semibold text-blue-900 mb-2">Admin Login</p>
             <div className="space-y-1 text-xs text-blue-800">
-              <p><strong>Email:</strong> admin@gullyfame.com</p>
-              <p><strong>Password:</strong> admin123</p>
+              <p>Please use your admin credentials provided by the system administrator.</p>
             </div>
-            <button
-              type="button"
-              onClick={fillDefaultCredentials}
-              className="mt-3 text-xs font-medium text-blue-700 hover:text-blue-900 underline"
-            >
-              Click to fill default credentials
-            </button>
           </div>
           ) : (
             <div className="rounded-lg bg-purple-50 border border-purple-200 p-4">

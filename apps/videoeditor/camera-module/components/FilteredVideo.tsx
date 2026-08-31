@@ -1,4 +1,4 @@
-import { ResizeMode, Video } from 'expo-av';
+import { Video, ResizeMode } from 'expo-video';
 import React from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
 import type { FilterConfig } from '../types/filters';

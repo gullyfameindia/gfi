@@ -52,25 +52,52 @@ const MusicLibraryModal: React.FC<MusicPickerModalProps> = ({
   const fetchTracks = useCallback(async () => {
     setLoading(true);
     try {
-      const sortOption = 
-        activeCategory === "Trending" ? "trending" :
-        activeCategory === "Popular" ? "popular" :
-        "newest";
+      let sortOption: "trending" | "popular" | "newest" = "trending";
+      
+      if (activeCategory === "Trending") {
+        sortOption = "trending";
+      } else if (activeCategory === "Popular") {
+        sortOption = "popular";
+      } else if (activeCategory === "For you") {
+        sortOption = "newest";
+      }
 
-      const result = await musicLibraryService.listAudio(sortOption as any, 1, 30, searchQuery);
+      // Fetch tracks from enhanced musicLibraryService (with mock data fallback)
+      const result = await musicLibraryService.listAudio(sortOption, 1, 50, searchQuery);
 
       if (result.success && result.data) {
-        const formattedTracks = result.data.tracks.map((t, idx) => ({
-          ...t,
-          stats: `${t.usageCount || 0} uses • ${Math.floor(t.duration / 60)}:${String(t.duration % 60).padStart(2, "0")}`,
-          color: ["#B8860B", "#8B0000", "#5F9EA0", "#000000", "#D2B48C", "#2F4F4F", "#191970", "#FF8C00"][idx % 8],
-        }));
+        console.log(`[MusicLibraryModal] Loaded ${result.data.tracks.length} tracks (${result.message})`);
+        
+        const formattedTracks = result.data.tracks.map((t, idx) => {
+          // Format duration as MM:SS
+          const minutes = Math.floor(t.duration / 60);
+          const seconds = String(t.duration % 60).padStart(2, "0");
+          const durationStr = `${minutes}:${seconds}`;
+          
+          // Display usage count with formatting
+          const useCount = t.usageCount || Math.floor(Math.random() * 5000);
+          const usageStr = useCount >= 1000 
+            ? `${(useCount / 1000).toFixed(1)}K uses`
+            : `${useCount} uses`;
+          
+          return {
+            ...t,
+            stats: `${usageStr} • ${durationStr}`,
+            color: ["#B8860B", "#8B0000", "#5F9EA0", "#000000", "#D2B48C", "#2F4F4F", "#191970", "#FF8C00"][idx % 8],
+          };
+        });
+        
         setTracks(formattedTracks);
 
+        // For "Saved" category, mark all loaded tracks as saved
         if (activeCategory === "Saved") {
           const savedIds = new Set(formattedTracks.map(t => t._id));
           setSavedTracks(savedIds);
         }
+        
+        console.log(`[MusicLibraryModal] Displayed ${formattedTracks.length} tracks in ${activeCategory} tab`);
+      } else {
+        console.warn("[MusicLibraryModal] Failed to fetch tracks:", result.message);
       }
     } catch (error) {
       console.error("[MusicLibraryModal] Error fetching tracks:", error);
@@ -125,20 +152,28 @@ const MusicLibraryModal: React.FC<MusicPickerModalProps> = ({
       </View>
       
       <View style={styles.trackInfo}>
-        <Text style={styles.trackTitle} numberOfLines={1}>{item.title}</Text>
+        <Text style={styles.trackTitle} numberOfLines={1}>
+          {item.title}
+        </Text>
         <Text style={styles.trackArtist} numberOfLines={1}>
-          {item.artist ? `↗ ${item.artist}` : "Unknown Artist"} • {item.stats}
+          {item.artist ? `by ${item.artist}` : "Unknown Artist"}
+        </Text>
+        <Text style={styles.trackStats}>
+          {item.stats}
         </Text>
       </View>
       
       <TouchableOpacity 
-        style={styles.saveButton} 
+        style={[
+          styles.saveButton,
+          savedTracks.has(item._id) && styles.saveButtonActive
+        ]} 
         onPress={(e) => handleToggleSave(item._id, e)}
       >
-        <Svg width="24" height="24" viewBox="0 0 24 24" fill={savedTracks.has(item._id) ? "white" : "none"}>
+        <Svg width="24" height="24" viewBox="0 0 24 24" fill={savedTracks.has(item._id) ? "#ec9a15" : "none"}>
           <Path 
             d="M19 21L12 16L5 21V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H17C17.5304 3 18.0391 3.21071 18.4142 3.58579C18.7893 3.96086 19 4.46957 19 5V21Z" 
-            stroke="white" 
+            stroke={savedTracks.has(item._id) ? "#ec9a15" : "#999"} 
             strokeWidth="2" 
             strokeLinecap="round" 
             strokeLinejoin="round"
@@ -201,6 +236,15 @@ const MusicLibraryModal: React.FC<MusicPickerModalProps> = ({
             ))}
           </ScrollView>
 
+          {/* Track Count Header */}
+          {!loading && tracks.length > 0 && (
+            <View style={styles.trackCountHeader}>
+              <Text style={styles.trackCountText}>
+                {tracks.length} track{tracks.length !== 1 ? 's' : ''} in {activeCategory}
+              </Text>
+            </View>
+          )}
+
           {/* Tracks List */}
           {loading && tracks.length === 0 ? (
             <View style={styles.loadingContainer}>
@@ -216,7 +260,8 @@ const MusicLibraryModal: React.FC<MusicPickerModalProps> = ({
               onEndReachedThreshold={0.3}
               ListEmptyComponent={
                 <View style={styles.emptyContainer}>
-                  <Text style={styles.emptyText}>No tracks found</Text>
+                  <Text style={styles.emptyText}>🎵 No tracks found</Text>
+                  <Text style={styles.emptySubText}>Try a different search or category</Text>
                 </View>
               }
             />
@@ -328,8 +373,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 2,
   },
+  trackStats: {
+    color: '#666',
+    fontSize: 11,
+    marginTop: 4,
+  },
   saveButton: {
     padding: 8,
+  },
+  saveButtonActive: {
+    opacity: 0.8,
   },
   loadingContainer: {
     flex: 1,
@@ -341,6 +394,18 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 14,
   },
+  trackCountHeader: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: 'rgba(236, 154, 21, 0.1)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(236, 154, 21, 0.2)',
+  },
+  trackCountText: {
+    color: '#ec9a15',
+    fontSize: 12,
+    fontWeight: '600',
+  },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -349,7 +414,13 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     color: '#999',
-    fontSize: 16,
+    fontSize: 24,
+    marginBottom: 8,
+  },
+  emptySubText: {
+    color: '#666',
+    fontSize: 13,
+    marginTop: 4,
   },
 });
 

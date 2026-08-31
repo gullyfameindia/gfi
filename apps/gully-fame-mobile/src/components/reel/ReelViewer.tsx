@@ -19,7 +19,7 @@ import {
   Alert,
   Linking,
 } from 'react-native';
-import { Video, ResizeMode } from 'expo-av';
+import { Video, ResizeMode } from 'expo-video';
 import { router } from 'expo-router';
 import Svg, { Path, G, Circle, Rect, Defs, RadialGradient, Stop, Line } from 'react-native-svg';
 import { scale, spacing, getFontSize, wp } from '../../utils/responsive';

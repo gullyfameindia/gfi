@@ -3,6 +3,7 @@
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
+import API_ENDPOINTS, { replaceParams } from "../endpoints";
 
 export interface User {
   _id: string;
@@ -36,7 +37,8 @@ export async function followUser(userId: string): Promise<ApiResponse<FollowResp
   try {
     console.log("[followService] Following user:", userId);
 
-    const response = await apiClient.post<any>(`user/${userId}/follow`, {});
+    const endpoint = replaceParams(API_ENDPOINTS.FOLLOW.FOLLOW_USER, { userId });
+    const response = await apiClient.post<any>(endpoint, {});
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -77,7 +79,8 @@ export async function unfollowUser(userId: string): Promise<ApiResponse<FollowRe
   try {
     console.log("[followService] Unfollowing user:", userId);
 
-    const response = await apiClient.post<any>(`user/${userId}/unfollow`, {});
+    const endpoint = replaceParams(API_ENDPOINTS.FOLLOW.UNFOLLOW_USER, { userId });
+    const response = await apiClient.post<any>(endpoint, {});
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {

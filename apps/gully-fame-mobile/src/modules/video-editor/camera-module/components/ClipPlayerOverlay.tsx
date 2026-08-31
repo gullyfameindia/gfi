@@ -7,7 +7,7 @@ import {
   View,
   Image,
 } from 'react-native';
-import { ResizeMode, Video } from 'expo-av';
+import { Video, ResizeMode } from 'expo-video';
 import type { CameraClip } from '../types/camera.types';
 
 interface ClipPlayerOverlayProps {

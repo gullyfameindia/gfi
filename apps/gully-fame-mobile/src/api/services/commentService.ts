@@ -3,6 +3,7 @@
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
+import API_ENDPOINTS, { replaceParams } from "../endpoints";
 
 export interface Comment {
   _id: string;
@@ -50,7 +51,8 @@ export async function addComment(
   try {
     console.log("[commentService] Adding comment to reel:", { reelId, commentData });
 
-    const response = await apiClient.post<any>(`reels/${reelId}/comments`, commentData);
+    const endpoint = replaceParams(API_ENDPOINTS.REELS.ADD_COMMENT, { id: reelId });
+    const response = await apiClient.post<any>(endpoint, commentData);
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -99,7 +101,8 @@ export async function getComments(
   try {
     console.log("[commentService] Getting comments for reel:", { reelId, params });
 
-    const response = await apiClient.get<any>(`reels/${reelId}/comments`, { params });
+    const endpoint = replaceParams(API_ENDPOINTS.REELS.GET_COMMENTS, { id: reelId });
+    const response = await apiClient.get<any>(endpoint, { params });
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -151,7 +154,8 @@ export async function deleteComment(commentId: string): Promise<ApiResponse<bool
   try {
     console.log("[commentService] Deleting comment:", commentId);
 
-    const response = await apiClient.delete<any>(`comments/${commentId}`);
+    const endpoint = replaceParams(API_ENDPOINTS.COMMENT.DELETE, { id: commentId });
+    const response = await apiClient.delete<any>(endpoint);
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
@@ -186,7 +190,8 @@ export async function likeComment(commentId: string): Promise<ApiResponse<number
   try {
     console.log("[commentService] Liking comment:", commentId);
 
-    const response = await apiClient.post<any>(`comments/${commentId}/like`, {});
+    const endpoint = replaceParams(API_ENDPOINTS.COMMENT.CREATE, { id: commentId });
+    const response = await apiClient.post<any>(`${endpoint}/like`, {});
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
@@ -223,7 +228,8 @@ export async function unlikeComment(commentId: string): Promise<ApiResponse<numb
   try {
     console.log("[commentService] Unliking comment:", commentId);
 
-    const response = await apiClient.post<any>(`comments/${commentId}/unlike`, {});
+    const endpoint = replaceParams(API_ENDPOINTS.COMMENT.CREATE, { id: commentId });
+    const response = await apiClient.post<any>(`${endpoint}/unlike`, {});
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
@@ -263,7 +269,8 @@ export async function replyToComment(
   try {
     console.log("[commentService] Replying to comment:", { commentId, replyText });
 
-    const response = await apiClient.post<any>(`comments/${commentId}/reply`, {
+    const endpoint = replaceParams(API_ENDPOINTS.COMMENT.CREATE, { id: commentId });
+    const response = await apiClient.post<any>(`${endpoint}/reply`, {
       text: replyText,
     });
     const responseData = response.data as any;
@@ -311,7 +318,8 @@ export async function getCommentCount(reelId: string): Promise<ApiResponse<numbe
   try {
     console.log("[commentService] Getting comment count for reel:", reelId);
 
-    const response = await apiClient.get<any>(`reels/${reelId}/comment-count`);
+    const endpoint = replaceParams(API_ENDPOINTS.REELS.GET_COMMENTS, { id: reelId });
+    const response = await apiClient.get<any>(`${endpoint}-count`);
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
