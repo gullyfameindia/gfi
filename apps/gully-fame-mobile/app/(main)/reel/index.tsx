@@ -39,8 +39,7 @@ try {
   isFFmpegAvailable = false;
 }
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { Video, ResizeMode } from "expo-video";
-import { Audio } from "expo-audio";
+import { Video as AVVideo, ResizeMode, Audio } from "expo-av";
 import Svg, { Path } from "react-native-svg";
 import BottomNav from "../../../src/components/layout/BottomNav";
 import DrawerMenu from "../../../src/components/layout/DrawerMenu";
@@ -180,7 +179,7 @@ export default function GullyReelScreen() {
   const flatListRef = useRef<FlatList<(typeof reelData)[0]>>(null);
   const [showMoreShareOptions, setShowMoreShareOptions] = useState(false);
   const [currentVisibleIndex, setCurrentVisibleIndex] = useState<number | null>(null);
-  const videoRefs = useRef<Map<number, Video>>(new Map());
+  const videoRefs = useRef<Map<number, AVVideo>>(new Map());
   const [showStarAnimation, setShowStarAnimation] = useState<number | null>(null);
   const [showThreeDotsMenu, setShowThreeDotsMenu] = useState(false);
   const [currentReelForMenu, setCurrentReelForMenu] = useState<number | null>(null);
@@ -320,7 +319,7 @@ export default function GullyReelScreen() {
       if (currentReel) {
         const videoRef = videoRefs.current.get(currentReel.id);
         if (videoRef && AppState.currentState === "active") {
-          videoRef.playAsync().catch((error) => {
+          videoRef.playAsync().catch((error: any) => {
             console.log("Play error:", error);
             // Retry once after a short delay
             setTimeout(() => {
@@ -798,7 +797,7 @@ export default function GullyReelScreen() {
             style={styles.videoTouchable}
           >
             {shouldLoadVideo ? (
-              <Video
+              <AVVideo
                 ref={(ref) => {
                   if (ref) {
                     videoRefs.current.set(reel.id, ref);
@@ -808,7 +807,7 @@ export default function GullyReelScreen() {
                 }}
                 source={reel.video}
                 style={styles.reelImage}
-                resizeMode={ResizeMode.COVER}
+                resizeMode={ResizeMode?.COVER || "cover"}
                 shouldPlay={false}
                 isLooping={true}
                 isMuted={false}
@@ -966,16 +965,17 @@ export default function GullyReelScreen() {
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.followButtonBox}
                     onPress={() => {
-                      const isFollowing = followingStates[reel.userId];
+                      const userId = reel.userId || "";
+                      const isFollowing = followingStates[userId];
                       if (isFollowing) {
-                        handleUnfollowUser(reel.userId, reel.username, reel.id);
+                        handleUnfollowUser(userId, reel.username, reel.id);
                       } else {
-                        handleFollowUser(reel.userId, reel.username, reel.id);
+                        handleFollowUser(userId, reel.username, reel.id);
                       }
                     }}
                   >
                     <Text style={styles.followButtonBoxText}>
-                      {reel.isFollowed || followingStates[reel.userId] ? "Following" : "Follow"}
+                      {reel.isFollowed || followingStates[reel.userId || ""] ? "Following" : "Follow"}
                     </Text>
                   </TouchableOpacity>
                 </View>

@@ -7,7 +7,13 @@
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
 import * as Notifications from "expo-notifications";
-import * as Device from "expo-device";
+
+let Device: any = null;
+try {
+  Device = require("expo-device");
+} catch (e) {
+  console.warn("[notificationIntegrationService] expo-device not available:", (e as any)?.message);
+}
 
 export interface Notification {
   id: string;
@@ -42,8 +48,8 @@ export async function registerDeviceForNotifications(): Promise<
     console.log("[notificationIntegrationService] Registering device for notifications");
 
     // Get device token
-    if (!Device.isDevice) {
-      console.warn("[notificationIntegrationService] Not a physical device, skipping registration");
+    if (!Device || !Device.isDevice) {
+      console.warn("[notificationIntegrationService] Not a physical device or Device module not available, skipping registration");
       return {
         success: false,
         message: "Not a physical device",
@@ -58,8 +64,8 @@ export async function registerDeviceForNotifications(): Promise<
     // Register with backend
     const response = await apiClient.post<any>("notifications/register-device", {
       deviceToken: token,
-      deviceType: Device.osName,
-      deviceModel: Device.modelName,
+      deviceType: Device?.osName || "unknown",
+      deviceModel: Device?.modelName || "unknown",
     });
 
     const responseData = response.data as any;

@@ -138,7 +138,7 @@ export async function uploadDocument(
   onProgress?: (progress: DocumentUploadProgress) => void
 ): Promise<ApiResponse<KYCDocument>> {
   try {
-    console.log("[kycService] Uploading KYC document:", {
+    console.log("[kycService] POST user/kyc (upload-document)", {
       documentType,
       documentNumber,
     });
@@ -163,6 +163,7 @@ export async function uploadDocument(
       } as any);
     }
 
+    // Using kyc/upload-document as it's not explicitly in Postman spec
     const response = await apiClient.post<any>("kyc/upload-document", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -262,9 +263,10 @@ export async function verifyDocument(documentId: string): Promise<ApiResponse<KY
 // ✅ CREATED BY KIRO - Resubmit KYC after rejection
 export async function resubmitKYC(kycData: KYCSubmissionData): Promise<ApiResponse<KYCStatus>> {
   try {
-    console.log("[kycService] Resubmitting KYC data");
+    console.log("[kycService] POST user/kyc (resubmit)");
 
-    const response = await apiClient.post<any>(`kyc/resubmit`, kycData);
+    // Using user/kyc for resubmit per Postman spec
+    const response = await apiClient.post<any>("user/kyc", kycData);
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -291,7 +293,7 @@ export async function resubmitKYC(kycData: KYCSubmissionData): Promise<ApiRespon
       data: undefined,
     };
   } catch (error: any) {
-    console.error("[kycService] Resubmit KYC error:", error.message);
+    console.error("[kycService] POST user/kyc (resubmit) error:", error.message);
     return {
       success: false,
       message: error.response?.data?.message || error.message || "Network error occurred",

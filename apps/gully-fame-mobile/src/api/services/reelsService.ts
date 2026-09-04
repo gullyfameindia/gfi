@@ -1,21 +1,4 @@
-// import type { ReelsResponse } from '../../types/reels';
 
-// export interface GetUserReelsParams {
-//   page?: number;
-//   limit?: number;
-// }
-
-// export const getUserReels = async (
-//   params: GetUserReelsParams = {}
-// ): Promise<ReelsResponse> => {
-//   const { page = 1, limit = 10 } = params;
-
-//   throw new Error(
-//     `Reels API not ready yet. Expected endpoint: GET /v1/api/user/reels?page=${page}&limit=${limit}`
-//   );
-// };
-
-// this code given by kiro
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
@@ -49,15 +32,10 @@ export async function getReelsFeed(params?: any): Promise<ApiResponse<ReelsRespo
   try {
     console.log("[reelsService] GET Reels Feed");
 
-    // ✅ KIRO: Edit by kiro - Fixed endpoint path from 'reels' to 'feed/matrix' (Postman collection shows feed/matrix for home feed)
-    // ❌ OLD CODE - WRONG PATH
-    // const response = await apiClient.get<any>("reels", { params });
-
-    // ✅ NEW CODE - CORRECT PATH
+   
     const response = await apiClient.get<any>(API_ENDPOINTS.FEED.GET_HOME_FEED, { params });
     const responseData = response.data as any;
 
-    // 🔍 DEBUG: Log the raw response to find correct field names
     console.log("[reelsService] RAW response code:", responseData.code);
     console.log("[reelsService] RAW response data keys:", Object.keys(responseData.data || {}));
     if (Array.isArray(responseData.data)) {
@@ -248,7 +226,8 @@ export async function uploadReel(formData: FormData): Promise<ApiResponse<Reel>>
   try {
     console.log("[reelsService] UPLOAD Reel");
 
-    const response = await apiClient.post<any>(API_ENDPOINTS.REELS.UPLOAD, formData, {
+    // Use GET_UPLOAD_URL endpoint (presigned URL flow)
+    const response = await apiClient.post<any>(API_ENDPOINTS.REELS.GET_UPLOAD_URL, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     const responseData = response.data as any;
@@ -280,7 +259,7 @@ export async function uploadReel(formData: FormData): Promise<ApiResponse<Reel>>
   }
 }
 
-// ✅ CREATED BY KIRO - Get User Reels
+
 export async function getUserReels(
   userId: string,
   params?: { page?: number; limit?: number }
@@ -288,9 +267,16 @@ export async function getUserReels(
   try {
     console.log("[reelsService] GET User Reels", { userId, params });
 
-    const endpoint = replaceParams(API_ENDPOINTS.REELS.GET_BY_ID, { id: `${userId}/reels` });
+    // Use the USER.GET_REELS endpoint which is "user/reels"
+    // This gets the logged-in user's reels, not someone else's
+    const endpoint = API_ENDPOINTS.USER.GET_REELS;
+    console.log("[reelsService] Using endpoint:", endpoint);
+    
     const response = await apiClient.get<any>(endpoint, { params });
     const responseData = response.data as any;
+
+    console.log("[reelsService] Response code:", responseData.code);
+    console.log("[reelsService] Response data keys:", Object.keys(responseData.data || {}));
 
     if (responseData.code === 1 && responseData.data) {
       let reels: Reel[] = [];
@@ -302,6 +288,11 @@ export async function getUserReels(
       } else if (Array.isArray(responseData.data.reels)) {
         reels = responseData.data.reels;
       }
+
+      console.log("[reelsService] Reels found:", reels.length);
+      reels.forEach((reel: any) => {
+        console.log("[reelsService]   - Reel ID:", reel._id || reel.id, "- Status:", reel.status || reel.published);
+      });
 
       return {
         success: true,
@@ -318,6 +309,7 @@ export async function getUserReels(
     };
   } catch (error: any) {
     console.error("[reelsService] GET User Reels error:", error.message);
+    console.error("[reelsService] Error details:", error.response?.data || error);
     return {
       success: false,
       message: error.response?.data?.message || error.message || "Network error occurred",

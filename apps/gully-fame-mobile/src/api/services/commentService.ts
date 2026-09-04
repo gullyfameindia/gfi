@@ -43,7 +43,7 @@ export interface AddCommentResponse {
   createdAt: string;
 }
 
-// ✅ CREATED BY KIRO - Add comment to reel
+//   Add comment to reel
 export async function addComment(
   reelId: string,
   commentData: AddCommentRequest
@@ -93,7 +93,7 @@ export async function addComment(
   }
 }
 
-// ✅ CREATED BY KIRO - Get comments for a reel
+//   Get comments for a reel
 export async function getComments(
   reelId: string,
   params?: { page?: number; limit?: number }
@@ -149,7 +149,7 @@ export async function getComments(
   }
 }
 
-// ✅ CREATED BY KIRO - Delete comment
+//   Delete comment
 export async function deleteComment(commentId: string): Promise<ApiResponse<boolean>> {
   try {
     console.log("[commentService] Deleting comment:", commentId);
@@ -185,7 +185,7 @@ export async function deleteComment(commentId: string): Promise<ApiResponse<bool
   }
 }
 
-// ✅ CREATED BY KIRO - Like comment
+//  Like comment
 export async function likeComment(commentId: string): Promise<ApiResponse<number>> {
   try {
     console.log("[commentService] Liking comment:", commentId);
@@ -223,7 +223,7 @@ export async function likeComment(commentId: string): Promise<ApiResponse<number
   }
 }
 
-// ✅ CREATED BY KIRO - Unlike comment
+//   Unlike comment
 export async function unlikeComment(commentId: string): Promise<ApiResponse<number>> {
   try {
     console.log("[commentService] Unliking comment:", commentId);
@@ -261,7 +261,7 @@ export async function unlikeComment(commentId: string): Promise<ApiResponse<numb
   }
 }
 
-// ✅ CREATED BY KIRO - Reply to comment
+// Reply to comment
 export async function replyToComment(
   commentId: string,
   replyText: string
@@ -313,7 +313,7 @@ export async function replyToComment(
   }
 }
 
-// ✅ CREATED BY KIRO - Get comment count for reel
+//  Get comment count for reel
 export async function getCommentCount(reelId: string): Promise<ApiResponse<number>> {
   try {
     console.log("[commentService] Getting comment count for reel:", reelId);

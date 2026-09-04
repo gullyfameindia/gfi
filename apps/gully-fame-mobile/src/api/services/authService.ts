@@ -178,11 +178,11 @@ export const authService = {
         { skipAuth: true }
       );
 
-      // ✅ KIRO: Edit by kiro - Added null safety checks for response data
+
       const responseAny = response.data as any;
       const responseData = responseAny.data || responseAny;
 
-      // ✅ KIRO: Edit by kiro - Added detailed logging to debug response structure
+
       console.log("[authService] verifyOtp response:", {
         hasData: !!responseData,
         hasToken: !!responseData?.token,
@@ -191,11 +191,7 @@ export const authService = {
         responseKeys: responseData ? Object.keys(responseData) : [],
       });
 
-      // ❌ OLD CODE - Could crash if responseData is null
-      // let finalData = responseData;
-      // if (responseData?.token && responseData?.userId && !responseData?.user) {
-
-      // ✅ NEW CODE - Safe null checks before accessing properties
+      
       let finalData = responseData || {};
 
       if (responseData && responseData.token && responseData.userId && !responseData.user) {
@@ -216,11 +212,11 @@ export const authService = {
           }
         } catch (error) {
           console.error("[authService] Error fetching user profile:", error);
-          // ✅ KIRO: Edit by kiro - Continue with token-only response if profile fetch fails
+
           console.log("[authService] Continuing with token-only response");
         }
       } else if (responseData && responseData.token) {
-        // ✅ KIRO: Edit by kiro - If we have token but no userId, store token anyway
+
         try {
           await setAuthToken(responseData.token);
           console.log("[authService] Token stored (no userId available)");
@@ -387,13 +383,12 @@ export const authService = {
       const responseAny = response.data as any;
       const userData = responseAny.data || responseAny;
 
-      // After profile update, check if KYC should be auto-verified
-      // Import dynamically to avoid circular dependencies
+     
       try {
         const { autoVerifyKycIfComplete } = await import("../../utils/kycValidation");
         await autoVerifyKycIfComplete();
       } catch (kycError) {
-        // Non-critical, just log
+
         if (__DEV__) {
           console.log("[authService] Could not auto-verify KYC:", kycError);
         }

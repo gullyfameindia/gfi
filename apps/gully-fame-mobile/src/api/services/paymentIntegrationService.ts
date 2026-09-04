@@ -343,14 +343,16 @@ export async function getPaymentHistory(
 /**
  * Get wallet balance
  * KIRO: Fetch current wallet balance and coin count
+ * Spec: GET user/wallet
  */
 export async function getWalletBalance(): Promise<
   ApiResponse<{ coins: number; balance: number; lastUpdated: string }>
 > {
   try {
-    console.log("[paymentIntegrationService] Fetching wallet balance");
+    console.log("[paymentIntegrationService] GET user/wallet");
 
-    const response = await apiClient.get<any>("payment/wallet");
+    // Spec: GET user/wallet
+    const response = await apiClient.get<any>("user/wallet");
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -372,7 +374,7 @@ export async function getWalletBalance(): Promise<
       data: { coins: 0, balance: 0, lastUpdated: new Date().toISOString() },
     };
   } catch (error: any) {
-    console.error("[paymentIntegrationService] Get wallet error:", error.message);
+    console.error("[paymentIntegrationService] GET user/wallet error:", error.message);
     return {
       success: false,
       message: error.message || "Failed to fetch wallet balance",

@@ -25,9 +25,17 @@ export const useUserReels = (userId: string) => {
         limit: 50,
       });
 
+      console.log("[useUserReels] Response from getUserReels:", {
+        success: response.success,
+        count: response.data?.items?.length,
+        total: response.data?.total,
+        message: response.message,
+      });
+
       if (response.success && response.data) {
-        setReels(response.data.items);
         console.log("[useUserReels] Reels fetched:", response.data.items.length);
+        console.log("[useUserReels] Reel IDs:", response.data.items.map((r: any) => r._id || r.id).join(", "));
+        setReels(response.data.items);
       } else {
         setError(response.message || "Failed to fetch reels");
         console.error("[useUserReels] Error:", response.message);

@@ -23,6 +23,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Circle } from "react-native-svg";
 import { ChatMessageAPIData, chatService } from "@api/services/chatService";
+import { socketChatService } from "@api/services/socketChatService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackIcon, MicIcon, SendIcon } from "@/icons";
 import { chatScreenStyles as styles } from "@/styles/chatScreenStyles";
@@ -90,6 +91,8 @@ export default function ChatDetailScreen() {
   const [isOnline, setIsOnline] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
+  const [socketError, setSocketError] = useState<string | null>(null);
   useEffect(() => {
     if (Platform.OS === "ios") return;
     const showSub = Keyboard.addListener("keyboardDidShow", (e) => {
@@ -162,18 +165,21 @@ export default function ChatDetailScreen() {
             "[ChatDetailScreen] Failed to fetch chat:",
             response.message,
           );
-          // Don't show alert for empty chats - just show empty state
-          if (response.message && !response.message.includes("No messages")) {
-            console.warn(
-              "[ChatDetailScreen] Chat fetch warning:",
-              response.message,
-            );
-          }
+          // Show error state (no mock fallback)
+          Alert.alert(
+            "Error Loading Chat",
+            response.message || "Failed to load conversation. Please try again.",
+            [{ text: "OK", onPress: () => router.back() }]
+          );
           setMessages([]);
         }
       } catch (error: any) {
         console.error("[ChatDetailScreen] Error fetching chat:", error);
-        Alert.alert("Error", "Failed to load chat. Please try again.");
+        Alert.alert(
+          "Error",
+          "Failed to load chat. Please try again.",
+          [{ text: "OK", onPress: () => router.back() }]
+        );
       } finally {
         setLoading(false);
       }
@@ -182,6 +188,63 @@ export default function ChatDetailScreen() {
     if (currentUserId) {
       fetchChatDetails();
     }
+  }, [chatUserId, currentUserId]);
+
+  // Connect websocket on screen open
+  useEffect(() => {
+    const connectSocket = async () => {
+      if (!chatUserId || chatUserId === "new" || !currentUserId) return;
+
+      try {
+        console.log("[ChatDetailScreen] Connecting socket...");
+        await socketChatService.connect(chatUserId, {
+          onMessageReceived: (newMessage: ChatMessageAPIData) => {
+            console.log("[ChatDetailScreen] Real-time message received:", newMessage._id);
+            setMessages((prev) => {
+              // Avoid duplicates
+              if (prev.find((m) => m._id === newMessage._id)) {
+                return prev;
+              }
+              return [...prev, newMessage];
+            });
+          },
+          onMessageDelivered: (messageId: string) => {
+            console.log("[ChatDetailScreen] Message delivered:", messageId);
+            // Update message status if needed
+          },
+          onMessageDeleted: (messageId: string) => {
+            console.log("[ChatDetailScreen] Message deleted:", messageId);
+            setMessages((prev) => prev.filter((m) => m._id !== messageId));
+          },
+          onConnected: () => {
+            console.log("[ChatDetailScreen] Socket connected");
+            setSocketConnected(true);
+            setSocketError(null);
+            // Mark conversation as read when socket connects
+            socketChatService.markConversationRead(chatUserId);
+          },
+          onDisconnected: () => {
+            console.log("[ChatDetailScreen] Socket disconnected");
+            setSocketConnected(false);
+          },
+          onError: (error: string) => {
+            console.error("[ChatDetailScreen] Socket error:", error);
+            setSocketError(error);
+          },
+        });
+      } catch (error: any) {
+        console.error("[ChatDetailScreen] Socket connection failed:", error.message);
+        setSocketError(error.message);
+      }
+    };
+
+    connectSocket();
+
+    // Disconnect on unmount
+    return () => {
+      console.log("[ChatDetailScreen] Disconnecting socket on unmount");
+      socketChatService.disconnect();
+    };
   }, [chatUserId, currentUserId]);
   useEffect(() => {
     if (scrollViewRef.current && messages.length > 0) {
@@ -202,6 +265,26 @@ export default function ChatDetailScreen() {
 
       console.log("[ChatDetailScreen] Sending message to:", chatUserId);
 
+      // Try socket first if connected
+      if (socketChatService.isConnected()) {
+        console.log("[ChatDetailScreen] Sending via socket");
+        const socketResult = await socketChatService.sendMessage(
+          chatUserId,
+          chatUserId,
+          messageText
+        );
+
+        if (socketResult.success) {
+          console.log("[ChatDetailScreen] Message sent via socket");
+          // Message will appear via socket event listener
+          return;
+        } else {
+          console.warn("[ChatDetailScreen] Socket send failed, falling back to REST");
+        }
+      }
+
+      // Fallback to REST API
+      console.log("[ChatDetailScreen] Sending via REST API");
       const response = await chatService.sendChat(chatUserId, messageText);
 
       if (response.success) {
@@ -216,18 +299,6 @@ export default function ChatDetailScreen() {
         };
 
         setMessages((prev) => [...prev, newMessage]);
-
-        // Refresh chat details to get the actual message from server
-        setTimeout(async () => {
-          const refreshResponse = await chatService.getChatDetails(
-            chatUserId,
-            1,
-            50,
-          );
-          if (refreshResponse.success && refreshResponse.data) {
-            setMessages(refreshResponse.data.messages);
-          }
-        }, 500);
       } else {
         if (!currentUserId) return;
         const newMessage: ChatMessageAPIData = {
@@ -239,7 +310,6 @@ export default function ChatDetailScreen() {
         };
         setMessages((prev) => [...prev, newMessage]);
         console.warn("Couldn't send message to backend, updating UI");
-        // Alert.alert("Error", response.message || "Failed to send message");
         setMessage(messageText); // Restore message on error
       }
     } catch (error: any) {
@@ -359,14 +429,24 @@ export default function ChatDetailScreen() {
           {
             text: "Delete",
             style: "destructive",
-            onPress: () => {
-              setMessages((prev) =>
-                prev.filter((msg) => !selectedMessages.has(msg._id)),
-              );
+            onPress: async () => {
+              try {
+                // Delete each message via API
+                const deletePromises = Array.from(selectedMessages).map((msgId) =>
+                  chatService.deleteMessage(msgId)
+                );
+                await Promise.all(deletePromises);
 
-              setIsMultiSelectMode(false);
-              setSelectedMessages(new Set());
-              hideActionBar();
+                setMessages((prev) =>
+                  prev.filter((msg) => !selectedMessages.has(msg._id)),
+                );
+
+                setIsMultiSelectMode(false);
+                setSelectedMessages(new Set());
+                hideActionBar();
+              } catch (error: any) {
+                Alert.alert("Error", "Failed to delete messages");
+              }
             },
           },
         ],
@@ -377,11 +457,17 @@ export default function ChatDetailScreen() {
         {
           text: "Delete",
           style: "destructive",
-          onPress: () => {
-            setMessages((prev) =>
-              prev.filter((msg) => msg._id !== selectedMessage._id),
-            );
-            hideActionBar();
+          onPress: async () => {
+            try {
+              // Delete message via API
+              await chatService.deleteMessage(selectedMessage._id);
+              setMessages((prev) =>
+                prev.filter((msg) => msg._id !== selectedMessage._id),
+              );
+              hideActionBar();
+            } catch (error: any) {
+              Alert.alert("Error", "Failed to delete message");
+            }
           },
         },
       ]);

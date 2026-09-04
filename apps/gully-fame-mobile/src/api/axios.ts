@@ -52,9 +52,9 @@ declare module "axios" {
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     try {
-      // Log only in development mode
+      // Log request details in development mode
       if (__DEV__) {
-        console.log("[axios] Request Details:", {
+        console.log("[axios] 🔐 [VERIFICATION] Request Details:", {
           method: config.method?.toUpperCase(),
           url: config.url,
           baseURL: config.baseURL,
@@ -62,8 +62,7 @@ apiClient.interceptors.request.use(
           headers: {
             "Content-Type": config.headers?.["Content-Type"],
             "User-Agent": config.headers?.["User-Agent"],
-            "X-Requested-With": config.headers?.["X-Requested-With"],
-            Authorization: config.headers?.Authorization ? "Bearer [TOKEN]" : "None",
+            Authorization: config.headers?.Authorization ? "Bearer [TOKEN_PRESENT]" : "None",
           },
         });
       }
@@ -73,19 +72,23 @@ apiClient.interceptors.request.use(
         if (token) {
           config.headers = config.headers || {};
           config.headers.Authorization = `Bearer ${token}`;
-          if (__DEV__) {
-            console.log("[axios] Token attached to request");
-          }
+          console.log("[axios] 🔐 [VERIFICATION] Bearer token attached to request - Token length:", token.length);
+          console.log("[axios] 🔐 [VERIFICATION] Authorization header:", `Bearer ${token.substring(0, 20)}...`);
+        } else {
+          console.warn("[axios] 🔐 [VERIFICATION] No token found in AsyncStorage - request will be sent without auth");
         }
+      } else {
+        console.log("[axios] 🔐 [VERIFICATION] skipAuth=true - request will be sent without authorization header");
       }
+      
       return config;
     } catch (error) {
-      console.warn("[axios] Failed to retrieve token:", error);
+      console.warn("[axios] 🔐 [VERIFICATION] Failed to retrieve token:", error);
       return config;
     }
   },
   (error: AxiosError) => {
-    console.error("[axios] Request error:", error.message);
+    console.error("[axios] 🔐 [VERIFICATION FAILED] Request error:", error.message);
     return Promise.reject(error);
   }
 );
@@ -128,12 +131,15 @@ apiClient.interceptors.response.use(
 
     // Token Refresh Mechanism with proper error handling
     if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.skipAuth) {
+      console.log("[axios] 🔐 [VERIFICATION] Received 401 - Attempting token refresh");
       originalRequest._retry = true;
       try {
         // Refresh token API call
         const refreshToken = await AsyncStorage.getItem("refreshToken");
+        console.log("[axios] 🔐 [VERIFICATION] Refresh token available:", !!refreshToken);
 
         if (refreshToken) {
+          console.log("[axios] 🔐 [VERIFICATION] Calling auth/refresh-token endpoint");
           const refreshResponse = await axios.post(
             `${BASE_URL}auth/refresh-token`,
             { refreshToken },
@@ -142,33 +148,31 @@ apiClient.interceptors.response.use(
 
           if (refreshResponse.status === 200) {
             const newToken = refreshResponse.data.data?.token || refreshResponse.data.token;
+            console.log("[axios] 🔐 [VERIFICATION] Token refresh response received - new token available:", !!newToken);
 
             if (newToken) {
               await AsyncStorage.setItem(TOKEN_STORAGE_KEY, newToken);
               originalRequest.headers.Authorization = `Bearer ${newToken}`;
-
-              if (__DEV__) {
-                console.log("[axios] Token refreshed successfully");
-              }
+              console.log("[axios] ✅ [VERIFICATION] Token refreshed successfully - new token length:", newToken.length);
+              console.log("[axios] 🔐 [VERIFICATION] Retrying original request with new token");
               return apiClient(originalRequest);
             }
           }
+        } else {
+          console.warn("[axios] 🔐 [VERIFICATION] No refresh token available - user will be logged out");
         }
       } catch (refreshError) {
-        console.error("[axios] Token refresh failed:", refreshError);
+        console.error("[axios] ❌ [VERIFICATION FAILED] Token refresh failed:", refreshError);
         // Logout on refresh failure
         await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
         await AsyncStorage.removeItem("refreshToken");
+        console.log("[axios] 🔐 [VERIFICATION] Auth tokens cleared - user logged out");
       }
     } else if (error.response?.status === 401 && originalRequest.skipAuth) {
       // Public endpoint returned 401 - don't log out, just log a warning
-      if (__DEV__) {
-        console.warn("[axios] Public endpoint returned 401, but not logging out user");
-      }
-    }
-
-    if (error.response?.status === 403 && __DEV__) {
-      console.warn("[axios] Forbidden: Access denied");
+      console.warn("[axios] 🔐 [VERIFICATION] Public endpoint returned 401 - no logout required");
+    } else if (error.response?.status === 403) {
+      console.warn("[axios] 🔐 [VERIFICATION] Forbidden (403): Access denied to this resource");
     }
 
     if (error.response?.status === 404 && __DEV__) {

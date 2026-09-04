@@ -36,35 +36,10 @@ export interface ChatDetailsResponse {
   limit: number;
 }
 
-// ==================== API Functions ====================
 
-/**
- * Get chat list for the current user
- */
-// Temporary mock data fallback
 const getMockChatList = (): ChatListResponse => {
-  console.warn("[chatService] Using temporary mock data - API not available");
-
-  // Create some timestamps for realistic UI testing
-  const now = new Date();
-  const fiveMinsAgo = new Date(now.getTime() - 5 * 60000);
-  const fiveYearsAgo = new Date(now.getTime() - 5 * 365 * 24 * 60 * 60 * 1000);
-  return {
-    chatlist: [
-      {
-        chatter_user_id: "mock_user_1", // This will map to isSent: false (received message)
-        latest_message:
-          "Hey! The API isn't ready yet, so here is a mock message.",
-        last_message_time: fiveMinsAgo.toISOString(),
-      },
-      {
-        chatter_user_id: "sender_id_11",
-        latest_message: "Looks good, the UI is rendering correctly!",
-
-        last_message_time: fiveYearsAgo.toISOString(),
-      },
-    ],
-  };
+  console.warn("[chatService] Mock data removed - API error will be shown to user");
+  return { chatlist: [] };
 };
 
 export async function getChatList(): Promise<ApiResponse<ChatListResponse>> {
@@ -89,19 +64,18 @@ export async function getChatList(): Promise<ApiResponse<ChatListResponse>> {
       "";
     console.log("[chatService] Response Content-Type:", contentType);
 
-    let responseData: any;
-
-    // If response is a string (HTML/text), use fallback
-    if (typeof response.data === "string" || responseData.code !== 1) {
-      console.warn(
-        "[chatService] Received HTML or error, falling back to mock data",
-      );
+    // If response is a string (HTML/text), reject it
+    if (typeof response.data === "string") {
+      console.error("[chatService] Received HTML instead of JSON");
       return {
-        success: true,
-        data: getMockChatList(),
-        message: "Using mock data",
+        success: false,
+        message: "Server returned invalid response",
+        error: "Invalid response format",
+        data: { chatlist: [] },
       };
     }
+
+    let responseData = response.data;
 
     console.log("[chatService] GET Chat List - Full response object:", {
       status: response.status,
@@ -217,35 +191,12 @@ export async function getChatList(): Promise<ApiResponse<ChatListResponse>> {
       },
     };
   } catch (error: any) {
-    // Check if it's a network error (API not available)
-    const isNetworkError =
-      error.isNetworkError ||
-      error.message?.includes("Network") ||
-      error.message?.includes("ECONNREFUSED") ||
-      !error.response;
-
-    // Only log detailed errors if it's not a simple network error
-    if (!isNetworkError) {
-      console.error("[chatService] GET Chat List error:", error);
-      console.error("[chatService] Error details:", {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status,
-      });
-    } else {
-      // For network errors, just log a simple warning
-      console.warn(
-        "[chatService] API server not available. Using temporary mock data.",
-      );
-    }
-
-    // Use mock data as fallback if API fails
-    const mockData = getMockChatList();
+    console.error("[chatService] GET Chat List error:", error.message);
     return {
-      success: true,
-      data: mockData,
-      message:
-        "Using temporary data - API unavailable. Please check your server connection.",
+      success: false,
+      message: error.message || "Failed to fetch chat list",
+      error: error.message,
+      data: { chatlist: [] },
     };
   }
 }
@@ -301,30 +252,10 @@ const getMockChatDetails = (
   limit: number,
   chatUserId: string,
 ): ChatDetailsResponse => {
-  console.warn("[chatService] Using temporary mock data - API not available");
-
-  const now = new Date();
-  const fiveMinsAgo = new Date(now.getTime() - 5 * 60000);
-
+  console.warn("[chatService] Mock data removed - API error will be shown to user");
   return {
-    messages: [
-      {
-        _id: "mock_msg_1",
-        sender_id: "mock_user_1",
-        receiver_id: chatUserId,
-        message: "Hey! The API isn't ready yet, so here is a mock message.",
-
-        createdAt: fiveMinsAgo.toISOString(),
-      },
-      {
-        _id: "mock_msg_2",
-        sender_id: chatUserId,
-        receiver_id: "mock_user_1",
-        message: "Looks good, the UI is rendering correctly!",
-        createdAt: now.toISOString(),
-      },
-    ],
-    totalMessageCount: 2,
+    messages: [],
+    totalMessageCount: 0,
     page: page,
     limit: limit,
   };
@@ -349,15 +280,19 @@ export async function getChatDetails(
     // Explicitly assign responseData
     let responseData = response.data;
 
-    // INTERCEPT: If response is HTML/text or doesn't have success code, use fallback
-    if (typeof responseData === "string" || responseData.code !== 1) {
-      console.warn(
-        "[chatService] Received HTML or error, falling back to mock data",
-      );
+    // If response is a string (HTML/text), reject it
+    if (typeof responseData === "string") {
+      console.error("[chatService] Received HTML instead of JSON");
       return {
-        success: true, // Set to true so UI renders it
-        data: getMockChatDetails(page, limit, chatUserId),
-        message: "Using mock data",
+        success: false,
+        message: "Server returned invalid response",
+        error: "Invalid response format",
+        data: {
+          messages: [],
+          totalMessageCount: 0,
+          page: page,
+          limit: limit,
+        },
       };
     }
 
@@ -394,12 +329,95 @@ export async function getChatDetails(
     };
   } catch (error: any) {
     console.error("[chatService] GET Chat Details error:", error.message);
-
-    // Fall back to mock data even if network fails entirely
     return {
-      success: true,
-      data: getMockChatDetails(page, limit, chatUserId),
-      message: "Network error, using mock data",
+      success: false,
+      message: error.message || "Failed to fetch chat details",
+      error: error.message,
+      data: {
+        messages: [],
+        totalMessageCount: 0,
+        page: page,
+        limit: limit,
+      },
+    };
+  }
+}
+
+// ==================== DELETE MESSAGE ====================
+
+export async function deleteMessage(
+  messageId: string
+): Promise<ApiResponse<{ success: boolean }>> {
+  try {
+    console.log("[chatService] DELETE Message", { messageId });
+
+    const response = await apiClient.delete<any>(
+      API_ENDPOINTS.CHAT.DELETE_MESSAGE.replace(":id", messageId)
+    );
+    const responseData = response.data as any;
+
+    if (responseData.code === 1) {
+      console.log("[chatService] DELETE Message - Success");
+      return {
+        success: true,
+        data: { success: true },
+        message: responseData.message || "Message deleted successfully",
+      };
+    }
+
+    return {
+      success: false,
+      message: responseData.message || "Failed to delete message",
+      error: "API returned unsuccessful response",
+      data: { success: false },
+    };
+  } catch (error: any) {
+    console.error("[chatService] DELETE Message error:", error.message);
+    return {
+      success: false,
+      message: error.message || "Failed to delete message",
+      error: error.message,
+      data: { success: false },
+    };
+  }
+}
+
+// ==================== MARK CONVERSATION AS READ ====================
+
+export async function markConversationRead(
+  conversationId: string
+): Promise<ApiResponse<{ success: boolean }>> {
+  try {
+    console.log("[chatService] POST Mark Conversation Read", { conversationId });
+
+    const response = await apiClient.post<any>(
+      API_ENDPOINTS.CHAT.MARK_READ.replace(":id", conversationId),
+      {}
+    );
+    const responseData = response.data as any;
+
+    if (responseData.code === 1) {
+      console.log("[chatService] POST Mark Conversation Read - Success");
+      return {
+        success: true,
+        data: { success: true },
+        message: responseData.message || "Conversation marked as read",
+      };
+    }
+
+    return {
+      success: false,
+      message: responseData.message || "Failed to mark as read",
+      error: "API returned unsuccessful response",
+      data: { success: false },
+    };
+  } catch (error: any) {
+    console.error("[chatService] Mark read error:", error.message);
+    return {
+      success: false,
+      message: error.message || "Failed to mark as read",
+      error: error.message,
+      data: { success: false },
     };
   }
 }
@@ -410,4 +428,6 @@ export const chatService = {
   getChatList,
   sendChat,
   getChatDetails,
+  deleteMessage,
+  markConversationRead,
 };

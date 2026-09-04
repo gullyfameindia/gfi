@@ -108,12 +108,13 @@ export async function uploadKYCDocument(
 /**
  * Submit KYC verification
  * KIRO: Submit complete KYC data for verification
+ * Spec: POST user/kyc
  */
 export async function submitKYCVerification(
   request: KYCSubmitRequest
 ): Promise<ApiResponse<{ kycId: string; status: string }>> {
   try {
-    console.log("[kycVerificationService] Submitting KYC verification");
+    console.log("[kycVerificationService] POST user/kyc");
 
     // Upload all documents first
     const uploadedDocuments = [];
@@ -143,7 +144,7 @@ export async function submitKYCVerification(
       }
     }
 
-    // Submit KYC data
+    // Submit KYC data - Spec: POST user/kyc
     const payload = {
       firstName: request.firstName,
       lastName: request.lastName,
@@ -155,7 +156,7 @@ export async function submitKYCVerification(
       documents: uploadedDocuments,
     };
 
-    const response = await apiClient.post<any>("kyc/submit", payload);
+    const response = await apiClient.post<any>("user/kyc", payload);
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -176,7 +177,7 @@ export async function submitKYCVerification(
       data: { kycId: "", status: "failed" },
     };
   } catch (error: any) {
-    console.error("[kycVerificationService] Submit error:", error.message);
+    console.error("[kycVerificationService] POST user/kyc error:", error.message);
     return {
       success: false,
       message: error.message || "Failed to submit KYC",
@@ -189,12 +190,13 @@ export async function submitKYCVerification(
 /**
  * Get KYC status
  * KIRO: Check current KYC verification status
+ * Spec: GET user/kyc
  */
 export async function getKYCStatus(): Promise<ApiResponse<KYCStatus>> {
   try {
-    console.log("[kycVerificationService] Getting KYC status");
+    console.log("[kycVerificationService] GET user/kyc");
 
-    const response = await apiClient.get<any>("kyc/status");
+    const response = await apiClient.get<any>("user/kyc");
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -221,7 +223,7 @@ export async function getKYCStatus(): Promise<ApiResponse<KYCStatus>> {
       },
     };
   } catch (error: any) {
-    console.error("[kycVerificationService] Get status error:", error.message);
+    console.error("[kycVerificationService] GET user/kyc error:", error.message);
     return {
       success: false,
       message: error.message || "Failed to get KYC status",
@@ -237,12 +239,13 @@ export async function getKYCStatus(): Promise<ApiResponse<KYCStatus>> {
 /**
  * Update KYC information
  * KIRO: Update KYC data after initial submission
+ * Spec: PUT user/kyc (but using POST for update per Postman, will use PUT if backend expects)
  */
 export async function updateKYCInformation(
   request: Partial<KYCSubmitRequest>
 ): Promise<ApiResponse<{ status: string }>> {
   try {
-    console.log("[kycVerificationService] Updating KYC information");
+    console.log("[kycVerificationService] PUT user/kyc");
 
     const payload = {
       firstName: request.firstName,
@@ -254,7 +257,8 @@ export async function updateKYCInformation(
       pincode: request.pincode,
     };
 
-    const response = await apiClient.post<any>("kyc/update", payload);
+    // Spec: PUT user/kyc (using PUT per Postman spec)
+    const response = await apiClient.put<any>("user/kyc", payload);
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
@@ -274,7 +278,7 @@ export async function updateKYCInformation(
       data: { status: "failed" },
     };
   } catch (error: any) {
-    console.error("[kycVerificationService] Update error:", error.message);
+    console.error("[kycVerificationService] PUT user/kyc error:", error.message);
     return {
       success: false,
       message: error.message || "Failed to update KYC",

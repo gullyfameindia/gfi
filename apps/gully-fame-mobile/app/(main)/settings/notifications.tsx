@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -10,68 +10,32 @@ import {
   Platform,
   Image,
   Animated,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path } from "react-native-svg";
 import { BackIcon } from "@/icons";
+import {
+  getNotifications,
+  markNotificationAsRead,
+  getUnreadNotificationCount,
+  type Notification,
+} from "@/api/services/notificationIntegrationService";
+
 // Get initial dimensions
 const getDimensions = () => Dimensions.get("window");
-
-// Notification data matching the image
-const todayNotifications = [
-  {
-    id: 1,
-    title: "Rank Boost!",
-    description: "Your Gully Score just climbed higher.",
-    highlighted: true,
-  },
-  {
-    id: 2,
-    title: "Daily Challenge Ready",
-    description: "Drop your bars to earn points today.",
-    highlighted: false,
-  },
-  {
-    id: 3,
-    title: "New Rap Battle Invite",
-    description: "A challenger just called you out!",
-    highlighted: false,
-  },
-  {
-    id: 4,
-    title: "Upcoming Event Alert",
-    description: "A new cypher is happening this weekend.",
-    highlighted: false,
-  },
-  {
-    id: 5,
-    title: "Profile Update",
-    description: "Add new clips to increase your visibility.",
-    highlighted: false,
-  },
-];
-
-const pastNotifications = [
-  {
-    id: 6,
-    title: "Competition Results",
-    description: "Results for Summer Showdown 2024 are out!",
-    highlighted: false,
-  },
-  {
-    id: 7,
-    title: "Payment Successful",
-    description: "Your entry fee has been processed successfully",
-    highlighted: false,
-  },
-];
 
 export default function NotificationsScreen() {
   const [activeTab, setActiveTab] = useState<"Today" | "Past">("Today");
   const [dimensions, setDimensions] = useState(getDimensions());
   const insets = useSafeAreaInsets();
   const slideAnim = useRef(new Animated.Value(0)).current;
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [marking, setMarking] = useState<string | null>(null);
 
   // Listen for dimension changes (orientation, split screen, etc.)
   useEffect(() => {
@@ -81,6 +45,106 @@ export default function NotificationsScreen() {
 
     return () => subscription?.remove();
   }, []);
+
+  // Fetch notifications on screen focus
+  useFocusEffect(
+    useCallback(() => {
+      fetchNotifications();
+    }, [])
+  );
+
+  const fetchNotifications = async () => {
+    try {
+      setLoading(true);
+      const response = await getNotifications(100, 0, false);
+      if (response.success && response.data) {
+        setNotifications(response.data);
+      } else {
+        Alert.alert("Error", response.message || "Failed to load notifications");
+      }
+
+      // Also fetch unread count
+      const countResponse = await getUnreadNotificationCount();
+      if (countResponse.success) {
+        setUnreadCount(countResponse.data?.count || 0);
+      }
+    } catch (error: any) {
+      console.error("Error fetching notifications:", error);
+      Alert.alert("Error", "Failed to load notifications");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMarkAsRead = async (notificationId: string) => {
+    try {
+      setMarking(notificationId);
+      const response = await markNotificationAsRead(notificationId);
+      if (response.success) {
+        // Remove from list and update unread count
+        setNotifications((prev) =>
+          prev.map((n) =>
+            n.id === notificationId ? { ...n, read: true } : n
+          )
+        );
+        
+        // Update unread count
+        const countResponse = await getUnreadNotificationCount();
+        if (countResponse.success) {
+          setUnreadCount(countResponse.data?.count || 0);
+        }
+
+        // Navigate based on notification type
+        navigateFromNotification(
+          notifications.find((n) => n.id === notificationId)
+        );
+      }
+    } catch (error: any) {
+      console.error("Error marking notification as read:", error);
+      Alert.alert("Error", "Failed to process notification");
+    } finally {
+      setMarking(null);
+    }
+  };
+
+  const navigateFromNotification = (notification: Notification | undefined) => {
+    if (!notification) return;
+
+    const { type, data } = notification;
+
+    switch (type) {
+      case "comment":
+        if (data?.reelId) {
+          router.push(`/(main)/reel/${data.reelId}`);
+        }
+        break;
+      case "like":
+        if (data?.reelId) {
+          router.push(`/(main)/reel/${data.reelId}`);
+        }
+        break;
+      case "follow":
+        if (data?.userId) {
+          router.push(`/(main)/profile/${data.userId}`);
+        }
+        break;
+      case "competition":
+        if (data?.competitionId) {
+          router.push(`/(main)/competition/${data.competitionId}`);
+        }
+        break;
+      case "tip":
+        if (data?.reelId) {
+          router.push(`/(main)/reel/${data.reelId}`);
+        }
+        break;
+      case "system":
+        // System notifications don't navigate
+        break;
+      default:
+        break;
+    }
+  };
 
   // Animate slide when tab changes
   useEffect(() => {
@@ -92,8 +156,20 @@ export default function NotificationsScreen() {
     }).start();
   }, [activeTab]);
 
-  const currentNotifications =
-    activeTab === "Today" ? todayNotifications : pastNotifications;
+  // Filter notifications by date (Today vs Past)
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  
+  const currentNotifications = notifications.filter((n) => {
+    const notifDate = new Date(n.createdAt);
+    const notifStart = new Date(notifDate.getFullYear(), notifDate.getMonth(), notifDate.getDate());
+    
+    if (activeTab === "Today") {
+      return notifStart.getTime() === todayStart.getTime();
+    } else {
+      return notifStart.getTime() < todayStart.getTime();
+    }
+  });
 
   // Responsive scaling functions based on current dimensions
   const scale = (size: number) => (dimensions.width / 375) * size;
@@ -304,19 +380,32 @@ export default function NotificationsScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={responsiveStyles.scrollContent}
       >
-        {activeTab === "Today" && (
+        {loading ? (
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center", paddingTop: 40 }}>
+            <ActivityIndicator size="large" color="#EC9A15" />
+          </View>
+        ) : currentNotifications.length === 0 ? (
+          <View style={{ paddingTop: 40, alignItems: "center" }}>
+            <Text style={{ color: "#999", fontSize: 16 }}>
+              No {activeTab === "Today" ? "today" : "past"} notifications
+            </Text>
+          </View>
+        ) : (
           <>
-            <Text style={responsiveStyles.sectionHeading}>Earlier Today</Text>
+            <Text style={responsiveStyles.sectionHeading}>
+              {activeTab === "Today" ? "Earlier Today" : "Past Notifications"}
+            </Text>
             <View style={responsiveStyles.notificationsList}>
               {currentNotifications.map((notification) => (
                 <TouchableOpacity
                   key={notification.id}
                   style={[
                     responsiveStyles.notificationCard,
-                    notification.highlighted &&
-                      styles.notificationCardHighlighted,
+                    !notification.read && styles.notificationCardHighlighted,
                   ]}
                   activeOpacity={0.7}
+                  disabled={marking === notification.id}
+                  onPress={() => handleMarkAsRead(notification.id)}
                 >
                   <View style={responsiveStyles.bellIconContainer}>
                     <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
@@ -328,72 +417,35 @@ export default function NotificationsScreen() {
                         strokeLinejoin="round"
                       />
                     </Svg>
-                    <View style={responsiveStyles.bellBadge}>
-                      <Text style={responsiveStyles.bellBadgeText}>4+</Text>
-                    </View>
+                    {unreadCount > 0 && (
+                      <View style={responsiveStyles.bellBadge}>
+                        <Text style={responsiveStyles.bellBadgeText}>
+                          {unreadCount > 99 ? "99+" : unreadCount}
+                        </Text>
+                      </View>
+                    )}
                   </View>
                   <View style={responsiveStyles.notificationContent}>
                     <Text
-                      style={responsiveStyles.notificationTitle}
+                      style={[
+                        responsiveStyles.notificationTitle,
+                        notification.read && { opacity: 0.6 },
+                      ]}
                       numberOfLines={2}
                       ellipsizeMode="tail"
                     >
                       {notification.title}
+                      {marking === notification.id && " ..."}
                     </Text>
                     <Text
-                      style={responsiveStyles.notificationDescription}
+                      style={[
+                        responsiveStyles.notificationDescription,
+                        notification.read && { opacity: 0.5 },
+                      ]}
                       numberOfLines={2}
                       ellipsizeMode="tail"
                     >
-                      {notification.description}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </>
-        )}
-
-        {activeTab === "Past" && (
-          <>
-            <Text style={responsiveStyles.sectionHeading}>
-              Past Notifications
-            </Text>
-            <View style={responsiveStyles.notificationsList}>
-              {currentNotifications.map((notification) => (
-                <TouchableOpacity
-                  key={notification.id}
-                  style={responsiveStyles.notificationCard}
-                  activeOpacity={0.7}
-                >
-                  <View style={responsiveStyles.bellIconContainer}>
-                    <Svg width={16} height={16} viewBox="0 0 24 24" fill="none">
-                      <Path
-                        d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"
-                        stroke="#000"
-                        strokeWidth={2}
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </Svg>
-                    <View style={responsiveStyles.bellBadge}>
-                      <Text style={responsiveStyles.bellBadgeText}>4+</Text>
-                    </View>
-                  </View>
-                  <View style={responsiveStyles.notificationContent}>
-                    <Text
-                      style={responsiveStyles.notificationTitle}
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                    >
-                      {notification.title}
-                    </Text>
-                    <Text
-                      style={responsiveStyles.notificationDescription}
-                      numberOfLines={2}
-                      ellipsizeMode="tail"
-                    >
-                      {notification.description}
+                      {notification.message}
                     </Text>
                   </View>
                 </TouchableOpacity>

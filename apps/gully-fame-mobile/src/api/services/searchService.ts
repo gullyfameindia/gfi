@@ -61,8 +61,9 @@ export async function searchUsers(
   try {
     console.log("[searchService] Searching users:", { query, params });
 
-    const response = await apiClient.get<any>("search/users", {
-      params: { q: query, ...params },
+    // Spec: GET search?q=bryan&type=users&page=1&limit=20
+    const response = await apiClient.get<any>("search", {
+      params: { q: query, type: 'users', ...params },
     });
     const responseData = response.data as any;
 
@@ -111,8 +112,9 @@ export async function searchReels(
   try {
     console.log("[searchService] Searching reels:", { query, params });
 
-    const response = await apiClient.get<any>("search/reels", {
-      params: { q: query, ...params },
+    // Spec: GET search?q=dance&type=reels&page=1&limit=20
+    const response = await apiClient.get<any>("search", {
+      params: { q: query, type: 'reels', ...params },
     });
     const responseData = response.data as any;
 
@@ -161,8 +163,9 @@ export async function searchCompetitions(
   try {
     console.log("[searchService] Searching competitions:", { query, params });
 
-    const response = await apiClient.get<any>("search/competitions", {
-      params: { q: query, ...params },
+    // Spec: GET search?q=dance&type=competitions&page=1&limit=20
+    const response = await apiClient.get<any>("search", {
+      params: { q: query, type: 'competitions', ...params },
     });
     const responseData = response.data as any;
 
@@ -256,13 +259,15 @@ export async function searchHashtags(
 // ✅ CREATED BY KIRO - Global search (all types)
 export async function globalSearch(
   query: string,
-  params?: { page?: number; limit?: number }
+  params?: { page?: number; limit?: number; type?: string }
 ): Promise<ApiResponse<SearchResults>> {
   try {
-    console.log("[searchService] Global search:", { query, params });
+    const searchType = params?.type || 'all';
+    console.log("[searchService] Global search:", { query, searchType });
 
+    // Spec: GET search?q=dance&type=all (or users, reels, competitions)
     const response = await apiClient.get<any>("search", {
-      params: { q: query, ...params },
+      params: { q: query, type: searchType, ...params },
     });
     const responseData = response.data as any;
 

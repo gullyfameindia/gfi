@@ -1,8 +1,4 @@
-/**
- * Feed Service
- * Handles home feed, trending content, and reel management
- * Connects to backend with mock data fallback for development
- */
+
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
@@ -122,14 +118,7 @@ export async function getTrendingReels(
   }
 }
 
-// ─────────────────────────────────────────────
-// For You (Personalized Feed)
-// ─────────────────────────────────────────────
 
-/**
- * Fetch personalized "For You" feed
- * Shows content tailored to user preferences
- */
 export async function getForYouReels(
   page: number = 1,
   limit: number = 20
@@ -171,13 +160,7 @@ export async function getForYouReels(
   }
 }
 
-// ─────────────────────────────────────────────
-// Popular Reels
-// ─────────────────────────────────────────────
 
-/**
- * Fetch popular reels with highest engagement
- */
 export async function getPopularReels(
   page: number = 1,
   limit: number = 20
@@ -219,13 +202,7 @@ export async function getPopularReels(
   }
 }
 
-// ─────────────────────────────────────────────
-// Saved Reels
-// ─────────────────────────────────────────────
 
-/**
- * Fetch user's saved reels
- */
 export async function getSavedReels(
   page: number = 1,
   limit: number = 20
@@ -233,8 +210,10 @@ export async function getSavedReels(
   try {
     console.log("[feedService] Fetching saved reels:", { page, limit });
 
-    const response = await apiClient.get<any>("user/feed/saved", {
-      params: { page, limit },
+    // Spec: GET reels with saved filter or user/audio/saved for audio
+    // Using reels endpoint with filter param
+    const response = await apiClient.get<any>("reels", {
+      params: { page, limit, saved: true },
     });
     const responseData = response.data as any;
 
@@ -267,13 +246,7 @@ export async function getSavedReels(
   }
 }
 
-// ─────────────────────────────────────────────
-// Categories & Collections
-// ─────────────────────────────────────────────
 
-/**
- * Fetch all available content categories
- */
 export async function getCategories(): Promise<ApiResponse<Category[]>> {
   try {
     console.log("[feedService] Fetching categories");
@@ -304,9 +277,8 @@ export async function getCategories(): Promise<ApiResponse<Category[]>> {
   }
 }
 
-/**
- * Fetch featured collections
- */
+
+
 export async function getFeaturedCollections(): Promise<ApiResponse<Collection[]>> {
   try {
     console.log("[feedService] Fetching featured collections");
@@ -337,13 +309,9 @@ export async function getFeaturedCollections(): Promise<ApiResponse<Collection[]
   }
 }
 
-// ─────────────────────────────────────────────
-// Reel Actions
-// ─────────────────────────────────────────────
 
-/**
- * Like / unlike a reel
- */
+ 
+
 export async function toggleLikeReel(
   reelId: string
 ): Promise<ApiResponse<{ isLiked: boolean; likeCount: number }>> {
@@ -382,9 +350,7 @@ export async function toggleLikeReel(
   }
 }
 
-/**
- * Save / unsave a reel
- */
+
 export async function toggleSaveReel(
   reelId: string
 ): Promise<ApiResponse<{ isSaved: boolean }>> {
@@ -420,9 +386,7 @@ export async function toggleSaveReel(
   }
 }
 
-// ─────────────────────────────────────────────
-// Helpers
-// ─────────────────────────────────────────────
+
 
 function normalizeReel(raw: any): Reel {
   return {
@@ -550,9 +514,7 @@ function _getMockFeaturedCollections(): ApiResponse<Collection[]> {
   };
 }
 
-// ─────────────────────────────────────────────
-// Service Export
-// ─────────────────────────────────────────────
+
 
 export const feedService = {
   getTrendingReels,

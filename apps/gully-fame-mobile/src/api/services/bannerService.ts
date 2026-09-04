@@ -24,9 +24,8 @@ export interface BannersResponse {
 
 // ==================== API Functions ====================
 
-/**
- * Get all banners (public endpoint)
- */
+
+
 export async function getBanners(params?: {
   page?: number;
   limit?: number;
@@ -132,9 +131,9 @@ export async function getBanners(params?: {
   }
 }
 
-/**
- * Get active banners only (public endpoint)
- */
+
+  // Get active banners only (public endpoint)
+ 
 export async function getActiveBanners(): Promise<ApiResponse<Banner[]>> {
   try {
     const bannersResponse = await getBanners();

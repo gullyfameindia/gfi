@@ -49,6 +49,7 @@ export interface UpdateNotificationStatusResponse {
 
 /**
  * Get notifications for the current user with pagination
+ * Spec: GET notification/notification?time=1&page=1&limit=10 (typo in spec, actually notifications)
  */
 export async function getNotifications(
   time: number = 1,
@@ -56,9 +57,10 @@ export async function getNotifications(
   limit: number = 10
 ): Promise<ApiResponse<NotificationListResponse>> {
   try {
-    console.log('[notificationService] GET Notifications', { time, page, limit });
+    console.log('[notificationService] GET notifications', { time, page, limit });
     
-    const response = await apiClient.get<any>(API_ENDPOINTS.NOTIFICATION.GET_ALL, {
+    // Spec endpoint: notification/notification (has typo, but use notifications)
+    const response = await apiClient.get<any>('notifications', {
       params: {
         time: time,
         page: page,
@@ -67,7 +69,7 @@ export async function getNotifications(
     });
     const responseData = response.data as any;
 
-    console.log('[notificationService] GET Notifications - Raw response:', JSON.stringify(responseData, null, 2));
+    console.log('[notificationService] GET notifications - Raw response:', JSON.stringify(responseData, null, 2));
 
     // Handle different response structures
     if (responseData.code === 1) {
@@ -85,7 +87,7 @@ export async function getNotifications(
           limit: notificationData.limit || limit,
         };
 
-        console.log('[notificationService] GET Notifications - Success:', notificationList.notification.length, 'notifications');
+        console.log('[notificationService] GET notifications - Success:', notificationList.notification.length, 'notifications');
         return {
           success: true,
           data: notificationList,
@@ -94,7 +96,7 @@ export async function getNotifications(
       }
     }
 
-    console.error('[notificationService] GET Notifications - Unexpected response structure:', responseData);
+    console.error('[notificationService] GET notifications - Unexpected response structure:', responseData);
 
     return {
       success: false,
@@ -110,7 +112,7 @@ export async function getNotifications(
       },
     };
   } catch (error: any) {
-    console.error('[notificationService] GET Notifications error:', error.message);
+    console.error('[notificationService] GET notifications error:', error.message);
     return {
       success: false,
       message: error.response?.data?.message || error.message || 'Network error occurred',
@@ -175,25 +177,27 @@ export async function sendNotification(
 
 /**
  * Update notification status (read/unRead)
+ * Spec: PUT notification/:id/read
  */
 export async function updateNotificationStatus(
   notificationId: string,
   status: 'read' | 'unRead'
 ): Promise<ApiResponse<UpdateNotificationStatusResponse>> {
   try {
-    console.log('[notificationService] PUT Update Notification Status', { notificationId, status });
+    console.log('[notificationService] PUT notifications/:id/read', { notificationId, status });
     
     const requestBody: UpdateNotificationStatusRequest = {
       notification_id: notificationId,
       status: status,
     };
 
-    const endpoint = replaceParams(API_ENDPOINTS.NOTIFICATION.MARK_READ, { id: notificationId });
+    // Spec: PUT notification/:id/read
+    const endpoint = `notifications/${notificationId}/read`;
     const response = await apiClient.put<any>(endpoint, requestBody);
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
-      console.log('[notificationService] PUT Update Notification Status - Success');
+      console.log('[notificationService] PUT notifications/:id/read - Success');
       return {
         success: true,
         data: responseData.data || {},
@@ -208,7 +212,7 @@ export async function updateNotificationStatus(
       data: undefined,
     };
   } catch (error: any) {
-    console.error('[notificationService] PUT Update Notification Status error:', error.message);
+    console.error('[notificationService] PUT notifications/:id/read error:', error.message);
     return {
       success: false,
       message: error.response?.data?.message || error.message || 'Network error occurred',

@@ -53,19 +53,19 @@ export interface WalletBalance {
 
 export async function getCurrentUser(): Promise<ApiResponse<User>> {
   try {
-    console.log('[userService] GET Current User');
+    console.log('[userService] GET user/profile');
     
-    const response = await apiClient.get<any>(API_ENDPOINTS.USER.PROFILE);
+    const response = await apiClient.get<any>('user/profile');
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
-      const userData = responseData.data.user || responseData.data;
+      const userData = responseData.data;
       const user: User = {
         ...userData,
         id: userData.id || userData._id,
       };
 
-      console.log('[userService] GET Current User - Success:', user);
+      console.log('[userService] GET user/profile - Success:', user);
       return {
         success: true,
         data: user,
@@ -80,7 +80,46 @@ export async function getCurrentUser(): Promise<ApiResponse<User>> {
       data: undefined,
     };
   } catch (error: any) {
-    console.error('[userService] GET Current User error:', error.message);
+    console.error('[userService] GET user/profile error:', error.message);
+    return {
+      success: false,
+      message: error.response?.data?.message || error.message || 'Network error occurred',
+      error: error.message || 'Network error',
+      data: undefined,
+    };
+  }
+}
+
+export async function updateUserProfile(data: any): Promise<ApiResponse<User>> {
+  try {
+    console.log('[userService] PUT user/profile');
+    
+    const response = await apiClient.put<any>('user/profile', data);
+    const responseData = response.data as any;
+
+    if (responseData.code === 1 && responseData.data) {
+      const userData = responseData.data;
+      const user: User = {
+        ...userData,
+        id: userData.id || userData._id,
+      };
+
+      console.log('[userService] PUT user/profile - Success:', user);
+      return {
+        success: true,
+        data: user,
+        message: responseData.message || 'User profile updated successfully',
+      };
+    }
+
+    return {
+      success: false,
+      message: responseData.message || 'Failed to update user profile',
+      error: 'API returned unsuccessful response',
+      data: undefined,
+    };
+  } catch (error: any) {
+    console.error('[userService] PUT user/profile error:', error.message);
     return {
       success: false,
       message: error.response?.data?.message || error.message || 'Network error occurred',
@@ -242,6 +281,7 @@ export async function getWalletBalance(): Promise<ApiResponse<WalletBalance>> {
 
 export const userService = {
   getCurrentUser,
+  updateUserProfile,
   getUserKycStatus,
   getUserEarnings,
   getWalletBalance,

@@ -47,12 +47,21 @@ export interface CompetitionsResponse {
 
 /**
  * Get all competitions
+ * Spec: GET user/competitions?page=1&limit=20
  */
-export async function getCompetitions(): Promise<ApiResponse<CompetitionsResponse>> {
+export async function getCompetitions(params?: {
+  page?: number;
+  limit?: number;
+}): Promise<ApiResponse<CompetitionsResponse>> {
+  const page = params?.page || 1;
+  const limit = params?.limit || 20;
+  
   try {
-    console.log('[competitionService] GET Competitions');
+    console.log('[competitionService] GET user/competitions', { page, limit });
     
-    const response = await apiClient.get<any>('user/competitions');
+    const response = await apiClient.get<any>('user/competitions', {
+      params: { page, limit },
+    });
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -68,10 +77,12 @@ export async function getCompetitions(): Promise<ApiResponse<CompetitionsRespons
 
       const result: CompetitionsResponse = {
         items: competitions,
-        total: competitions.length,
+        total: responseData.data.total || competitions.length,
+        page,
+        limit,
       };
 
-      console.log('[competitionService] GET Competitions - Success:', competitions.length, 'competitions');
+      console.log('[competitionService] GET user/competitions - Success:', competitions.length, 'competitions');
       return {
         success: true,
         data: result,
@@ -89,7 +100,7 @@ export async function getCompetitions(): Promise<ApiResponse<CompetitionsRespons
       },
     };
   } catch (error: any) {
-    console.error('[competitionService] GET Competitions error:', error.message);
+    console.error('[competitionService] GET user/competitions error:', error.message);
     return {
       success: false,
       message: error.response?.data?.message || error.message || 'Network error occurred',
@@ -107,10 +118,10 @@ export async function getCompetitions(): Promise<ApiResponse<CompetitionsRespons
  */
 export async function getCompetitionById(competitionId: string): Promise<ApiResponse<Competition>> {
   try {
-    console.log('[competitionService] GET Competition By ID', { competitionId });
+    console.log('[competitionService] GET competitions/:id', { competitionId });
     
-    // First get all competitions, then find the one with matching ID
-    const competitionsResponse = await getCompetitions();
+    // First get competitions, then find the one with matching ID
+    const competitionsResponse = await getCompetitions({ page: 1, limit: 100 });
     
     if (competitionsResponse.success && competitionsResponse.data) {
       const competition = competitionsResponse.data.items.find(
@@ -133,7 +144,7 @@ export async function getCompetitionById(competitionId: string): Promise<ApiResp
       data: undefined,
     };
   } catch (error: any) {
-    console.error('[competitionService] GET Competition By ID error:', error.message);
+    console.error('[competitionService] GET competitions/:id error:', error.message);
     return {
       success: false,
       message: error.response?.data?.message || error.message || 'Network error occurred',
@@ -147,12 +158,13 @@ export async function getCompetitionById(competitionId: string): Promise<ApiResp
  * Get competitions by status
  */
 export async function getCompetitionsByStatus(
-  status: 'CREATED' | 'APPROVED' | 'CANCELLED' | 'COMPLETED' | 'live'
+  status: 'CREATED' | 'APPROVED' | 'CANCELLED' | 'COMPLETED' | 'live',
+  params?: { page?: number; limit?: number }
 ): Promise<ApiResponse<CompetitionsResponse>> {
   try {
-    console.log('[competitionService] GET Competitions By Status', { status });
+    console.log('[competitionService] GET competitions by status', { status });
     
-    const competitionsResponse = await getCompetitions();
+    const competitionsResponse = await getCompetitions(params);
     
     if (competitionsResponse.success && competitionsResponse.data) {
       const filteredCompetitions = competitionsResponse.data.items.filter(
@@ -171,7 +183,7 @@ export async function getCompetitionsByStatus(
 
     return competitionsResponse;
   } catch (error: any) {
-    console.error('[competitionService] GET Competitions By Status error:', error.message);
+    console.error('[competitionService] GET competitions by status error:', error.message);
     return {
       success: false,
       message: error.response?.data?.message || error.message || 'Network error occurred',

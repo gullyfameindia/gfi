@@ -99,21 +99,27 @@ export async function listAudio(
   search?: string
 ): Promise<ApiResponse<AudioListData>> {
   try {
-    console.log("[musicLibraryService] Fetching audio list:", { sort, page, limit, search });
+    console.log('[musicLibraryService] 🎵 [VERIFICATION] listAudio called - sort:', sort, 'page:', page, 'limit:', limit, 'search:', search);
 
     const params: Record<string, any> = { sort, page, limit };
     if (search && search.trim()) params.search = search.trim();
 
+    console.log('[musicLibraryService] 🎵 [VERIFICATION] Calling GET /public/audio with params:', JSON.stringify(params));
     const response = await apiClient.get<any>("public/audio", { params });
     const responseData = response.data as any;
+
+    console.log('[musicLibraryService] 🎵 [VERIFICATION] API response code:', responseData.code, 'message:', responseData.message);
 
     if (responseData.code === 1) {
       const raw = responseData.data;
 
-      // Backend may return array directly OR wrapped in an object
+      // Backend returns response with 'audios' key, check all possible keys
       const rawTracks: any[] = Array.isArray(raw)
         ? raw
-        : raw?.tracks ?? raw?.audio ?? raw?.data ?? [];
+        : raw?.audios ?? raw?.tracks ?? raw?.audio ?? raw?.data ?? [];
+
+      console.log('[musicLibraryService] 🎵 Raw data structure keys:', Object.keys(raw || {}));
+      console.log('[musicLibraryService] 🎵 Extracted tracks:', rawTracks.length);
 
       const tracks: MusicTrack[] = rawTracks.map(normaliseTrack);
 
@@ -124,7 +130,11 @@ export async function listAudio(
         tracks,
       };
 
-      console.log(`[musicLibraryService] Loaded ${tracks.length} tracks from API`);
+      console.log(`[musicLibraryService] ✅ [VERIFICATION] Successfully loaded ${tracks.length} tracks from API`);
+      console.log('[musicLibraryService] 🎵 [VERIFICATION] Sample tracks:');
+      tracks.slice(0, 3).forEach((t, i) => {
+        console.log(`  [${i}] title: ${t.title}, artist: ${t.artist}, audioUrl: ${t.audioUrl?.substring(0, 50)}...`);
+      });
 
       return {
         success: true,
@@ -134,10 +144,10 @@ export async function listAudio(
     }
 
     // API returned error response - fall back to mock
-    console.warn("[musicLibraryService] API returned error, using mock data");
+    console.warn('[musicLibraryService] ⚠️ [VERIFICATION] API returned error code:', responseData.code, '- falling back to mock data');
     return _getMockAudioList(sort, page, limit, search);
   } catch (error: any) {
-    console.warn("[musicLibraryService] API call failed, falling back to mock data:", error.message);
+    console.warn('[musicLibraryService] ⚠️ [VERIFICATION] API call failed:', error.message, '- falling back to mock data');
     
     // Fall back to mock data on any error
     return _getMockAudioList(sort, page, limit, search);
@@ -200,7 +210,11 @@ function _getMockAudioList(
     tracks: paginatedTracks,
   };
 
-  console.log(`[musicLibraryService] Using mock data - Loaded ${paginatedTracks.length} tracks (using fallback)`);
+  console.log(`[musicLibraryService] ✅ [VERIFICATION] Using mock data - Loaded ${paginatedTracks.length} tracks (sort: ${sort}, page: ${page})`);
+  console.log('[musicLibraryService] 🎵 [VERIFICATION] Sample mock tracks:');
+  paginatedTracks.slice(0, 3).forEach((t, i) => {
+    console.log(`  [${i}] title: ${t.title}, artist: ${t.artist}, audioUrl: ${t.audioUrl?.substring(0, 50)}...`);
+  });
 
   return {
     success: true,
@@ -225,9 +239,12 @@ export async function toggleSaveAudio(
   audioId: string
 ): Promise<ApiResponse<{ isSaved: boolean }>> {
   try {
-    console.log("[musicLibraryService] Toggling save for audio:", audioId);
+    console.log("[musicLibraryService] POST user/audio/:id/save", { audioId });
 
-    const response = await apiClient.post<any>(`user/audio/${audioId}/save`);
+    // Spec: POST user/audio/:id/save (with Bearer token)
+    const response = await apiClient.post<any>(`user/audio/${audioId}/save`, {}, {
+      skipAuth: false,  // Explicitly require auth
+    });
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
@@ -236,8 +253,7 @@ export async function toggleSaveAudio(
         responseData.data?.isSaved ??
         responseData.data?.is_saved ??
         responseData.data?.saved ??
-        !responseData.data?.removed ??
-        true;
+        (!responseData.data?.removed ? true : false);
 
       console.log(`[musicLibraryService] Audio ${audioId} saved: ${isSaved}`);
 

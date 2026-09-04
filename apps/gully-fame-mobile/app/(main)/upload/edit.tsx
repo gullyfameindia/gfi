@@ -30,6 +30,11 @@ import {
   CutoutIcon,
   StickerIcon,
 } from "@/icons";
+import Svg, { Path } from "react-native-svg";
+import { useAudioLibrary } from "@/hooks/useAudioLibrary";
+import { MusicLibraryModal } from "@/components/MusicLibraryModal";
+import { AudioTrimView } from "@/components/AudioTrimView";
+import type { AudioTrimData } from "@/components/AudioTrimView";
 
 const { width, height } = Dimensions.get("window");
 
@@ -39,6 +44,20 @@ export default function EditScreen() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSoundOn, setIsSoundOn] = useState(true);
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [masterVolume, setMasterVolume] = useState(1);
+  const [showAudioMixer, setShowAudioMixer] = useState(false);
+  const [showMusicPicker, setShowMusicPicker] = useState(false);
+  const [showTrimView, setShowTrimView] = useState(false);
+  const [selectedMusicForTrim, setSelectedMusicForTrim] = useState<any>(null);
+  const [videoDuration, setVideoDuration] = useState(1);
+
+  // Calculate video duration from clips
+  useEffect(() => {
+    if (clips.length > 0 && clips[0]?.uri) {
+      // Assume clip is at least 1 second (for demo); in real app fetch actual duration
+      setVideoDuration(1);
+    }
+  }, [clips]);
 
   useEffect(() => {
     if (params.clips) {
@@ -62,6 +81,17 @@ export default function EditScreen() {
       : null;
     const entryFee = params.entryFee ? String(params.entryFee) : null;
 
+    // Include trim data if music was selected
+    const musicData = selectedMusicForTrim && selectedMusicForTrim.trimData
+      ? {
+          trackId: selectedMusicForTrim.id,
+          startOffset: selectedMusicForTrim.trimData.startOffset,
+          duration: selectedMusicForTrim.trimData.duration,
+          title: selectedMusicForTrim.title,
+          artist: selectedMusicForTrim.artist,
+        }
+      : null;
+
     router.push({
       pathname: "/(main)/upload/post",
       params: {
@@ -69,6 +99,7 @@ export default function EditScreen() {
         ...(competitionId && { competitionId }),
         ...(competitionName && { competitionName }),
         ...(entryFee && { entryFee }),
+        ...(musicData && { musicData: JSON.stringify(musicData) }),
       },
     });
   };
@@ -81,6 +112,8 @@ export default function EditScreen() {
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
+          pointerEvents={selectedTool ? "none" : "auto"}
+          scrollEnabled={!selectedTool}
         >
           {/* Top Bar */}
           <View style={styles.topBar}>
@@ -165,28 +198,6 @@ export default function EditScreen() {
               </View>
             </View>
 
-            {/* Add Audio Row */}
-            <View style={styles.addAudioRow}>
-              <TouchableOpacity
-                style={styles.addAudioButton}
-                onPress={() => Alert.alert("Add Audio", "Select audio track")}
-              >
-                <Text style={styles.addAudioIcon}>+</Text>
-                <Text style={styles.addAudioText}>Add audio</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.soundToggleButton}
-                onPress={() => setIsSoundOn(!isSoundOn)}
-                activeOpacity={0.8}
-              >
-                {isSoundOn ? (
-                  <SoundOnIcon size={20} />
-                ) : (
-                  <SoundOffIcon size={20} />
-                )}
-              </TouchableOpacity>
-            </View>
-
             {/* Clip Timeline */}
             <View style={styles.clipTimelineContainer}>
               <ScrollView
@@ -250,136 +261,210 @@ export default function EditScreen() {
             </View>
           </View>
         </ScrollView>
+      </SafeAreaView>
 
-        {/* Editing Tools Bottom Toolbar */}
-        <View style={styles.toolbar}>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.toolbarContent}
+      {/* Editing Tools Bottom Toolbar */}
+      <View style={styles.toolbar} pointerEvents="box-none">
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.toolbarContent}
+          pointerEvents="auto"
+        >
+          <TouchableOpacity
+            style={[
+              styles.toolButton,
+              selectedTool === "audio" && styles.toolButtonActive,
+            ]}
+            onPress={() => {
+              setShowMusicPicker(true);
+              setSelectedTool("audio");
+            }}
           >
-            <TouchableOpacity
-              style={[
-                styles.toolButton,
-                selectedTool === "audio" && styles.toolButtonActive,
-              ]}
-              onPress={() =>
-                setSelectedTool(selectedTool === "audio" ? null : "audio")
-              }
-            >
-              <View style={styles.toolIconContainer}>
-                <MusicIcon size={20} />
-              </View>
-              <Text style={styles.toolLabel}>Audio</Text>
-            </TouchableOpacity>
+            <View style={styles.toolIconContainer}>
+              <MusicIcon size={20} />
+            </View>
+            <Text style={styles.toolLabel}>Audio</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.toolButton,
+              selectedTool === "text" && styles.toolButtonActive,
+            ]}
+            onPress={() =>
+              setSelectedTool(selectedTool === "text" ? null : "text")
+            }
+          >
+            <View style={styles.toolIconContainer}>
+              <TextIcon size={20} />
+            </View>
+            <Text style={styles.toolLabel}>Text</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.toolButton,
+              selectedTool === "voice" && styles.toolButtonActive,
+            ]}
+            onPress={() =>
+              setSelectedTool(selectedTool === "voice" ? null : "voice")
+            }
+          >
+            <View style={styles.toolIconContainer}>
+              <Text style={styles.toolIcon}>🎤</Text>
+            </View>
+            <Text style={styles.toolLabel}>Voice</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.toolButton,
+              selectedTool === "overlay" && styles.toolButtonActive,
+            ]}
+            onPress={() =>
+              setSelectedTool(selectedTool === "overlay" ? null : "overlay")
+            }
+          >
+            <View style={styles.toolIconContainer}>
+              <OverlayIcon size={20} />
+            </View>
+            <Text style={styles.toolLabel}>Overlay</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.toolButton,
+              selectedTool === "filter" && styles.toolButtonActive,
+            ]}
+            onPress={() =>
+              setSelectedTool(selectedTool === "filter" ? null : "filter")
+            }
+          >
+            <View style={styles.toolIconContainer}>
+              <FilterIcon size={20} />
+            </View>
+            <Text style={styles.toolLabel}>Filter</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.toolButton,
+              selectedTool === "soundfx" && styles.toolButtonActive,
+            ]}
+            onPress={() =>
+              setSelectedTool(selectedTool === "soundfx" ? null : "soundfx")
+            }
+          >
+            <View style={styles.toolIconContainer}>
+              <SoundFXIcon size={20} />
+            </View>
+            <Text style={styles.toolLabel}>Sound FX</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.toolButton,
+              selectedTool === "cutout" && styles.toolButtonActive,
+            ]}
+            onPress={() =>
+              setSelectedTool(selectedTool === "cutout" ? null : "cutout")
+            }
+          >
+            <View style={styles.toolIconContainer}>
+              <CutoutIcon size={20} />
+            </View>
+            <Text style={styles.toolLabel}>Cutout</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.toolButton,
+              selectedTool === "sticker" && styles.toolButtonActive,
+            ]}
+            onPress={() =>
+              setSelectedTool(selectedTool === "sticker" ? null : "sticker")
+            }
+          >
+            <View style={styles.toolIconContainer}>
+              <StickerIcon size={20} />
+            </View>
+            <Text style={styles.toolLabel}>Stickers</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+
+      {/* Audio Panel - Shows when Audio tool is selected */}
+      {selectedTool === "audio" && !showTrimView && (
+        <View style={styles.audioPanelOverlay} pointerEvents="box-none">
+          <ScrollView
+            style={styles.audioPanelContent}
+            contentContainerStyle={styles.audioPanelScroll}
+            pointerEvents="auto"
+          >
+            <View style={styles.panelHeader}>
+              <Text style={styles.panelTitle}>Audio Track</Text>
+              <TouchableOpacity onPress={() => setSelectedTool(null)}>
+                <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+                  <Path d="M18 6L6 18M6 6l12 12" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
+                </Svg>
+              </TouchableOpacity>
+            </View>
 
             <TouchableOpacity
-              style={[
-                styles.toolButton,
-                selectedTool === "text" && styles.toolButtonActive,
-              ]}
-              onPress={() =>
-                setSelectedTool(selectedTool === "text" ? null : "text")
-              }
+              style={styles.addTrackButton}
+              onPress={() => setShowMusicPicker(true)}
             >
-              <View style={styles.toolIconContainer}>
-                <TextIcon size={20} />
-              </View>
-              <Text style={styles.toolLabel}>Text</Text>
+              <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+                <Path d="M12 5v14m7-7H5" stroke="#000" strokeWidth="2" strokeLinecap="round" />
+              </Svg>
+              <Text style={styles.addTrackText}>Add Music</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={[
-                styles.toolButton,
-                selectedTool === "voice" && styles.toolButtonActive,
-              ]}
-              onPress={() =>
-                setSelectedTool(selectedTool === "voice" ? null : "voice")
-              }
-            >
-              <View style={styles.toolIconContainer}>
-                <Text style={styles.toolIcon}>🎤</Text>
+            {selectedMusicForTrim && (
+              <View style={styles.selectedTrackCard}>
+                <View style={styles.selectedAlbumArt}>
+                  <Text style={styles.selectedAlbumIcon}>🎵</Text>
+                </View>
+                <View style={styles.selectedTrackInfo}>
+                  <Text style={styles.selectedTrackTitle}>{selectedMusicForTrim.title}</Text>
+                  <Text style={styles.selectedTrackArtist}>{selectedMusicForTrim.artist}</Text>
+                </View>
               </View>
-              <Text style={styles.toolLabel}>Voice</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.toolButton,
-                selectedTool === "overlay" && styles.toolButtonActive,
-              ]}
-              onPress={() =>
-                setSelectedTool(selectedTool === "overlay" ? null : "overlay")
-              }
-            >
-              <View style={styles.toolIconContainer}>
-                <OverlayIcon size={20} />
-              </View>
-              <Text style={styles.toolLabel}>Overlay</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.toolButton,
-                selectedTool === "filter" && styles.toolButtonActive,
-              ]}
-              onPress={() =>
-                setSelectedTool(selectedTool === "filter" ? null : "filter")
-              }
-            >
-              <View style={styles.toolIconContainer}>
-                <FilterIcon size={20} />
-              </View>
-              <Text style={styles.toolLabel}>Filter</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.toolButton,
-                selectedTool === "soundfx" && styles.toolButtonActive,
-              ]}
-              onPress={() =>
-                setSelectedTool(selectedTool === "soundfx" ? null : "soundfx")
-              }
-            >
-              <View style={styles.toolIconContainer}>
-                <SoundFXIcon size={20} />
-              </View>
-              <Text style={styles.toolLabel}>Sound FX</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.toolButton,
-                selectedTool === "cutout" && styles.toolButtonActive,
-              ]}
-              onPress={() =>
-                setSelectedTool(selectedTool === "cutout" ? null : "cutout")
-              }
-            >
-              <View style={styles.toolIconContainer}>
-                <CutoutIcon size={20} />
-              </View>
-              <Text style={styles.toolLabel}>Cutout</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.toolButton,
-                selectedTool === "sticker" && styles.toolButtonActive,
-              ]}
-              onPress={() =>
-                setSelectedTool(selectedTool === "sticker" ? null : "sticker")
-              }
-            >
-              <View style={styles.toolIconContainer}>
-                <StickerIcon size={20} />
-              </View>
-              <Text style={styles.toolLabel}>Stickers</Text>
-            </TouchableOpacity>
+            )}
           </ScrollView>
         </View>
-      </SafeAreaView>
+      )}
+
+      {/* Trim View */}
+      {showTrimView && selectedMusicForTrim && (
+        <AudioTrimView
+          music={selectedMusicForTrim}
+          videoDuration={videoDuration}
+          onConfirm={(trimData: AudioTrimData) => {
+            console.log('[EditScreen] Audio trimmed:', trimData);
+            // Store trim data for export
+            setSelectedMusicForTrim({
+              ...selectedMusicForTrim,
+              trimData,
+            });
+            setShowTrimView(false);
+          }}
+          onCancel={() => setShowTrimView(false)}
+        />
+      )}
+
+      {/* Music Picker Modal */}
+      <MusicLibraryModal
+        visible={showMusicPicker}
+        onSelect={(music) => {
+          console.log('[EditScreen] Music selected:', music);
+          setSelectedMusicForTrim(music);
+          setShowMusicPicker(false);
+          setShowTrimView(true);
+        }}
+        onCancel={() => setShowMusicPicker(false)}
+      />
     </View>
   );
 }
@@ -546,48 +631,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  addAudioRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 20,
-    marginBottom: 12,
-    marginTop: 8,
-    position: "relative",
-    zIndex: 2,
-  },
-  addAudioButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.15)",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
-  },
-  addAudioIcon: {
-    color: "#fff",
-    fontSize: 20,
-    marginRight: 8,
-    fontWeight: "300",
-    lineHeight: 20,
-  },
-  addAudioText: {
-    color: "#fff",
-    fontSize: 14,
-    fontWeight: "500",
-  },
-  soundToggleButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
-  },
   clipTimelineContainer: {
     position: "relative",
     marginBottom: 8,
@@ -678,6 +721,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.95)",
     borderTopWidth: 0.5,
     borderTopColor: "rgba(255, 255, 255, 0.15)",
+    zIndex: 50,
   },
   toolbarContent: {
     paddingHorizontal: 16,
@@ -711,6 +755,109 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "500",
     textAlign: "center",
+    marginTop: 2,
+  },
+  audioPanel: {
+    position: "absolute",
+    bottom: 140,
+    left: 0,
+    right: 0,
+    height: height * 0.5,
+    backgroundColor: "#000",
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255, 255, 255, 0.1)",
+    zIndex: 100,
+  },
+  audioPanelOverlay: {
+    position: "absolute",
+    bottom: 80,
+    left: 0,
+    right: 0,
+    maxHeight: height * 0.55,
+    backgroundColor: "#000",
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255, 255, 255, 0.1)",
+    zIndex: 51,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 15,
+  },
+  audioPanelContent: {
+    flex: 1,
+    maxHeight: height * 0.55,
+  },
+  audioPanelScroll: {
+    paddingBottom: 20,
+  },
+  panelHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255, 255, 255, 0.1)",
+  },
+  panelTitle: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  addTrackButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginHorizontal: 20,
+    marginVertical: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: "#ec9a15",
+  },
+  addTrackText: {
+    color: "#000",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  selectedTrackCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 20,
+    marginTop: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    borderRadius: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    borderWidth: 1,
+    borderColor: "rgba(236, 154, 21, 0.3)",
+  },
+  selectedAlbumArt: {
+    width: 48,
+    height: 48,
+    borderRadius: 4,
+    backgroundColor: "#ec9a15",
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  selectedAlbumIcon: {
+    fontSize: 24,
+  },
+  selectedTrackInfo: {
+    flex: 1,
+  },
+  selectedTrackTitle: {
+    color: "#fff",
+    fontSize: 13,
+    fontWeight: "600",
+  },
+  selectedTrackArtist: {
+    color: "#999",
+    fontSize: 11,
     marginTop: 2,
   },
 });

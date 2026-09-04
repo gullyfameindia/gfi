@@ -1,7 +1,7 @@
 /**
  * Filter Library Service
  * Manages video filters and effects available in the editor
- * KIRO: Real-time backend integration for production
+ *  Real-time backend integration for production
  */
 
 import apiClient from "../axios";
@@ -71,7 +71,7 @@ export async function listFilters(
     const params: Record<string, any> = { page, limit };
     if (category) params.category = category;
 
-    const response = await apiClient.get<any>("public/filters", { params });
+    const response = await apiClient.get<any>("public/filters", { params, skipAuth: true });
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -133,7 +133,7 @@ export async function getFilterById(filterId: string): Promise<ApiResponse<Filte
   try {
     console.log("[filterLibraryService] Getting filter:", filterId);
 
-    const response = await apiClient.get<any>(`public/filters/${filterId}`);
+    const response = await apiClient.get<any>(`public/filters/${filterId}`, { skipAuth: true });
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -185,6 +185,7 @@ export async function searchFilters(query: string, limit = 20): Promise<ApiRespo
 
     const response = await apiClient.get<any>("public/filters", {
       params: { search: query, limit },
+      skipAuth: true
     });
     const responseData = response.data as any;
 

@@ -1,4 +1,4 @@
-// Created by Kiro - Camera Service
+// Camera Service
 // Handles video recording, compression, and upload functionality
 
 import * as FileSystem from "expo-file-system";
@@ -28,7 +28,7 @@ export interface ReelUploadData {
   tags?: string[];
 }
 
-// ✅ CREATED BY KIRO - Save video to media library
+// Save video to media library
 export async function saveVideoToLibrary(videoUri: string): Promise<ApiResponse<string>> {
   try {
     console.log("[cameraService] Saving video to library:", videoUri);
@@ -72,7 +72,7 @@ export async function saveVideoToLibrary(videoUri: string): Promise<ApiResponse<
   }
 }
 
-// ✅ CREATED BY KIRO - Get video file info
+//  Get video file info
 export async function getVideoFileInfo(videoUri: string): Promise<ApiResponse<VideoFile>> {
   try {
     console.log("[cameraService] Getting video file info:", videoUri);
@@ -113,7 +113,7 @@ export async function getVideoFileInfo(videoUri: string): Promise<ApiResponse<Vi
   }
 }
 
-// ✅ CREATED BY KIRO - Upload video to backend
+//  Upload video to backend
 export async function uploadVideo(
   videoUri: string,
   reelData: ReelUploadData,
@@ -201,7 +201,7 @@ export async function uploadVideo(
   }
 }
 
-// ✅ CREATED BY KIRO - Delete video file
+//  Delete video file
 export async function deleteVideoFile(videoUri: string): Promise<ApiResponse<boolean>> {
   try {
     console.log("[cameraService] Deleting video file:", videoUri);
@@ -226,7 +226,7 @@ export async function deleteVideoFile(videoUri: string): Promise<ApiResponse<boo
   }
 }
 
-// ✅ CREATED BY KIRO - Get video duration (requires FFmpeg)
+//   Get video duration (requires FFmpeg)
 export async function getVideoDuration(videoUri: string): Promise<ApiResponse<number>> {
   try {
     console.log("[cameraService] Getting video duration:", videoUri);
@@ -251,7 +251,7 @@ export async function getVideoDuration(videoUri: string): Promise<ApiResponse<nu
   }
 }
 
-// ✅ CREATED BY KIRO - Compress video (requires FFmpeg)
+//  Compress video (requires FFmpeg)
 export async function compressVideo(
   videoUri: string,
   quality: "low" | "medium" | "high" = "medium"

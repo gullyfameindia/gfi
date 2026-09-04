@@ -27,6 +27,7 @@ import {
     Inter_700Bold,
 } from "@expo-google-fonts/inter";
 import { UserRoleProvider } from "@/contexts/UserRoleContext";
+import { registerDeviceForNotifications, setupNotificationListeners } from "@/api/services/notificationIntegrationService";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -51,9 +52,59 @@ export default function RootLayout() {
     useEffect(() => {
         if (fontsLoaded || fontError) {
             console.log("✅ Fonts ready");
+            
+            // Register push notifications on app launch
+            registerDeviceForNotifications();
+            
+            // Setup notification listeners with navigation
+            const unsubscribe = setupNotificationListeners(
+                (notification) => {
+                    console.log("[RootLayout] Notification received:", notification);
+                },
+                (notification) => {
+                    console.log("[RootLayout] Notification tapped:", notification);
+                    // Handle navigation based on notification type
+                    handleNotificationNavigation(notification);
+                }
+            );
+
             SplashScreen.hideAsync();
+            
+            return unsubscribe;
         }
     }, [fontsLoaded, fontError]);
+
+    const handleNotificationNavigation = (notification: any) => {
+        const { type, data } = notification;
+        
+        if (!data) return;
+
+        switch (type) {
+            case "comment":
+                if (data?.reelId) {
+                    // Navigate would be done via router, but we're at root level
+                    // This will be handled in the nested screen
+                }
+                break;
+            case "like":
+                if (data?.reelId) {
+                    // Navigate to reel
+                }
+                break;
+            case "follow":
+                if (data?.userId) {
+                    // Navigate to profile
+                }
+                break;
+            case "competition":
+                if (data?.competitionId) {
+                    // Navigate to competition
+                }
+                break;
+            default:
+                break;
+        }
+    };
 
     if (!fontsLoaded && !fontError) {
         console.log("⏳ Waiting for fonts...");

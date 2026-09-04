@@ -65,7 +65,8 @@ export const API_ENDPOINTS = {
     GET_COMMENTS: "reels/:id/comments",
     ADD_COMMENT: "reels/:id/comments/add",
     DELETE_COMMENT: "reels/:id/comments/:commentId/delete",
-    UPLOAD: "reels/upload",
+    GET_UPLOAD_URL: "reels/upload-url",
+    PUBLISH: "reels/publish",
     GET_UPLOAD_STATUS: "reels/upload/:id/status",
     CANCEL_UPLOAD: "reels/upload/:id/cancel",
   },
@@ -84,9 +85,9 @@ export const API_ENDPOINTS = {
 
   // ==================== KYC ENDPOINTS ====================
   KYC: {
-    SUBMIT: "kyc/submit",
-    GET_STATUS: "kyc/status",
-    UPDATE: "kyc/update",
+    SUBMIT: "user/kyc",
+    GET_STATUS: "user/kyc",
+    UPDATE: "user/kyc",
   },
 
   // ==================== PAYMENT ENDPOINTS ====================
@@ -128,7 +129,7 @@ export const API_ENDPOINTS = {
 
   // ==================== CHAT ENDPOINTS ====================
   CHAT: {
-    GET_CONVERSATIONS: "chat/conversations",
+    GET_CONVERSATIONS: "chat/chatlist",
     GET_MESSAGES: "chat/conversations/:id/messages",
     SEND_MESSAGE: "chat/messages/send",
     DELETE_MESSAGE: "chat/messages/:id/delete",

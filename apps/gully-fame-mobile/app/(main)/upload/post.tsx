@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { Video, ResizeMode } from "expo-video";
+import { Video, ResizeMode } from "expo-av";
 import Svg, {
   Path,
   Circle,
@@ -45,6 +45,17 @@ export default function PostReelScreen() {
       })()
     : [];
 
+  // Parse music data from trim (if selected in editor)
+  const musicDataFromParams = params.musicData
+    ? (() => {
+        try {
+          return JSON.parse(params.musicData as string);
+        } catch {
+          return null;
+        }
+      })()
+    : null;
+
   // Initialize state from params if available
   const [caption, setCaption] = useState(params.caption ? String(params.caption) : "");
   const [hashtags, setHashtags] = useState<string[]>(() => {
@@ -58,7 +69,9 @@ export default function PostReelScreen() {
     return [];
   });
   const [hashtagInput, setHashtagInput] = useState("");
-  const [selectedMusic, setSelectedMusic] = useState<string | null>(null);
+  const [selectedMusic, setSelectedMusic] = useState<string | null>(
+    musicDataFromParams?.title ? `${musicDataFromParams.title} - ${musicDataFromParams.artist}` : null
+  );
   const [taggedPeople, setTaggedPeople] = useState<any[]>([]);
   const [location, setLocation] = useState<string | null>(null);
   const [privacy, setPrivacy] = useState("Everyone");
@@ -145,7 +158,13 @@ export default function PostReelScreen() {
     }).start(() => setShowMoreOptions(false));
   };
 
-  const handlePost = () => {
+  const handlePost = async () => {
+    // Include music trim data in the export payload
+    // This will be passed to FFmpeg export handler to apply trim:
+    // musicDataFromParams = { trackId, startOffset, duration, title, artist }
+    // startOffset: seconds into track where playback starts
+    // duration: length of audio to use (matches video duration)
+    
     // If this is a competition entry, navigate to payment screen
     if (competitionId && competitionName && entryFee) {
       router.push({
@@ -154,13 +173,81 @@ export default function PostReelScreen() {
           competitionId,
           competitionName: encodeURIComponent(competitionName),
           entryFee: encodeURIComponent(entryFee),
+          ...(musicDataFromParams && { musicData: JSON.stringify(musicDataFromParams) }),
         },
       });
     } else {
-      // Regular post - simulate backend call
-      Alert.alert("Post Reel", "Your reel has been posted!", [
-        { text: "OK", onPress: () => router.replace("/(main)") },
-      ]);
+      // Regular post - call actual backend API
+      try {
+        if (!clipsFromParams.length || !clipsFromParams[0]?.uri) {
+          Alert.alert("Error", "Please select a video before posting");
+          return;
+        }
+
+        // Show loading alert
+        let loadingAlert: any;
+        const showLoadingAlert = () => {
+          Alert.alert("Uploading", "Please wait while we upload your reel...", undefined, { cancelable: false });
+        };
+        
+        // Dismiss the alert after response
+        const dismissAlert = () => {
+          if (loadingAlert) {
+            loadingAlert.dismiss?.();
+          }
+        };
+        
+        showLoadingAlert();
+        
+        // Import the upload service dynamically to avoid circular dependencies
+        const { uploadVideoComplete } = await import("@/api/services/videoUploadService");
+        
+        const result = await uploadVideoComplete(
+          clipsFromParams[0].uri,
+          {
+            title: caption || "Untitled Reel",
+            description: caption,
+            duration: 0, // Will be determined by backend
+            resolution: "1080p",
+            fps: 30,
+            tags: hashtags,
+            music: musicDataFromParams ? {
+              trackId: musicDataFromParams.trackId,
+              title: musicDataFromParams.title,
+              artist: musicDataFromParams.artist,
+              startOffset: musicDataFromParams.startOffset || 0,
+              duration: musicDataFromParams.duration || 0,
+            } : undefined,
+            competitionId: competitionId || undefined,
+          }
+        );
+
+        // Dismiss loading alert
+        dismissAlert();
+
+        if (result.success) {
+          Alert.alert("Success", "Your reel has been posted!", [
+            { text: "OK", onPress: () => {
+              // Navigate to own profile using the correct route (matching MyFame tab)
+              router.push({
+                pathname: "/(main)/profile/[id]",
+                params: { id: "me" },
+              } as any);
+            }},
+          ]);
+        } else {
+          Alert.alert("Upload Failed", result.message || "Failed to post reel. Please try again.", [
+            { text: "Try Again", onPress: () => handlePost() },
+            { text: "Cancel", onPress: () => {}, style: "cancel" },
+          ]);
+        }
+      } catch (error: any) {
+        console.error("[post.tsx] handlePost error:", error);
+        Alert.alert("Error", error.message || "An error occurred while posting your reel", [
+          { text: "Try Again", onPress: () => handlePost() },
+          { text: "Cancel", onPress: () => {}, style: "cancel" },
+        ]);
+      }
     }
   };
 
@@ -204,20 +291,11 @@ export default function PostReelScreen() {
               useNativeControls={false}
             />
           ) : (
-            <Video
-              ref={videoRef}
-              // ✅ KIRO: Edit by kiro - Removed video file reference (file deleted to reduce build size)
-              // ❌ OLD CODE - VIDEO FILE REFERENCE (file deleted)
-              // source={require("@assets/1.mp4")}
-              // ✅ NEW CODE - PLACEHOLDER (will use uploaded video)
-              source={null}
-              style={styles.video}
-              resizeMode={ResizeMode.COVER}
-              shouldPlay={true}
-              isLooping={true}
-              isMuted={true}
-              useNativeControls={false}
-            />
+            <View style={styles.video}>
+              <Text style={{ color: "#999", textAlign: "center", marginTop: "50%" }}>
+                No video selected
+              </Text>
+            </View>
           )}
         </View>
 

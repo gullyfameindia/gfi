@@ -147,16 +147,21 @@ export default function OwnFanProfile() {
   const { stats: followStats } = useFollowStats(profileData.id || "");
 
   // ✅ CREATED BY KIRO - Get user reels dynamically
-  const { reels: userReels, loading: reelsLoading } = useUserReels(profileData.id || "");
+  const { reels: userReels, loading: reelsLoading, refetch: refetchReels } = useUserReels(profileData.id || "");
 
   // Reload data when screen comes into focus - only if needed
   useFocusEffect(
     React.useCallback(() => {
-      // Only reload if we don't have basic data
+      // Always refetch reels when screen comes into focus to catch newly posted reels
+      if (profileData.id || profileData._id) {
+        refetchReels();
+      }
+      
+      // Only reload profile if we don't have basic data
       if (!profileData.firstName && !profileData.lastName) {
         reloadProfile();
       }
-    }, [profileData.firstName, profileData.lastName, reloadProfile]),
+    }, [profileData.id, profileData._id, profileData.firstName, profileData.lastName, reloadProfile, refetchReels]),
   );
 
   const handleBackPress = () => {

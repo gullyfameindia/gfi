@@ -1,4 +1,4 @@
-// Created by Kiro - Follow Service
+// Follow Service
 // Handles follow/unfollow, followers, and following list functionality
 
 import apiClient from "../axios";
@@ -32,7 +32,7 @@ export interface FollowersResponse {
   limit?: number;
 }
 
-// ✅ CREATED BY KIRO - Follow a user
+//  Follow a user
 export async function followUser(userId: string): Promise<ApiResponse<FollowResponse>> {
   try {
     console.log("[followService] Following user:", userId);
@@ -74,7 +74,7 @@ export async function followUser(userId: string): Promise<ApiResponse<FollowResp
   }
 }
 
-// ✅ CREATED BY KIRO - Unfollow a user
+// Unfollow a user
 export async function unfollowUser(userId: string): Promise<ApiResponse<FollowResponse>> {
   try {
     console.log("[followService] Unfollowing user:", userId);
@@ -116,7 +116,7 @@ export async function unfollowUser(userId: string): Promise<ApiResponse<FollowRe
   }
 }
 
-// ✅ CREATED BY KIRO - Get followers list
+//  Get followers list
 export async function getFollowers(
   userId: string,
   params?: { page?: number; limit?: number }

@@ -117,7 +117,7 @@ export function useOwnProfile() {
                                 "";
 
                             // Update cache with fresh API data + preserved local data
-                            AsyncStorage.multiSet([
+                            const cacheUpdates: Array<[string, string]> = [
                                 ["userFirstName", userData.firstName || ""],
                                 ["userLastName", userData.lastName || ""],
                                 [
@@ -129,12 +129,19 @@ export function useOwnProfile() {
                                 ["userRole", userData.role || ""],
                                 ["userInstagram", finalInstagram], // Preserved!
                                 ["userXLink", finalXLink], // Preserved!
-                                ...(userId ? [["userId", userId]] : []),
-                            ]).catch((err) =>
+                            ];
+                            
+                            if (userId) {
+                                cacheUpdates.push(["userId", userId]);
+                            }
+                            
+                            AsyncStorage.multiSet(cacheUpdates).catch((err) =>
                                 console.error("Error updating cache:", err),
                             );
 
                             return {
+                                id: userId,  // ✅ FIX: Store userId in profileData
+                                _id: userId, // ✅ FIX: Also store as _id for compatibility
                                 firstName: userData.firstName || "",
                                 lastName: userData.lastName || "",
                                 bio: finalBio,

@@ -23,20 +23,20 @@ export async function getCategories(params?: {
 }): Promise<ApiResponse<CategoriesResponse>> {
     const page = params?.page || 1;
     const limit = params?.limit || 50;
-    const endpoint = API_ENDPOINTS.CATEGORY.GET_ALL;
 
     try {
-        // Categories should be publicly accessible - skip authentication
-        const response = await apiClient.get<any>(endpoint, {
-            skipAuth: true,
+        // Spec: GET user/categories?page=1&limit=50
+        const response = await apiClient.get<any>('user/categories', {
+            skipAuth: false,
+            params: { page, limit },
         });
         const responseData = response.data as any;
         console.log(
-            `[Categories] ${responseData.code} ${responseData.data} ${response.status}`,
+            `[Categories] page=${page} limit=${limit} code=${responseData.code} items=${responseData.data?.categories?.length || 0}`,
         );
         if (responseData.code === 1 && responseData.data) {
-            let payload = responseData.data;
             let rawItems: any[] = [];
+            const payload = responseData.data;
 
             if (Array.isArray(payload)) {
                 rawItems = payload;
@@ -54,15 +54,15 @@ export async function getCategories(params?: {
                     c._id?.toString?.() ||
                     c.categoryId?.toString?.() ||
                     "",
-                name: c.name || c.title || "",
+                name: c.name || c.title || c.label || "",
                 icon: c.icon,
-                image: c.image,
+                image: c.image || c.banner,
                 ...c,
             }));
 
             const result: CategoriesResponse = {
                 items,
-                total: payload.total,
+                total: payload.totalCategories || payload.total || rawItems.length,
                 page: payload.page || page,
                 limit: payload.limit || limit,
             };
@@ -82,23 +82,6 @@ export async function getCategories(params?: {
             data: undefined,
         };
     } catch (error: any) {
-        // Categories are public - suppress auth errors since app uses default categories
-        if (
-            error.response?.status === 401 ||
-            error.message?.includes("token") ||
-            error.message?.includes("Unauthorized")
-        ) {
-            // Backend requires auth but categories should be public
-            // App will use default categories, so we don't need to log this as an error
-            return {
-                success: false,
-                message: "Categories unavailable",
-                error: "Unauthorized",
-                data: undefined,
-            };
-        }
-
-        // Only log non-auth errors
         console.error("[categoryService] getCategories error:", error.message);
         return {
             success: false,
