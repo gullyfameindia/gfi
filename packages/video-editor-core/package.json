@@ -11,7 +11,7 @@
     "expo-camera": "~17.0.10",
     "expo-image-picker": "~17.0.10",
     "ffmpeg-kit-react-native-community": "6.0.2-fork.1",
-    "react": "19.1.0",
+    "react": "19.2.8",
     "react-native": "0.81.5",
     "react-native-color-matrix-image-filters": "^8.0.2",
     "react-native-fs": "2.20.0",
