@@ -120,7 +120,20 @@ export async function getCompetitionById(competitionId: string): Promise<ApiResp
   try {
     console.log('[competitionService] GET competitions/:id', { competitionId });
     
-    
+    try {
+      const response = await apiClient.get<any>(`competitions/${competitionId}`);
+      const responseData = response.data as any;
+      if (responseData.code === 1 && responseData.data) {
+        return {
+          success: true,
+          data: responseData.data,
+          message: responseData.message || 'Competition fetched successfully',
+        };
+      }
+    } catch {
+      // fallback to searching in list
+    }
+
     const competitionsResponse = await getCompetitions({ page: 1, limit: 100 });
     
     if (competitionsResponse.success && competitionsResponse.data) {
@@ -150,6 +163,106 @@ export async function getCompetitionById(competitionId: string): Promise<ApiResp
       message: error.response?.data?.message || error.message || 'Network error occurred',
       error: error.message || 'Network error',
       data: undefined,
+    };
+  }
+}
+
+export async function joinCompetition(competitionId: string): Promise<ApiResponse<any>> {
+  try {
+    console.log('[competitionService] POST competitions/:id/join', { competitionId });
+    const response = await apiClient.post<any>(`competitions/${competitionId}/join`);
+    const responseData = response.data as any;
+
+    return {
+      success: responseData.code === 1 || responseData.success,
+      data: responseData.data,
+      message: responseData.message || 'Joined competition successfully',
+    };
+  } catch (error: any) {
+    console.error('[competitionService] joinCompetition error:', error.message);
+    return {
+      success: false,
+      message: error.response?.data?.message || error.message || 'Failed to join competition',
+      error: error.message,
+    };
+  }
+}
+
+export async function getCompetitionLeaderboard(
+  competitionId: string,
+  params?: { page?: number; limit?: number }
+): Promise<ApiResponse<any[]>> {
+  try {
+    const page = params?.page || 1;
+    const limit = params?.limit || 20;
+    const response = await apiClient.get<any>(`competitions/${competitionId}/leaderboard`, {
+      params: { page, limit },
+    });
+    const responseData = response.data as any;
+
+    const list = Array.isArray(responseData.data)
+      ? responseData.data
+      : responseData.data?.leaderboard || responseData.data?.items || [];
+
+    return {
+      success: true,
+      data: list,
+      message: responseData.message || 'Leaderboard fetched successfully',
+    };
+  } catch (error: any) {
+    console.error('[competitionService] getCompetitionLeaderboard error:', error.message);
+    return {
+      success: false,
+      message: error.message || 'Failed to fetch leaderboard',
+      data: [],
+    };
+  }
+}
+
+export async function getCompetitionReels(
+  competitionId: string,
+  limit: number = 10
+): Promise<ApiResponse<any[]>> {
+  try {
+    const response = await apiClient.get<any>(`competitions/${competitionId}/reels`, {
+      params: { limit },
+    });
+    const responseData = response.data as any;
+
+    const reels = Array.isArray(responseData.data)
+      ? responseData.data
+      : responseData.data?.reels || responseData.data?.items || [];
+
+    return {
+      success: true,
+      data: reels,
+      message: responseData.message || 'Reels fetched successfully',
+    };
+  } catch (error: any) {
+    console.error('[competitionService] getCompetitionReels error:', error.message);
+    return {
+      success: false,
+      message: error.message || 'Failed to fetch competition reels',
+      data: [],
+    };
+  }
+}
+
+export async function getCompetitionRules(): Promise<ApiResponse<any>> {
+  try {
+    const response = await apiClient.get<any>('public/competitionRules', { skipAuth: true });
+    const responseData = response.data as any;
+
+    return {
+      success: true,
+      data: responseData.data,
+      message: responseData.message || 'Rules fetched successfully',
+    };
+  } catch (error: any) {
+    console.error('[competitionService] getCompetitionRules error:', error.message);
+    return {
+      success: false,
+      message: error.message || 'Failed to fetch competition rules',
     };
   }
 }

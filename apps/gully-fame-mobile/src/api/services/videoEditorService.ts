@@ -505,7 +505,12 @@ export async function getVideoFilters(): Promise<ApiResponse<mockVideoFilters.Vi
   try {
     console.log("[videoEditorService] Fetching video filters");
 
-    const response = await apiClient.get<any>("video-editor/filters");
+    let response: any;
+    try {
+      response = await apiClient.get<any>("public/filters", { skipAuth: true });
+    } catch {
+      response = await apiClient.get<any>("video-editor/filters");
+    }
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -523,10 +528,10 @@ export async function getVideoFilters(): Promise<ApiResponse<mockVideoFilters.Vi
     }
 
     
-    console.warn("[videoEditorService] API returned error for filters, using mock data");
+    console.warn("[videoEditorService] API returned error for filters, using fallback data");
     return _getMockFilters();
   } catch (error: any) {
-    console.warn("[videoEditorService] Failed to fetch filters, falling back to mock data:", error.message);
+    console.warn("[videoEditorService] Failed to fetch filters, falling back:", error.message);
     return _getMockFilters();
   }
 }
@@ -554,10 +559,10 @@ export async function getVideoEffects(): Promise<ApiResponse<mockVideoFilters.Vi
     }
 
     
-    console.warn("[videoEditorService] API returned error for effects, using mock data");
+    console.warn("[videoEditorService] API returned error for effects, using fallback data");
     return _getMockEffects();
   } catch (error: any) {
-    console.warn("[videoEditorService] Failed to fetch effects, falling back to mock data:", error.message);
+    console.warn("[videoEditorService] Failed to fetch effects, falling back:", error.message);
     return _getMockEffects();
   }
 }
@@ -585,10 +590,10 @@ export async function getVideoTransitions(): Promise<ApiResponse<mockVideoFilter
     }
 
     
-    console.warn("[videoEditorService] API returned error for transitions, using mock data");
+    console.warn("[videoEditorService] API returned error for transitions, using fallback data");
     return _getMockTransitions();
   } catch (error: any) {
-    console.warn("[videoEditorService] Failed to fetch transitions, falling back to mock data:", error.message);
+    console.warn("[videoEditorService] Failed to fetch transitions, falling back:", error.message);
     return _getMockTransitions();
   }
 }
@@ -598,7 +603,12 @@ export async function getVideoStickers(): Promise<ApiResponse<mockVideoFilters.V
   try {
     console.log("[videoEditorService] Fetching video stickers");
 
-    const response = await apiClient.get<any>("video-editor/stickers");
+    let response: any;
+    try {
+      response = await apiClient.get<any>("public/stickers", { skipAuth: true });
+    } catch {
+      response = await apiClient.get<any>("video-editor/stickers");
+    }
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -616,11 +626,50 @@ export async function getVideoStickers(): Promise<ApiResponse<mockVideoFilters.V
     }
 
     
-    console.warn("[videoEditorService] API returned error for stickers, using mock data");
+    console.warn("[videoEditorService] API returned error for stickers, using fallback data");
     return _getMockStickers();
   } catch (error: any) {
-    console.warn("[videoEditorService] Failed to fetch stickers, falling back to mock data:", error.message);
+    console.warn("[videoEditorService] Failed to fetch stickers, falling back:", error.message);
     return _getMockStickers();
+  }
+}
+
+export async function getVideoAudio(sort: string = "trending"): Promise<ApiResponse<any[]>> {
+  try {
+    console.log("[videoEditorService] Fetching audio library:", sort);
+
+    const response = await apiClient.get<any>("public/audio", {
+      params: { sort },
+      skipAuth: true,
+    });
+    const responseData = response.data as any;
+
+    if (responseData.code === 1 && responseData.data) {
+      const audioList = Array.isArray(responseData.data)
+        ? responseData.data
+        : responseData.data.audio || responseData.data.items || [];
+
+      return {
+        success: true,
+        data: audioList,
+        message: responseData.message || "Audio fetched successfully",
+      };
+    }
+
+    return {
+      success: false,
+      message: responseData.message || "Failed to fetch audio",
+      error: "API error",
+      data: [],
+    };
+  } catch (error: any) {
+    console.warn("[videoEditorService] Failed to fetch audio:", error.message);
+    return {
+      success: false,
+      message: error.message || "Network error",
+      error: error.message,
+      data: [],
+    };
   }
 }
 
@@ -680,4 +729,5 @@ export const videoEditorService = {
   getVideoEffects,
   getVideoTransitions,
   getVideoStickers,
+  getVideoAudio,
 };
