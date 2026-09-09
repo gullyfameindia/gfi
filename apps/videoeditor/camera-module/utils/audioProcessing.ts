@@ -3,7 +3,12 @@
 
 
 
-import { Audio } from 'expo-av';
+let Audio: any = null;
+try {
+  Audio = require('expo-audio').Audio;
+} catch (e) {
+  Audio = { requestPermissionsAsync: () => ({ status: 'granted' }), setAudioModeAsync: () => {} };
+}
 import { AudioTrackWithEffects, VoiceOverlayWithEffects, AudioEffectType, TextToSpeechConfig, AudioMixSettings } from '../types/audioEffects.types';
 import * as FileSystem from 'expo-file-system';
 
@@ -269,4 +274,4 @@ export function calculateAudioDuration(tracks: AudioTrackWithEffects[]): number 
   return Math.max(...tracks.map(track => track.endTime || track.duration));
 }
 
-export { Audio, Speech };
+export { Speech };

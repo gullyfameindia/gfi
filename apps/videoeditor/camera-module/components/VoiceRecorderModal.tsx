@@ -9,7 +9,14 @@ import {
   Alert,
   Animated,
 } from "react-native";
-import { Audio } from "expo-av";
+let Audio: any = null;
+try {
+  const expoAudio = require("expo-audio");
+  Audio = expoAudio.Audio;
+} catch (e) {
+  console.warn("[VoiceRecorderModal] expo-audio not available:", (e as any)?.message);
+  Audio = null;
+}
 import Svg, { Path, Circle } from "react-native-svg";
 import type { VoiceOverlay } from "../types/voiceOverlay.types";
 
