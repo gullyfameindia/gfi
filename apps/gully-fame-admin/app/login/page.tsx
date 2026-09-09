@@ -154,27 +154,49 @@ export default function LoginPage() {
         </form>
 
         <div className="mt-6 space-y-3">
+          <div className="rounded-lg bg-gray-50 border border-gray-200 p-4">
+            <p className="text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">Quick Demo Fill</p>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('admin@gullyfame.com');
+                  setPassword('admin123');
+                  setRole('admin');
+                }}
+                className="flex-1 rounded-md bg-white border border-gray-300 py-1.5 px-2 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors shadow-sm"
+              >
+                Fill Admin Demo
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('sponsor@gullyfame.com');
+                  setPassword('sponsor123');
+                  setRole('sponsor');
+                }}
+                className="flex-1 rounded-md bg-white border border-gray-300 py-1.5 px-2 text-xs font-medium text-gray-700 hover:bg-gray-100 transition-colors shadow-sm"
+              >
+                Fill Sponsor Demo
+              </button>
+            </div>
+          </div>
+
           {role === 'admin' ? (
           <div className="rounded-lg bg-blue-50 border border-blue-200 p-4">
-            <p className="text-sm font-semibold text-blue-900 mb-2">Admin Login</p>
+            <p className="text-sm font-semibold text-blue-900 mb-1">Admin Login</p>
             <div className="space-y-1 text-xs text-blue-800">
-              <p>Please use your admin credentials provided by the system administrator.</p>
+              <p>Use your admin credentials or click above for demo access.</p>
             </div>
           </div>
           ) : (
             <div className="rounded-lg bg-purple-50 border border-purple-200 p-4">
-              <p className="text-sm font-semibold text-purple-900 mb-2">Sponsor Login:</p>
+              <p className="text-sm font-semibold text-purple-900 mb-1">Sponsor Login</p>
               <div className="space-y-1 text-xs text-purple-800">
-                <p>Use the email and password provided by the admin when your sponsor account was created.</p>
-                <p className="mt-2"><strong>Note:</strong> Sponsor accounts are created by administrators.</p>
+                <p>Use your assigned sponsor credentials or click above for demo access.</p>
               </div>
             </div>
           )}
-          <p className="text-center text-xs text-gray-500">
-            {role === 'admin' 
-              ? 'Note: Admin login uses the live backend API. Use valid admin credentials.'
-              : 'Note: Sponsor login uses the live backend API. Use your assigned sponsor credentials.'}
-          </p>
         </div>
       </div>
     </div>
