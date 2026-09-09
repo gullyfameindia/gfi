@@ -31,14 +31,14 @@ export function formatTimeAgo(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
   
-  // Check if date is valid
+  
   if (isNaN(date.getTime())) {
     return 'Recently';
   }
   
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
   
-  // Handle future dates
+  
   if (diffInSeconds < 0) {
     return 'Just now';
   }
@@ -81,7 +81,7 @@ export function formatDate(dateString: string): string {
   
   const date = new Date(dateString);
   
-  // Check if date is valid
+  
   if (isNaN(date.getTime())) {
     return '';
   }

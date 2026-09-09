@@ -1,4 +1,4 @@
-// File Route: apps/gully-fame-mobile/app/(main)/history.tsx
+
 
 import React, { useState } from "react";
 import {
@@ -13,7 +13,7 @@ import {
 import { router } from "expo-router";
 import { Ionicons, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 
-// Dummy Transaction Data (Asli app me yeh API se aayega)
+
 const transactionData = [
   {
     id: "1",
@@ -60,10 +60,10 @@ const transactionData = [
 export default function HistoryScreen() {
   const [filter, setFilter] = useState<"all" | "credit" | "debit">("all");
 
-  // Wallet Balance (Demo)
+  
   const totalBalance = 1500;
 
-  // Filter transactions based on selected tab
+  
   const filteredTransactions = transactionData.filter((item) => {
     if (filter === "all") return true;
     return item.type === filter;
@@ -73,7 +73,7 @@ export default function HistoryScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="chevron-back" size={28} color="#fff" />
@@ -84,7 +84,7 @@ export default function HistoryScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
-        {/* Wallet Balance Card */}
+        {}
         <View style={styles.walletCard}>
           <Text style={styles.walletLabel}>Total Available Balance</Text>
           <View style={styles.balanceRow}>
@@ -105,7 +105,7 @@ export default function HistoryScreen() {
           </View>
         </View>
 
-        {/* Transaction Filters */}
+        {}
         <View style={styles.filterContainer}>
           <TouchableOpacity 
             style={[styles.filterTab, filter === "all" && styles.activeFilterTab]} 
@@ -129,7 +129,7 @@ export default function HistoryScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Transaction List */}
+        {}
         <View style={styles.transactionsContainer}>
           <Text style={styles.sectionTitle}>Recent Transactions</Text>
           

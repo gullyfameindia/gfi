@@ -48,7 +48,7 @@ export default function UserKycPage() {
       if (kycResult.success && kycResult.data) {
         setKyc(kycResult.data);
       } else {
-        // KYC might not exist yet, that's okay
+        
         setKyc(null);
       }
     } catch (err: any) {
@@ -69,7 +69,7 @@ export default function UserKycPage() {
       if (result.success && result.data) {
         setKyc(result.data);
         alert('KYC approved successfully!');
-        fetchData(); // Refresh user data to update KYC status
+        fetchData(); 
       } else {
         alert(result.message || 'Failed to approve KYC');
       }
@@ -96,7 +96,7 @@ export default function UserKycPage() {
         alert('KYC rejected successfully!');
         setShowRejectModal(false);
         setRejectionReason('');
-        fetchData(); // Refresh user data
+        fetchData(); 
       } else {
         alert(result.message || 'Failed to reject KYC');
       }
@@ -173,7 +173,7 @@ export default function UserKycPage() {
             </div>
           ) : (
             <>
-              {/* Status Info */}
+              {}
               <div className="mb-6 space-y-4">
                 {kyc.submittedAt && (
                   <div className="rounded-lg border border-gray-200 p-4">
@@ -198,7 +198,7 @@ export default function UserKycPage() {
                 )}
               </div>
 
-              {/* Documents */}
+              {}
               {kyc.documents && kyc.documents.length > 0 && (
                 <div className="mb-6">
                   <h2 className="text-lg font-semibold text-gray-900 mb-4">Documents</h2>
@@ -249,7 +249,7 @@ export default function UserKycPage() {
                 </div>
               )}
 
-              {/* Action Buttons */}
+              {}
               {kyc.status !== 'approved' && (
                 <div className="flex space-x-4">
                   <button
@@ -275,7 +275,7 @@ export default function UserKycPage() {
         </div>
       </div>
 
-      {/* Reject Modal */}
+      {}
       {showRejectModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">

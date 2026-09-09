@@ -17,7 +17,7 @@ export type SpeedSelection = {
   curveConfig?: VelocityCurve;
 };
 
-// CameraScreen.tsx ke actual incoming props ke sath 100% sync kiya
+
 interface SpeedSelectorProps {
   speed: number; 
   onSpeedChange: (newSpeed: number) => void;
@@ -65,7 +65,7 @@ const SpeedSelector: React.FC<SpeedSelectorProps> = ({
 
   const constantOptions: SpeedMultiplier[] = [0.5, 1, 2, 3, 5];
 
-  // SAFE GUARD: Incoming speed ko currentSelection object mein map kiya taaki niche ka UI na tute
+  
   const currentSelection: SpeedSelection = {
     type: 'constant',
     value: (speed as SpeedMultiplier) || 1
@@ -106,12 +106,12 @@ const SpeedSelector: React.FC<SpeedSelectorProps> = ({
   };
 
   const handleSelectConstant = (val: SpeedMultiplier) => {
-    onSpeedChange(val); // Directly calling CameraScreen's state handler
+    onSpeedChange(val); 
     setModalVisible(false);
   };
 
   const handleSelectCurve = (curveKey: string) => {
-    // Parent simple numbers accept karta h, isliye safe custom numeric multiplier trigger kar rahe hain
+    
     onSpeedChange(2); 
     setModalVisible(false);
   };
@@ -155,7 +155,7 @@ const SpeedSelector: React.FC<SpeedSelectorProps> = ({
           >
             <ScrollView showsVerticalScrollIndicator={false}>
               
-              {/* 🛑 Section 1: Constant Speed Matrices */}
+              {}
               <Text style={{ color: '#aaa', fontSize: 11, fontWeight: 'bold', marginBottom: 8 }}>
                 CONSTANT SPEED
               </Text>
@@ -180,7 +180,7 @@ const SpeedSelector: React.FC<SpeedSelectorProps> = ({
                 })}
               </View>
 
-              {/* 📈 Section 2: Real-time Velocity Curves */}
+              {}
               <Text style={{ color: '#aaa', fontSize: 11, fontWeight: 'bold', marginBottom: 8 }}>
                 VELOCITY CURVES (INSTAGRAM EDIT)
               </Text>
@@ -200,7 +200,7 @@ const SpeedSelector: React.FC<SpeedSelectorProps> = ({
                         {curve.name}
                       </Text>
                       
-                      {/* Live Mini Vector Graph Matrix Preview */}
+                      {}
                       <View style={{ width: 45, height: 22, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 4, overflow: 'hidden' }}>
                         <Svg width="100%" height="100%" viewBox="0 0 80 40">
                           <Path

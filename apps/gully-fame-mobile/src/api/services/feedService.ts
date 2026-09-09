@@ -69,14 +69,14 @@ export interface Collection {
   featured: boolean;
 }
 
-// ─────────────────────────────────────────────
-// Trending Reels
-// ─────────────────────────────────────────────
 
-/**
- * Fetch trending reels for home screen
- * Shows most viewed and engaged content
- */
+
+
+
+
+
+
+
 export async function getTrendingReels(
   page: number = 1,
   limit: number = 20
@@ -109,7 +109,7 @@ export async function getTrendingReels(
       };
     }
 
-    // Fall back to mock data
+    
     console.warn("[feedService] API returned error for trending reels, using mock data");
     return _getMockTrendingReels(page, limit);
   } catch (error: any) {
@@ -151,7 +151,7 @@ export async function getForYouReels(
       };
     }
 
-    // Fall back to mock data
+    
     console.warn("[feedService] API returned error for For You feed, using mock data");
     return _getMockForYouReels(page, limit);
   } catch (error: any) {
@@ -193,7 +193,7 @@ export async function getPopularReels(
       };
     }
 
-    // Fall back to mock data
+    
     console.warn("[feedService] API returned error for popular reels, using mock data");
     return _getMockPopularReels(page, limit);
   } catch (error: any) {
@@ -210,8 +210,8 @@ export async function getSavedReels(
   try {
     console.log("[feedService] Fetching saved reels:", { page, limit });
 
-    // Spec: GET reels with saved filter or user/audio/saved for audio
-    // Using reels endpoint with filter param
+    
+    
     const response = await apiClient.get<any>("reels", {
       params: { page, limit, saved: true },
     });
@@ -237,7 +237,7 @@ export async function getSavedReels(
       };
     }
 
-    // Fall back to mock data
+    
     console.warn("[feedService] API returned error for saved reels, using mock data");
     return _getMockSavedReels(page, limit);
   } catch (error: any) {
@@ -268,7 +268,7 @@ export async function getCategories(): Promise<ApiResponse<Category[]>> {
       };
     }
 
-    // Fall back to mock data
+    
     console.warn("[feedService] API returned error for categories, using mock data");
     return _getMockCategories();
   } catch (error: any) {
@@ -300,7 +300,7 @@ export async function getFeaturedCollections(): Promise<ApiResponse<Collection[]
       };
     }
 
-    // Fall back to mock data
+    
     console.warn("[feedService] API returned error for collections, using mock data");
     return _getMockFeaturedCollections();
   } catch (error: any) {
@@ -333,7 +333,7 @@ export async function toggleLikeReel(
       };
     }
 
-    // Mock behavior
+    
     console.warn("[feedService] API error for like toggle, using mock behavior");
     return {
       success: true,
@@ -369,7 +369,7 @@ export async function toggleSaveReel(
       };
     }
 
-    // Mock behavior
+    
     console.warn("[feedService] API error for save toggle, using mock behavior");
     return {
       success: true,
@@ -477,7 +477,7 @@ function _getMockPopularReels(page: number, limit: number): ApiResponse<FeedResp
 }
 
 function _getMockSavedReels(page: number, limit: number): ApiResponse<FeedResponse> {
-  // Return empty for saved as user hasn't saved anything in mock
+  
   console.log(`[feedService] Using mock saved reels - Empty (user hasn't saved any)`);
 
   return {

@@ -27,7 +27,7 @@ import { TipPopup } from '../tip/TipComponents';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
-// Icons
+
 const StarIcon = ({ filled = false, color = "#fff", size = 24, themeColor = "#EC9A15" }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Path
@@ -106,7 +106,7 @@ const ThreeDotsIcon = ({ color = "#fff", size = 24 }) => (
   </Svg>
 );
 
-// Share Option Icons
+
 const CopyIcon = ({ size = 24 }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <G>
@@ -286,34 +286,34 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
   const shareScrollViewRef = useRef<ScrollView>(null);
   const THEME_COLOR = "#EC9A15";
   
-  // Positioning constants
+  
   const ACTION_ICONS_CONTAINER_HEIGHT = scale(50);
   const REEL_VIEWER_ACTION_ICONS_BOTTOM = hasBottomNav 
     ? scale(60) + scale(12) 
     : insets.bottom + scale(20);
   const REEL_VIEWER_LEFT_CONTENT_BOTTOM = REEL_VIEWER_ACTION_ICONS_BOTTOM + ACTION_ICONS_CONTAINER_HEIGHT + scale(24);
   
-  // Update reels when prop changes
+  
   useEffect(() => {
     setReelsState(reels);
   }, [reels]);
   
-  // Initialize comment likes state
+  
   useEffect(() => {
     const initialLikes = new Map<number, { likes: number; isLiked: boolean }>();
-    // Sample comments data
+    
     initialLikes.set(1, { likes: 12, isLiked: false });
     initialLikes.set(2, { likes: 8, isLiked: true });
     initialLikes.set(3, { likes: 5, isLiked: false });
-    initialLikes.set(4, { likes: 3, isLiked: false }); // Reply comment
+    initialLikes.set(4, { likes: 3, isLiked: false }); 
     setCommentLikes(initialLikes);
   }, []);
   
-  // Reset to initial index when modal opens
+  
   useEffect(() => {
     if (visible && initialIndex >= 0 && initialIndex < reelsState.length) {
       setCurrentVisibleIndex(initialIndex);
-      // Use a longer timeout to ensure FlatList is fully rendered
+      
       const timeoutId = setTimeout(() => {
         if (reelFlatListRef.current && initialIndex < reelsState.length) {
           try {
@@ -322,7 +322,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
               animated: false 
             });
           } catch (error) {
-            // If scroll fails, try scrolling to offset instead
+            
             console.log('Scroll to index failed, using scrollToOffset:', error);
             const offset = initialIndex * SCREEN_HEIGHT;
             reelFlatListRef.current?.scrollToOffset({ offset, animated: false });
@@ -432,7 +432,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
           }
           break;
       }
-      // Close modal after sharing
+      
       Animated.timing(slideAnim, {
         toValue: SCREEN_HEIGHT,
         duration: 300,
@@ -534,29 +534,29 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
   }, []);
   
   const handleClose = useCallback(() => {
-    // Pause all videos before closing
+    
     videoRefs.current.forEach((videoRef) => {
       if (videoRef) {
         videoRef.pauseAsync().catch(() => {});
       }
     });
-    // Call onClose to close the modal and return to previous screen
+    
     onClose();
   }, [onClose]);
   
-  // Handle Android hardware back button - ensures back button returns to previous screen
+  
   useEffect(() => {
     if (!visible) return;
     
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       handleClose();
-      return true; // Prevent default back behavior, we handle it
+      return true; 
     });
     
     return () => backHandler.remove();
   }, [visible, handleClose]);
   
-  // Control video playback
+  
   useEffect(() => {
     if (!visible || currentVisibleIndex === null) return;
     
@@ -810,7 +810,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
               <TouchableOpacity 
                 style={styles.profileImageContainer}
                 onPress={() => {
-                  // Navigate to user profile screen
+                  
                   router.push({
                     pathname: "/(main)/profile/[id]",
                     params: {
@@ -818,7 +818,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
                       firstName: reel.username.split('@')[1] || reel.username,
                       lastName: "",
                       bio: reel.caption || "",
-                      role: "participants", // Default, backend will provide actual role
+                      role: "participants", 
                       isViewingOther: "true",
                     }
                   } as any);
@@ -835,7 +835,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  // Navigate to user profile screen
+                  
                   router.push({
                     pathname: "/(main)/profile/[id]",
                     params: {
@@ -897,8 +897,8 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
   }, [currentVisibleIndex, handleLike, handleSave, handleClose, expandedCaptions, REEL_VIEWER_ACTION_ICONS_BOTTOM, REEL_VIEWER_LEFT_CONTENT_BOTTOM, handleDoubleTap, handleVideoTap, showStarAnimation, showPlayPauseIcon, playPauseIconOpacity, slideAnim, threeDotsSlideAnim]);
   
   const filteredReels = useMemo(() => {
-    // Always return all reels - don't slice, just use all of them
-    // The initialIndex is handled by scrolling to the correct position
+    
+    
     return reelsState;
   }, [reelsState]);
   
@@ -943,7 +943,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
         />
       </View>
       
-      {/* Comment Modal */}
+      {}
       <Modal
         visible={commentModalVisible}
         transparent={true}
@@ -980,10 +980,10 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
               onPress={(e) => e.stopPropagation()}
               style={{ flex: 1 }}
             >
-              {/* Handle Bar */}
+              {}
               <View style={styles.handleBar} />
               
-              {/* Header */}
+              {}
               <View style={styles.commentHeader}>
                 <Text style={styles.commentHeaderTitle}>Comments</Text>
                 <TouchableOpacity
@@ -1004,13 +1004,13 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
                 style={{ flex: 1 }}
                 keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0}
               >
-                {/* Comments List */}
+                {}
                 <ScrollView 
                   style={styles.commentsList} 
                   showsVerticalScrollIndicator={false}
                   keyboardShouldPersistTaps="handled"
                 >
-                  {/* Sample Comments with Replies */}
+                  {}
                   {[
                     { 
                       id: 1, 
@@ -1068,7 +1068,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
                                 </Text>
                           </TouchableOpacity>
                         </View>
-                            {/* Replies Section */}
+                            {}
                             {comment.replies && comment.replies.length > 0 && (
                               <TouchableOpacity
                                 onPress={() => {
@@ -1092,7 +1092,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
                                 </Text>
                               </TouchableOpacity>
                             )}
-                            {/* Display Replies */}
+                            {}
                             {expandedReplies.has(comment.id) && comment.replies && comment.replies.map((reply) => {
                               const replyLikeData = commentLikes.get(reply.id) || { likes: reply.likes, isLiked: reply.isLiked };
                               return (
@@ -1152,7 +1152,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
                   })}
                 </ScrollView>
 
-                {/* Comment Input */}
+                {}
                 <View style={styles.commentInputContainer}>
                   <Image
                     source={require('../../assets/images/user1.png')}
@@ -1174,12 +1174,12 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
                     disabled={commentText.trim() === ""}
                     onPress={() => {
                       if (commentText.trim()) {
-                        // Handle posting comment or reply
+                        
                         if (replyingToComment) {
-                          // This would be a reply - in real app, send to API
+                          
                           setReplyingToComment(null);
                         } else {
-                          // This would be a new comment - in real app, send to API
+                          
                         }
                         setCommentText("");
                       }
@@ -1201,7 +1201,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
         </TouchableOpacity>
       </Modal>
 
-      {/* Share Modal */}
+      {}
       <Modal
         visible={shareModalVisible}
         transparent={true}
@@ -1243,10 +1243,10 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
               activeOpacity={1}
               onPress={(e) => e.stopPropagation()}
             >
-              {/* Handle Bar */}
+              {}
               <View style={styles.handleBar} />
               
-              {/* Header */}
+              {}
               <View style={styles.shareHeader}>
                 <Text style={styles.shareHeaderTitle}>Share</Text>
                 <TouchableOpacity
@@ -1265,7 +1265,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
                 </TouchableOpacity>
               </View>
 
-              {/* Friends List */}
+              {}
               <View style={styles.friendsSection}>
                 <Text style={styles.sectionTitle}>Send to</Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.friendsList}>
@@ -1283,7 +1283,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
                 </ScrollView>
               </View>
 
-              {/* Share Options */}
+              {}
               <View style={styles.shareOptionsSection}>
                 <Text style={styles.sectionTitle}>Share to</Text>
                 <ScrollView 
@@ -1292,7 +1292,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
                   showsHorizontalScrollIndicator={false} 
                   style={styles.shareOptionsList}
                 >
-                  {/* Initial options: Copy, WhatsApp, WhatsApp Status, Instagram */}
+                  {}
                   <TouchableOpacity 
                     style={styles.shareOption}
                     onPress={() => handleShare("copy")}
@@ -1346,7 +1346,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
                     <Text style={styles.shareOptionName} numberOfLines={1}>Instagram</Text>
                   </TouchableOpacity>
                   
-                  {/* More options: Snapchat, Download, Facebook, Twitter - shown when More is clicked */}
+                  {}
                   {showMoreShareOptions && (
                     <>
                       <TouchableOpacity 
@@ -1404,13 +1404,13 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
                     </>
                   )}
                   
-                  {/* More Button - only show if more options are not visible */}
+                  {}
                   {!showMoreShareOptions && (
                     <TouchableOpacity 
                       style={styles.shareOption}
                       onPress={() => {
                         setShowMoreShareOptions(true);
-                        // Scroll to show the new icons when "More" is clicked
+                        
                         setTimeout(() => {
                           shareScrollViewRef.current?.scrollToEnd({ animated: true });
                         }, 100);
@@ -1429,7 +1429,7 @@ export const ReelViewer: React.FC<ReelViewerProps> = ({
         </TouchableOpacity>
       </Modal>
 
-      {/* Three Dots Menu Modal - Bottom Overlay */}
+      {}
       <Modal
         visible={showThreeDotsMenu}
         transparent={true}
@@ -1823,7 +1823,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: scale(1) },
     textShadowRadius: scale(2),
   },
-  // Modal Styles
+  
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.7)',

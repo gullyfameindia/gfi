@@ -34,15 +34,15 @@ import { liveCompetitionStyles as styles } from "@/styles/liveCompetitionStyles"
 import { useUserRole } from "@/contexts/UserRoleContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width, height } = Dimensions.get("window");
-// NOTE: setLayoutAnimationEnabledExperimental is deprecated in New Architecture
-// and doesn't have any effect. Use Reanimated for animations instead if needed.
-// if (
-//   Platform.OS === "android" &&
-//   UIManager.setLayoutAnimationEnabledExperimental
-// ) {
-//   UIManager.setLayoutAnimationEnabledExperimental(true);
-// }
-// Helper functions to format Admin data for display
+
+
+
+
+
+
+
+
+
 const formatDate = (dateString: string): string => {
   if (!dateString) return "";
   const date = new Date(dateString);
@@ -128,8 +128,8 @@ const getTimeRemaining = (endDate: string): string => {
   return `${minutes} min${minutes > 1 ? "s" : ""}`;
 };
 
-// Mock data - aligned with Admin Panel data structure
-// This will be replaced with API data when user APIs are connected
+
+
 const competitionDataMock = {
   id: "1",
   _id: "1",
@@ -290,17 +290,17 @@ export default function LiveCompetitionScreen() {
     : competitionDataMock.id;
   const [competitionData, setCompetitionData] =
     useState<any>(competitionDataMock);
-  // Reel viewer state
+  
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
         Animated.timing(liveDotOpacity, {
-          toValue: 0.2, // Fade out
+          toValue: 0.2, 
           duration: 800,
           useNativeDriver: true,
         }),
         Animated.timing(liveDotOpacity, {
-          toValue: 1, // Fade back in
+          toValue: 1, 
           duration: 800,
           useNativeDriver: true,
         }),
@@ -429,7 +429,7 @@ export default function LiveCompetitionScreen() {
           }
           break;
       }
-      // Close modal after sharing
+      
       Animated.timing(shareSlideAnim, {
         toValue: height,
         duration: 300,
@@ -447,15 +447,15 @@ export default function LiveCompetitionScreen() {
     return source;
   };
 
-  // Safely map the API data
+  
   const mappedLeaderboard = (
     competitionData.leaderboardPreview ||
     competitionData.leaderboard ||
     []
   ).map((participant: any) => ({
     ...participant,
-    username: participant.name || participant.username, // Fallback for your local mock
-    image: getImageSource(participant.profilePictureUrl || participant.image), // Fallback for local mock
+    username: participant.name || participant.username, 
+    image: getImageSource(participant.profilePictureUrl || participant.image), 
   }));
 
   const top10LeaderboardData = mappedLeaderboard.slice(0, 10);
@@ -551,11 +551,11 @@ export default function LiveCompetitionScreen() {
         </View>
       )}
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
-            // If coming from payment/post flow, go to home instead of back
+            
             router.push("/(main)/home");
           }}
           style={styles.headerButton}
@@ -588,7 +588,7 @@ export default function LiveCompetitionScreen() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 100 }}
       >
-        {/* Banner Image with Live Badge */}
+        {}
         <TouchableOpacity style={styles.bannerContainer} activeOpacity={0.9}>
           <Image
             source={competitionData.bannerImage}
@@ -599,9 +599,9 @@ export default function LiveCompetitionScreen() {
             style={styles.bannerGradient}
           />
 
-          {/* Live Badge */}
+          {}
           <View style={styles.liveBadge}>
-            {/* Change this line right here 👇 */}
+            {}
             <Animated.View
               style={[styles.liveDot, { opacity: liveDotOpacity }]}
             />
@@ -609,7 +609,7 @@ export default function LiveCompetitionScreen() {
           </View>
         </TouchableOpacity>
 
-        {/* Competition Info - Below Image */}
+        {}
         <View style={styles.infoSection}>
           <View style={styles.infoRow}>
             <Text style={styles.categoryText}>
@@ -633,11 +633,11 @@ export default function LiveCompetitionScreen() {
           </View>
         </View>
 
-        {/* Rewards & Entry Details */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Rewards & Entry Details</Text>
           <View style={styles.card}>
-            {/* THE HERO STAT: Total Prize Pool */}
+            {}
             <View style={styles.heroPrizeContainer}>
               <Text style={styles.heroPrizeLabel}>TOTAL PRIZE POOL</Text>
               <Text style={styles.heroPrizeAmount}>
@@ -649,7 +649,7 @@ export default function LiveCompetitionScreen() {
 
             <View style={styles.divider} />
 
-            {/* VISUAL PODIUMS: Prize Breakdown */}
+            {}
             <View style={styles.podiumContainer}>
               {formatPrizeBreakdown(
                 competitionData.prizeAmount || competitionData.prizePool || 0,
@@ -674,9 +674,9 @@ export default function LiveCompetitionScreen() {
 
             <View style={styles.divider} />
 
-            {/* Entry Fee */}
+            {}
             <View style={styles.specsRow}>
-              {/* Entry Fee */}
+              {}
               <View style={styles.specBox}>
                 <View style={styles.specHeader}>
                   <Text style={styles.specIcon}>🎟️</Text>
@@ -695,7 +695,7 @@ export default function LiveCompetitionScreen() {
 
               <View style={styles.specVerticalDivider} />
 
-              {/* Dates */}
+              {}
               <View style={styles.specBox}>
                 <View style={styles.specHeader}>
                   <Text style={styles.specIcon}>📅</Text>
@@ -710,10 +710,10 @@ export default function LiveCompetitionScreen() {
 
             <View style={styles.divider} />
 
-            {/* Total Participants */}
+            {}
             <View style={styles.detailRowCompact}>
               <View style={styles.socialProofContainer}>
-                {/* Avatar Face Piles */}
+                {}
                 <View style={styles.avatarPileContainer}>
                   <View style={styles.avatars}>
                     {top10LeaderboardData
@@ -726,7 +726,7 @@ export default function LiveCompetitionScreen() {
                             styles.pileAvatar,
                             index > 0 && {
                               marginLeft: -12,
-                            }, // This creates the overlap effect!
+                            }, 
                           ]}
                         />
                       ))}
@@ -739,7 +739,7 @@ export default function LiveCompetitionScreen() {
                   </Text>
                 </View>
 
-                {/* The "Star" Flex Box */}
+                {}
                 <View style={styles.starFlexBox}>
                   <Text style={styles.starFlexIcon}>⭐</Text>
                   <View>
@@ -754,7 +754,7 @@ export default function LiveCompetitionScreen() {
           </View>
         </View>
 
-        {/* Description & Rules (Gamified as Mission Briefing) */}
+        {}
         <View style={styles.section}>
           <TouchableOpacity
             style={styles.missionBriefingCard}
@@ -773,13 +773,13 @@ export default function LiveCompetitionScreen() {
 
             {isRulesExpanded && (
               <View style={styles.missionContent}>
-                {/* About */}
+                {}
                 <Text style={styles.missionSectionTitle}>About the Battle</Text>
                 <Text style={styles.missionText}>
                   {competitionData.description || "No description available."}
                 </Text>
 
-                {/* Rules */}
+                {}
                 {competitionData.rules && (
                   <>
                     <View style={styles.missionDivider} />
@@ -787,7 +787,7 @@ export default function LiveCompetitionScreen() {
                       Rules of Engagement
                     </Text>
                     <View style={styles.rulesList}>
-                      {/* We split the rules string by newlines to create real bullet points! */}
+                      {}
                       {competitionData.rules
                         .split("\n")
                         .map((rule: string, index: number) => (
@@ -806,7 +806,7 @@ export default function LiveCompetitionScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Leaderboard Preview */}
+        {}
         <View style={styles.section}>
           <View style={styles.leaderboardTitleContainer}>
             <Text style={styles.leaderboardMainTitle}>🏆 LIVE LEADERBOARD</Text>
@@ -828,7 +828,7 @@ export default function LiveCompetitionScreen() {
                   ></TopPerformer>
                 ))}
 
-              {/* Rank 3 - Right Side */}
+              {}
               {top10LeaderboardData
                 .filter((d: any) => d.rank === 3)
                 .map((dancer: any) => (
@@ -856,7 +856,7 @@ export default function LiveCompetitionScreen() {
         <View style={{ height: 20 }} />
       </ScrollView>
 
-      {/* Leaderboard Modal */}
+      {}
       <Modal
         visible={leaderboardModalVisible}
         animationType="slide"
@@ -883,7 +883,7 @@ export default function LiveCompetitionScreen() {
                   key={participant.rank}
                   style={styles.leaderboardItem}
                   onPress={() => {
-                    // Extract name parts from username if needed
+                    
                     const nameParts = participant.username?.split(" ") || [];
                     const firstName =
                       nameParts[0] || participant.username || "User";
@@ -925,7 +925,7 @@ export default function LiveCompetitionScreen() {
         </View>
       </Modal>
 
-      {/* Share Competition Modal */}
+      {}
       <Modal
         visible={shareModalVisible}
         transparent={true}

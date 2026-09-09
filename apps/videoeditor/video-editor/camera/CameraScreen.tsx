@@ -1,18 +1,18 @@
-// PATH: apps/videoeditor/video-ediot/camera/CameraScreen.tsx
+
 
 import React, { useState, useCallback } from 'react';
 import { ActivityIndicator, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { CameraView, useCameraPermissions, useMicrophonePermissions } from 'expo-camera'; 
 import HDSelector from '@/camera-module/components/HDSelector';
 
-/**
- * CameraScreen (Standalone Video Editor Module)
- *
- * - Handles camera + microphone permissions safely using Expo native hooks
- * - Renders a stable CameraView component from expo-camera
- */
+
+
+
+
+
+
 const CameraScreen: React.FC = () => {
-  // Use Expo's native hooks to prevent Android deadlocks
+  
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const [micPermission, requestMicPermission] = useMicrophonePermissions();
 
@@ -27,7 +27,7 @@ const CameraScreen: React.FC = () => {
     await requestMicPermission();
   }, [requestCameraPermission, requestMicPermission]);
 
-  // If permissions state is still loading
+  
   if (!cameraPermission || !micPermission) {
     return (
       <SafeAreaView style={styles.centered}>
@@ -37,7 +37,7 @@ const CameraScreen: React.FC = () => {
     );
   }
 
-  // If permissions are not granted
+  
   if (!cameraPermission.granted || !micPermission.granted) {
     return (
       <SafeAreaView style={styles.centered}>
@@ -56,21 +56,21 @@ const CameraScreen: React.FC = () => {
     );
   }
 
-  // Permissions granted: render the camera preview securely
+  
   return (
     <SafeAreaView style={styles.container}>
-      {/* 1. Preview Area */}
+      {}
       <View style={styles.previewArea}>
         <CameraView
           style={styles.camera}
           facing="back"
           flash="off"
-          // We map resolution string properly for Expo Camera
+          
           videoQuality={config.resolution === '4k' ? '2160p' : '1080p'} 
         />
       </View>
 
-      {/* 2. Controls Area */}
+      {}
       <View style={styles.controlsArea}>
         <HDSelector
           resolution={config.resolution as any}

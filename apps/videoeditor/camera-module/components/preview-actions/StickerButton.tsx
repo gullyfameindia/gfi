@@ -62,7 +62,7 @@ const StickerButton: React.FC<StickerButtonProps> = ({ onPress, onStickerSelect 
   const availableWidth = screenWidth - panelPadding;
   const itemWidth = (availableWidth - (columnsPerView * itemSpacing)) / columnsPerView;
 
-  // 1. Stickers Chunking (Horizontal 3-Rows)
+  
   const stickerColumns = useMemo(() => {
     const cols: (string | number)[][] = [];
     const totalCols = Math.ceil(stickers.length / rows);
@@ -77,7 +77,7 @@ const StickerButton: React.FC<StickerButtonProps> = ({ onPress, onStickerSelect 
     return cols;
   }, [stickers]);
 
-  // 2. Emojis Chunking (Horizontal 3-Rows)
+  
   const emojiColumns = useMemo(() => {
     const cols: string[][] = [];
     const totalCols = Math.ceil(ALL_SYSTEM_EMOJIS.length / rows);

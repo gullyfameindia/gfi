@@ -17,7 +17,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useLocalSearchParams } from "expo-router";
-import { Video, ResizeMode } from "expo-av";
+import { VideoView, useVideoPlayer } from "expo-video";
 import Svg, {
   Path,
   Circle,
@@ -31,10 +31,38 @@ import Svg, {
 import { BackIcon, MusicIcon, InstagramIcon, TagIcon, ThreeDotsIcon, LocationIcon } from "@/icons";
 const { width, height } = Dimensions.get("window");
 
+
+
+
+interface PostVideoPreviewProps {
+  videoUri: string;
+  playerRef: React.MutableRefObject<ReturnType<typeof useVideoPlayer> | null>;
+}
+
+function PostVideoPreview({ videoUri, playerRef }: PostVideoPreviewProps) {
+  const player = useVideoPlayer(videoUri, (player) => {
+    player.loop = true;
+    player.muted = true;
+    player.play();
+  });
+
+  React.useEffect(() => {
+    playerRef.current = player;
+  }, [player, playerRef]);
+
+  return (
+    <VideoView
+      style={styles.video}
+      player={player}
+      contentFit="cover"
+    />
+  );
+}
+
 export default function PostReelScreen() {
   const params = useLocalSearchParams();
 
-  // Get clips from params (from camera/upload screen)
+  
   const clipsFromParams = params.clips
     ? (() => {
         try {
@@ -45,7 +73,7 @@ export default function PostReelScreen() {
       })()
     : [];
 
-  // Parse music data from trim (if selected in editor)
+  
   const musicDataFromParams = params.musicData
     ? (() => {
         try {
@@ -56,7 +84,7 @@ export default function PostReelScreen() {
       })()
     : null;
 
-  // Initialize state from params if available
+  
   const [caption, setCaption] = useState(params.caption ? String(params.caption) : "");
   const [hashtags, setHashtags] = useState<string[]>(() => {
     if (params.hashtags) {
@@ -83,14 +111,14 @@ export default function PostReelScreen() {
   const [showLocationModal, setShowLocationModal] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
 
-  // Competition params
+  
   const competitionId = params.competitionId ? String(params.competitionId) : null;
   const competitionName = params.competitionName
     ? decodeURIComponent(String(params.competitionName))
     : null;
   const entryFee = params.entryFee ? decodeURIComponent(String(params.entryFee)) : null;
 
-  // More Options State
+  
   const [turnOffCommenting, setTurnOffCommenting] = useState(
     params.allowComments === "false" ? false : true
   );
@@ -101,7 +129,7 @@ export default function PostReelScreen() {
   const [allowRemix, setAllowRemix] = useState(true);
 
   const slideAnim = useRef(new Animated.Value(height)).current;
-  const videoRef = useRef<Video>(null);
+  const videoPlayer = useRef<ReturnType<typeof useVideoPlayer> | null>(null);
 
   const maxCaptionLength = 2200;
   const hashtagSuggestions = [
@@ -116,7 +144,7 @@ export default function PostReelScreen() {
   ];
 
   const handleAddHashtag = () => {
-    const trimmedInput = hashtagInput.trim().replace(/^#/, ""); // Remove # if user added it
+    const trimmedInput = hashtagInput.trim().replace(/^#/, ""); 
     if (trimmedInput && !hashtags.includes(trimmedInput)) {
       setHashtags([...hashtags, trimmedInput]);
       setHashtagInput("");
@@ -124,12 +152,12 @@ export default function PostReelScreen() {
   };
 
   const handleHashtagInputChange = (text: string) => {
-    // Allow users to type freely, including custom hashtags
+    
     setHashtagInput(text);
   };
 
   const handleHashtagKeyPress = (e: any) => {
-    // Add hashtag on Enter or when user types space/comma
+    
     if (e.nativeEvent.key === "Enter" || e.nativeEvent.key === " ") {
       handleAddHashtag();
     }
@@ -159,13 +187,13 @@ export default function PostReelScreen() {
   };
 
   const handlePost = async () => {
-    // Include music trim data in the export payload
-    // This will be passed to FFmpeg export handler to apply trim:
-    // musicDataFromParams = { trackId, startOffset, duration, title, artist }
-    // startOffset: seconds into track where playback starts
-    // duration: length of audio to use (matches video duration)
     
-    // If this is a competition entry, navigate to payment screen
+    
+    
+    
+    
+    
+    
     if (competitionId && competitionName && entryFee) {
       router.push({
         pathname: "/(main)/competition/payment",
@@ -177,20 +205,20 @@ export default function PostReelScreen() {
         },
       });
     } else {
-      // Regular post - call actual backend API
+      
       try {
         if (!clipsFromParams.length || !clipsFromParams[0]?.uri) {
           Alert.alert("Error", "Please select a video before posting");
           return;
         }
 
-        // Show loading alert
+        
         let loadingAlert: any;
         const showLoadingAlert = () => {
           Alert.alert("Uploading", "Please wait while we upload your reel...", undefined, { cancelable: false });
         };
         
-        // Dismiss the alert after response
+        
         const dismissAlert = () => {
           if (loadingAlert) {
             loadingAlert.dismiss?.();
@@ -199,7 +227,7 @@ export default function PostReelScreen() {
         
         showLoadingAlert();
         
-        // Import the upload service dynamically to avoid circular dependencies
+        
         const { uploadVideoComplete } = await import("@/api/services/videoUploadService");
         
         const result = await uploadVideoComplete(
@@ -207,7 +235,7 @@ export default function PostReelScreen() {
           {
             title: caption || "Untitled Reel",
             description: caption,
-            duration: 0, // Will be determined by backend
+            duration: 0, 
             resolution: "1080p",
             fps: 30,
             tags: hashtags,
@@ -222,13 +250,13 @@ export default function PostReelScreen() {
           }
         );
 
-        // Dismiss loading alert
+        
         dismissAlert();
 
         if (result.success) {
           Alert.alert("Success", "Your reel has been posted!", [
             { text: "OK", onPress: () => {
-              // Navigate to own profile using the correct route (matching MyFame tab)
+              
               router.push({
                 pathname: "/(main)/profile/[id]",
                 params: { id: "me" },
@@ -261,7 +289,7 @@ export default function PostReelScreen() {
     <SafeAreaView style={styles.container} edges={["top"]}>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <BackIcon />
@@ -277,19 +305,12 @@ export default function PostReelScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Video Preview */}
+        {}
         <View style={styles.videoPreview}>
           {clipsFromParams.length > 0 && clipsFromParams[0]?.uri ? (
-            <Video
-              ref={videoRef}
-              source={{ uri: clipsFromParams[0].uri }}
-              style={styles.video}
-              resizeMode={ResizeMode.COVER}
-              shouldPlay={true}
-              isLooping={true}
-              isMuted={true}
-              useNativeControls={false}
-            />
+            <View style={styles.video}>
+              <PostVideoPreview videoUri={clipsFromParams[0].uri} playerRef={videoPlayer} />
+            </View>
           ) : (
             <View style={styles.video}>
               <Text style={{ color: "#999", textAlign: "center", marginTop: "50%" }}>
@@ -299,7 +320,7 @@ export default function PostReelScreen() {
           )}
         </View>
 
-        {/* Caption Input */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>Caption</Text>
           <TextInput
@@ -317,7 +338,7 @@ export default function PostReelScreen() {
           </Text>
         </View>
 
-        {/* Hashtags */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>Hashtags</Text>
           <View style={styles.hashtagInputContainer}>
@@ -354,7 +375,7 @@ export default function PostReelScreen() {
                     <Text style={styles.suggestionText}>#{suggestion}</Text>
                   </TouchableOpacity>
                 ))}
-              {/* Show option to add custom hashtag */}
+              {}
               {hashtagInput.trim().replace(/^#/, "") &&
                 !hashtagSuggestions.some(
                   (s) => s.toLowerCase() === hashtagInput.toLowerCase().replace(/^#/, "")
@@ -384,14 +405,14 @@ export default function PostReelScreen() {
           )}
         </View>
 
-        {/* Add Music */}
+        {}
         <TouchableOpacity style={styles.optionRow} onPress={() => setShowMusicModal(true)}>
           <MusicIcon />
           <Text style={styles.optionText}>{selectedMusic || "Add Music"}</Text>
           <Text style={styles.chevron}>›</Text>
         </TouchableOpacity>
 
-        {/* Tag People */}
+        {}
         <TouchableOpacity style={styles.optionRow} onPress={() => setShowTagModal(true)}>
           <TagIcon />
           <Text style={styles.optionText}>
@@ -412,14 +433,14 @@ export default function PostReelScreen() {
           </View>
         )}
 
-        {/* Add Location */}
+        {}
         <TouchableOpacity style={styles.optionRow} onPress={() => setShowLocationModal(true)}>
           <LocationIcon />
           <Text style={styles.optionText}>{location || "Add Location"}</Text>
           <Text style={styles.chevron}>›</Text>
         </TouchableOpacity>
 
-        {/* Privacy & Sharing */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionLabel}>Privacy & Sharing</Text>
 
@@ -453,7 +474,7 @@ export default function PostReelScreen() {
         </View>
       </ScrollView>
 
-      {/* Bottom Action Bar */}
+      {}
       <View style={styles.actionBar}>
         <TouchableOpacity style={styles.saveDraftButton} onPress={handleSaveDraft}>
           <Text style={styles.saveDraftText}>Save Draft</Text>
@@ -463,7 +484,7 @@ export default function PostReelScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* More Options Modal */}
+      {}
       <Modal
         visible={showMoreOptions}
         transparent={true}
@@ -475,7 +496,7 @@ export default function PostReelScreen() {
             style={[styles.moreOptionsModal, { transform: [{ translateY: slideAnim }] }]}
           >
             <TouchableOpacity activeOpacity={1} onPress={(e) => e.stopPropagation()}>
-              {/* Header */}
+              {}
               <View style={styles.modalHeader}>
                 <TouchableOpacity onPress={closeMoreOptions}>
                   <BackIcon color="#fff" />
@@ -485,7 +506,7 @@ export default function PostReelScreen() {
               </View>
 
               <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
-                {/* Toggle Options with Icons */}
+                {}
                 <View style={styles.toggleSection}>
                   <View style={styles.toggleRow}>
                     <View style={styles.toggleLeft}>
@@ -659,7 +680,7 @@ export default function PostReelScreen() {
                   </View>
                 </View>
 
-                {/* Third Party Sharing */}
+                {}
                 <View style={styles.sharingSection}>
                   <Text style={styles.sharingTitle}>Share on</Text>
 
@@ -674,7 +695,7 @@ export default function PostReelScreen() {
         </TouchableOpacity>
       </Modal>
 
-      {/* Privacy Modal */}
+      {}
       <Modal
         visible={showPrivacyModal}
         transparent={true}
@@ -708,7 +729,7 @@ export default function PostReelScreen() {
         </TouchableOpacity>
       </Modal>
 
-      {/* Music Modal */}
+      {}
       <Modal
         visible={showMusicModal}
         transparent={true}
@@ -742,7 +763,7 @@ export default function PostReelScreen() {
         </TouchableOpacity>
       </Modal>
 
-      {/* Tag Modal */}
+      {}
       <Modal
         visible={showTagModal}
         transparent={true}
@@ -794,7 +815,7 @@ export default function PostReelScreen() {
         </TouchableOpacity>
       </Modal>
 
-      {/* Location Modal */}
+      {}
       <Modal
         visible={showLocationModal}
         transparent={true}

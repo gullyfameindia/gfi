@@ -1,6 +1,6 @@
-// PATH: apps/gully-fame-mobile/src/modules/video-editor/camera-module/screens/CameraScreen.tsx
 
-import { CameraView } from 'expo-camera';
+
+import { CameraView as ExpoCameraView } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
@@ -62,7 +62,7 @@ const CameraScreen: React.FC<CameraScreenProps> = ({ onBack, onNext, initialClip
   const [frameRate, setFrameRate] = useState<FrameRate>(30);
   const [colorMode, setColorMode] = useState<ColorMode>('sdr');
 
-  // 🔥 STATE MACHINE FLAGS (Bina kisi arbitrary setTimeout ke hardware sync ke liye)
+  
   const [isSwitchingLens, setIsSwitchingLens] = useState(false);
   const [pendingFlip, setPendingFlip] = useState(false);
   const shouldResumeRecordingRef = useRef(false);
@@ -83,14 +83,14 @@ const CameraScreen: React.FC<CameraScreenProps> = ({ onBack, onNext, initialClip
     setMode(nextMode);
   }, []);
 
-  // 🔥 STEP 1: TRIGGER FLIP (Sirf stop recording call karo aur state mark karo)
+  
   const handleSwitchCamera = useCallback(async () => {
     if (isSwitchingLens || pendingFlip) return; 
 
     if (isRecording && mode === CameraModeEnum.Video) {
       console.log('🎥 Flip triggered during active recording. Scheduling hardware safe-stop...');
       setIsSwitchingLens(true);
-      setPendingFlip(true); // Machine will wait for isRecording to become false natively
+      setPendingFlip(true); 
       await stopRecording();
     } else {
       setIsSwitchingLens(true);
@@ -100,26 +100,26 @@ const CameraScreen: React.FC<CameraScreenProps> = ({ onBack, onNext, initialClip
     }
   }, [isRecording, mode, stopRecording, isSwitchingLens, pendingFlip]);
 
-  // 🔥 STEP 2: HARDWARE WATCHER (Jab native recorder completely close hoga tabhi lens badlega)
+  
   useEffect(() => {
     if (!isRecording && pendingFlip) {
       console.log('🔄 Native MediaRecorder has fully released file handles. Safe to flip lenses now.');
-      setPendingFlip(false); // Reset state machine trigger
-      shouldResumeRecordingRef.current = true; // Signal onCameraReady to auto-resume
+      setPendingFlip(false); 
+      shouldResumeRecordingRef.current = true; 
       
-      // Physically change camera lens now that pipeline is completely idle
+      
       setCameraFacing(prev => (prev === 'front' ? 'back' : 'front'));
       setZoom(1);
     }
   }, [isRecording, pendingFlip]);
 
-  // 🔥 STEP 3: AUTO RESUME CHUNKS (Naye lens preview load hote hi automatic recording resume)
+  
   const handleCameraReady = useCallback(async () => {
     if (shouldResumeRecordingRef.current) {
-      shouldResumeRecordingRef.current = false; // Reset instant ref
+      shouldResumeRecordingRef.current = false; 
       console.log('📸 New camera stream layer successfully bound. Resuming recording pipe...');
       
-      // 400ms buffer window to avoid visual stutter during hardware initialization threads
+      
       setTimeout(async () => {
         try {
           recordingStartTimeRef.current = Date.now();
@@ -129,7 +129,7 @@ const CameraScreen: React.FC<CameraScreenProps> = ({ onBack, onNext, initialClip
         } catch (error) {
           console.warn('❌ Failed to resume video stream context:', error);
         } finally {
-          setIsSwitchingLens(false); // Unlock the user UI controls
+          setIsSwitchingLens(false); 
         }
       }, 400);
     } else {
@@ -370,7 +370,7 @@ const CameraScreen: React.FC<CameraScreenProps> = ({ onBack, onNext, initialClip
   return (
     <SafeAreaView style={cameraStyles.cameraContainer}>
       <View style={cameraStyles.cameraPreview}>
-        <CameraView
+        <ExpoCameraView
           ref={cameraRef}
           style={cameraStyles.cameraPreview}
           facing={cameraFacing}
@@ -382,7 +382,7 @@ const CameraScreen: React.FC<CameraScreenProps> = ({ onBack, onNext, initialClip
           onCameraReady={handleCameraReady} 
         />
 
-        {/* --- BLUR TRANSITION LAYER --- */}
+        {}
         {isSwitchingLens && (
           <View style={styles.switchingOverlay}>
             <ActivityIndicator color="#ffffff" size="large" />

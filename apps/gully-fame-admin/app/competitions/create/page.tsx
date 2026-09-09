@@ -35,7 +35,7 @@ export default function CreateCompetitionPage() {
     const role = getUserRole();
     setUserRole(role);
     
-    // For sponsors, auto-set their sponsorId
+    
     if (role === 'sponsor') {
       const adminData = getStoredAdmin();
       const sponsorId = adminData?._id || adminData?.id || adminData?.sponsorCode;
@@ -50,7 +50,7 @@ export default function CreateCompetitionPage() {
   }, []);
 
   useEffect(() => {
-    // Fetch sponsors list when component mounts
+    
     const fetchSponsors = async () => {
       setLoadingSponsors(true);
       try {
@@ -68,7 +68,7 @@ export default function CreateCompetitionPage() {
         }
       } catch (error) {
         console.error('Error fetching sponsors:', error);
-        // Show error message to user if needed
+        
       } finally {
         setLoadingSponsors(false);
       }
@@ -98,7 +98,7 @@ export default function CreateCompetitionPage() {
     setSubmitError(null);
 
     try {
-      // Prepare form data
+      
       const competitionData: any = {
         title: formData.title,
         description: formData.description,
@@ -111,7 +111,7 @@ export default function CreateCompetitionPage() {
         winnerSlots: formData.winnerSlots,
       };
 
-      // For sponsors, always include their sponsorId
+      
       if (userRole === 'sponsor') {
         const adminData = getStoredAdmin();
         const sponsorId = adminData?._id || adminData?.id || adminData?.sponsorCode;
@@ -119,14 +119,14 @@ export default function CreateCompetitionPage() {
           competitionData.sponsorId = sponsorId;
         }
       } else if (formData.hasSponsor && formData.sponsorId) {
-        // For admin, only include sponsorId if they selected one
+        
         competitionData.sponsorId = formData.sponsorId;
       }
 
-      // Handle banner image upload if present
+      
       if (formData.bannerImage) {
-        // Note: Image upload would need to be handled via FormData
-        // For now, we'll send the competition data and handle image separately if needed
+        
+        
         console.log('Banner image selected:', formData.bannerImage.name);
       }
 
@@ -159,7 +159,7 @@ export default function CreateCompetitionPage() {
   return (
     <DashboardLayout>
       <div className="space-y-4 p-4 md:p-6 max-w-5xl mx-auto">
-        {/* Header */}
+        {}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
         <button
@@ -176,7 +176,7 @@ export default function CreateCompetitionPage() {
             </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Basic Information Section */}
+          {}
           <div className="rounded-lg bg-white shadow-sm border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-primary-50 to-primary-100 px-4 py-3 border-b border-gray-200">
               <h2 className="text-base font-semibold text-gray-900 flex items-center space-x-2">
@@ -261,7 +261,7 @@ export default function CreateCompetitionPage() {
             </div>
           </div>
 
-          {/* Schedule & Prize Section */}
+          {}
           <div className="rounded-lg bg-white shadow-sm border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-50 to-blue-100 px-4 py-3 border-b border-gray-200">
               <h2 className="text-base font-semibold text-gray-900 flex items-center space-x-2">
@@ -342,7 +342,7 @@ export default function CreateCompetitionPage() {
             </div>
           </div>
 
-          {/* Competition Rules Section */}
+          {}
           <div className="rounded-lg bg-white shadow-sm border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-purple-50 to-purple-100 px-4 py-3 border-b border-gray-200">
               <h2 className="text-base font-semibold text-gray-900 flex items-center space-x-2">
@@ -368,7 +368,7 @@ export default function CreateCompetitionPage() {
               </div>
             </div>
 
-          {/* Media Section */}
+          {}
           <div className="rounded-lg bg-white shadow-sm border border-gray-200 overflow-hidden">
             <div className="bg-gradient-to-r from-green-50 to-green-100 px-4 py-3 border-b border-gray-200">
               <h2 className="text-base font-semibold text-gray-900 flex items-center space-x-2">
@@ -415,7 +415,7 @@ export default function CreateCompetitionPage() {
               </div>
             </div>
 
-          {/* Sponsor Section - Only visible to admins */}
+          {}
           {userRole === 'admin' && isMounted && (
             <div className="rounded-lg bg-white shadow-sm border border-gray-200 overflow-hidden">
               <div className="bg-gradient-to-r from-orange-50 to-orange-100 px-4 py-3 border-b border-gray-200">
@@ -480,14 +480,14 @@ export default function CreateCompetitionPage() {
               </div>
             )}
 
-          {/* Error Message */}
+          {}
           {submitError && (
             <div className="rounded-lg bg-red-50 border border-red-200 p-3">
               <p className="text-sm text-red-800">{submitError}</p>
             </div>
           )}
 
-          {/* Action Buttons */}
+          {}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 pt-3 border-t border-gray-200">
               <button
                 type="button"

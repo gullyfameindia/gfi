@@ -21,7 +21,7 @@ export default function OnboardingAllDone() {
   const fromKycFlow = params.fromKycFlow === "true";
 
   useEffect(() => {
-    // If coming from KYC flow, auto-navigate to KYC status page after 2 seconds
+    
     if (fromKycFlow) {
       const timer = setTimeout(async () => {
         await AsyncStorage.removeItem('kycFlowActive');
@@ -34,12 +34,12 @@ export default function OnboardingAllDone() {
 
   const handleExplore = async () => {
     if (fromKycFlow) {
-      // If from KYC flow, navigate to KYC status page
+      
       await AsyncStorage.removeItem('kycFlowActive');
       const { navigateToNextKycStep } = await import("@utils/kycValidation");
       await navigateToNextKycStep('allDone');
     } else {
-      // Normal flow - go to sign in
+      
       router.replace("/auth/signin");
     }
   };

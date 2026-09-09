@@ -1,5 +1,5 @@
-// Created by Kiro
-// Home Screen - Displays competitions, banners, and categories
+
+
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -54,7 +54,7 @@ export default function HomeScreen({ navigation }: any) {
     fetchHomeData();
   }, []);
 
-  // Fetch all home data
+  
   const fetchHomeData = async () => {
     try {
       setLoading(true);
@@ -81,19 +81,19 @@ export default function HomeScreen({ navigation }: any) {
     }
   };
 
-  // Handle refresh
+  
   const handleRefresh = async () => {
     setRefreshing(true);
     await fetchHomeData();
     setRefreshing(false);
   };
 
-  // Handle competition tap
+  
   const handleCompetitionTap = (competition: Competition) => {
     navigation.navigate('CompetitionDetail', { competition });
   };
 
-  // Filter competitions based on search
+  
   const filteredCompetitions = competitions.filter((comp) =>
     comp.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -117,20 +117,20 @@ export default function HomeScreen({ navigation }: any) {
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         }
       >
-        {/* Search Bar */}
+        {}
         <View style={styles.searchContainer}>
           <Ionicons name="search" size={20} color="#999" />
           <Text
             style={styles.searchInput}
             onPress={() => {
-              /* Search functionality */
+              
             }}
           >
             Search competitions...
           </Text>
         </View>
 
-        {/* Banners Section */}
+        {}
         {banners.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Featured</Text>
@@ -144,7 +144,7 @@ export default function HomeScreen({ navigation }: any) {
                   key={banner.id}
                   style={styles.bannerCard}
                   onPress={() => {
-                    /* Handle banner tap */
+                    
                   }}
                 >
                   {banner.image ? (
@@ -163,7 +163,7 @@ export default function HomeScreen({ navigation }: any) {
           </View>
         )}
 
-        {/* Categories Section */}
+        {}
         {categories.length > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Categories</Text>
@@ -173,7 +173,7 @@ export default function HomeScreen({ navigation }: any) {
                   key={category.id}
                   style={styles.categoryCard}
                   onPress={() => {
-                    /* Filter by category */
+                    
                   }}
                 >
                   <View style={styles.categoryIcon}>
@@ -186,7 +186,7 @@ export default function HomeScreen({ navigation }: any) {
           </View>
         )}
 
-        {/* Competitions Section */}
+        {}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Competitions</Text>
@@ -239,7 +239,7 @@ export default function HomeScreen({ navigation }: any) {
           )}
         </View>
 
-        {/* Footer Spacing */}
+        {}
         <View style={styles.footerSpacing} />
       </ScrollView>
     </SafeAreaView>

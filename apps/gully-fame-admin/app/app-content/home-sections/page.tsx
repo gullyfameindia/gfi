@@ -118,7 +118,7 @@ export default function HomeSectionsPage() {
   };
 
   const handleSaveAll = () => {
-    // TODO: Call API to save sections configuration
+    
     alert('Home page sections configuration saved successfully!');
   };
 
@@ -133,7 +133,7 @@ export default function HomeSectionsPage() {
   return (
     <DashboardLayout>
       <div className="space-y-4 md:space-y-6 p-3 sm:p-4 md:p-6">
-        {/* Header */}
+        {}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Manage Home Page Sections</h1>
@@ -158,7 +158,7 @@ export default function HomeSectionsPage() {
           </div>
         </div>
 
-        {/* Info Banner */}
+        {}
         <div className="rounded-xl bg-blue-50 border border-blue-200 p-4">
           <p className="text-sm text-blue-800">
             <strong>How it works:</strong> Sections are automatically generated based on user behavior and content. 

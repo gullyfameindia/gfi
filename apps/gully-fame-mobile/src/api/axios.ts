@@ -1,20 +1,20 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// ✅ FIXED BY KIRO: Improved error handling and network error detection
-// Get base URL from env, with fallback to production server
+
+
 export let BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 
-// ✅ KIRO: Edit by kiro - Changed fallback to new production deployment URL
-// ❌ OLD CODE - OLD IP FALLBACK
-// if (!BASE_URL) {
-//   BASE_URL = "http://103.194.228.68:3552/v1/api/";
-//   console.warn(
-//     "[axios] Using production server as base URL. To change, set EXPO_PUBLIC_API_BASE_URL in .env"
-//   );
-// }
 
-// ✅ NEW CODE - UPDATED PRODUCTION DEPLOYMENT URL
+
+
+
+
+
+
+
+
+
 if (!BASE_URL) {
   BASE_URL = "https://gullyfame.com/v1/api/";
   if (__DEV__) {
@@ -26,18 +26,18 @@ if (!BASE_URL) {
 
 const TOKEN_STORAGE_KEY = "authToken";
 
-// ✅ KIRO: Edit by kiro - Added CORS headers and improved timeout for mobile builds
+
 const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 60000, // ✅ KIRO: Increased timeout from 30s to 60s for mobile builds
+  timeout: 60000, 
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
-    // ✅ KIRO: Added CORS headers for mobile app
+    
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    // ✅ KIRO: Edit by kiro - Added User-Agent and X-Requested-With headers for better compatibility
+    
     "User-Agent": "GullyFame-Mobile/1.0",
     "X-Requested-With": "XMLHttpRequest",
   },
@@ -52,7 +52,7 @@ declare module "axios" {
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     try {
-      // Log request details in development mode
+      
       if (__DEV__) {
         console.log("[axios] 🔐 [VERIFICATION] Request Details:", {
           method: config.method?.toUpperCase(),
@@ -109,7 +109,7 @@ apiClient.interceptors.response.use(
       _retryCount?: number;
     };
 
-    // Retry logic for network errors (max 2 retries)
+    
     if (!error.response && !originalRequest._retry) {
       originalRequest._retryCount = (originalRequest._retryCount || 0) + 1;
 
@@ -122,19 +122,19 @@ apiClient.interceptors.response.use(
           );
         }
 
-        // Wait 1 second before retrying
+        
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         return apiClient(originalRequest);
       }
     }
 
-    // Token Refresh Mechanism with proper error handling
+    
     if (error.response?.status === 401 && !originalRequest._retry && !originalRequest.skipAuth) {
       console.log("[axios] 🔐 [VERIFICATION] Received 401 - Attempting token refresh");
       originalRequest._retry = true;
       try {
-        // Refresh token API call
+        
         const refreshToken = await AsyncStorage.getItem("refreshToken");
         console.log("[axios] 🔐 [VERIFICATION] Refresh token available:", !!refreshToken);
 
@@ -163,13 +163,13 @@ apiClient.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error("[axios] ❌ [VERIFICATION FAILED] Token refresh failed:", refreshError);
-        // Logout on refresh failure
+        
         await AsyncStorage.removeItem(TOKEN_STORAGE_KEY);
         await AsyncStorage.removeItem("refreshToken");
         console.log("[axios] 🔐 [VERIFICATION] Auth tokens cleared - user logged out");
       }
     } else if (error.response?.status === 401 && originalRequest.skipAuth) {
-      // Public endpoint returned 401 - don't log out, just log a warning
+      
       console.warn("[axios] 🔐 [VERIFICATION] Public endpoint returned 401 - no logout required");
     } else if (error.response?.status === 403) {
       console.warn("[axios] 🔐 [VERIFICATION] Forbidden (403): Access denied to this resource");
@@ -183,9 +183,9 @@ apiClient.interceptors.response.use(
       console.error("[axios] Server Error");
     }
 
-    // Improved network error handling
+    
     if (!error.response) {
-      // Network errors are expected when API server is down - use warning instead of error
+      
       if (__DEV__) {
         console.warn(
           "[axios] Network Error (using fallback data):",
@@ -195,7 +195,7 @@ apiClient.interceptors.response.use(
 
       let networkErrorMessage = "Network error: Unable to connect to server.";
 
-      // Detailed error messages based on error type
+      
       if (error.code === "ECONNREFUSED") {
         networkErrorMessage =
           "Cannot connect to server. The backend server may be down. Please check if the API server is running.";

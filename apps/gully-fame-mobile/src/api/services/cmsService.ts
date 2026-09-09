@@ -18,13 +18,13 @@ export async function getTermsAndConditions(): Promise<ApiResponse<CMSContentRes
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
-      // Handle different response formats
+      
       let content = '';
       if (typeof responseData.data === 'string') {
-        // If data is a string directly
+        
         content = responseData.data;
       } else if (responseData.data && typeof responseData.data === 'object') {
-        // If data is an object, check for termsAndConditions or content field
+        
         content = responseData.data.termsAndConditions || responseData.data.content || '';
       }
       
@@ -60,7 +60,7 @@ export async function getAboutUs(): Promise<ApiResponse<CMSContentResponse>> {
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
-      // Handle different response formats
+      
       let content = '';
       if (typeof responseData.data === 'string') {
         content = responseData.data;
@@ -100,7 +100,7 @@ export async function getPrivacyPolicy(): Promise<ApiResponse<CMSContentResponse
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
-      // Handle different response formats
+      
       let content = '';
       if (typeof responseData.data === 'string') {
         content = responseData.data;
@@ -140,7 +140,7 @@ export async function getCompetitionRules(): Promise<ApiResponse<CMSContentRespo
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
-      // Handle different response formats
+      
       let content = '';
       if (typeof responseData.data === 'string') {
         content = responseData.data;

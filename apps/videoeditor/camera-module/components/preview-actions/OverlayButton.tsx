@@ -8,9 +8,9 @@ interface OverlayButtonProps {
   onApplyOverlay?: (overlay: any) => void;
 }
 
-/**
- * Overlay button component for preview editor
- */
+
+
+
 const OverlayButton: React.FC<OverlayButtonProps> = ({ onPress, onApplyOverlay }) => {
   const [showModal, setShowModal] = useState(false);
 

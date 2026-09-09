@@ -4,7 +4,7 @@ export const styles = StyleSheet.create({
     leaderboardSection: {
         flex: 1,
         marginTop: 10,
-        backgroundColor: "#3C2610", // Keeps the background matching the theme
+        backgroundColor: "#3C2610", 
     },
     leaderboardContent: {
         paddingHorizontal: 16,
@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
         borderRadius: 12,
         paddingVertical: 12,
         paddingHorizontal: 16,
-        marginBottom: 10, // Gives the floating gap effect in FlatList
+        marginBottom: 10, 
         borderWidth: 1,
         borderColor: "#4A3A2A",
         overflow: "hidden",
@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.4,
         shadowRadius: 4,
         elevation: 5,
-        height: 80, // Matches ITEM_HEIGHT
+        height: 80, 
     },
     cardAccentStrip: {
         position: "absolute",

@@ -20,7 +20,7 @@ const RoleBasedBanner = ({ onLayout }: { onLayout?: (event: any) => void }) => {
     loadUserRole();
   }, []);
 
-  // Backend returns "participants" (plural), but we also check for "participant" (singular) for compatibility
+  
   const isParticipant =
     userRole === "participant" || userRole === "participants";
 

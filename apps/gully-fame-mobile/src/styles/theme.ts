@@ -1,20 +1,20 @@
-/**
- * Theme Constants
- * Centralized colors, spacing, and typography
- */
+
+
+
+
 
 export const COLORS = {
-  // Primary Colors
+  
   PRIMARY: "#E91E63",
   PRIMARY_DARK: "#C2185B",
   PRIMARY_LIGHT: "#F06292",
 
-  // Secondary Colors
+  
   SECONDARY: "#007AFF",
   SECONDARY_DARK: "#0051D5",
   SECONDARY_LIGHT: "#5AC8FA",
 
-  // Neutral Colors
+  
   WHITE: "#FFFFFF",
   BLACK: "#000000",
   GRAY_50: "#F9FAFB",
@@ -28,28 +28,28 @@ export const COLORS = {
   GRAY_800: "#1F2937",
   GRAY_900: "#111827",
 
-  // Background Colors
+  
   BACKGROUND: "#121212",
   SURFACE: "#1E1E1E",
   SURFACE_VARIANT: "#2C2C2C",
 
-  // Status Colors
+  
   SUCCESS: "#10B981",
   WARNING: "#F59E0B",
   ERROR: "#EF4444",
   INFO: "#3B82F6",
 
-  // Text Colors
+  
   TEXT_PRIMARY: "#000000",
   TEXT_SECONDARY: "#666666",
   TEXT_TERTIARY: "#999999",
   TEXT_DISABLED: "#CCCCCC",
 
-  // Border Colors
+  
   BORDER: "#E5E7EB",
   BORDER_DARK: "#2C2C2C",
 
-  // Overlay
+  
   OVERLAY_LIGHT: "rgba(0, 0, 0, 0.3)",
   OVERLAY_DARK: "rgba(0, 0, 0, 0.7)",
 } as const;

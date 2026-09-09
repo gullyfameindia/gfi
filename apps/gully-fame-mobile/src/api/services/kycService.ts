@@ -1,6 +1,6 @@
-// Created by Kiro - KYC Verification Service
-// Handles KYC document submission, verification, and status tracking
-// PRODUCTION READY: All endpoints use centralized API_ENDPOINTS configuration
+
+
+
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
@@ -43,7 +43,7 @@ export interface DocumentUploadProgress {
   percentage: number;
 }
 
-// ✅ CREATED BY KIRO - Submit KYC information
+
 export async function submitKYC(kycData: KYCSubmissionData): Promise<ApiResponse<KYCStatus>> {
   try {
     console.log("[kycService] Submitting KYC data");
@@ -85,7 +85,7 @@ export async function submitKYC(kycData: KYCSubmissionData): Promise<ApiResponse
   }
 }
 
-// ✅ CREATED BY KIRO - Get KYC verification status
+
 export async function getKYCStatus(): Promise<ApiResponse<KYCStatus>> {
   try {
     console.log("[kycService] Getting KYC status");
@@ -129,7 +129,7 @@ export async function getKYCStatus(): Promise<ApiResponse<KYCStatus>> {
   }
 }
 
-// ✅ CREATED BY KIRO - Upload KYC document
+
 export async function uploadDocument(
   documentType: string,
   documentNumber: string,
@@ -147,14 +147,14 @@ export async function uploadDocument(
     formData.append("documentType", documentType);
     formData.append("documentNumber", documentNumber);
 
-    // Append front image
+    
     formData.append("frontImage", {
       uri: frontImageUri,
       name: `${documentType}_front.jpg`,
       type: "image/jpeg",
     } as any);
 
-    // Append back image if provided
+    
     if (backImageUri) {
       formData.append("backImage", {
         uri: backImageUri,
@@ -163,7 +163,7 @@ export async function uploadDocument(
       } as any);
     }
 
-    // Using kyc/upload-document as it's not explicitly in Postman spec
+    
     const response = await apiClient.post<any>("kyc/upload-document", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -217,7 +217,7 @@ export async function uploadDocument(
   }
 }
 
-// ✅ CREATED BY KIRO - Verify KYC document
+
 export async function verifyDocument(documentId: string): Promise<ApiResponse<KYCDocument>> {
   try {
     console.log("[kycService] Verifying document:", documentId);
@@ -260,12 +260,12 @@ export async function verifyDocument(documentId: string): Promise<ApiResponse<KY
   }
 }
 
-// ✅ CREATED BY KIRO - Resubmit KYC after rejection
+
 export async function resubmitKYC(kycData: KYCSubmissionData): Promise<ApiResponse<KYCStatus>> {
   try {
     console.log("[kycService] POST user/kyc (resubmit)");
 
-    // Using user/kyc for resubmit per Postman spec
+    
     const response = await apiClient.post<any>("user/kyc", kycData);
     const responseData = response.data as any;
 

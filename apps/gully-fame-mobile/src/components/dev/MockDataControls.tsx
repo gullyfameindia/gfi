@@ -1,7 +1,7 @@
-/**
- * Mock Data Controls Component
- * Development-only UI for toggling mock data settings
- */
+
+
+
+
 
 import React, { useState } from "react";
 import {
@@ -16,23 +16,23 @@ import {
 } from "react-native";
 import { mockDataLoader } from "../../utils/mockDataLoader";
 
-/**
- * Development-only component for mock data configuration
- * Add to dev menu or hidden settings screen
- * 
- * Usage:
- * ```tsx
- * import MockDataControls from "@/components/dev/MockDataControls";
- * 
- * export default function DevSettings() {
- *   return (
- *     <ScrollView>
- *       <MockDataControls />
- *     </ScrollView>
- *   );
- * }
- * ```
- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export default function MockDataControls() {
   const [config, setConfig] = useState(mockDataLoader.getConfig());
   const [delayInput, setDelayInput] = useState(String(config.mockResponseDelay));
@@ -88,7 +88,7 @@ export default function MockDataControls() {
         <Text style={styles.subtitle}>Development Only</Text>
       </View>
 
-      {/* Status Section */}
+      {}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Status</Text>
         <View style={styles.statusBox}>
@@ -97,11 +97,11 @@ export default function MockDataControls() {
         </View>
       </View>
 
-      {/* Toggle Section */}
+      {}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Toggles</Text>
 
-        {/* Enabled */}
+        {}
         <View style={styles.toggleRow}>
           <Text style={styles.toggleLabel}>Mock Data Enabled</Text>
           <Switch
@@ -112,7 +112,7 @@ export default function MockDataControls() {
           />
         </View>
 
-        {/* Force Mock */}
+        {}
         <View style={styles.toggleRow}>
           <Text style={styles.toggleLabel}>Force Mock (Override API)</Text>
           <Switch
@@ -123,7 +123,7 @@ export default function MockDataControls() {
           />
         </View>
 
-        {/* Fallback */}
+        {}
         <View style={styles.toggleRow}>
           <Text style={styles.toggleLabel}>Fallback to Mock on API Error</Text>
           <Switch
@@ -134,7 +134,7 @@ export default function MockDataControls() {
           />
         </View>
 
-        {/* Verbose Logging */}
+        {}
         <View style={styles.toggleRow}>
           <Text style={styles.toggleLabel}>Verbose Logging</Text>
           <Switch
@@ -146,7 +146,7 @@ export default function MockDataControls() {
         </View>
       </View>
 
-      {/* Response Delay Section */}
+      {}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Mock Response Delay</Text>
         <View style={styles.delayRow}>
@@ -167,7 +167,7 @@ export default function MockDataControls() {
         </Text>
       </View>
 
-      {/* Quick Actions Section */}
+      {}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Quick Actions</Text>
 
@@ -200,7 +200,7 @@ export default function MockDataControls() {
         </TouchableOpacity>
       </View>
 
-      {/* Utility Section */}
+      {}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Utilities</Text>
 

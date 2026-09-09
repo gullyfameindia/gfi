@@ -1,5 +1,5 @@
-// Created by Kiro - Hook for real-time follow stats
-// Fetches and updates follower/following counts
+
+
 
 import { useState, useEffect, useCallback } from "react";
 import { followService } from "../api/services/followService";
@@ -12,7 +12,7 @@ export const useFollowStats = (userId: string) => {
   });
   const [loading, setLoading] = useState(true);
 
-  // Fetch follow stats
+  
   const fetchFollowStats = useCallback(async () => {
     if (!userId) {
       setLoading(false);
@@ -22,13 +22,13 @@ export const useFollowStats = (userId: string) => {
     try {
       setLoading(true);
 
-      // Get followers count
+      
       const followersResponse = await followService.getFollowers(userId, {
         page: 1,
-        limit: 1, // Just need the count, not all followers
+        limit: 1, 
       });
 
-      // Get following count
+      
       const followingResponse = await followService.getFollowing(userId, {
         page: 1,
         limit: 1,
@@ -50,16 +50,16 @@ export const useFollowStats = (userId: string) => {
     }
   }, [userId]);
 
-  // Load stats on mount
+  
   useEffect(() => {
     fetchFollowStats();
   }, [userId, fetchFollowStats]);
 
-  // Listen for real-time updates
+  
   useEffect(() => {
     const unsubscribe = followUpdateEmitter.on((event) => {
       console.log("[useFollowStats] Real-time update received:", event);
-      // Refresh stats when follow/unfollow happens
+      
       fetchFollowStats();
     });
 

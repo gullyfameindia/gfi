@@ -27,10 +27,10 @@ interface DeviceCapabilities {
   supportsHDR: boolean;
 }
 
-/**
- * HD selector component with HD icon.
- * Shows Resolution (HD, 2K, 4K), Frame Rate (24, 30, 60), and Color (SDR, HDR) options in a modal.
- */
+
+
+
+
 const HDSelector: React.FC<HDSelectorProps> = ({
   resolution,
   frameRate,
@@ -54,7 +54,7 @@ const HDSelector: React.FC<HDSelectorProps> = ({
   });
   const [popupLayout, setPopupLayout] = useState({ width: 0, height: 0 });
   
-  // 🔥 DIRECT FIX: Sabhi options initially hi TRUE set kar diye gaye hain
+  
   const [capabilities, setCapabilities] = useState<DeviceCapabilities>({
     supportsHD: true,
     supports2K: true,
@@ -74,30 +74,30 @@ const HDSelector: React.FC<HDSelectorProps> = ({
       buttonRef.current.measure((x, y, width, height, pageX, pageY) => {
         const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
-        // Responsive spacing based on screen size
-        const spacing = screenWidth * 0.02; // 2% of screen width
-        const estimatedPopupWidth = screenWidth * 0.22; // 22% for wider content
+        
+        const spacing = screenWidth * 0.02; 
+        const estimatedPopupWidth = screenWidth * 0.22; 
         let popupLeft = pageX + width + spacing;
 
-        // Ensure popup doesn't go off-screen on the right
+        
         const safeAreaMargin = screenHeight * 0.015;
         if (popupLeft + estimatedPopupWidth > screenWidth - safeAreaMargin) {
           popupLeft = screenWidth - estimatedPopupWidth - safeAreaMargin;
         }
 
-        // Calculate button center Y position
+        
         const buttonCenterY = pageY + height / 2;
 
-        // Estimated popup height (3 sections with options)
-        const estimatedPopupHeight = screenHeight * 0.4; // ~40% of screen height
+        
+        const estimatedPopupHeight = screenHeight * 0.4; 
 
-        // Center the popup on the button
+        
         let popupTop = buttonCenterY - estimatedPopupHeight / 2;
         const minTop = safeAreaMargin;
         const maxTop = screenHeight - estimatedPopupHeight - safeAreaMargin;
         popupTop = Math.max(minTop, Math.min(popupTop, maxTop));
 
-        // Calculate arrow position to point at button center
+        
         const arrowTopPosition = buttonCenterY - popupTop - 30;
 
         setButtonLayout({
@@ -123,14 +123,14 @@ const HDSelector: React.FC<HDSelectorProps> = ({
         const actualPopupHeight = height;
         const buttonCenterY = buttonLayout.buttonCenterY;
 
-        // Responsive safe area margin
+        
         const safeAreaMargin = screenHeight * 0.015;
         let popupTop = buttonCenterY - actualPopupHeight / 2;
         const minTop = safeAreaMargin;
         const maxTop = screenHeight - actualPopupHeight - safeAreaMargin;
         popupTop = Math.max(minTop, Math.min(popupTop, maxTop));
 
-        // Calculate arrow position to point at button center
+        
         const arrowTopPosition = buttonCenterY - popupTop - 30;
 
         setButtonLayout(prev => ({
@@ -238,7 +238,7 @@ const HDSelector: React.FC<HDSelectorProps> = ({
               />
             )}
 
-            {/* Resolution Section */}
+            {}
             <View style={cameraStyles.hdModalSection}>
               <Text style={cameraStyles.hdModalSectionTitle}>Resolution</Text>
               <View style={cameraStyles.hdModalOptionsRow}>
@@ -267,7 +267,7 @@ const HDSelector: React.FC<HDSelectorProps> = ({
               </View>
             </View>
 
-            {/* Frame Rate Section */}
+            {}
             <View style={cameraStyles.hdModalSection}>
               <Text style={cameraStyles.hdModalSectionTitle}>Frame Rate</Text>
               <View style={cameraStyles.hdModalOptionsRow}>
@@ -296,7 +296,7 @@ const HDSelector: React.FC<HDSelectorProps> = ({
               </View>
             </View>
 
-            {/* Color Section */}
+            {}
             <View style={cameraStyles.hdModalSection}>
               <Text style={cameraStyles.hdModalSectionTitle}>Color</Text>
               <View style={cameraStyles.hdModalOptionsRow}>

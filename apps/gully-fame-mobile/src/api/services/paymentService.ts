@@ -56,7 +56,7 @@ export interface PaymentError {
   };
 }
 
-// Load from environment variable - never hardcode payment keys
+
 const RAZORPAY_KEY_ID = process.env.EXPO_PUBLIC_RAZORPAY_KEY_ID || '';
 
 const getMockUserData = () => ({

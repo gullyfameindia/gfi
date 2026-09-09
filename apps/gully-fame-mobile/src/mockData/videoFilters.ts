@@ -1,22 +1,22 @@
-/**
- * Mock Video Filters & Effects Data
- * Used for video editor features
- */
+
+
+
+
 
 export interface VideoFilter {
   id: string;
   name: string;
   category: 'filter' | 'effect' | 'transition' | 'sticker';
   thumbnail?: string;
-  intensity?: number; // 0-100
+  intensity?: number; 
   parameters?: Record<string, number>;
   isPopular?: boolean;
   isPremium?: boolean;
 }
 
-// Photo Filters
+
 export const mockVideoFilters: VideoFilter[] = [
-  // Classic Filters
+  
   {
     id: 'filter-paris',
     name: 'Paris',
@@ -82,7 +82,7 @@ export const mockVideoFilters: VideoFilter[] = [
     isPopular: true,
   },
 
-  // Modern Filters
+  
   {
     id: 'filter-neon',
     name: 'Neon',
@@ -144,7 +144,7 @@ export const mockVideoFilters: VideoFilter[] = [
     },
   },
 
-  // Effects
+  
   {
     id: 'effect-blur',
     name: 'Blur',
@@ -181,7 +181,7 @@ export const mockVideoFilters: VideoFilter[] = [
     parameters: { slowMotionSpeed: 0.5 },
   },
 
-  // Transitions
+  
   {
     id: 'transition-fade',
     name: 'Fade',
@@ -211,7 +211,7 @@ export const mockVideoFilters: VideoFilter[] = [
     parameters: { duration: 400, rotation: 360 },
   },
 
-  // Stickers & Overlays
+  
   {
     id: 'sticker-hearts',
     name: 'Hearts',

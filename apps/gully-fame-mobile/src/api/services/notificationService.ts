@@ -2,7 +2,7 @@ import apiClient from '../axios';
 import { ApiResponse } from '../types';
 import API_ENDPOINTS, { replaceParams } from '../endpoints';
 
-// ==================== Type Definitions ====================
+
 
 export interface Notification {
   _id: string;
@@ -45,12 +45,12 @@ export interface UpdateNotificationStatusResponse {
   [key: string]: any;
 }
 
-// ==================== API Functions ====================
 
-/**
- * Get notifications for the current user with pagination
- * Spec: GET notification/notification?time=1&page=1&limit=10 (typo in spec, actually notifications)
- */
+
+
+
+
+
 export async function getNotifications(
   time: number = 1,
   page: number = 1,
@@ -59,7 +59,7 @@ export async function getNotifications(
   try {
     console.log('[notificationService] GET notifications', { time, page, limit });
     
-    // Spec endpoint: notification/notification (has typo, but use notifications)
+    
     const response = await apiClient.get<any>('notifications', {
       params: {
         time: time,
@@ -71,12 +71,12 @@ export async function getNotifications(
 
     console.log('[notificationService] GET notifications - Raw response:', JSON.stringify(responseData, null, 2));
 
-    // Handle different response structures
+    
     if (responseData.code === 1) {
-      // Standard structure: { code: 1, data: { notification: [...], ... } }
+      
       let notificationData = responseData.data;
       
-      // If data is directly the notification object
+      
       if (notificationData && (notificationData.notification || Array.isArray(notificationData))) {
         const notificationList: NotificationListResponse = {
           notification: notificationData.notification || (Array.isArray(notificationData) ? notificationData : []),
@@ -129,9 +129,9 @@ export async function getNotifications(
   }
 }
 
-/**
- * Send a notification (Admin only)
- */
+
+
+
 export async function sendNotification(
   userId: string,
   title: string,
@@ -175,10 +175,10 @@ export async function sendNotification(
   }
 }
 
-/**
- * Update notification status (read/unRead)
- * Spec: PUT notification/:id/read
- */
+
+
+
+
 export async function updateNotificationStatus(
   notificationId: string,
   status: 'read' | 'unRead'
@@ -191,7 +191,7 @@ export async function updateNotificationStatus(
       status: status,
     };
 
-    // Spec: PUT notification/:id/read
+    
     const endpoint = `notifications/${notificationId}/read`;
     const response = await apiClient.put<any>(endpoint, requestBody);
     const responseData = response.data as any;
@@ -222,7 +222,7 @@ export async function updateNotificationStatus(
   }
 }
 
-// ==================== Service Export ====================
+
 
 export const notificationService = {
   getNotifications,

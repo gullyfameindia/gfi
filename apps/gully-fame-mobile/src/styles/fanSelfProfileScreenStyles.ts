@@ -24,7 +24,7 @@ export const fanSelfProfileScreenStyles = StyleSheet.create({
     socialIconButton: {
         width: 44,
         height: 44,
-        borderRadius: 22, // Makes it a perfect circle
+        borderRadius: 22, 
         backgroundColor: "rgba(255, 255, 255, 0.08)",
         justifyContent: "center",
         alignItems: "center",
@@ -42,7 +42,7 @@ export const fanSelfProfileScreenStyles = StyleSheet.create({
         width: width * 0.42,
         height: width * 0.42,
         borderRadius: width * 0.21,
-        padding: 4, // This acts as the border thickness!
+        padding: 4, 
         shadowColor: "#FFD700",
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.6,
@@ -54,7 +54,7 @@ export const fanSelfProfileScreenStyles = StyleSheet.create({
         height: "100%",
         borderRadius: width * 0.21,
         borderWidth: 3,
-        borderColor: "#3C2610", // Gives separation between the gradient and the photo
+        borderColor: "#3C2610", 
         resizeMode: "cover",
     },
     rankBadgeContainer: {
@@ -101,7 +101,7 @@ export const fanSelfProfileScreenStyles = StyleSheet.create({
         fontWeight: "600",
     },
 
-    // --- Edit Modal Social Inputs ---
+    
     socialInputContainer: {
         flexDirection: "row",
         alignItems: "center",
@@ -365,7 +365,7 @@ export const fanSelfProfileScreenStyles = StyleSheet.create({
     logoutText: {
         color: "#FF6B6B",
     },
-    // Edit Bio Modal Styles
+    
     editBioOverlay: {
         flex: 1,
         backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -468,7 +468,7 @@ export const fanSelfProfileScreenStyles = StyleSheet.create({
         color: "#fff",
         fontSize: 16,
     },
-    // Level-Up Modal Styles
+    
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0, 0, 0, 0.7)",

@@ -10,9 +10,9 @@ interface AudioTrackEditorProps {
   maxDuration: number;
 }
 
-/**
- * Audio track editor component for managing audio tracks
- */
+
+
+
 const AudioTrackEditor: React.FC<AudioTrackEditorProps> = ({
   track,
   onUpdate,
@@ -73,7 +73,7 @@ const AudioTrackEditor: React.FC<AudioTrackEditorProps> = ({
       </View>
 
       <View style={styles.controls}>
-        {/* Volume Control */}
+        {}
         <View style={styles.controlGroup}>
           <TouchableOpacity
             style={[styles.controlButton, track.isMuted && styles.controlButtonMuted]}
@@ -115,7 +115,7 @@ const AudioTrackEditor: React.FC<AudioTrackEditorProps> = ({
           </View>
         </View>
 
-        {/* Fade Controls */}
+        {}
         <View style={styles.controlGroup}>
           <Text style={styles.controlLabel}>Fade</Text>
           <View style={styles.fadeControls}>

@@ -22,9 +22,9 @@ interface ExportScreenProps {
   onComplete?: () => void;
 }
 
-/**
- * Export screen with progress indicator and save to gallery
- */
+
+
+
 const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete }) => {
   const [exporting, setExporting] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -32,7 +32,7 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete }
   const [exportedUri, setExportedUri] = useState<string | null>(null);
   const progressAnim = React.useRef(new Animated.Value(0)).current;
 
-  // Request media library permission
+  
   useEffect(() => {
     const requestPermission = async () => {
       try {
@@ -51,7 +51,7 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete }
     requestPermission();
   }, [onBack]);
 
-  // Animate progress bar
+  
   useEffect(() => {
     Animated.timing(progressAnim, {
       toValue: progress,
@@ -69,23 +69,29 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete }
     setExportedUri(null);
 
     try {
-      // Update progress
+      
       setProgress(0.1);
       setStatus('Processing clips...');
 
-      // Export and combine clips
+      
+      const allOverlays = clips.flatMap(clip => clip.overlays || []);
+      
+      console.log(`🎨 [ExportScreen] Exporting with ${allOverlays.length} overlays from ${clips.length} clips`);
+
+      
       const outputUri = await exportAndCombineClips(
         clips,
         (currentProgress: number, currentStatus: string) => {
           setProgress(currentProgress);
           setStatus(currentStatus);
-        }
+        },
+        allOverlays
       );
 
       setProgress(0.9);
       setStatus('Saving to gallery...');
 
-      // Save to gallery
+      
       if (outputUri) {
         const asset = await MediaLibrary.createAssetAsync(outputUri);
         await MediaLibrary.createAlbumAsync('Video Editor', asset, false);
@@ -126,7 +132,7 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete }
     }
   }, [clips, exporting, onBack, onComplete]);
 
-  // Auto-start export when screen loads
+  
   useEffect(() => {
     if (clips.length > 0 && !exporting && !exportedUri) {
       handleExport();
@@ -140,7 +146,7 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete }
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={onBack} style={styles.backButton} disabled={exporting}>
           <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -157,11 +163,11 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete }
         <View style={styles.backButton} />
       </View>
 
-      {/* Content */}
+      {}
       <View style={styles.content}>
         {exporting ? (
           <>
-            {/* Progress Indicator */}
+            {}
             <View style={styles.progressContainer}>
               <View style={styles.progressBarBackground}>
                 <Animated.View
@@ -176,10 +182,10 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete }
               <Text style={styles.progressText}>{Math.round(progress * 100)}%</Text>
             </View>
 
-            {/* Status Text */}
+            {}
             <Text style={styles.statusText}>{status}</Text>
 
-            {/* Spinner */}
+            {}
             <ActivityIndicator size="large" color="#ec9a15" style={styles.spinner} />
           </>
         ) : exportedUri ? (

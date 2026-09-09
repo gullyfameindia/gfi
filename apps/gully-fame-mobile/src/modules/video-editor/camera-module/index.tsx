@@ -3,60 +3,78 @@ import { View } from 'react-native';
 import HomeScreen from './screens/HomeScreen';
 import CameraScreen from './screens/CameraScreen';
 import PreviewScreen from './screens/PreviewScreen';
+import CameraErrorBoundary from './components/CameraErrorBoundary';
 import type { CameraClipArray, CameraModuleScreenName } from './types/camera.types';
 
-/**
- * Root entry point for the self-contained camera module.
- *
- * This component owns ONLY navigation and data passed to Preview:
- * - Home → Camera → Preview
- *
- * Camera-specific UI state (mode, flash, clips) lives inside `CameraScreen`.
- * PreviewScreen receives a snapshot of clips when the user presses Next.
- */
+
+
+
+
+
+
+
+
+
 const CameraModule: React.FC = () => {
   const [screen, setScreen] = useState<CameraModuleScreenName>('Home');
   const [previewClips, setPreviewClips] = useState<CameraClipArray>([]);
   const [cameraClips, setCameraClips] = useState<CameraClipArray>([]);
 
   const handleOpenCamera = useCallback(() => {
+    console.log('🎥 CameraModule: Opening camera screen');
     setCameraClips([]);
     setScreen('Camera');
   }, []);
 
   const handleBackToHome = useCallback(() => {
+    console.log('🎥 CameraModule: Returning to home screen');
     setScreen('Home');
     setCameraClips([]);
     setPreviewClips([]);
   }, []);
 
   const handleNextFromCamera = useCallback((clips: CameraClipArray) => {
-    console.log('🎥 CameraModule: handleNextFromCamera called with', clips?.length ?? 0, 'clips');
-    console.log('🎥 CameraModule: Raw clips array:', JSON.stringify(clips, null, 2));
+    console.log('🎬 [VERIFICATION] CameraModule: handleNextFromCamera called');
+    console.log('  clips.length:', clips?.length ?? 0);
+    console.log('  clips array:', JSON.stringify(clips?.map(c => ({
+      id: c.id,
+      duration: c.duration,
+      uri: c.uri?.substring(0, 50),
+      type: c.type
+    })) ?? []));
+    
     if (clips && clips.length > 0) {
-      console.log('📹 CameraModule: First clip:', JSON.stringify(clips[0], null, 2));
+      console.log('✅ [VERIFICATION] Clips valid - setting camera & preview clips');
+    } else {
+      console.log('⚠️ [VERIFICATION FAILED] Invalid clips array');
+      return;
     }
+    
     setCameraClips(clips);
     setPreviewClips(clips);
+    console.log('✅ [VERIFICATION] Navigation: setting screen to Preview');
     setScreen('Preview');
   }, []);
 
   const handleAddClipFromPreview = useCallback((source: 'camera' | 'gallery') => {
+    console.log('🎥 CameraModule: handleAddClipFromPreview called, source:', source);
     if (source === 'camera') {
-      // Navigate back to camera screen to record new clip
-      // Pass existing clips so they're preserved
+      
+      
       setScreen('Camera');
     }
-    // Gallery is handled in PreviewScreen via onAddClipFromGallery
+    
   }, []);
 
   const handleBackFromPreview = useCallback(() => {
-    // Go back to camera screen (not home) so user can continue adding clips
-    // Pass existing clips so they're preserved (use cameraClips which should be synced)
+    console.log('🎥 CameraModule: Returning from preview to camera');
+    
+    
     setScreen('Camera');
   }, []);
 
   const handleClipUpdateFromPreview = useCallback((clips: CameraClipArray) => {
+    console.log('🎥 CameraModule: handleClipUpdateFromPreview called with', clips.length, 'clips');
     setPreviewClips(clips);
     setCameraClips(clips);
   }, []);
@@ -65,11 +83,13 @@ const CameraModule: React.FC = () => {
     <View style={{ flex: 1 }}>
       {screen === 'Home' && <HomeScreen onOpenCamera={handleOpenCamera} />}
       {screen === 'Camera' && (
-        <CameraScreen
-          onBack={handleBackToHome}
-          onNext={handleNextFromCamera}
-          initialClips={cameraClips}
-        />
+        <CameraErrorBoundary onReset={handleBackToHome}>
+          <CameraScreen
+            onBack={handleBackToHome}
+            onNext={handleNextFromCamera}
+            initialClips={cameraClips}
+          />
+        </CameraErrorBoundary>
       )}
       {screen === 'Preview' && (
         <PreviewScreen

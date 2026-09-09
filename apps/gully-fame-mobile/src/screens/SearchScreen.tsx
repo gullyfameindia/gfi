@@ -1,5 +1,5 @@
-// Created by Kiro - Search Screen
-// Handles global search for users, reels, competitions, and hashtags
+
+
 
 import React, { useState, useEffect } from "react";
 import {
@@ -25,7 +25,7 @@ interface SearchScreenProps {
   navigation?: any;
 }
 
-// ✅ CREATED BY KIRO - Search Screen Component
+
 const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<any>(null);
@@ -34,13 +34,13 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
   const [trendingHashtags, setTrendingHashtags] = useState<SearchHashtag[]>([]);
   const [searchHistory, setSearchHistory] = useState<string[]>([]);
 
-  // ✅ CREATED BY KIRO - Load trending hashtags and search history on mount
+  
   useEffect(() => {
     loadTrendingHashtags();
     loadSearchHistory();
   }, []);
 
-  // ✅ CREATED BY KIRO - Load trending hashtags
+  
   const loadTrendingHashtags = async () => {
     try {
       const response = await searchService.getTrendingHashtags({ limit: 10 });
@@ -52,7 +52,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     }
   };
 
-  // ✅ CREATED BY KIRO - Load search history
+  
   const loadSearchHistory = async () => {
     try {
       const response = await searchService.getSearchHistory();
@@ -64,7 +64,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     }
   };
 
-  // ✅ CREATED BY KIRO - Handle search
+  
   const handleSearch = async (query: string) => {
     if (!query.trim()) {
       setSearchResults(null);
@@ -77,7 +77,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
 
       if (response.success && response.data) {
         setSearchResults(response.data);
-        // Reload search history
+        
         await loadSearchHistory();
       }
     } catch (error) {
@@ -87,19 +87,19 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     }
   };
 
-  // ✅ CREATED BY KIRO - Handle search by hashtag
+  
   const handleHashtagSearch = (hashtag: string) => {
     setSearchQuery(hashtag);
     handleSearch(hashtag);
   };
 
-  // ✅ CREATED BY KIRO - Handle search history item click
+  
   const handleHistoryItemClick = (query: string) => {
     setSearchQuery(query);
     handleSearch(query);
   };
 
-  // ✅ CREATED BY KIRO - Clear search history
+  
   const handleClearHistory = async () => {
     try {
       const response = await searchService.clearSearchHistory();
@@ -111,9 +111,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     }
   };
 
-  // ✅ CREATED BY KIRO - Render user item
+  
   const renderUserItem = (user: SearchUser) => {
-    // Safety check for user and _id
+    
     if (!user || !user._id) {
       return null;
     }
@@ -145,9 +145,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     );
   };
 
-  // ✅ CREATED BY KIRO - Render reel item
+  
   const renderReelItem = (reel: SearchReel) => {
-    // Safety check for reel and _id
+    
     if (!reel || !reel._id) {
       return null;
     }
@@ -172,9 +172,9 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     );
   };
 
-  // ✅ CREATED BY KIRO - Render competition item
+  
   const renderCompetitionItem = (competition: SearchCompetition) => {
-    // Safety check for competition and _id
+    
     if (!competition || !competition._id) {
       return null;
     }
@@ -207,7 +207,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     );
   };
 
-  // ✅ CREATED BY KIRO - Render hashtag item
+  
   const renderHashtagItem = (hashtag: SearchHashtag) => (
     <TouchableOpacity
       key={hashtag.tag}
@@ -219,7 +219,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-  // ✅ CREATED BY KIRO - Render empty state
+  
   const renderEmptyState = () => (
     <View style={styles.emptyContainer}>
       <Text style={styles.emptyIcon}>🔍</Text>
@@ -228,7 +228,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     </View>
   );
 
-  // ✅ CREATED BY KIRO - Render search results
+  
   const renderSearchResults = () => {
     if (!searchResults) return null;
 
@@ -241,7 +241,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
 
     return (
       <View>
-        {/* Users Section */}
+        {}
         {(activeTab === "all" || activeTab === "users") &&
           searchResults.users &&
           searchResults.users.length > 0 && (
@@ -251,7 +251,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
             </View>
           )}
 
-        {/* Reels Section */}
+        {}
         {(activeTab === "all" || activeTab === "reels") &&
           searchResults.reels &&
           searchResults.reels.length > 0 && (
@@ -263,7 +263,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
             </View>
           )}
 
-        {/* Competitions Section */}
+        {}
         {(activeTab === "all" || activeTab === "competitions") &&
           searchResults.competitions &&
           searchResults.competitions.length > 0 && (
@@ -278,10 +278,10 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
     );
   };
 
-  // ✅ CREATED BY KIRO - Render initial state with trending and history
+  
   const renderInitialState = () => (
     <ScrollView style={styles.container}>
-      {/* Trending Hashtags */}
+      {}
       {trendingHashtags.length > 0 && (
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Trending</Text>
@@ -289,7 +289,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
         </View>
       )}
 
-      {/* Search History */}
+      {}
       {searchHistory.length > 0 && (
         <View style={styles.section}>
           <View style={styles.historyHeader}>
@@ -315,7 +315,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Search Header */}
+      {}
       <View style={styles.searchHeader}>
         <View style={styles.searchInputContainer}>
           <Text style={styles.searchIcon}>🔍</Text>
@@ -337,7 +337,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
         </View>
       </View>
 
-      {/* Tab Navigation */}
+      {}
       {searchQuery && (
         <View style={styles.tabNavigation}>
           {["all", "users", "reels", "competitions"].map((tab) => (
@@ -354,7 +354,7 @@ const SearchScreen: React.FC<SearchScreenProps> = ({ navigation }) => {
         </View>
       )}
 
-      {/* Content */}
+      {}
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#007AFF" />

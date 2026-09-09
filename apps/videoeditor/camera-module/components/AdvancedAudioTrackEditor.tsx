@@ -105,7 +105,7 @@ const AdvancedAudioTrackEditor: React.FC<AdvancedAudioTrackEditorProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Track Header */}
+      {}
       <View style={styles.header}>
         <View style={styles.trackInfo}>
           <View style={styles.iconContainer}>
@@ -123,7 +123,7 @@ const AdvancedAudioTrackEditor: React.FC<AdvancedAudioTrackEditorProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Waveform Visualization */}
+      {}
       <View style={styles.waveformContainer}>
         <AudioWaveformDisplay
           audioId={track.id}
@@ -135,9 +135,9 @@ const AdvancedAudioTrackEditor: React.FC<AdvancedAudioTrackEditorProps> = ({
         />
       </View>
 
-      {/* Controls */}
+      {}
       <View style={styles.controls}>
-        {/* Volume Control */}
+        {}
         <View style={styles.controlRow}>
           <View style={styles.controlLabel}>
             <Text style={styles.controlIcon}>🔊</Text>
@@ -163,7 +163,7 @@ const AdvancedAudioTrackEditor: React.FC<AdvancedAudioTrackEditorProps> = ({
           <Text style={styles.volumeValue}>{Math.round(track.volume * 100)}%</Text>
         </View>
 
-        {/* Mute Toggle */}
+        {}
         <View style={styles.controlRow}>
           <TouchableOpacity
             onPress={handleToggleMute}
@@ -174,7 +174,7 @@ const AdvancedAudioTrackEditor: React.FC<AdvancedAudioTrackEditorProps> = ({
           </TouchableOpacity>
         </View>
 
-        {/* Crop Button */}
+        {}
         <TouchableOpacity
           style={styles.actionButton}
           onPress={() => setShowCropModal(true)}
@@ -188,7 +188,7 @@ const AdvancedAudioTrackEditor: React.FC<AdvancedAudioTrackEditorProps> = ({
           ) : null}
         </TouchableOpacity>
 
-        {/* Fade Controls */}
+        {}
         <View style={styles.fadeRow}>
           <View style={styles.fadeItem}>
             <Text style={styles.fadeLabel}>Fade In</Text>
@@ -229,7 +229,7 @@ const AdvancedAudioTrackEditor: React.FC<AdvancedAudioTrackEditorProps> = ({
           </View>
         </View>
 
-        {/* Effects Button */}
+        {}
         <TouchableOpacity
           style={styles.actionButton}
           onPress={() => setShowEffectsModal(true)}
@@ -240,7 +240,7 @@ const AdvancedAudioTrackEditor: React.FC<AdvancedAudioTrackEditorProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Crop Modal */}
+      {}
       <Modal visible={showCropModal} animationType="slide" presentationStyle="pageSheet">
         <SafeAreaView style={styles.modalContainer}>
           <View style={styles.modalHeader}>

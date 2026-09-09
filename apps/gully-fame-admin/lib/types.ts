@@ -1,4 +1,4 @@
-// Keep for backward compatibility
+
 export type UserRole = 'admin' | 'sponsor';
 
 export interface User {

@@ -49,7 +49,7 @@ export default function CompetitionDetailPage() {
       const result = await approveCompetition(id);
       if (result.success) {
         alert('Competition approved successfully!');
-        fetchCompetition(); // Refresh
+        fetchCompetition(); 
       } else {
         alert(result.message || 'Failed to approve competition');
       }
@@ -68,7 +68,7 @@ export default function CompetitionDetailPage() {
       const result = await rejectCompetition(id);
       if (result.success) {
         alert('Competition rejected successfully!');
-        fetchCompetition(); // Refresh
+        fetchCompetition(); 
       } else {
         alert(result.message || 'Failed to reject competition');
       }
@@ -82,11 +82,11 @@ export default function CompetitionDetailPage() {
   const handleDeclareWinners = async () => {
     if (!competition) return;
     
-    // For now, show a placeholder - you'll need to implement a winners selection UI
+    
     if (confirm('Declare winners and distribute coins? This action cannot be undone.')) {
       try {
         setLoadingAction(true);
-        // TODO: Get winners from UI or form
+        
         const winnersData = {
           winners: competition.winners?.map(w => ({
             userId: w.userId,
@@ -98,7 +98,7 @@ export default function CompetitionDetailPage() {
         const result = await declareWinners(competition.id, winnersData);
         if (result.success) {
           alert('Winners declared successfully! Coins will be distributed automatically.');
-          fetchCompetition(); // Refresh
+          fetchCompetition(); 
         } else {
           alert(result.message || 'Failed to declare winners');
         }

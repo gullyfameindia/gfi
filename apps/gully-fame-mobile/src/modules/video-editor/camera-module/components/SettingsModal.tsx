@@ -35,7 +35,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <SafeAreaView style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -52,9 +52,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
           <View style={styles.closeButton} />
         </View>
 
-        {/* Content */}
+        {}
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* Resolution Section */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Resolution</Text>
             <View style={styles.optionsRow}>
@@ -72,7 +72,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </View>
           </View>
 
-          {/* Frame Rate Section */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Frame rate (limited to 30)</Text>
             <View style={styles.optionsRow}>
@@ -101,7 +101,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </View>
           </View>
 
-          {/* Color Mode Section */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Color (limited to SDR)</Text>
             <View style={styles.optionsRow}>
@@ -130,7 +130,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({
             </View>
           </View>
 
-          {/* Info Section */}
+          {}
           <View style={styles.infoSection}>
             <Text style={styles.infoTitle}>Current Settings</Text>
             <View style={styles.infoRow}>

@@ -56,7 +56,7 @@ const ScriptEditorModal: React.FC<ScriptEditorModalProps> = ({
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.keyboardAvoid}
         >
-          {/* Header */}
+          {}
           <View style={styles.header}>
             <TouchableOpacity onPress={onClose} style={styles.backButton}>
               <MaterialCommunityIcons name="chevron-left" size={28} color="#fff" />
@@ -68,7 +68,7 @@ const ScriptEditorModal: React.FC<ScriptEditorModalProps> = ({
           </View>
 
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-            {/* Script Input */}
+            {}
             <View style={styles.inputSection}>
               <Text style={styles.label}>Write your script here...</Text>
               <TextInput
@@ -84,7 +84,7 @@ const ScriptEditorModal: React.FC<ScriptEditorModalProps> = ({
               />
             </View>
 
-            {/* Character Counter */}
+            {}
             <View style={styles.counterSection}>
               <View style={styles.counterBar}>
                 <View
@@ -107,7 +107,7 @@ const ScriptEditorModal: React.FC<ScriptEditorModalProps> = ({
               </Text>
             </View>
 
-            {/* Tips */}
+            {}
             <View style={styles.tipsSection}>
               <Text style={styles.tipsTitle}>💡 Script Tips</Text>
               <View style={styles.tipItem}>
@@ -124,7 +124,7 @@ const ScriptEditorModal: React.FC<ScriptEditorModalProps> = ({
               </View>
             </View>
 
-            {/* Action Buttons */}
+            {}
             <View style={styles.actionsSection}>
               {script.length > 0 && (
                 <TouchableOpacity

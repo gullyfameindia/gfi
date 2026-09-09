@@ -1,205 +1,255 @@
 import { useCallback, useRef, useState, type MutableRefObject } from 'react';
+import React from 'react';
 import type { CameraRecordingOptions } from 'expo-camera';
 import type { CameraClip } from '../types/camera.types';
 import { CameraModeEnum } from '../utils/mediaTypes';
-
+import { Alert, Platform } from 'react-native';
+import * as FileSystem from 'expo-file-system';
+ 
 export interface UseCameraResult {
   cameraRef: MutableRefObject<any>;
   isRecording: boolean;
+  recordingError: string | null;
   takePhoto: () => Promise<CameraClip | null>;
-  startRecording: (onFinished: (clip: CameraClip | null) => void | Promise<void>, maxDurationSeconds?: number, speed?: number) => Promise<void>;
+  startRecording: (
+    onFinished: (clip: CameraClip | null) => void | Promise<void>,
+    maxDurationSeconds?: number,
+    speed?: number
+  ) => Promise<void>;
   stopRecording: () => Promise<void>;
 }
-
-/**
- * Hook that encapsulates expo-camera capture logic.
- */
+ 
+const IS_ANDROID = Platform.OS === 'android';
+ 
 export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResult => {
   const cameraRef = useRef<any>(null);
   const [isRecording, setIsRecording] = useState(false);
-  const maxDurationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [recordingError, setRecordingError] = useState<string | null>(null);
   const isRecordingRef = useRef(false);
-
+ 
+  const recordingStartTimeRef = useRef<number>(0);
+  const maxDurationTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+ 
   const takePhoto = useCallback(async (): Promise<CameraClip | null> => {
-    if (!cameraRef.current || mode !== CameraModeEnum.Photo) {
-      return null;
-    }
-
-    const makeId = () =>
-      `clip-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-
+    if (!cameraRef.current || mode !== CameraModeEnum.Photo) return null;
+    const makeId = () => `clip-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+ 
     try {
       const photo = await cameraRef.current.takePictureAsync();
       const uri = (photo as { uri?: string }).uri ?? '';
-      if (!uri) {
-        return null;
-      }
-
-      return {
-        id: makeId(),
-        uri,
-        duration: 0,
-        type: 'photo',
-        source: 'camera',
-      };
+      if (!uri) return null;
+      return { id: makeId(), uri, duration: 0, type: 'photo', source: 'camera' };
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.warn('Failed to take photo', error);
+      console.error('❌ Photo Error:', error);
+      setRecordingError('Photo capture failed');
+      Alert.alert("Photo Error", "Failed to capture photo.");
       return null;
     }
   }, [mode]);
-
+ 
   const startRecording = useCallback(
-    async (onFinished: (clip: CameraClip | null) => void | Promise<void>, maxDurationSeconds?: number, speed?: number): Promise<void> => {
-      if (!cameraRef.current || mode !== CameraModeEnum.Video || isRecording) {
-        console.log('[useCamera] startRecording: Cannot start recording', {
-          hasRef: !!cameraRef.current,
-          modeCorrect: mode === CameraModeEnum.Video,
-          isRecording,
-        });
+    async (
+      onFinished: (clip: CameraClip | null) => void | Promise<void>,
+      maxDurationSeconds?: number,
+      speed?: number
+    ): Promise<void> => {
+      console.log('[RECORDING] startRecording called');
+      console.log('[CAMERA] ref exists:', !!cameraRef.current);
+      console.log('[CAMERA] isVideoMode:', mode === CameraModeEnum.Video);
+      console.log('[CAMERA] alreadyRecording:', isRecordingRef.current);
+      
+      if (!cameraRef.current || mode !== CameraModeEnum.Video || isRecordingRef.current) {
+        console.warn('[RECORDING] Guard failed - cannot start');
         return;
       }
 
-      const makeId = () =>
-        `clip-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+      console.log('[RECORDING] ✅ All guards passed');
+      setRecordingError(null);
+      const makeId = () => `clip-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+      const recordingId = makeId();
 
-      setIsRecording(true);
+      
       isRecordingRef.current = true;
-      console.log('[useCamera] startRecording: Set recording to true');
+      setIsRecording(true);
+      recordingStartTimeRef.current = Date.now();
+      console.log('[RECORDING] ✅ UI state set to recording');
 
-      // Clear any existing timer
       if (maxDurationTimerRef.current) {
         clearTimeout(maxDurationTimerRef.current);
         maxDurationTimerRef.current = null;
       }
 
-      try {
-        console.log('[useCamera] startRecording: Starting camera recording');
-        const options: CameraRecordingOptions = {};
-        const recordingPromise = cameraRef.current.recordAsync(options);
-        console.log('[useCamera] startRecording: Recording promise created');
+      
+      const delayStartRecording = () => {
+        console.log('[RECORDING] 150ms delay complete - calling recordAsync');
 
-        // Set up auto-stop timer if maxDuration is provided
-        if (maxDurationSeconds && maxDurationSeconds > 0) {
-          maxDurationTimerRef.current = setTimeout(async () => {
-            if (cameraRef.current && isRecordingRef.current) {
-              try {
-                console.log('[useCamera] startRecording: Auto-stopping recording after', maxDurationSeconds, 'seconds');
-                await cameraRef.current.stopRecording();
-              } catch (error) {
-                console.error('[useCamera] startRecording: Failed to auto-stop recording', error);
+        try {
+          const options: any = IS_ANDROID ? {
+            mute: false,
+            maxDuration: maxDurationSeconds || 60,
+            maxFileSize: 500000000,
+            quality: '480p',
+            codec: 'H264',
+          } : {};
+
+          console.log('[RECORDING] recordAsync options:', JSON.stringify(options));
+          console.log('[RECORDING] Calling cameraRef.current.recordAsync()');
+          
+          const recordingPromise = cameraRef.current.recordAsync(options);
+          console.log('[RECORDING] recordAsync promise created, waiting...');
+
+          if (maxDurationSeconds && maxDurationSeconds > 0) {
+            console.log('[RECORDING] Setting max duration timeout:', maxDurationSeconds, 's');
+            maxDurationTimerRef.current = setTimeout(async () => {
+              console.log('[RECORDING] Max duration timeout fired');
+              if (cameraRef.current && isRecordingRef.current) {
+                try {
+                  await cameraRef.current.stopRecording();
+                  console.log('[RECORDING] stopRecording called from timeout');
+                } catch (e) {
+                  console.error('[RECORDING] Error stopping on timeout:', e);
+                }
               }
-            }
-          }, maxDurationSeconds * 1000);
-        }
+            }, maxDurationSeconds * 1000);
+          }
 
-        recordingPromise
-          .then((video: any) => {
-            console.log('[useCamera] startRecording: Recording finished successfully', {
-              hasUri: !!video?.uri,
-              duration: video?.duration,
-            });
-            // Clear timer if recording finishes before timeout
-            if (maxDurationTimerRef.current) {
-              clearTimeout(maxDurationTimerRef.current);
-              maxDurationTimerRef.current = null;
-            }
-            setIsRecording(false);
-            isRecordingRef.current = false;
-            const uri = (video as { uri?: string }).uri ?? '';
-            const duration = (video as { duration?: number }).duration ?? 0;
+          recordingPromise
+            .then(async (video: any) => {
+              console.log('[RECORDING] ✅ recordAsync RESOLVED');
+              console.log('[RECORDING] video result:', JSON.stringify(video, null, 2));
 
-            if (!uri) {
-              console.error('[useCamera] startRecording: No URI in video result');
+              if (maxDurationTimerRef.current) {
+                clearTimeout(maxDurationTimerRef.current);
+                maxDurationTimerRef.current = null;
+              }
+
+              isRecordingRef.current = false;
+              setIsRecording(false);
+              setRecordingError(null);
+
+              const uri = (video as { uri?: string }).uri ?? '';
+              let duration = (video as { duration?: number }).duration ?? 0;
+
+              console.log('[RECORDING] uri:', uri?.substring(0, 60));
+              console.log('[RECORDING] duration from result:', duration);
+              
+              
+              let fileSize = 0;
+              if (uri) {
+                try {
+                  const fileInfo = await FileSystem.getInfoAsync(uri);
+                  fileSize = (fileInfo as any).size || 0;
+                  console.log('[FILE] exists:', fileInfo.exists, '| size:', (fileSize / (1024 * 1024)).toFixed(2), 'MB');
+                  
+                  if (!fileInfo.exists) {
+                    console.error('[FILE] ❌ File does not exist:', uri);
+                    setRecordingError('Video file not saved');
+                    Alert.alert("Error", "Video file was not saved.");
+                    void onFinished(null);
+                    return;
+                  }
+                  
+                  if (fileSize === 0) {
+                    console.error('[FILE] ❌ File is empty (0 bytes)');
+                    setRecordingError('Video file is empty');
+                    Alert.alert("Error", "Video file is empty.");
+                    void onFinished(null);
+                    return;
+                  }
+                } catch (fileCheckError) {
+                  console.warn('[FILE] Could not check file:', fileCheckError);
+                }
+              }
+
+              
+              if (!duration || duration <= 0) {
+                duration = Math.max(1, (Date.now() - recordingStartTimeRef.current) / 1000);
+                console.log('[RECORDING] ⚠️ Duration was 0, calculated:', duration);
+              }
+
+              if (!uri) {
+                console.error('[RECORDING] ❌ No URI in result');
+                setRecordingError('Video URI missing');
+                Alert.alert("Error", "No video URI returned.");
+                void onFinished(null);
+              } else {
+                const clip: CameraClip = {
+                  id: recordingId,
+                  uri,
+                  duration,
+                  type: 'video',
+                  source: 'camera',
+                  speed: speed ?? 1,
+                };
+                console.log('[CLIP] ✅ Created:', {
+                  id: clip.id,
+                  duration,
+                  fileSize: (fileSize / (1024 * 1024)).toFixed(2),
+                  uri: uri.substring(0, 60)
+                });
+                console.log('[CALLBACK] Calling onFinished with clip');
+                void onFinished(clip);
+              }
+            })
+            .catch((err: any) => {
+              console.error('[RECORDING] ❌ recordAsync ERROR:', err);
+              console.error('[RECORDING] Error message:', err?.message);
+              console.error('[RECORDING] Error code:', err?.code);
+
+              if (maxDurationTimerRef.current) clearTimeout(maxDurationTimerRef.current);
+              isRecordingRef.current = false;
+              setIsRecording(false);
+              const errorMsg = err?.message || "Failed to save video";
+              setRecordingError(errorMsg);
+              Alert.alert("Recording Error", errorMsg);
               void onFinished(null);
-            } else {
-              console.log('[useCamera] startRecording: Calling onFinished with clip');
-              void onFinished({
-                id: makeId(),
-                uri,
-                duration,
-                type: 'video',
-                source: 'camera',
-                speed: speed ?? 1, // Store speed multiplier with clip
-              });
-            }
-          })
-          .catch((error: any) => {
-            console.error('[useCamera] startRecording: Recording promise rejected', {
-              error,
-              message: error?.message,
-              code: error?.code,
-              stack: error?.stack,
             });
-            // Clear timer on error
-            if (maxDurationTimerRef.current) {
-              clearTimeout(maxDurationTimerRef.current);
-              maxDurationTimerRef.current = null;
-            }
-            setIsRecording(false);
-            isRecordingRef.current = false;
-            void onFinished(null);
-          });
-      } catch (error) {
-        console.error('[useCamera] startRecording: Sync error', {
-          error,
-          message: error instanceof Error ? error.message : String(error),
-          stack: error instanceof Error ? error.stack : undefined,
-        });
-        // Clear timer on error
-        if (maxDurationTimerRef.current) {
-          clearTimeout(maxDurationTimerRef.current);
-          maxDurationTimerRef.current = null;
-        }
-        setIsRecording(false);
-        isRecordingRef.current = false;
-        void onFinished(null);
-      }
-    },
-    [isRecording, mode],
-  );
+        } catch (error: any) {
+          console.error('[RECORDING] ❌ Exception in delayStartRecording:', error);
 
+          isRecordingRef.current = false;
+          setIsRecording(false);
+          const errorMsg = error?.message || "Could not start recording";
+          setRecordingError(errorMsg);
+          Alert.alert("Camera Error", errorMsg);
+          void onFinished(null);
+        }
+      };
+
+      setTimeout(delayStartRecording, 150);
+    },
+    [mode]
+  );
+ 
   const stopRecording = useCallback(async (): Promise<void> => {
-    if (!cameraRef.current || !isRecording) {
-      console.log('[useCamera] stopRecording: Camera ref or isRecording issue', {
-        hasRef: !!cameraRef.current,
-        isRecording,
-      });
+    console.log('[STOP] stopRecording called');
+    console.log('[STOP] camera ref exists:', !!cameraRef.current);
+    console.log('[STOP] isRecordingRef.current:', isRecordingRef.current);
+    
+    if (!cameraRef.current || !isRecordingRef.current) {
+      console.warn('[STOP] Guard failed - cannot stop');
       return;
     }
 
-    console.log('[useCamera] stopRecording: Starting stop recording process');
-
-    // Clear auto-stop timer
     if (maxDurationTimerRef.current) {
       clearTimeout(maxDurationTimerRef.current);
       maxDurationTimerRef.current = null;
     }
 
-    isRecordingRef.current = false;
-
     try {
-      console.log('[useCamera] stopRecording: Calling camera.stopRecording()');
-      const result = await cameraRef.current.stopRecording();
-      console.log('[useCamera] stopRecording: Successfully stopped recording', result);
+      console.log('[STOP] Calling cameraRef.current.stopRecording()');
+      await cameraRef.current.stopRecording();
+      console.log('[STOP] ✅ stopRecording succeeded');
+    } catch (error: any) {
+      console.error('[STOP] ❌ stopRecording error:', error);
+      console.error('[STOP] Error message:', error?.message);
+      const errorMsg = error?.message || "Failed to stop recording";
+      setRecordingError(errorMsg);
+      Alert.alert("Stop Error", errorMsg);
       setIsRecording(false);
-    } catch (error) {
-      console.error('[useCamera] stopRecording: FAILED TO STOP RECORDING', {
-        error,
-        message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-      setIsRecording(false);
-      throw error; // Re-throw so CameraScreen can handle it
+      isRecordingRef.current = false;
     }
-  }, [isRecording]);
-
-  return {
-    cameraRef,
-    isRecording,
-    takePhoto,
-    startRecording,
-    stopRecording,
-  };
+  }, []);
+ 
+  return { cameraRef, isRecording, recordingError, takePhoto, startRecording, stopRecording };
 };
-

@@ -3,7 +3,7 @@ import type { ApiResponse } from './apiTypes';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://gullyfame.com/v1/api/';
 
-// ==================== Type Definitions ====================
+
 
 export interface Sponsor {
   id: string;
@@ -27,13 +27,13 @@ export interface UpdateSponsorRequest {
   isActive?: boolean;
 }
 
-// ==================== Universal Response Parser ====================
 
-/**
- * Universal parser that handles both API response formats:
- * { code: 1, message: "...", data: ... }
- * { rCode: 1, msg: "...", rData: ... }
- */
+
+
+
+
+
+
 function parseApiResponse<T>(response: any): { success: boolean; data?: T; message?: string } {
   const success = response.code === 1 || response.rCode === 1;
   const payload = response.data || response.rData;
@@ -136,12 +136,12 @@ async function makeRequest<T>(
   }
 }
 
-// ==================== Sponsor APIs ====================
 
-/**
- * Get list of sponsors
- * GET /admin/sponsors
- */
+
+
+
+
+
 export async function getSponsors(): Promise<ApiResponse<Sponsor[]>> {
   const endpoint = 'admin/sponsors';
   const response = await makeRequest<any>('GET', endpoint);
@@ -166,10 +166,10 @@ export async function getSponsors(): Promise<ApiResponse<Sponsor[]>> {
   };
 }
 
-/**
- * Get sponsor by ID
- * GET /admin/sponsors/{id}
- */
+
+
+
+
 export async function getSponsorById(sponsorId: string): Promise<ApiResponse<Sponsor>> {
   const endpoint = `admin/sponsors/${sponsorId}`;
   const response = await makeRequest<Sponsor>('GET', endpoint);
@@ -192,10 +192,10 @@ export async function getSponsorById(sponsorId: string): Promise<ApiResponse<Spo
   };
 }
 
-/**
- * Create sponsor
- * POST /admin/sponsors
- */
+
+
+
+
 export async function createSponsor(
   data: CreateSponsorRequest
 ): Promise<ApiResponse<Sponsor>> {
@@ -220,10 +220,10 @@ export async function createSponsor(
   };
 }
 
-/**
- * Update sponsor
- * PUT /admin/sponsors/{id}
- */
+
+
+
+
 export async function updateSponsor(
   sponsorId: string,
   data: UpdateSponsorRequest
@@ -249,10 +249,10 @@ export async function updateSponsor(
   };
 }
 
-/**
- * Delete/Deactivate sponsor
- * DELETE /admin/sponsors/{id}
- */
+
+
+
+
 export async function deleteSponsor(
   sponsorId: string,
   email?: string

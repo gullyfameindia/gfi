@@ -12,9 +12,9 @@ interface CaptureButtonProps {
   onPressOut?: () => void;
 }
 
-/**
- * Circular capture button for photo/video capture.
- */
+
+
+
 const CaptureButton: React.FC<CaptureButtonProps> = ({
   mode,
   isRecording,
@@ -50,7 +50,7 @@ const CaptureButton: React.FC<CaptureButtonProps> = ({
             cameraStyles.captureButtonInnerRecording,
         ]}
       >
-        {/* Inner white circle */}
+        {}
         <View
           style={[
             cameraStyles.captureButtonInnerCircle,

@@ -1,17 +1,17 @@
 import type { FilterPreset, FilterConfig } from '../types/filters';
 import type { CameraClip } from '../types/camera.types';
 
-/**
- * Checks if a filter preset has any actual filter values (non-default/Original)
- * @param preset - Filter preset to check
- * @returns true if preset has filter values applied, false if it's Original/no changes
- */
+
+
+
+
+
 export function hasFilterChanges(preset: FilterPreset | FilterConfig | null | undefined): boolean {
   if (!preset || preset.name === 'Original') {
     return false;
   }
 
-  // Check if any filter values are set (non-default values)
+  
   const hasBrightness = preset.brightness !== undefined && preset.brightness !== 0;
   const hasContrast = preset.contrast !== undefined && preset.contrast !== 1.0;
   const hasSaturation = preset.saturation !== undefined && preset.saturation !== 1.0;
@@ -33,11 +33,11 @@ export function hasFilterChanges(preset: FilterPreset | FilterConfig | null | un
   );
 }
 
-/**
- * Checks if a clip has a filter preset applied
- * @param clip - CameraClip to check
- * @returns true if clip has a filter preset with actual changes, false otherwise
- */
+
+
+
+
+
 export function clipHasFilter(clip: CameraClip): boolean {
   if (!clip.filterPreset) {
     return false;
@@ -45,11 +45,11 @@ export function clipHasFilter(clip: CameraClip): boolean {
   return hasFilterChanges(clip.filterPreset);
 }
 
-/**
- * Gets the filter preset name from a clip, or returns 'Original' if none applied
- * @param clip - CameraClip to check
- * @returns Filter preset name or 'Original'
- */
+
+
+
+
+
 export function getClipFilterName(clip: CameraClip): string {
   if (!clip.filterPreset || !hasFilterChanges(clip.filterPreset)) {
     return 'Original';
@@ -57,17 +57,17 @@ export function getClipFilterName(clip: CameraClip): string {
   return clip.filterPreset.name;
 }
 
-/**
- * Compares two filter presets to see if they're different
- * @param preset1 - First preset
- * @param preset2 - Second preset
- * @returns true if presets are different, false if same
- */
+
+
+
+
+
+
 export function areFiltersDifferent(
   preset1: FilterPreset | FilterConfig | null | undefined,
   preset2: FilterPreset | FilterConfig | null | undefined
 ): boolean {
-  // Both null/undefined or both Original
+  
   if (
     (!preset1 || preset1.name === 'Original') &&
     (!preset2 || preset2.name === 'Original')
@@ -75,7 +75,7 @@ export function areFiltersDifferent(
     return false;
   }
 
-  // One is null/Original, other is not
+  
   if (
     (!preset1 || preset1.name === 'Original') !==
     (!preset2 || preset2.name === 'Original')
@@ -83,7 +83,7 @@ export function areFiltersDifferent(
     return true;
   }
 
-  // Both have values, compare them
+  
   if (!preset1 || !preset2) return false;
 
   return (

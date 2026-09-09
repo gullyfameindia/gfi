@@ -1,4 +1,4 @@
-// PATH: apps/gully-fame-mobile/src/modules/video-editor/camera-module/components/StickerLibraryModal.tsx
+
 
 import React, { useState } from 'react';
 import {
@@ -38,12 +38,12 @@ const StickerLibraryModal: React.FC<StickerLibraryModalProps> = ({
     <Modal visible={visible} animationType="slide" transparent={true} onRequestClose={onClose}>
       <View style={styles.modalOverlay}>
         <View style={styles.sheetContainer}>
-          {/* Drag Handle */}
+          {}
           <TouchableOpacity style={styles.dragHandleContainer} onPress={onClose} activeOpacity={1}>
             <View style={styles.dragHandle} />
           </TouchableOpacity>
 
-          {/* Search Bar */}
+          {}
           <View style={styles.searchContainer}>
             <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={styles.searchIcon}>
               <Path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -60,7 +60,7 @@ const StickerLibraryModal: React.FC<StickerLibraryModalProps> = ({
 
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
             
-            {/* Cutouts Section */}
+            {}
             <View style={styles.cutoutSection}>
               <TouchableOpacity style={styles.cutoutButton} onPress={() => handleSelect('CUTOUTS')}>
                 <Text style={styles.cutoutIcon}>✂️</Text>

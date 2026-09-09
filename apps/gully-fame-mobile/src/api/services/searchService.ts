@@ -1,5 +1,5 @@
-// Created by Kiro - Search Service
-// Handles search functionality for users, reels, competitions, and hashtags
+
+
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
@@ -53,7 +53,7 @@ export interface SearchResults {
   total?: number;
 }
 
-// ✅ CREATED BY KIRO - Search users
+
 export async function searchUsers(
   query: string,
   params?: { page?: number; limit?: number }
@@ -61,7 +61,7 @@ export async function searchUsers(
   try {
     console.log("[searchService] Searching users:", { query, params });
 
-    // Spec: GET search?q=bryan&type=users&page=1&limit=20
+    
     const response = await apiClient.get<any>("search", {
       params: { q: query, type: 'users', ...params },
     });
@@ -104,7 +104,7 @@ export async function searchUsers(
   }
 }
 
-// ✅ CREATED BY KIRO - Search reels
+
 export async function searchReels(
   query: string,
   params?: { page?: number; limit?: number }
@@ -112,7 +112,7 @@ export async function searchReels(
   try {
     console.log("[searchService] Searching reels:", { query, params });
 
-    // Spec: GET search?q=dance&type=reels&page=1&limit=20
+    
     const response = await apiClient.get<any>("search", {
       params: { q: query, type: 'reels', ...params },
     });
@@ -155,7 +155,7 @@ export async function searchReels(
   }
 }
 
-// ✅ CREATED BY KIRO - Search competitions
+
 export async function searchCompetitions(
   query: string,
   params?: { page?: number; limit?: number }
@@ -163,7 +163,7 @@ export async function searchCompetitions(
   try {
     console.log("[searchService] Searching competitions:", { query, params });
 
-    // Spec: GET search?q=dance&type=competitions&page=1&limit=20
+    
     const response = await apiClient.get<any>("search", {
       params: { q: query, type: 'competitions', ...params },
     });
@@ -206,7 +206,7 @@ export async function searchCompetitions(
   }
 }
 
-// ✅ CREATED BY KIRO - Search hashtags
+
 export async function searchHashtags(
   query: string,
   params?: { limit?: number }
@@ -256,7 +256,7 @@ export async function searchHashtags(
   }
 }
 
-// ✅ CREATED BY KIRO - Global search (all types)
+
 export async function globalSearch(
   query: string,
   params?: { page?: number; limit?: number; type?: string }
@@ -265,7 +265,7 @@ export async function globalSearch(
     const searchType = params?.type || 'all';
     console.log("[searchService] Global search:", { query, searchType });
 
-    // Spec: GET search?q=dance&type=all (or users, reels, competitions)
+    
     const response = await apiClient.get<any>("search", {
       params: { q: query, type: searchType, ...params },
     });
@@ -306,7 +306,7 @@ export async function globalSearch(
   }
 }
 
-// ✅ CREATED BY KIRO - Get trending hashtags
+
 export async function getTrendingHashtags(params?: {
   limit?: number;
 }): Promise<ApiResponse<SearchHashtag[]>> {
@@ -353,7 +353,7 @@ export async function getTrendingHashtags(params?: {
   }
 }
 
-// ✅ CREATED BY KIRO - Get search history
+
 export async function getSearchHistory(): Promise<ApiResponse<string[]>> {
   try {
     console.log("[searchService] Getting search history");
@@ -398,7 +398,7 @@ export async function getSearchHistory(): Promise<ApiResponse<string[]>> {
   }
 }
 
-// ✅ CREATED BY KIRO - Clear search history
+
 export async function clearSearchHistory(): Promise<ApiResponse<boolean>> {
   try {
     console.log("[searchService] Clearing search history");

@@ -8,9 +8,9 @@ interface ModeToggleProps {
   onChangeMode: (mode: CameraModeEnum) => void;
 }
 
-/**
- * Photo / Video mode switch.
- */
+
+
+
 const ModeToggle: React.FC<ModeToggleProps> = ({ mode, onChangeMode }) => {
   const setPhoto = () => onChangeMode(CameraModeEnum.Photo);
   const setVideo = () => onChangeMode(CameraModeEnum.Video);

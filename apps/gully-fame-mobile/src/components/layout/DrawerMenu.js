@@ -41,7 +41,7 @@ function DrawerMenu({ visible, onClose }) {
           setIsLoggedIn(status === "true");
 
           if (status === "true") {
-            // Always reload fresh data when drawer opens
+            
             const userProfileImage =
               await AsyncStorage.getItem("userProfileImage");
             const userFirstName = await AsyncStorage.getItem("userFirstName");
@@ -56,7 +56,7 @@ function DrawerMenu({ visible, onClose }) {
             } else {
               setUserName("");
             }
-            // Set coins (default to 0 if not found)
+            
             setGfiCoins(userCoins ? parseInt(userCoins, 10) : 0);
           } else {
             setProfileImage(null);
@@ -129,7 +129,7 @@ function DrawerMenu({ visible, onClose }) {
             {isLoggedIn ? (
               <View style={styles.loggedInContainer}>
                 <View>
-                  {/* User Profile Section */}
+                  {}
                   <View style={styles.userProfileSection}>
                     {profileImage ? (
                       <Image

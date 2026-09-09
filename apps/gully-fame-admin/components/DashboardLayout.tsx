@@ -32,8 +32,8 @@ export default function DashboardLayout({
     }
   }, []);
 
-  // Always render the same structure to prevent hydration mismatch
-  // Use suppressHydrationWarning on the div that contains dynamic content
+  
+  
   return (
     <MobileMenuContext.Provider value={{ mobileMenuOpen, setMobileMenuOpen }}>
       <div className="flex h-screen bg-gray-50">

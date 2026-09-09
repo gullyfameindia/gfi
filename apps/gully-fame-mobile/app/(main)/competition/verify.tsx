@@ -28,7 +28,7 @@ export default function VerifyIdentityScreen() {
 
   const handleVerification = () => {
     setHasVerified(true);
-    // Auto proceed to payment after verification
+    
     setTimeout(() => {
       const encodedCompetitionName = encodeURIComponent(competitionName);
       const encodedEntryFee = encodeURIComponent(entryFee);

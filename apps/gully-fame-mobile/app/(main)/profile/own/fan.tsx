@@ -1,10 +1,10 @@
-// Own Profile - Fan
-// This screen is for when a fan views their own profile
+
+
 
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router/react-navigation";
 import {
   Dimensions,
   Image,
@@ -48,12 +48,12 @@ const InstagramIconSVG = ({ width = 26, height = 26, color = "#fff" }) => (
 );
 const formatHandle = (input: string) => {
   if (!input) return "";
-  // Strip URLs
+  
   let clean = input.replace(
     /(https?:\/\/)?(www\.)?(instagram\.com|x\.com|twitter\.com)\/?/g,
     "",
   );
-  // Strip existing @ symbols and trailing slashes
+  
   clean = clean.replace(/^@/, "").replace(/\/$/, "");
   return `@${clean}`;
 };
@@ -63,7 +63,7 @@ const XIconSVG = ({ width = 26, height = 26, color = "#fff" }) => (
   </Svg>
 );
 const { width, height } = Dimensions.get("window");
-// Tabs for fans (with Upload)
+
 const fanTabs = [
   { name: "Home", icon: HomeIconSVG, label: "" },
   { name: "Reel", icon: ReelIconSVG, label: "GullyReel" },
@@ -71,7 +71,7 @@ const fanTabs = [
   { name: "Search", icon: SearchIconSVG, label: "Search" },
   { name: "MyFame", icon: UserIconSVG, label: "" },
 ];
-// Liked Reels and Saved data
+
 const likedReels = [
   { id: 1, image: require("@assets/images/music.png"), width: 1, height: 1 },
   {
@@ -143,21 +143,21 @@ export default function OwnFanProfile() {
   const [levelUpModalVisible, setLevelUpModalVisible] = useState(false);
   const router = useRouter();
 
-  // ✅ CREATED BY KIRO - Get follow stats with real-time updates
+  
   const { stats: followStats } = useFollowStats(profileData.id || "");
 
-  // ✅ CREATED BY KIRO - Get user reels dynamically
+  
   const { reels: userReels, loading: reelsLoading, refetch: refetchReels } = useUserReels(profileData.id || "");
 
-  // Reload data when screen comes into focus - only if needed
+  
   useFocusEffect(
     React.useCallback(() => {
-      // Always refetch reels when screen comes into focus to catch newly posted reels
+      
       if (profileData.id || profileData._id) {
         refetchReels();
       }
       
-      // Only reload profile if we don't have basic data
+      
       if (!profileData.firstName && !profileData.lastName) {
         reloadProfile();
       }
@@ -168,7 +168,7 @@ export default function OwnFanProfile() {
     router.replace("/(main)" as any);
   };
 
-  // ✅ CREATED BY KIRO - Navigate to followers list
+  
   const handleFollowersPress = () => {
     const currentUserId = profileData.id || profileData._id || "";
     if (!currentUserId) {
@@ -181,7 +181,7 @@ export default function OwnFanProfile() {
     } as any);
   };
 
-  // ✅ CREATED BY KIRO - Navigate to following list
+  
   const handleFollowingPress = () => {
     const currentUserId = profileData.id || profileData._id || "";
     if (!currentUserId) {
@@ -196,7 +196,7 @@ export default function OwnFanProfile() {
 
   const handleEditBio = () => {
     setTempBio(profileData.bio || "");
-    // Parse three words or use defaults
+    
     const threeWordsStr = profileData.threeWords || "";
     if (threeWordsStr) {
       const words = threeWordsStr
@@ -205,7 +205,7 @@ export default function OwnFanProfile() {
         .filter((w) => w);
       setTempThreeWords([words[0] || "", words[1] || "", words[2] || ""]);
     } else {
-      // Use default values
+      
       setTempThreeWords(["🎵 MusicLover", "💃 DanceFreak", "✨ VibeCreator"]);
     }
     setEditBioVisible(true);
@@ -216,7 +216,7 @@ export default function OwnFanProfile() {
       .filter((w) => w.trim())
       .join(" | ");
 
-    // 1. Update Local UI State (FIXED: mapped to instagramLink instead of instagram)
+    
     setProfileData((prev) => ({
       ...prev,
       bio: tempBio,
@@ -233,7 +233,7 @@ export default function OwnFanProfile() {
         ["userXLink", tempX],
       ]);
 
-      // Ensure this matches what your backend API expects!
+      
       const updateData: any = {
         bio: tempBio,
         instagramLink: tempInsta,
@@ -290,7 +290,7 @@ export default function OwnFanProfile() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header with Back Button and Menu */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
             <BackIcon color="white" size={24} />
@@ -307,10 +307,10 @@ export default function OwnFanProfile() {
           </TouchableOpacity>
         </View>
 
-        {/* Fan Profile - Circle Frame Profile Section */}
+        {}
         <View style={styles.gamifiedAvatarContainer}>
           <LinearGradient
-            colors={["#E3E4E5", "#9CA3AF", "#4B5563"]} // Silver/Steel gradient
+            colors={["#E3E4E5", "#9CA3AF", "#4B5563"]} 
             style={styles.avatarGradientRing}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
@@ -338,7 +338,7 @@ export default function OwnFanProfile() {
           </View>
         </View>
 
-        {/* User Info */}
+        {}
         <UserInfoSection
           profileData={profileData}
           onEditBio={handleEditBio}
@@ -348,9 +348,9 @@ export default function OwnFanProfile() {
           handleUpgradeClick={handleUpgradeClick}
         />
 
-        {/* Social Links Tags */}
+        {}
         <View style={styles.socialLinksContainer}>
-          {/* Fallback to catch both naming conventions from backend/frontend */}
+          {}
           {profileData.instagramLink && (
             <TouchableOpacity
               style={styles.socialIconButton}
@@ -380,13 +380,13 @@ export default function OwnFanProfile() {
           )}
         </View>
 
-        {/* Content Container */}
+        {}
         <LinearGradient
           colors={["rgba(41, 33, 24, 0.2)", "#3C2610"]}
           locations={[0.0, 0.4]}
           style={styles.contentContainer}
         >
-          {/* Stats Section */}
+          {}
           <StatsSection
             photos={userReels.length}
             followers={followStats.followers}
@@ -395,13 +395,13 @@ export default function OwnFanProfile() {
             onFollowingPress={handleFollowingPress}
           />
 
-          {/* Level-Up Section */}
+          {}
           <LevelUpSection
             onPress={() => setLevelUpModalVisible(true)}
             levelPercentage={profileData.levelPercentage}
           />
 
-          {/* Liked Reels/Saved Tabs */}
+          {}
           <View style={styles.tabContainer}>
             <TouchableOpacity
               style={[
@@ -434,7 +434,7 @@ export default function OwnFanProfile() {
             </TouchableOpacity>
           </View>
 
-          {/* Grid Content - 2 columns layout */}
+          {}
           <View style={styles.gridContainer}>
             {(selectedTab === "Liked Reels" ? likedReels : saved).map(
               (item, index) => {
@@ -450,8 +450,8 @@ export default function OwnFanProfile() {
                     key={item.id}
                     style={[styles.gridItem, itemStyle]}
                     onPress={() => {
-                      // Open reel/post viewer - for now just show alert, can be enhanced later
-                      // TODO: Implement reel viewer similar to search/home pages
+                      
+                      
                       console.log(
                         `Opening ${selectedTab === "Liked Reels" ? "reel" : "saved post"} ${item.id}`,
                       );
@@ -466,7 +466,7 @@ export default function OwnFanProfile() {
         </LinearGradient>
       </ScrollView>
 
-      {/* Level-Up Popup Modal */}
+      {}
       <Modal
         visible={levelUpModalVisible}
         transparent={true}
@@ -526,7 +526,7 @@ export default function OwnFanProfile() {
         </TouchableOpacity>
       </Modal>
 
-      {/* Hamburger Menu Modal */}
+      {}
       <ProfileBurgerMenuModal
         isVisible={menuVisible}
         profileData={profileData}
@@ -537,7 +537,7 @@ export default function OwnFanProfile() {
         onClose={() => setUpgradeModalVisible(false)}
         onUpgradeSuccess={() => setUpgradeModalVisible(false)}
       ></UpgradeFanToParticipantModal>
-      {/* Edit Bio Modal */}
+      {}
       <Modal
         visible={editBioVisible}
         transparent={true}
@@ -658,7 +658,7 @@ export default function OwnFanProfile() {
         </View>
       </Modal>
 
-      {/* Bottom Navigation */}
+      {}
       <BottomNav
         activeTab={activeTab}
         setActiveTab={setActiveTab}

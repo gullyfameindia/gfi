@@ -1,8 +1,8 @@
-/**
- * Sticker & Emoji Library Service
- * Manages stickers, emojis, and decorative elements for video editor
- * KIRO: Real-time backend integration for production
- */
+
+
+
+
+
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
@@ -54,9 +54,9 @@ export interface EmojiGroup {
   emojis: string[];
 }
 
-/**
- * Fetch all available stickers
- */
+
+
+
 export async function listStickers(
   category?: string,
   page = 1,
@@ -125,9 +125,9 @@ export async function listStickers(
   }
 }
 
-/**
- * Get sticker by ID
- */
+
+
+
 export async function getStickerById(stickerId: string): Promise<ApiResponse<Sticker>> {
   try {
     console.log("[stickerEmojiService] Getting sticker:", stickerId);
@@ -178,9 +178,9 @@ export async function getStickerById(stickerId: string): Promise<ApiResponse<Sti
   }
 }
 
-/**
- * Search stickers
- */
+
+
+
 export async function searchStickers(query: string, limit = 30): Promise<ApiResponse<Sticker[]>> {
   try {
     console.log("[stickerEmojiService] Searching stickers:", query);
@@ -231,9 +231,9 @@ export async function searchStickers(query: string, limit = 30): Promise<ApiResp
   }
 }
 
-/**
- * Get trending/popular stickers
- */
+
+
+
 export async function getTrendingStickers(limit = 20): Promise<ApiResponse<Sticker[]>> {
   try {
     console.log("[stickerEmojiService] Getting trending stickers");
@@ -282,14 +282,14 @@ export async function getTrendingStickers(limit = 20): Promise<ApiResponse<Stick
   }
 }
 
-/**
- * Get emoji library with groups
- */
+
+
+
 export async function getEmojis(): Promise<ApiResponse<EmojiGroup[]>> {
   try {
     console.log("[stickerEmojiService] Fetching emojis");
 
-    // For emojis, we can use a standard emoji library or backend
+    
     const response = await apiClient.get<any>("public/emojis");
     const responseData = response.data as any;
 
@@ -328,7 +328,7 @@ export async function getEmojis(): Promise<ApiResponse<EmojiGroup[]>> {
   } catch (error: any) {
     console.error("[stickerEmojiService] getEmojis error:", error.message);
 
-    // Return fallback emoji groups if API fails
+    
     const fallbackEmojis: EmojiGroup[] = [
       {
         name: "Smileys",

@@ -16,7 +16,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { router } from "expo-router";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router/react-navigation";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Svg, { Path, Circle } from "react-native-svg";
 import { ChatListItem, chatService } from "@api/services/chatService";
@@ -49,7 +49,7 @@ export default function InboxScreen() {
   const [showMenu, setShowMenu] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Listen for dimension changes (orientation, split screen, etc.)
+  
   useEffect(() => {
     const subscription = Dimensions.addEventListener("change", ({ window }) => {
       setDimensions(window);
@@ -58,7 +58,7 @@ export default function InboxScreen() {
     return () => subscription?.remove();
   }, []);
 
-  // Fetch chat list from API
+  
   useEffect(() => {
     const fetchChatList = async () => {
       try {
@@ -68,7 +68,7 @@ export default function InboxScreen() {
         const response = await chatService.getChatList();
 
         if (response.success && response.data) {
-          // Transform API chat list to UI format
+          
           const chatList: ChatListItem[] = response.data.chatlist || [];
           console.log(
             "[InboxScreen] Raw chat list from API: ",
@@ -96,7 +96,7 @@ export default function InboxScreen() {
             "[InboxScreen] Failed to fetch chat list:",
             response.message,
           );
-          // Keep empty list on error
+          
           setAllChatsList([]);
         }
       } catch (error: any) {
@@ -110,7 +110,7 @@ export default function InboxScreen() {
     fetchChatList();
   }, []);
 
-  // Animate slide when tab changes
+  
   useEffect(() => {
     Animated.spring(slideAnim, {
       toValue: activeTab === "All" ? 0 : 1,
@@ -120,7 +120,7 @@ export default function InboxScreen() {
     }).start();
   }, [activeTab]);
 
-  // Responsive scaling functions based on current dimensions
+  
   const scale = (size: number) => (dimensions.width / 375) * size;
   const scaleVertical = (size: number) => (dimensions.height / 812) * size;
   const getFontSize = (size: number) => {
@@ -128,13 +128,13 @@ export default function InboxScreen() {
     return Math.max(scaled, size * 0.8);
   };
 
-  // Responsive styles based on screen size
+  
   const isSmallScreen = dimensions.width < 375;
   const tabMargin = isSmallScreen ? scale(20) : scale(50);
 
   const currentChats = activeTab === "All" ? allChatsList : archivedChatsList;
 
-  // Initialize swipe animations for each chat
+  
   useEffect(() => {
     currentChats.forEach((chat) => {
       if (!swipeAnimations.current[chat.id]) {
@@ -143,7 +143,7 @@ export default function InboxScreen() {
     });
   }, [currentChats]);
 
-  // Refresh chat list when screen comes into focus
+  
   useFocusEffect(
     useCallback(() => {
       const fetchChatList = async () => {
@@ -174,11 +174,11 @@ export default function InboxScreen() {
     }, []),
   );
 
-  // Archive chat function
+  
   const handleArchive = (chatId: string) => {
     const chat = allChatsList.find((c) => c.id === chatId);
     if (chat) {
-      // Animate out
+      
       Animated.timing(
         swipeAnimations.current[chatId] || new Animated.Value(0),
         {
@@ -189,7 +189,7 @@ export default function InboxScreen() {
       ).start(() => {
         setAllChatsList(allChatsList.filter((c) => c.id !== chatId));
         setArchivedChatsList([...archivedChatsList, chat]);
-        // Reset animation
+        
         if (swipeAnimations.current[chatId]) {
           swipeAnimations.current[chatId].setValue(0);
         }
@@ -197,11 +197,11 @@ export default function InboxScreen() {
     }
   };
 
-  // Unarchive chat function
+  
   const handleUnarchive = (chatId: string) => {
     const chat = archivedChatsList.find((c) => c.id === chatId);
     if (chat) {
-      // Animate out
+      
       Animated.timing(
         swipeAnimations.current[chatId] || new Animated.Value(0),
         {
@@ -212,7 +212,7 @@ export default function InboxScreen() {
       ).start(() => {
         setArchivedChatsList(archivedChatsList.filter((c) => c.id !== chatId));
         setAllChatsList([...allChatsList, chat]);
-        // Reset animation
+        
         if (swipeAnimations.current[chatId]) {
           swipeAnimations.current[chatId].setValue(0);
         }
@@ -220,7 +220,7 @@ export default function InboxScreen() {
     }
   };
 
-  // Create PanResponder for swipe gesture (works in both tabs)
+  
   const createPanResponder = (chatId: string) => {
     return PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -229,9 +229,9 @@ export default function InboxScreen() {
         const swipeThreshold = 150;
         if (Math.abs(gestureState.dx) > Math.abs(gestureState.dy)) {
           const dx = gestureState.dx;
-          // Allow swipe in both directions with slower movement
+          
           if (dx > -swipeThreshold && dx < swipeThreshold) {
-            // Slow down the swipe by dividing by a factor
+            
             swipeAnimations.current[chatId]?.setValue(dx * 0.6);
           }
         }
@@ -240,14 +240,14 @@ export default function InboxScreen() {
         const swipeThreshold = 80;
         if (Math.abs(gestureState.dx) > swipeThreshold) {
           if (activeTab === "All") {
-            // Archive the chat (swipe left or right)
+            
             handleArchive(chatId);
           } else {
-            // Unarchive the chat (swipe left or right)
+            
             handleUnarchive(chatId);
           }
         } else {
-          // Reset position
+          
           Animated.spring(
             swipeAnimations.current[chatId] || new Animated.Value(0),
             {
@@ -262,7 +262,7 @@ export default function InboxScreen() {
     });
   };
 
-  // Create responsive styles
+  
   const responsiveStyles = {
     headerContainer: {
       ...styles.headerContainer,
@@ -379,7 +379,7 @@ export default function InboxScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header with curved bottom */}
+      {}
       <View style={responsiveStyles.headerContainer}>
         <View style={responsiveStyles.header}>
           <TouchableOpacity
@@ -414,9 +414,9 @@ export default function InboxScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Tabs */}
+        {}
         <View style={responsiveStyles.tabsContainer}>
-          {/* Animated sliding background */}
+          {}
           <Animated.View
             style={[
               styles.slidingIndicator,
@@ -476,7 +476,7 @@ export default function InboxScreen() {
         </View>
       </View>
 
-      {/* Chat List */}
+      {}
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#EC9A15" />
@@ -500,32 +500,32 @@ export default function InboxScreen() {
               const swipeX =
                 swipeAnimations.current[chat.id] || new Animated.Value(0);
 
-              // Arrow animation logic:
-              // Swipe right (dx > 0) → show right arrow on right side
-              // Swipe left (dx < 0) → show left arrow on left side
+              
+              
+              
 
-              // Right arrow (shows when swiping right - dx > 0)
+              
               const rightArrowOpacity = swipeX.interpolate({
                 inputRange: [0, 30, 90],
                 outputRange: [0, 0.5, 1],
                 extrapolate: "clamp",
               });
 
-              // Left arrow (shows when swiping left - dx < 0)
+              
               const leftArrowOpacity = swipeX.interpolate({
                 inputRange: [-90, -30, 0],
                 outputRange: [1, 0.5, 0],
                 extrapolate: "clamp",
               });
 
-              // Right arrow animation (slides in from right)
+              
               const rightArrowTranslateX = swipeX.interpolate({
                 inputRange: [0, 30, 90],
                 outputRange: [20, 10, 0],
                 extrapolate: "clamp",
               });
 
-              // Left arrow animation (slides in from left)
+              
               const leftArrowTranslateX = swipeX.interpolate({
                 inputRange: [-90, -30, 0],
                 outputRange: [0, -10, -20],
@@ -541,7 +541,7 @@ export default function InboxScreen() {
                     overflow: "hidden",
                   }}
                 >
-                  {/* Left archive background (shows when swiping left - dx < 0) */}
+                  {}
                   {activeTab === "All" && (
                     <Animated.View
                       style={[
@@ -571,7 +571,7 @@ export default function InboxScreen() {
                     </Animated.View>
                   )}
 
-                  {/* Right archive background (shows when swiping right - dx > 0) */}
+                  {}
                   {activeTab === "All" && (
                     <Animated.View
                       style={[
@@ -601,7 +601,7 @@ export default function InboxScreen() {
                     </Animated.View>
                   )}
 
-                  {/* Unarchive background for Archived tab */}
+                  {}
                   {activeTab === "Archived" && (
                     <>
                       <Animated.View
@@ -685,7 +685,7 @@ export default function InboxScreen() {
                             setSelectedChats([...selectedChats, chat.id]);
                           }
                         } else {
-                          // Navigate to chat with chat_user_id
+                          
                           router.push({
                             pathname: "/(main)/chat/[id]",
                             params: {
@@ -780,7 +780,7 @@ export default function InboxScreen() {
         </ScrollView>
       )}
 
-      {/* Three Dots Menu Modal */}
+      {}
       <Modal
         visible={showMenu}
         transparent={true}
@@ -840,7 +840,7 @@ export default function InboxScreen() {
         </TouchableOpacity>
       </Modal>
 
-      {/* Selection Mode Actions */}
+      {}
       {isSelectionMode && selectedChats.length > 0 && (
         <View style={styles.selectionActions}>
           <TouchableOpacity
@@ -990,7 +990,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   scrollContent: {
-    // Responsive values set in component
+    
   },
   chatItem: {
     flexDirection: "row",
@@ -1005,7 +1005,7 @@ const styles = StyleSheet.create({
     flexShrink: 0,
   },
   avatar: {
-    // Responsive values set in component
+    
   },
   onlineIndicator: {
     position: "absolute",
@@ -1013,7 +1013,7 @@ const styles = StyleSheet.create({
     borderColor: "#FFFFFF",
   },
   chatContent: {
-    // Responsive values set in component
+    
   },
   chatName: {
     color: "#000000",

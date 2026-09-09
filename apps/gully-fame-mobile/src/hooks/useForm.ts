@@ -1,5 +1,5 @@
-// Created by Kiro
-// useForm Hook - Form state management with validation
+
+
 
 import { useState, useCallback } from 'react';
 
@@ -21,15 +21,15 @@ export interface UseFormOptions {
   onSubmit?: (values: Record<string, any>) => Promise<void> | void;
 }
 
-/**
- * Hook for managing form state with validation
- * @param options - Configuration options
- * @returns Form state and handlers
- */
+
+
+
+
+
 export const useForm = (options: UseFormOptions) => {
   const { initialValues, validationRules = {}, onSubmit } = options;
 
-  // Initialize form state
+  
   const [formState, setFormState] = useState<FormState>(() => {
     const state: FormState = {};
     Object.keys(initialValues).forEach((key) => {
@@ -45,7 +45,7 @@ export const useForm = (options: UseFormOptions) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Validate single field
+  
   const validateField = useCallback(
     (fieldName: string, value: any): string | null => {
       const rules = validationRules[fieldName];
@@ -61,7 +61,7 @@ export const useForm = (options: UseFormOptions) => {
     [validationRules]
   );
 
-  // Handle field change
+  
   const handleChange = useCallback(
     (fieldName: string, value: any) => {
       setFormState((prev) => ({
@@ -69,14 +69,14 @@ export const useForm = (options: UseFormOptions) => {
         [fieldName]: {
           ...prev[fieldName],
           value,
-          error: null, // Clear error on change
+          error: null, 
         },
       }));
     },
     []
   );
 
-  // Handle field blur
+  
   const handleBlur = useCallback(
     (fieldName: string) => {
       setFormState((prev) => {
@@ -96,7 +96,7 @@ export const useForm = (options: UseFormOptions) => {
     [validateField]
   );
 
-  // Validate all fields
+  
   const validateForm = useCallback((): boolean => {
     let isValid = true;
     const newState: FormState = {};
@@ -118,7 +118,7 @@ export const useForm = (options: UseFormOptions) => {
     return isValid;
   }, [formState, validateField]);
 
-  // Handle form submit
+  
   const handleSubmit = useCallback(
     async (e?: any) => {
       if (e?.preventDefault) {
@@ -152,7 +152,7 @@ export const useForm = (options: UseFormOptions) => {
     [formState, validateForm, onSubmit]
   );
 
-  // Reset form
+  
   const resetForm = useCallback(() => {
     const newState: FormState = {};
     Object.keys(initialValues).forEach((key) => {
@@ -166,7 +166,7 @@ export const useForm = (options: UseFormOptions) => {
     setSubmitError(null);
   }, [initialValues]);
 
-  // Set field value
+  
   const setFieldValue = useCallback((fieldName: string, value: any) => {
     setFormState((prev) => ({
       ...prev,
@@ -177,7 +177,7 @@ export const useForm = (options: UseFormOptions) => {
     }));
   }, []);
 
-  // Set field error
+  
   const setFieldError = useCallback((fieldName: string, error: string | null) => {
     setFormState((prev) => ({
       ...prev,
@@ -188,7 +188,7 @@ export const useForm = (options: UseFormOptions) => {
     }));
   }, []);
 
-  // Get field props
+  
   const getFieldProps = useCallback(
     (fieldName: string) => ({
       value: formState[fieldName]?.value || '',
@@ -198,7 +198,7 @@ export const useForm = (options: UseFormOptions) => {
     [formState, handleChange, handleBlur]
   );
 
-  // Get form values
+  
   const getValues = useCallback(() => {
     const values: Record<string, any> = {};
     Object.keys(formState).forEach((key) => {
@@ -207,12 +207,12 @@ export const useForm = (options: UseFormOptions) => {
     return values;
   }, [formState]);
 
-  // Check if form is valid
+  
   const isValid = useCallback(() => {
     return Object.values(formState).every((field) => !field.error);
   }, [formState]);
 
-  // Check if form is dirty
+  
   const isDirty = useCallback(() => {
     return Object.keys(formState).some(
       (key) => formState[key].value !== initialValues[key]
@@ -220,17 +220,17 @@ export const useForm = (options: UseFormOptions) => {
   }, [formState, initialValues]);
 
   return {
-    // State
+    
     formState,
     isSubmitting,
     submitError,
 
-    // Handlers
+    
     handleChange,
     handleBlur,
     handleSubmit,
 
-    // Utilities
+    
     resetForm,
     setFieldValue,
     setFieldError,

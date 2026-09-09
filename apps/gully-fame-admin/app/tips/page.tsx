@@ -52,7 +52,7 @@ export default function TipsPage() {
         setTopEarners(topEarnersResult.data || []);
       }
 
-      // Calculate statistics
+      
       const tipsData = earnings.filter(e => e.category === 'TIP' || e.type === 'CREDIT');
       const totalTips = tipsData.reduce((sum, e) => sum + (e.amount || 0), 0);
       const totalCoins = earnings
@@ -72,7 +72,7 @@ export default function TipsPage() {
     }
   };
 
-  // Transform earnings and winners into a unified format for display
+  
   const allData = [
     ...earnings.map((earning) => ({
       id: earning.id || earning._id || '',
@@ -326,7 +326,7 @@ export default function TipsPage() {
           </div>
         )}
 
-        {/* User Details Modal */}
+        {}
         {showUserDetailsModal && selectedUser && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
             <div className="w-full max-w-2xl rounded-xl bg-white shadow-2xl max-h-[90vh] overflow-y-auto">
@@ -344,7 +344,7 @@ export default function TipsPage() {
               </div>
 
               <div className="p-6 space-y-6">
-                {/* User Info */}
+                {}
                 <div className="border-b pb-4">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
                     <User className="h-5 w-5" />
@@ -388,7 +388,7 @@ export default function TipsPage() {
                   </div>
                 </div>
 
-                {/* Competition Info */}
+                {}
                 {selectedUser.competitionName && (
                   <div className="border-b pb-4">
                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
@@ -416,7 +416,7 @@ export default function TipsPage() {
                   </div>
                 )}
 
-                {/* Tips & Earnings */}
+                {}
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
                     <DollarSign className="h-5 w-5" />

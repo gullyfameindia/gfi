@@ -49,7 +49,7 @@ export default function Sidebar({ userRole }: { userRole: UserRole }) {
     }
   }, []);
 
-  // Close mobile menu when route changes
+  
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname, setMobileMenuOpen]);
@@ -113,7 +113,7 @@ export default function Sidebar({ userRole }: { userRole: UserRole }) {
 
   return (
     <>
-      {/* Mobile Sidebar Overlay */}
+      {}
       {mobileMenuOpen && (
         <div 
           className="md:hidden fixed inset-0 z-50 bg-black bg-opacity-50"

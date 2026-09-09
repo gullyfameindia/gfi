@@ -1,26 +1,26 @@
-/**
- * Transition Types for Video Editor
- */
+
+
+
 
 export type TransitionType = "fade" | "slide" | "zoom" | "wipe" | "dissolve" | "push" | "reveal";
 
 export type TransitionDirection = "left" | "right" | "up" | "down";
 
-/**
- * Represents a transition between two clips
- */
+
+
+
 export interface Transition {
   id: string;
   type: TransitionType;
-  duration: number; // in milliseconds (default: 300-500ms)
-  direction?: TransitionDirection; // for directional transitions
-  intensity?: number; // 0-1, for effects like blur intensity
+  duration: number; 
+  direction?: TransitionDirection; 
+  intensity?: number; 
   easing?: "linear" | "ease-in" | "ease-out" | "ease-in-out";
 }
 
-/**
- * Transition preset configuration
- */
+
+
+
 export interface TransitionPreset {
   id: string;
   name: string;
@@ -32,19 +32,19 @@ export interface TransitionPreset {
   category?: string;
 }
 
-/**
- * Transition applied to a clip
- */
+
+
+
 export interface ClipTransition {
   id: string;
-  clipId: string; // ID of the clip this transition is applied to
+  clipId: string; 
   transition: Transition;
-  position: "start" | "end"; // whether transition is at start or end of clip
+  position: "start" | "end"; 
 }
 
-/**
- * Transition selector modal props
- */
+
+
+
 export interface TransitionSelectorModalProps {
   visible: boolean;
   onSelect: (transition: Transition) => void;
@@ -52,18 +52,18 @@ export interface TransitionSelectorModalProps {
   selectedTransition?: Transition | null;
 }
 
-/**
- * Transition editor props
- */
+
+
+
 export interface TransitionEditorProps {
   transition: Transition;
   onUpdate: (transition: Transition) => void;
   onDelete: () => void;
 }
 
-/**
- * Available transition presets
- */
+
+
+
 export const TRANSITION_PRESETS: TransitionPreset[] = [
   {
     id: "fade-default",

@@ -15,12 +15,12 @@ interface ClipPlayerOverlayProps {
   onClose: () => void;
 }
 
-/**
- * Full-screen player for a single clip (photo or video).
- *
- * - Opens on top of the camera screen
- * - Back button returns to the camera so the user can continue capturing
- */
+
+
+
+
+
+
 const ClipPlayerOverlay: React.FC<ClipPlayerOverlayProps> = ({ clip, onClose }) => {
   const isVideo = clip.type === 'video';
 
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   title: {
     flex: 1,
     textAlign: 'center',
-    marginRight: 48, // space so title remains centered relative to back button
+    marginRight: 48, 
     color: '#f9fafb',
     fontSize: 16,
     fontWeight: '600',

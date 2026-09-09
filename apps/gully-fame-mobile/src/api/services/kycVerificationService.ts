@@ -1,8 +1,8 @@
-/**
- * KYC Verification Service
- * KIRO: Complete KYC verification flow
- * Handles: Document upload → Verification → Status tracking
- */
+
+
+
+
+
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
@@ -37,10 +37,10 @@ export interface KYCStatus {
   }[];
 }
 
-/**
- * Upload KYC document
- * KIRO: Upload single document with progress tracking
- */
+
+
+
+
 export async function uploadKYCDocument(
   documentType: string,
   imageUri: string,
@@ -49,13 +49,13 @@ export async function uploadKYCDocument(
   try {
     console.log("[kycVerificationService] Uploading KYC document:", documentType);
 
-    // Get file info
+    
     const fileInfo = await FileSystem.getInfoAsync(imageUri);
     if (!fileInfo.exists) {
       throw new Error("Document image not found");
     }
 
-    // KIRO: Create FormData for multipart upload
+    
     const formData = new FormData();
     formData.append("document", {
       uri: imageUri,
@@ -64,7 +64,7 @@ export async function uploadKYCDocument(
     } as any);
     formData.append("documentType", documentType);
 
-    // KIRO: Upload with progress tracking
+    
     const response = await apiClient.post<any>("kyc/upload-document", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -105,21 +105,21 @@ export async function uploadKYCDocument(
   }
 }
 
-/**
- * Submit KYC verification
- * KIRO: Submit complete KYC data for verification
- * Spec: POST user/kyc
- */
+
+
+
+
+
 export async function submitKYCVerification(
   request: KYCSubmitRequest
 ): Promise<ApiResponse<{ kycId: string; status: string }>> {
   try {
     console.log("[kycVerificationService] POST user/kyc");
 
-    // Upload all documents first
+    
     const uploadedDocuments = [];
     for (const doc of request.documents) {
-      // Upload front image
+      
       const frontResult = await uploadKYCDocument(`${doc.type}_front`, doc.frontImageUri);
 
       if (!frontResult.success) {
@@ -132,7 +132,7 @@ export async function submitKYCVerification(
         documentNumber: doc.documentNumber,
       });
 
-      // Upload back image if provided
+      
       if (doc.backImageUri) {
         const backResult = await uploadKYCDocument(`${doc.type}_back`, doc.backImageUri);
 
@@ -144,7 +144,7 @@ export async function submitKYCVerification(
       }
     }
 
-    // Submit KYC data - Spec: POST user/kyc
+    
     const payload = {
       firstName: request.firstName,
       lastName: request.lastName,
@@ -187,11 +187,11 @@ export async function submitKYCVerification(
   }
 }
 
-/**
- * Get KYC status
- * KIRO: Check current KYC verification status
- * Spec: GET user/kyc
- */
+
+
+
+
+
 export async function getKYCStatus(): Promise<ApiResponse<KYCStatus>> {
   try {
     console.log("[kycVerificationService] GET user/kyc");
@@ -236,11 +236,11 @@ export async function getKYCStatus(): Promise<ApiResponse<KYCStatus>> {
   }
 }
 
-/**
- * Update KYC information
- * KIRO: Update KYC data after initial submission
- * Spec: PUT user/kyc (but using POST for update per Postman, will use PUT if backend expects)
- */
+
+
+
+
+
 export async function updateKYCInformation(
   request: Partial<KYCSubmitRequest>
 ): Promise<ApiResponse<{ status: string }>> {
@@ -257,7 +257,7 @@ export async function updateKYCInformation(
       pincode: request.pincode,
     };
 
-    // Spec: PUT user/kyc (using PUT per Postman spec)
+    
     const response = await apiClient.put<any>("user/kyc", payload);
     const responseData = response.data as any;
 
@@ -288,17 +288,17 @@ export async function updateKYCInformation(
   }
 }
 
-/**
- * Resubmit KYC after rejection
- * KIRO: Resubmit KYC documents after rejection
- */
+
+
+
+
 export async function resubmitKYC(
   request: KYCSubmitRequest
 ): Promise<ApiResponse<{ kycId: string; status: string }>> {
   try {
     console.log("[kycVerificationService] Resubmitting KYC");
 
-    // Similar to submitKYCVerification but for resubmission
+    
     return await submitKYCVerification(request);
   } catch (error: any) {
     console.error("[kycVerificationService] Resubmit error:", error.message);

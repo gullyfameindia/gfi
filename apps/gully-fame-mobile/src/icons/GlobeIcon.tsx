@@ -15,4 +15,4 @@ export const GlobeIcon = ({
   </Svg>
 );
 
-// Camera Icons
+

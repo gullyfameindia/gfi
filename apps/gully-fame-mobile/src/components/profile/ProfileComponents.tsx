@@ -1,4 +1,4 @@
-// Shared profile components - used across all profile screens
+
 import React from "react";
 import {
     View,
@@ -14,7 +14,7 @@ import { ProfileData } from "../../hooks/profileHooks";
 import { VerifiedBadgeIcon as VerifiedBadge } from "@/icons";
 const { width, height } = Dimensions.get("window");
 
-// Level Up Section Component
+
 export const LevelUpSection = ({
     onPress,
     levelPercentage = 30,
@@ -70,7 +70,7 @@ export const LevelUpSection = ({
     </TouchableOpacity>
 );
 
-// Stats Section Component
+
 export const StatsSection = () => (
     <View style={styles.statsContainer}>
         <View style={styles.statItem}>
@@ -88,7 +88,7 @@ export const StatsSection = () => (
     </View>
 );
 
-// User Info Section Component
+
 export const UserInfoSection = ({
     profileData,
     onEditBio,
@@ -106,19 +106,19 @@ export const UserInfoSection = ({
     role?: "participant" | "fan" | "other";
     handleUpgradeClick?: () => void;
 }) => {
-    // Default three words for user's own profile
+    
     const defaultThreeWords = "🎵 MusicLover | 💃 DanceFreak | ✨ FunSoul";
 
-    // Parse three words if provided, otherwise use default for own profile
+    
     let displayWords: string[] = [];
     if (threeWords && threeWords.trim()) {
-        // If user has set their own words, parse them
+        
         displayWords = threeWords
             .split("|")
             .map((w) => w.trim())
             .filter((w) => w);
     } else if (showEditButton) {
-        // For user's own profile, show default if not set
+        
         displayWords = defaultThreeWords
             .split("|")
             .map((w) => w.trim())
@@ -186,15 +186,15 @@ export const UserInfoSection = ({
                         style={styles.upgradeButton}
                         onPress={handleUpgradeClick}
                     >
-                        {/* <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
-            <Path
-              d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-              stroke="#EC9A15"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </Svg> */}
+                        {
+
+
+
+
+
+
+
+}
                         <Text style={styles.menuItemText}>
                             Upgrade to Participant
                         </Text>

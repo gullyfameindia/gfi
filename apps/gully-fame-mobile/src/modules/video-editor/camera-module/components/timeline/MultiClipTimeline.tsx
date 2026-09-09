@@ -15,7 +15,7 @@ import TimelineClip from './TimelineClip';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const VIDEO_TRACK_HEIGHT = 60;
 const LAYER_TRACK_HEIGHT = 36;
-const PIXELS_PER_SECOND = 60; // 60 pixels per second of video for smooth scaling
+const PIXELS_PER_SECOND = 60; 
 
 interface MultiClipTimelineProps {
   clips: CameraClip[];
@@ -30,10 +30,10 @@ interface MultiClipTimelineProps {
   onScroll?: (scrollX: number) => void;
 }
 
-/**
- * CapCut / VN Style Multi-Track Timeline Editor
- * Automatically generates Text, Voice, and Music layers above the main video track
- */
+
+
+
+
 const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
   clips,
   currentTime,
@@ -54,12 +54,12 @@ const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
   const [dragPreviewX, setDragPreviewX] = useState<number | null>(null);
   const lastScrollTimeRef = useRef(0);
 
-  // 📈 Calculate master timeline positions
+  
   const positionedClips = useMemo(() => calculateTimelinePositions(clips), [clips]);
   const totalDuration = useMemo(() => getTotalTimelineDuration(clips), [clips]);
   const totalWidth = totalDuration * PIXELS_PER_SECOND;
 
-  // 🚀 EXTRACT MULTI-TRACK LAYERS FROM CLIPS
+  
   const { textBlocks, voiceBlocks, musicBlocks } = useMemo(() => {
     const texts: any[] = [];
     const voices: any[] = [];
@@ -69,17 +69,17 @@ const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
       const clipStart = clip.timelineStart ?? 0;
       const clipDuration = (clip.timelineEnd ?? 0) - clipStart;
 
-      // Extract Text Overlays
+      
       (clip.textOverlays || []).forEach((txt, idx) => {
         texts.push({
           id: txt.id || `text-${clip.id}-${idx}`,
           text: txt.text || "Text",
           start: clipStart,
-          duration: clipDuration, // Currently bounding to clip length
+          duration: clipDuration, 
         });
       });
 
-      // Extract Voiceovers
+      
       (clip.voiceOverlays || []).forEach((voice, idx) => {
         voices.push({
           id: voice.id || `voice-${clip.id}-${idx}`,
@@ -89,7 +89,7 @@ const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
         });
       });
 
-      // Extract Music / SoundFX
+      
       (clip.soundEffects || []).forEach((snd, idx) => {
         musics.push({
           id: snd.id || `music-${clip.id}-${idx}`,
@@ -103,7 +103,7 @@ const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
     return { textBlocks: texts, voiceBlocks: voices, musicBlocks: musics };
   }, [positionedClips]);
 
-  // ⚡ Sync JS State to UI Thread Scroll Position
+  
   useEffect(() => {
     const targetPosition = currentTime * PIXELS_PER_SECOND;
     playheadPosition.value = targetPosition;
@@ -118,7 +118,7 @@ const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
     }
   }, [currentTime, playheadPosition, animatedScrollRef]);
 
-  // Drag & Drop Handlers (Original Logic kept intact)
+  
   const handleClipDragStart = useCallback((clip: CameraClip) => {
     const index = clips.findIndex((c) => c.id === clip.id);
     if (index === -1) return;
@@ -161,7 +161,7 @@ const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
     onTimelineSeek?.(Math.max(0, Math.min(time, totalDuration)));
   }, [totalDuration, onTimelineSeek]);
 
-  // Fake waveform renderer for audio tracks
+  
   const renderWaveform = () => (
     <View style={{ flexDirection: 'row', alignItems: 'center', opacity: 0.3, overflow: 'hidden', marginLeft: 'auto', marginRight: 8 }}>
       {Array.from({ length: 20 }).map((_, i) => (
@@ -186,7 +186,7 @@ const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
       >
         <View style={styles.multiTrackContainer}>
 
-          {/* 🟪 TRACK 1: Text Layers */}
+          {}
           {textBlocks.length > 0 && (
             <View style={styles.trackRow}>
               {textBlocks.map((block) => (
@@ -200,7 +200,7 @@ const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
             </View>
           )}
 
-          {/* 🟪 TRACK 2: Voiceover Layers */}
+          {}
           {voiceBlocks.length > 0 && (
             <View style={styles.trackRow}>
               {voiceBlocks.map((block) => (
@@ -215,7 +215,7 @@ const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
             </View>
           )}
 
-          {/* 🟪 TRACK 3: Music Layers */}
+          {}
           {musicBlocks.length > 0 && (
             <View style={styles.trackRow}>
               {musicBlocks.map((block) => (
@@ -230,9 +230,9 @@ const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
             </View>
           )}
 
-          {/* 🎬 MAIN TRACK: Video Clips (Bottom Most) */}
+          {}
           <View style={styles.videoTrackRow}>
-            {/* Center Playhead Left Padding Offset */}
+            {}
             <View style={{ width: SCREEN_WIDTH / 2 }} />
 
             {positionedClips.map((clip) => {
@@ -259,7 +259,7 @@ const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
               );
             })}
 
-            {/* Right Padding Offset */}
+            {}
             <View style={{ width: SCREEN_WIDTH / 2 }} />
           </View>
           
@@ -272,17 +272,17 @@ const MultiClipTimeline: React.FC<MultiClipTimelineProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#111', // Matches the timeline area background
+    backgroundColor: '#111', 
     position: 'relative',
   },
   timelineContent: {
     paddingVertical: 10,
-    justifyContent: 'flex-end', // Pushes all tracks to stick together nicely
+    justifyContent: 'flex-end', 
   },
   multiTrackContainer: {
     flexDirection: 'column',
     justifyContent: 'flex-end',
-    gap: 4, // Spacing between tracks
+    gap: 4, 
     height: '100%',
   },
   trackRow: {
@@ -312,15 +312,15 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   
-  /* CapCut / VN Exact Style Colors */
+  
   textBlock: {
-    backgroundColor: '#8B5CF6', // Purple for Text
+    backgroundColor: '#8B5CF6', 
   },
   voiceBlock: {
-    backgroundColor: '#D946EF', // Magenta for Voiceovers
+    backgroundColor: '#D946EF', 
   },
   musicBlock: {
-    backgroundColor: '#C026D3', // Pink for Audio/Music
+    backgroundColor: '#C026D3', 
   }
 });
 

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
-import { useRouter } from 'expo-router'; // For navigation with Expo Router
+import { useRouter } from 'expo-router'; 
 import Svg, { Path } from "react-native-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getTermsAndConditions } from '@/api/services/cmsService';
 
 export default function TermsAndConditions() {
-  const router = useRouter(); // Use Expo Router for navigation
+  const router = useRouter(); 
   const [isPressed, setIsPressed] = useState(false);
   const [content, setContent] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
@@ -32,20 +32,20 @@ export default function TermsAndConditions() {
 
   const handleAgree = async () => {
     try {
-      // Save terms acceptance to AsyncStorage
+      
       await AsyncStorage.setItem("termsAccepted", "true");
-      // Navigate back to previous screen
+      
       router.back();
     } catch (error) {
       console.error("Error saving terms acceptance:", error);
-      // Still navigate back even if there's an error
+      
       router.back();
     }
   };
 
   return (
     <View style={styles.container}>
-      {/* Header with Back Arrow and Title */}
+      {}
      <View style={styles.header}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <Svg width={15} height={15} viewBox="0 0 16 16" fill="none">
@@ -61,7 +61,7 @@ export default function TermsAndConditions() {
       </Text>
     </View>
 
-      {/* Terms Content */}
+      {}
       <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
         {loading ? (
           <View style={styles.loadingContainer}>
@@ -74,7 +74,7 @@ export default function TermsAndConditions() {
         )}
       </ScrollView>
 
-      {/* Agree Button */}
+      {}
       <View style={styles.footer}>
         <TouchableOpacity
           style={[styles.agreeButton, isPressed && styles.agreeButtonPressed]}

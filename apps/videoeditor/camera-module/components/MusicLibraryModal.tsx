@@ -12,10 +12,10 @@ import {
 import Svg, { Circle, Path } from "react-native-svg";
 import type { Music, MusicPickerModalProps } from "../types/music.types";
 
-/**
- * Sample music library data
- * In production, this would come from an API
- */
+
+
+
+
 const SAMPLE_MUSIC_LIBRARY: Music[] = [
   {
     id: "music-1",
@@ -95,13 +95,13 @@ const MusicLibraryModal: React.FC<MusicPickerModalProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Get unique categories
+  
   const categories = useMemo(() => {
     const cats = new Set(SAMPLE_MUSIC_LIBRARY.map((m) => m.category).filter(Boolean));
     return Array.from(cats);
   }, []);
 
-  // Filter music based on search and category
+  
   const filteredMusic = useMemo(() => {
     return SAMPLE_MUSIC_LIBRARY.filter((music) => {
       const matchesSearch =
@@ -179,7 +179,7 @@ const MusicLibraryModal: React.FC<MusicPickerModalProps> = ({
   return (
     <Modal visible={visible} animationType="slide" transparent={false}>
       <View style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={onCancel} style={styles.closeButton}>
             <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -196,7 +196,7 @@ const MusicLibraryModal: React.FC<MusicPickerModalProps> = ({
           <View style={styles.headerSpacer} />
         </View>
 
-        {/* Search Bar */}
+        {}
         <View style={styles.searchContainer}>
           <Svg width={18} height={18} viewBox="0 0 24 24" fill="none" style={styles.searchIcon}>
             <Path
@@ -216,7 +216,7 @@ const MusicLibraryModal: React.FC<MusicPickerModalProps> = ({
           />
         </View>
 
-        {/* Category Filter */}
+        {}
         <FlatList
           horizontal
           data={categories}
@@ -240,7 +240,7 @@ const MusicLibraryModal: React.FC<MusicPickerModalProps> = ({
           showsHorizontalScrollIndicator={false}
         />
 
-        {/* Music List */}
+        {}
         {isLoading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#a78bfa" />

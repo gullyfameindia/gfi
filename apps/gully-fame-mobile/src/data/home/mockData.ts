@@ -108,7 +108,7 @@ export const fallbackCategories: categoriesFullData[] = [
   { id: 3, name: "Comedy", icon: "comedy" },
   { id: 4, name: "Cook", icon: "cook" },
 ];
-// Sample data
+
 export const heroSlides: homePageHeroSlidesAPIData[] = [
   {
     id: 1,
@@ -130,7 +130,7 @@ export const heroSlides: homePageHeroSlidesAPIData[] = [
   },
 ];
 
-// Category Icons - Using Images
+
 
 export const trendingReels: trendingReelsHomePageFullData[] = [
   {

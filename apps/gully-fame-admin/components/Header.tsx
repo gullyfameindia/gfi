@@ -21,19 +21,19 @@ const getPageTitle = (pathname: string): string => {
     '/analytics': 'Analytics',
   };
 
-  // Check for exact match first
+  
   if (routeMap[pathname]) {
     return routeMap[pathname];
   }
 
-  // Check for dynamic routes (e.g., /competitions/[id])
+  
   for (const [route, title] of Object.entries(routeMap)) {
     if (pathname.startsWith(route) && route !== '/') {
       return title;
     }
   }
 
-  // Default fallback
+  
   return 'Dashboard';
 };
 
@@ -44,7 +44,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-10 flex h-14 items-center justify-center border-b border-gray-200 bg-white px-3 sm:px-4 md:px-5 shadow-sm relative">
-      {/* Mobile Menu Button - Left Side */}
+      {}
       <button
         onClick={() => setMobileMenuOpen(true)}
         className="md:hidden absolute left-3 sm:left-4 p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
@@ -52,7 +52,7 @@ export default function Header() {
         <Menu className="h-5 w-5" />
       </button>
       
-      {/* Centered Title */}
+      {}
       <h1 className="text-base sm:text-lg font-semibold text-gray-900 text-center">{pageTitle}</h1>
     </header>
   );

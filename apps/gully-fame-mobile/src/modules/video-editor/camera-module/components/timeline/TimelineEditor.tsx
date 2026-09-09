@@ -1,10 +1,14 @@
-// PATH: apps/gully-fame-mobile/src/modules/video-editor/camera-module/components/timeline/TimelineEditor.tsx
 
-import React, { useCallback, useState, useMemo, useRef } from "react";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View, ScrollView, Modal, TextInput, Alert, SafeAreaView } from "react-native";
+
+import React, { useCallback, useState, useMemo, useRef, useEffect } from "react";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View, ScrollView, Modal, TextInput, Alert, SafeAreaView, ActivityIndicator } from "react-native";
 import Svg, { Path, Rect, Circle } from "react-native-svg";
 import type { CameraClip } from "../../types/camera.types";
 import MultiClipPlayer from "./MultiClipPlayer";
+
+
+import soundFXService from "@/api/services/soundFXService";
+import filterLibraryService from "@/api/services/filterLibraryService";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -17,8 +21,9 @@ interface TrackItem {
   category: TrackCategory;
   label: string;
   color: string;
-  startPos: number; // exact start time in seconds
-  duration: number; // length in seconds
+  startPos: number; 
+  duration: number; 
+  data?: any; 
 }
 
 interface TimelineEditorProps {
@@ -31,14 +36,12 @@ interface TimelineEditorProps {
   onRedo?: () => void;
 }
 
-// --- DUMMY DATA FOR LIBRARIES ---
+
 const DUMMY_AUDIO = [
   { id: '1', title: 'Musicaltunnel', artist: 'musicaltunnel • 27L reels', duration: 6 },
   { id: '2', title: 'Sukoon', artist: 'Othoms • 3.9L reels', duration: 10 },
   { id: '3', title: 'Koi Baat Hai', artist: 'Arjun Tanwar', duration: 15 },
 ];
-const DUMMY_SOUND_FX = ['Swoosh', 'Ding', 'Heartbeat', 'Glitch', 'Laughter'];
-const DUMMY_FILTERS = ['Paris', 'Vintage', 'Cinematic', 'B&W', 'Cool', 'Warm'];
 const DUMMY_STICKERS = ['🔥', '❤️', '😂', '✨', '🎵', '💯'];
 
 const TimelineEditor: React.FC<TimelineEditorProps> = ({
@@ -48,13 +51,66 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [localClips, setLocalClips] = useState<CameraClip[]>(clips);
   
-  // Custom Tracks State
+  
+  const [soundEffects, setSoundEffects] = useState<SoundEffect[]>([]);
+  const [filters, setFilters] = useState<FilterPreset[]>([]);
+  const [loadingSoundFX, setLoadingSoundFX] = useState(false);
+  const [loadingFilters, setLoadingFilters] = useState(false);
+  
+  
   const [tracks, setTracks] = useState<TrackItem[]>([]);
   const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null);
 
-  // Modals System
+  
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [textInput, setTextInput] = useState('');
+
+  
+  useEffect(() => {
+    if (activeModal === 'soundfx' && soundEffects.length === 0) {
+      console.log('[TimelineEditor] Loading sound effects...');
+      setLoadingSoundFX(true);
+      soundFXService.listSoundFX().then(response => {
+        console.log('[TimelineEditor] SoundFX response:', response);
+        if (response.success && response.data) {
+          console.log('[TimelineEditor] Setting sound effects:', response.data);
+          setSoundEffects(response.data);
+        } else {
+          console.warn('[TimelineEditor] Failed to load sound effects:', response.message);
+          setSoundEffects([]);
+        }
+        setLoadingSoundFX(false);
+      }).catch(error => {
+        console.error('[TimelineEditor] Error loading sound effects:', error);
+        setLoadingSoundFX(false);
+      });
+    }
+  }, [activeModal]);
+
+  
+  useEffect(() => {
+    if (activeModal === 'filters' && filters.length === 0) {
+      console.log('[TimelineEditor] Loading filters...');
+      setLoadingFilters(true);
+      filterLibraryService.listFilters().then(response => {
+        console.log('[TimelineEditor] Filters response:', response);
+        if (response.success && response.data) {
+          console.log('[TimelineEditor] Setting filters:', response.data.filters);
+          setFilters(response.data.filters);
+        } else {
+          console.warn('[TimelineEditor] Failed to load filters:', response.message);
+          
+          setFilters([]);
+        }
+        setLoadingFilters(false);
+      }).catch(error => {
+        console.error('[TimelineEditor] Error loading filters:', error);
+        setLoadingFilters(false);
+      });
+    }
+  }, [activeModal]);
+
+  const [currentClipIndex, setCurrentClipIndex] = useState(0);
 
   const totalDuration = useMemo(() => localClips.reduce((acc, c) => acc + (c.duration || 3), 0), [localClips]);
 
@@ -83,30 +139,44 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
-  // --- 📍 REAL-TIME EXACT POSITIONING ---
-  const handleAddTrack = (type: TrackType, category: TrackCategory, label: string, color: string, defaultDuration: number = 3) => {
+  
+  const handleAddTrack = (type: TrackType, category: TrackCategory, label: string, color: string, defaultDuration: number = 3, data?: any) => {
     const newTrack: TrackItem = {
       id: `${type}-${Date.now()}`,
       type,
       category,
       label,
       color,
-      startPos: currentTime, // Track always starts EXACTLY at playhead
+      startPos: currentTime, 
       duration: Math.min(defaultDuration, totalDuration - currentTime),
+      data, 
     };
     setTracks(prev => [newTrack, ...prev]);
     setSelectedTrackId(newTrack.id);
+
+    
+    if (type === 'adjust' && data?.type === 'filter' && currentClipIndex >= 0) {
+      const updatedClips = [...localClips];
+      updatedClips[currentClipIndex] = {
+        ...updatedClips[currentClipIndex],
+        filterPreset: data.filterId ? { id: data.filterId, name: label } : undefined,
+      };
+      setLocalClips(updatedClips);
+      onClipsUpdate(updatedClips);
+      console.log(`🎬 [TimelineEditor] Applied filter to clip ${currentClipIndex}: ${label}`);
+    }
+
     setActiveModal(null);
   };
 
-  // --- 🎚️ REAL-TIME TRIM & MOVE EDITOR ---
+  
   const adjustSelectedTrack = (action: 'move_left' | 'move_right' | 'trim_left' | 'trim_right') => {
     if (!selectedTrackId) return;
     setTracks(prev => prev.map(t => {
       if (t.id !== selectedTrackId) return t;
       let { startPos, duration } = t;
 
-      const STEP = 0.5; // Change by 0.5 seconds per click
+      const STEP = 0.5; 
       if (action === 'move_left') startPos = Math.max(0, startPos - STEP);
       if (action === 'move_right') startPos = Math.min(totalDuration - duration, startPos + STEP);
       if (action === 'trim_left') duration = Math.max(1, duration - STEP);
@@ -121,7 +191,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
     setSelectedTrackId(null);
   };
 
-  // --- ✂️ REAL-TIME SPLIT VIDEO LOGIC ---
+  
   const handleSplitVideo = () => {
     let accTime = 0;
     let splitIdx = -1;
@@ -161,7 +231,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
   return (
     <View style={styles.container}>
       
-      {/* 1. TOP HEADER */}
+      {}
       <View style={styles.topHeader}>
          <TouchableOpacity style={styles.iconButtonDark} onPress={onBack}>
             <Svg width="20" height="20" viewBox="0 0 24 24" fill="none"><Path d="M19 9L12 16L5 9" stroke="#ffffff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></Svg>
@@ -175,14 +245,14 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
          </TouchableOpacity>
       </View>
 
-      {/* 2. VIDEO PREVIEW AREA */}
+      {}
       <View style={styles.videoPreviewArea}>
         <View style={styles.videoBox}>
           <MultiClipPlayer clips={localClips} currentTime={currentTime} isPlaying={isPlaying} onTimeUpdate={setCurrentTime} onEnd={() => setIsPlaying(false)} isDraggingTimeline={false} />
         </View>
       </View>
 
-      {/* 🎛️ TRACK EDITOR ACTIONS (Only visible when a track is tapped) */}
+      {}
       {selectedTrackId && (
         <View style={styles.trackEditorBar}>
             <TouchableOpacity style={styles.editActionBtn} onPress={() => adjustSelectedTrack('move_left')}><Text style={styles.editActionBtnText}>← Move</Text></TouchableOpacity>
@@ -193,7 +263,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
         </View>
       )}
 
-      {/* 3. PLAYBACK CONTROLS ROW */}
+      {}
       <View style={styles.playbackControlsRow}>
         <TouchableOpacity style={styles.playPauseBtn} onPress={togglePlayPause}>
           {isPlaying ? (
@@ -213,19 +283,19 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* 4. THE MASTER MULTI-TRACK TIMELINE */}
+      {}
       <View style={styles.timelineArea}>
-        {/* Playhead Center Static Guide Line */}
+        {}
         <View style={styles.playheadLineContainer} pointerEvents="none">
             <View style={styles.playheadDot} />
             <View style={styles.playheadLine} />
         </View>
 
-        {/* 🔥 VERTICAL SCROLLER: Enables unlimited tracks without breaking layout */}
+        {}
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={true}>
           <View style={{ flexDirection: 'row' }}>
             
-            {/* Left Track Icons Panel (Sticky Left, Scrolls Vertically) */}
+            {}
             <View style={styles.leftTrackIconsPanel}>
                 <View style={styles.rulerPlaceholder} />
                 {tracks.map(t => (
@@ -241,11 +311,11 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
                 <View style={[styles.trackIconBox, { height: 50 }]}><Text style={{fontSize: 16}}>🎞️</Text></View>
             </View>
 
-            {/* 🔥 HORIZONTAL SCROLLER: Timeline moving with time */}
+            {}
             <ScrollView horizontal showsHorizontalScrollIndicator={false} onScroll={(e) => handleTimelineScroll(e.nativeEvent.contentOffset.x)} scrollEventThrottle={16} contentContainerStyle={{ paddingHorizontal: SCREEN_WIDTH / 2 - 40 }}>
               <View style={{ width: totalTimelineWidth + 100, paddingVertical: 5 }}>
                  
-                 {/* Ruler Row */}
+                 {}
                  <View style={styles.rulerContainer}>
                    {Array.from({ length: Math.ceil(totalDuration) + 1 }).map((_, i) => (
                      <View key={i} style={[styles.rulerTickWrapper, { left: i * PIXELS_PER_SECOND }]}>
@@ -255,7 +325,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
                    ))}
                  </View>
 
-                 {/* Custom Tracks Rendering */}
+                 {}
                  {tracks.map((track) => {
                      const isSelected = selectedTrackId === track.id;
                      return (
@@ -270,7 +340,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
                             ]}
                         >
                             <Text style={styles.genericClipText} numberOfLines={1}>{track.label}</Text>
-                            {/* Waveforms for Audio */}
+                            {}
                             {track.category === 'audio' && (
                                 <View style={styles.waveformContainer}>
                                     <Svg width="100%" height="20" viewBox="0 0 100 20" preserveAspectRatio="none" opacity="0.3">
@@ -284,7 +354,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
                      </View>
                  )})}
 
-                 {/* MAIN VIDEO TRACK */}
+                 {}
                  <View style={styles.trackRowVideo}>
                     <View style={[styles.videoClipBlock, { width: totalTimelineWidth }]}>
                         <View style={styles.trimHandleLeft} />
@@ -311,7 +381,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
       </View>
       <Text style={styles.helperText}>Tap on a track to trim/move. Use Playhead to set insert position.</Text>
 
-      {/* 5. FULL BOTTOM TOOL TRAY (Matching exact sequence) */}
+      {}
       <View style={styles.bottomToolTray}>
          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.toolsScroll}>
           <TouchableOpacity style={styles.toolItem} onPress={() => setActiveModal('audio')}><Svg width="24" height="24" viewBox="0 0 24 24" fill="none"><Path d="M9 18V5L21 3V13" stroke="#FFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><Circle cx="6" cy="18" r="3" stroke="#FFF" strokeWidth="2"/><Circle cx="18" cy="16" r="3" stroke="#FFF" strokeWidth="2"/></Svg><Text style={styles.toolLabel}>Audio</Text></TouchableOpacity>
@@ -329,7 +399,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
          </ScrollView>
       </View>
 
-      {/* --- ALL FUNCTIONAL MODALS --- */}
+      {}
       <Modal visible={activeModal === 'audio'} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalSheet, {height: '60%'}]}>
@@ -382,13 +452,37 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
       </Modal>
 
       <Modal visible={activeModal === 'filters'} animationType="slide" transparent>
-        <View style={styles.modalOverlay}><View style={styles.modalSheet}><View style={styles.modalHeader}><Text style={styles.modalTitle}>Filters</Text><TouchableOpacity onPress={() => setActiveModal(null)}><Text style={{color:'#FFF', fontSize: 20}}>✕</Text></TouchableOpacity></View>
-            <ScrollView horizontal style={{padding: 15}}>
-              {DUMMY_FILTERS.map(f => (
-                <TouchableOpacity key={f} style={styles.filterPill} onPress={() => handleAddTrack('adjust', 'visual', `Filter: ${f}`, '#E64A19', totalDuration)}><Text style={{color:'#FFF'}}>{f}</Text></TouchableOpacity>
-              ))}
-            </ScrollView>
-        </View></View>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalSheet}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Filters</Text>
+              <TouchableOpacity onPress={() => setActiveModal(null)}>
+                <Text style={{color:'#FFF', fontSize: 20}}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            {loadingFilters ? (
+              <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <ActivityIndicator size="large" color="#FFF" />
+              </View>
+            ) : (
+              <ScrollView horizontal style={{padding: 15}}>
+                {filters.length > 0 ? (
+                  filters.map(f => (
+                    <TouchableOpacity 
+                      key={f.id} 
+                      style={styles.filterPill} 
+                      onPress={() => handleAddTrack('adjust', 'visual', `Filter: ${f.name}`, '#E64A19', totalDuration, { type: 'filter', filterId: f.id })}
+                    >
+                      <Text style={{color:'#FFF', fontWeight: 'bold'}}>{f.name}</Text>
+                    </TouchableOpacity>
+                  ))
+                ) : (
+                  <Text style={{color: '#888', padding: 20}}>No filters available</Text>
+                )}
+              </ScrollView>
+            )}
+          </View>
+        </View>
       </Modal>
 
       <Modal visible={activeModal === 'captions'} animationType="slide" transparent>
@@ -408,10 +502,60 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
         </View></View>
       </Modal>
 
-      <Modal visible={activeModal === 'link' || activeModal === 'overlay' || activeModal === 'soundfx' || activeModal === 'cutout'} animationType="slide" transparent>
-        <View style={styles.modalOverlay}><View style={styles.modalSheet}><View style={styles.modalHeader}><Text style={styles.modalTitle}>Action</Text><TouchableOpacity onPress={() => setActiveModal(null)}><Text style={{color:'#FFF', fontSize: 20}}>✕</Text></TouchableOpacity></View>
-            <TouchableOpacity style={styles.primaryBtn} onPress={() => handleAddTrack('overlay', 'visual', 'Extra Layer', '#0095f6', 4)}><Text style={{color:'#000', fontWeight:'bold'}}>Apply Feature to Timeline</Text></TouchableOpacity>
-        </View></View>
+      <Modal visible={activeModal === 'overlay' || activeModal === 'cutout' || activeModal === 'link'} animationType="slide" transparent>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalSheet}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>{activeModal === 'overlay' ? 'Overlay Effects' : activeModal === 'cutout' ? 'Cutout' : 'Links'}</Text>
+              <TouchableOpacity onPress={() => setActiveModal(null)}>
+                <Text style={{color:'#FFF', fontSize: 20}}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={styles.primaryBtn} onPress={() => handleAddTrack('overlay', 'visual', 'Extra Layer', '#0095f6', 4)}>
+              <Text style={{color:'#000', fontWeight:'bold'}}>Apply Feature to Timeline</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal visible={activeModal === 'soundfx'} animationType="slide" transparent>
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalSheet, {height: '60%'}]}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Sound Effects</Text>
+              <TouchableOpacity onPress={() => setActiveModal(null)}>
+                <Text style={{color:'#FFF', fontSize: 20}}>✕</Text>
+              </TouchableOpacity>
+            </View>
+            {loadingSoundFX ? (
+              <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                <ActivityIndicator size="large" color="#FFF" />
+              </View>
+            ) : (
+              <ScrollView>
+                {soundEffects.length > 0 ? (
+                  soundEffects.map(fx => (
+                    <TouchableOpacity 
+                      key={fx._id || fx.id} 
+                      style={styles.listItem} 
+                      onPress={() => handleAddTrack('soundfx', 'audio', fx.name || fx.title || 'Sound Effect', '#FFC107', fx.duration || 3, { soundFXId: fx._id || fx.id, audioUrl: fx.audioUrl })}
+                    >
+                      <View style={styles.albumArt}><Text>🔊</Text></View>
+                      <View>
+                        <Text style={{color: '#FFF', fontWeight: 'bold'}}>{fx.name || fx.title}</Text>
+                        <Text style={{color: '#888', fontSize: 12}}>{fx.category || 'Effect'}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))
+                ) : (
+                  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20}}>
+                    <Text style={{color: '#888'}}>No sound effects available</Text>
+                  </View>
+                )}
+              </ScrollView>
+            )}
+          </View>
+        </View>
       </Modal>
 
     </View>

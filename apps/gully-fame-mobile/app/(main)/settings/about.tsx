@@ -41,7 +41,7 @@ export default function AboutScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}

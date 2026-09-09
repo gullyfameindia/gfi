@@ -13,15 +13,15 @@ import type { CameraClip } from '../../types/camera.types';
 interface TimelineClipProps {
   clip: CameraClip;
   width: number;
-  thumbnailUri?: string; // 🚀 Added from parent
+  thumbnailUri?: string; 
   isSelected: boolean;
   pixelsPerSecond: number;
   onPress?: (clip: CameraClip) => void;
   onTrimStart?: (clip: CameraClip, newStart: number) => void;
   onTrimEnd?: (clip: CameraClip, newEnd: number) => void;
-  onDragStart?: (clip: CameraClip) => void; // 🚀 For Reordering
-  onDrag?: (clip: CameraClip, pageX: number) => void; // 🚀 For Reordering
-  onDragEnd?: (clip: CameraClip) => void; // 🚀 For Reordering
+  onDragStart?: (clip: CameraClip) => void; 
+  onDrag?: (clip: CameraClip, pageX: number) => void; 
+  onDragEnd?: (clip: CameraClip) => void; 
 }
 
 const HANDLE_WIDTH = 16;
@@ -39,25 +39,25 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
   onDrag,
   onDragEnd
 }) => {
-  // ⚡ Speed Configuration
+  
   const speedConfig = clip.speedConfig || { type: 'constant', value: 1 };
   const speedValue = speedConfig.type === 'constant' ? (speedConfig.value ?? 1) : 1;
 
-  // ⚡ Reanimated Values for Smooth Real-time Trimming
+  
   const leftTrimOffset = useSharedValue(0);
   const rightTrimOffset = useSharedValue(0);
   const isDraggingState = useSharedValue(false);
 
-  // --- GESTURES ---
+  
 
-  // 1. Tap to Select
+  
   const tapGesture = Gesture.Tap().onEnd(() => {
     if (onPress) runOnJS(onPress)(clip);
   });
 
-  // 2. Long Press to Reorder (Drag & Drop)
+  
   const longPressDragGesture = Gesture.Pan()
-    .activateAfterLongPress(250) // Wait 250ms before allowing drag (Instagram style)
+    .activateAfterLongPress(250) 
     .onStart(() => {
       isDraggingState.value = true;
       if (onDragStart) runOnJS(onDragStart)(clip);
@@ -70,18 +70,18 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
       if (onDragEnd) runOnJS(onDragEnd)(clip);
     });
 
-  // Combine Tap and LongPress
+  
   const clipGestures = Gesture.Simultaneous(tapGesture, longPressDragGesture);
 
-  // 3. Left Handle Drag (Trim Start)
+  
   const leftTrimDrag = Gesture.Pan()
     .onUpdate((e) => {
-      // Real-time UI update (constrained so it doesn't cross the right side)
+      
       leftTrimOffset.value = Math.max(0, Math.min(e.translationX, width - HANDLE_WIDTH * 2));
     })
     .onEnd((e) => {
       const translation = leftTrimOffset.value;
-      leftTrimOffset.value = withTiming(0, { duration: 100 }); // Snap back to 0 as parent updates width
+      leftTrimOffset.value = withTiming(0, { duration: 100 }); 
 
       if (!onTrimStart) return;
       const timeDelta = (translation / pixelsPerSecond) * speedValue;
@@ -94,10 +94,10 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
       }
     });
 
-  // 4. Right Handle Drag (Trim End)
+  
   const rightTrimDrag = Gesture.Pan()
     .onUpdate((e) => {
-      // Negative translation because dragging left shrinks the clip
+      
       rightTrimOffset.value = Math.min(0, Math.max(e.translationX, -(width - HANDLE_WIDTH * 2)));
     })
     .onEnd((e) => {
@@ -115,16 +115,16 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
       }
     });
 
-  // --- ANIMATED STYLES ---
+  
 
-  // Main Clip Container Style (Squeezes during trim, pops out during reorder)
+  
   const animatedClipStyle = useAnimatedStyle(() => {
     return {
       marginLeft: leftTrimOffset.value,
       marginRight: -rightTrimOffset.value,
       width: width - leftTrimOffset.value + rightTrimOffset.value,
       transform: [
-        { scale: withSpring(isDraggingState.value ? 1.05 : 1) } // Pops out slightly when drag-and-dropping
+        { scale: withSpring(isDraggingState.value ? 1.05 : 1) } 
       ],
       opacity: isDraggingState.value ? 0.8 : 1,
       zIndex: isDraggingState.value ? 100 : 1,
@@ -135,7 +135,7 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
     <GestureDetector gesture={clipGestures}>
       <Animated.View style={[styles.clipContainer, animatedClipStyle]}>
         
-        {/* Background Thumbnail or Fallback */}
+        {}
         {thumbnailUri ? (
           <Image 
             source={{ uri: thumbnailUri }} 
@@ -150,20 +150,20 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
           </View>
         )}
 
-        {/* Selected Overlay (Thick Borders Top/Bottom) */}
+        {}
         {isSelected && <View style={styles.selectedOverlay} />}
 
-        {/* Left Trim Handle */}
+        {}
         {isSelected && clip.type === 'video' && (
           <GestureDetector gesture={leftTrimDrag}>
             <View style={styles.leftHandle}>
-               {/* Grip lines */}
+               {}
                <View style={styles.gripLine} />
             </View>
           </GestureDetector>
         )}
 
-        {/* Right Trim Handle */}
+        {}
         {isSelected && clip.type === 'video' && (
           <GestureDetector gesture={rightTrimDrag}>
             <View style={styles.rightHandle}>
@@ -207,10 +207,10 @@ const styles = StyleSheet.create({
   },
   selectedOverlay: {
     ...StyleSheet.absoluteFillObject,
-    borderColor: '#ffffff', // Instagram uses white or yellow borders for active clips
+    borderColor: '#ffffff', 
     borderTopWidth: 2,
     borderBottomWidth: 2,
-    pointerEvents: 'none', // Allows touches to pass through to handles
+    pointerEvents: 'none', 
   },
   leftHandle: {
     position: 'absolute',

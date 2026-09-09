@@ -16,7 +16,7 @@ export function ThemedText({
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
-  // Map fontWeight to appropriate Rubik font family
+  
   const getFontFamily = (weight: string | undefined) => {
     if (!weight) return "Rubik_400Regular";
     const weightNum =
@@ -33,7 +33,7 @@ export function ThemedText({
     return "Rubik_400Regular";
   };
 
-  // Extract fontWeight from style prop or type
+  
   const styleArray = Array.isArray(style) ? style : style ? [style] : [];
   const styleFontWeight = styleArray.find((s: any) => s && typeof s === 'object' && 'fontWeight' in s)
     ? (styleArray.find((s: any) => s && typeof s === 'object' && 'fontWeight' in s) as any)?.fontWeight : undefined;
@@ -50,10 +50,10 @@ export function ThemedText({
   const fontWeight = getFontWeight();
   const fontFamily = getFontFamily(fontWeight);
 
-  // Process style to remove fontWeight and ensure fontFamily is applied
+  
   const processStyle = (styleItem: any) => {
     if (!styleItem) return null;
-    if (typeof styleItem === 'number') return styleItem; // StyleSheet reference
+    if (typeof styleItem === 'number') return styleItem; 
     const { fontWeight: _, ...restStyle } = styleItem;
     return restStyle;
   };
@@ -65,14 +65,14 @@ export function ThemedText({
   return (
     <Text
       style={[
-        { color, fontFamily }, // Apply fontFamily first
+        { color, fontFamily }, 
         type === "default" && styles.default,
         type === "defaultSemiBold" && styles.defaultSemiBold,
         type === "title" && styles.title,
         type === "subtitle" && styles.subtitle,
         type === "link" && styles.link,
-        processedStyle, // Processed style without fontWeight
-        { fontFamily }, // Ensure fontFamily is always last
+        processedStyle, 
+        { fontFamily }, 
       ]}
       {...rest}
     />

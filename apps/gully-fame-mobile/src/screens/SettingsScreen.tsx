@@ -1,5 +1,5 @@
-// Created by Kiro
-// Settings Screen - Account settings, notifications, privacy, and app info
+
+
 
 import React, { useState } from 'react';
 import {
@@ -15,16 +15,16 @@ import {
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function SettingsScreen({ navigation }: any) {
-  // Notification settings
+  
   const [pushNotifications, setPushNotifications] = useState(true);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [smsNotifications, setSmsNotifications] = useState(false);
 
-  // Privacy settings
+  
   const [profilePrivate, setProfilePrivate] = useState(false);
   const [showActivity, setShowActivity] = useState(true);
 
-  // Handle notification toggle
+  
   const handleNotificationToggle = (type: string, value: boolean) => {
     switch (type) {
       case 'push':
@@ -39,7 +39,7 @@ export default function SettingsScreen({ navigation }: any) {
     }
   };
 
-  // Handle privacy toggle
+  
   const handlePrivacyToggle = (type: string, value: boolean) => {
     switch (type) {
       case 'private':
@@ -51,7 +51,7 @@ export default function SettingsScreen({ navigation }: any) {
     }
   };
 
-  // Handle change password
+  
   const handleChangePassword = () => {
     Alert.alert('Change Password', 'Redirect to change password screen', [
       { text: 'Cancel', style: 'cancel' },
@@ -59,7 +59,7 @@ export default function SettingsScreen({ navigation }: any) {
     ]);
   };
 
-  // Handle clear cache
+  
   const handleClearCache = () => {
     Alert.alert(
       'Clear Cache',
@@ -77,7 +77,7 @@ export default function SettingsScreen({ navigation }: any) {
     );
   };
 
-  // Handle delete account
+  
   const handleDeleteAccount = () => {
     Alert.alert(
       'Delete Account',
@@ -98,7 +98,7 @@ export default function SettingsScreen({ navigation }: any) {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        {/* Account Section */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Account</Text>
 
@@ -131,7 +131,7 @@ export default function SettingsScreen({ navigation }: any) {
           </TouchableOpacity>
         </View>
 
-        {/* Notifications Section */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Notifications</Text>
 
@@ -190,7 +190,7 @@ export default function SettingsScreen({ navigation }: any) {
           </View>
         </View>
 
-        {/* Privacy Section */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Privacy</Text>
 
@@ -253,7 +253,7 @@ export default function SettingsScreen({ navigation }: any) {
           </TouchableOpacity>
         </View>
 
-        {/* App Section */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>App</Text>
 
@@ -283,7 +283,7 @@ export default function SettingsScreen({ navigation }: any) {
           </TouchableOpacity>
         </View>
 
-        {/* Danger Zone */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Danger Zone</Text>
 
@@ -306,7 +306,7 @@ export default function SettingsScreen({ navigation }: any) {
           </TouchableOpacity>
         </View>
 
-        {/* Footer Spacing */}
+        {}
         <View style={styles.footerSpacing} />
       </ScrollView>
     </SafeAreaView>

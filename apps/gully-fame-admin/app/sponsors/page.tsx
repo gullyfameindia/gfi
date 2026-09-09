@@ -44,7 +44,7 @@ export default function SponsorsPage() {
       const result = await getSponsors();
       if (result.success && result.data) {
         setSponsors(result.data);
-        // Fetch competitions count for each sponsor
+        
         await fetchCompetitionsCount(result.data);
       } else {
         setError(result.message || 'Failed to fetch sponsors');
@@ -164,7 +164,7 @@ export default function SponsorsPage() {
           confirmPassword: '',
         });
         setErrors({});
-        // Refresh sponsors list
+        
         await fetchSponsors();
       } else {
         alert(result.message || 'Failed to create sponsor');
@@ -237,7 +237,7 @@ export default function SponsorsPage() {
       setCopiedField(field);
       setTimeout(() => setCopiedField(null), 2000);
     } catch (err) {
-      // Fallback for older browsers
+      
       const textArea = document.createElement('textarea');
       textArea.value = text;
       document.body.appendChild(textArea);
@@ -252,7 +252,7 @@ export default function SponsorsPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6 p-6">
-        {/* Header */}
+        {}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Sponsors</h1>
@@ -286,7 +286,7 @@ export default function SponsorsPage() {
           </div>
         )}
 
-        {/* Stats Cards */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="rounded-xl bg-white p-6 shadow-sm border border-gray-200">
             <div className="flex items-center justify-between">
@@ -329,7 +329,7 @@ export default function SponsorsPage() {
           </div>
         </div>
 
-        {/* Sponsors Table */}
+        {}
         {loading ? (
           <div className="text-center py-12">
             <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary-600" />
@@ -416,7 +416,7 @@ export default function SponsorsPage() {
           </div>
         )}
 
-        {/* Create Sponsor Modal */}
+        {}
         {showCreateModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4 overflow-y-auto">
             <div className="w-full max-w-md rounded-xl bg-white shadow-2xl my-auto max-h-[90vh] overflow-y-auto">

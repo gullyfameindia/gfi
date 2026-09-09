@@ -3,13 +3,13 @@ import { StyleSheet } from "react-native";
 export const leaderboardScreenStyles = StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: "#3C2610", // Matches the deep brown theme
+        backgroundColor: "#3C2610", 
     },
     headerContainer: {
         backgroundColor: "#3C2610",
         paddingBottom: 16,
         borderBottomWidth: 1,
-        borderBottomColor: "rgba(255, 215, 0, 0.15)", // Subtle gold separator line
+        borderBottomColor: "rgba(255, 215, 0, 0.15)", 
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
@@ -38,7 +38,7 @@ export const leaderboardScreenStyles = StyleSheet.create({
     },
     headerMainTitle: {
         fontSize: 18,
-        color: "#FFD700", // Gold text
+        color: "#FFD700", 
         fontWeight: "800",
         letterSpacing: 1,
         textShadowColor: "rgba(255, 215, 0, 0.4)",
@@ -57,12 +57,12 @@ export const leaderboardScreenStyles = StyleSheet.create({
         width: 40,
     },
 
-    // --- Live Status Badge ---
+    
     statusRow: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "rgba(255, 215, 0, 0.08)", // Faint gold pill background
+        backgroundColor: "rgba(255, 215, 0, 0.08)", 
         alignSelf: "center",
         paddingHorizontal: 16,
         paddingVertical: 6,
@@ -75,7 +75,7 @@ export const leaderboardScreenStyles = StyleSheet.create({
         width: 6,
         height: 6,
         borderRadius: 3,
-        backgroundColor: "#22C55E", // Neon green "online" dot
+        backgroundColor: "#22C55E", 
         marginRight: 8,
     },
     statusText: {
@@ -85,9 +85,9 @@ export const leaderboardScreenStyles = StyleSheet.create({
         letterSpacing: 1,
     },
 
-    // --- List Container ---
+    
     listContainer: {
         flex: 1,
-        backgroundColor: "#3C2610", // Ensure scrolling background matches
+        backgroundColor: "#3C2610", 
     },
 });

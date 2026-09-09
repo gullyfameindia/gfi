@@ -29,10 +29,10 @@ export default function CompetitionsPage() {
         params.status = statusFilter;
       }
       
-      // For sponsors, get their ID and filter competitions
+      
       if (userRole === 'sponsor') {
         const adminData = getStoredAdmin();
-        // Try multiple fields to get sponsor ID
+        
         const sponsorId = adminData?._id || adminData?.id || adminData?.sponsorCode;
         
         if (process.env.NODE_ENV === 'development') {
@@ -55,14 +55,14 @@ export default function CompetitionsPage() {
       if (result.success && result.data) {
         let allCompetitions = result.data.items || [];
         
-        // Sort by createdAt in descending order (newest first)
+        
         allCompetitions.sort((a: Competition, b: Competition) => {
           const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
           const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
           return dateB - dateA;
         });
         
-        // For sponsors, ensure we only show their competitions (double-check filter)
+        
         const displayedCompetitions = userRole === 'sponsor' 
           ? allCompetitions.filter((c: Competition) => {
               const adminData = getStoredAdmin();
@@ -74,7 +74,7 @@ export default function CompetitionsPage() {
                 return false;
               }
               
-              // Handle sponsorId as object or string
+              
               const compSponsorId = typeof c.sponsorId === 'object' && c.sponsorId?._id 
                 ? c.sponsorId._id 
                 : (c.sponsorId || '');
@@ -112,7 +112,7 @@ export default function CompetitionsPage() {
         const result = await deleteCompetition(id);
         if (result.success) {
           alert('Competition deleted successfully!');
-          fetchCompetitions(); // Refresh list
+          fetchCompetitions(); 
         } else {
           alert(result.message || 'Failed to delete competition');
         }

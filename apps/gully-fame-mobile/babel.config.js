@@ -27,7 +27,7 @@ module.exports = function (api) {
           },
         },
       ],
-      'react-native-reanimated/plugin', // 👈 Ye wala strictly SABSE LAST mein hona chahiye!
+      'react-native-reanimated/plugin', 
     ],
   };
 };

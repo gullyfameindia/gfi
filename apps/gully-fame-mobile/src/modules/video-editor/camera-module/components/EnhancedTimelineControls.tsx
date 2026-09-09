@@ -60,7 +60,7 @@ const EnhancedTimelineControls: React.FC<TimelineControlsProps> = ({
       id: `audio_${Date.now()}`,
       name: `TTS - ${voice}`,
       type: 'tts',
-      duration: Math.ceil(text.length / 5) * (2 - rate), // Estimate based on text and rate
+      duration: Math.ceil(text.length / 5) * (2 - rate), 
       volume: 80,
       isMuted: false,
       canCrop: true,
@@ -75,7 +75,7 @@ const EnhancedTimelineControls: React.FC<TimelineControlsProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Timeline Slider */}
+      {}
       <View style={styles.timelineSection}>
         <View style={styles.timeDisplay}>
           <Text style={styles.timeLabel}>{formatTime(currentTime)}</Text>
@@ -102,14 +102,14 @@ const EnhancedTimelineControls: React.FC<TimelineControlsProps> = ({
         </View>
       </View>
 
-      {/* Control Buttons */}
+      {}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         style={styles.controlsScroll}
         contentContainerStyle={styles.controlsContainer}
       >
-        {/* Play/Pause */}
+        {}
         <TouchableOpacity
           style={[styles.controlButton, styles.playButton]}
           onPress={onPlayPause}
@@ -122,7 +122,7 @@ const EnhancedTimelineControls: React.FC<TimelineControlsProps> = ({
           <Text style={styles.controlButtonText}>{isPlaying ? 'Pause' : 'Play'}</Text>
         </TouchableOpacity>
 
-        {/* Script Editor */}
+        {}
         <TouchableOpacity
           style={styles.controlButton}
           onPress={() => setShowScriptEditor(true)}
@@ -131,7 +131,7 @@ const EnhancedTimelineControls: React.FC<TimelineControlsProps> = ({
           <Text style={styles.controlButtonText}>Script</Text>
         </TouchableOpacity>
 
-        {/* Text to Speech */}
+        {}
         <TouchableOpacity
           style={styles.controlButton}
           onPress={() => setShowTextToSpeech(true)}
@@ -140,7 +140,7 @@ const EnhancedTimelineControls: React.FC<TimelineControlsProps> = ({
           <Text style={styles.controlButtonText}>TTS</Text>
         </TouchableOpacity>
 
-        {/* Voice Effects */}
+        {}
         <TouchableOpacity
           style={styles.controlButton}
           onPress={() => setShowVoiceEffects(true)}
@@ -149,7 +149,7 @@ const EnhancedTimelineControls: React.FC<TimelineControlsProps> = ({
           <Text style={styles.controlButtonText}>Effects</Text>
         </TouchableOpacity>
 
-        {/* Audio Panel */}
+        {}
         <TouchableOpacity
           style={[styles.controlButton, audioTracks.length > 0 && styles.controlButtonActive]}
           onPress={() => setShowAudioPanel(true)}
@@ -163,32 +163,32 @@ const EnhancedTimelineControls: React.FC<TimelineControlsProps> = ({
           )}
         </TouchableOpacity>
 
-        {/* Duplicate Clip */}
+        {}
         <TouchableOpacity style={styles.controlButton}>
           <MaterialCommunityIcons name="content-duplicate" size={24} color="#10b981" />
           <Text style={styles.controlButtonText}>Duplicate</Text>
         </TouchableOpacity>
 
-        {/* Delete Clip */}
+        {}
         <TouchableOpacity style={styles.controlButton}>
           <MaterialCommunityIcons name="trash-can-outline" size={24} color="#ef4444" />
           <Text style={styles.controlButtonText}>Delete</Text>
         </TouchableOpacity>
 
-        {/* Crop */}
+        {}
         <TouchableOpacity style={styles.controlButton}>
           <MaterialCommunityIcons name="content-cut" size={24} color="#06b6d4" />
           <Text style={styles.controlButtonText}>Crop</Text>
         </TouchableOpacity>
 
-        {/* Slip (Move) */}
+        {}
         <TouchableOpacity style={styles.controlButton}>
           <MaterialCommunityIcons name="arrow-all" size={24} color="#8b5cf6" />
           <Text style={styles.controlButtonText}>Slip</Text>
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Modals */}
+      {}
       <ScriptEditorModal
         visible={showScriptEditor}
         onClose={() => setShowScriptEditor(false)}
@@ -215,7 +215,7 @@ const EnhancedTimelineControls: React.FC<TimelineControlsProps> = ({
         startTime={currentTime}
       />
 
-      {/* Audio Panel Modal */}
+      {}
       {showAudioPanel && (
         <View style={styles.modalOverlay}>
           <View style={styles.modal}>

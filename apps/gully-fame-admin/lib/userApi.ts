@@ -3,7 +3,7 @@ import type { ApiResponse } from './apiTypes';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://gullyfame.com/v1/api/';
 
-// ==================== Type Definitions ====================
+
 
 export interface User {
   _id: string;
@@ -95,7 +95,7 @@ export interface UpdateKycRequest {
   rejectionReason?: string;
 }
 
-// ==================== API Functions ====================
+
 
 async function makeRequest<T>(
   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
@@ -215,7 +215,7 @@ async function makeRequest<T>(
   }
 }
 
-// ==================== User List ====================
+
 
 export async function getUsers(params?: UserListParams): Promise<ApiResponse<UserListResponse>> {
   const page = params?.page || 1;
@@ -257,7 +257,7 @@ export async function getUsers(params?: UserListParams): Promise<ApiResponse<Use
   return result as ApiResponse<UserListResponse>;
 }
 
-// ==================== User Detail ====================
+
 
 export async function getUserById(userId: string): Promise<ApiResponse<UserDetail>> {
   const endpoint = `${BASE_URL}admin/users/${userId}`;
@@ -278,7 +278,7 @@ export async function getUserById(userId: string): Promise<ApiResponse<UserDetai
   return result as ApiResponse<UserDetail>;
 }
 
-// ==================== Update User Status ====================
+
 
 export async function updateUserStatus(
   userId: string,
@@ -288,7 +288,7 @@ export async function updateUserStatus(
   return makeRequest<User>('PUT', endpoint, { status });
 }
 
-// ==================== Reset Password ====================
+
 
 export async function resetUserPassword(
   userId: string,
@@ -298,7 +298,7 @@ export async function resetUserPassword(
   return makeRequest<{ message: string }>('POST', endpoint, { newPassword });
 }
 
-// ==================== Get User KYC ====================
+
 
 export async function getUserKyc(userId: string): Promise<ApiResponse<KycStatus>> {
   const endpoint = `${BASE_URL}admin/users/${userId}/kyc`;
@@ -315,7 +315,7 @@ export async function getUserKyc(userId: string): Promise<ApiResponse<KycStatus>
   return result as ApiResponse<KycStatus>;
 }
 
-// ==================== Update User KYC ====================
+
 
 export async function updateUserKyc(
   userId: string,
@@ -330,7 +330,7 @@ export async function updateUserKyc(
   return makeRequest<KycStatus>('PUT', endpoint, body);
 }
 
-// ==================== Get User Earnings ====================
+
 
 export async function getUserEarnings(userId: string): Promise<ApiResponse<UserEarningsResponse>> {
   const endpoint = `${BASE_URL}admin/users/${userId}/earnings`;
@@ -362,7 +362,7 @@ export async function getUserEarnings(userId: string): Promise<ApiResponse<UserE
   return result as ApiResponse<UserEarningsResponse>;
 }
 
-// ==================== Export ====================
+
 
 export const userApi = {
   getUsers,

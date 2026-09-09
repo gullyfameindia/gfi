@@ -14,7 +14,7 @@ import Svg, { Path, Circle, G, Rect } from "react-native-svg";
 
 const { width, height } = Dimensions.get("window");
 
-// Sample live competitions data
+
 const liveCompetitions = [
   {
     id: 1,
@@ -75,7 +75,7 @@ export default function LiveCompetitionsScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -123,13 +123,13 @@ export default function LiveCompetitionsScreen() {
                     resizeMode="cover"
                   />
 
-                  {/* LIVE Badge */}
+                  {}
                   <View style={styles.liveBadge}>
                     <View style={styles.liveDot} />
                     <Text style={styles.liveBadgeText}>LIVE</Text>
                   </View>
 
-                  {/* Timer Badge */}
+                  {}
                   <View style={styles.dateBadge}>
                     <Text style={styles.dateBadgeText}>{comp.endsIn}</Text>
                   </View>
@@ -144,7 +144,7 @@ export default function LiveCompetitionsScreen() {
                   </Text>
                   <View style={styles.compCardDetailsNew}>
                     <View style={styles.compDetailItemNew}>
-                      {/* Eye Icon for Viewers */}
+                      {}
                       <Svg
                         width={14}
                         height={14}
@@ -195,7 +195,7 @@ export default function LiveCompetitionsScreen() {
           </ScrollView>
         </View>
 
-        {/* Top Performers Section (Kept identical to maintain layout) */}
+        {}
         <View style={styles.topPerformersSection}>
           <View style={styles.sectionHeader}>
             <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -215,7 +215,7 @@ export default function LiveCompetitionsScreen() {
           </View>
 
           <View style={styles.topDancersContainer}>
-            {/* Rank 2 - Left Side */}
+            {}
             <View style={styles.topDancerSide}>
               <View style={styles.dancerImageWrapper}>
                 <Image
@@ -234,10 +234,10 @@ export default function LiveCompetitionsScreen() {
               </Text>
             </View>
 
-            {/* Rank 1 - Center (Larger) */}
+            {}
             <View style={styles.topDancerCenter}>
               <View style={styles.dancerImageWrapper}>
-                {/* Star Icon Above Head */}
+                {}
                 <View style={styles.starIconWrapper}>
                   <Image
                     source={require("@assets/images/star.png")}
@@ -261,7 +261,7 @@ export default function LiveCompetitionsScreen() {
               </Text>
             </View>
 
-            {/* Rank 3 - Right Side */}
+            {}
             <View style={styles.topDancerSide}>
               <View style={styles.dancerImageWrapper}>
                 <Image
@@ -286,14 +286,14 @@ export default function LiveCompetitionsScreen() {
   );
 }
 
-// ... Use the exact same styles object as your original code, but add these two badge styles:
+
 const styles = StyleSheet.create({
-  /* ... copy all your original styles here ... */
+  
   liveBadge: {
     position: "absolute",
     top: 12,
     left: 12,
-    backgroundColor: "#E53935", // Red for Live
+    backgroundColor: "#E53935", 
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   actionBtnNew: {
-    backgroundColor: "#E53935", // Match the live badge color
+    backgroundColor: "#E53935", 
     paddingHorizontal: 18,
     paddingVertical: 8,
     borderRadius: 8,
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
   },
-  // Top Performers Section
+  
   topPerformersSection: {
     padding: 16,
     paddingHorizontal: 16,
@@ -606,5 +606,5 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontWeight: "400",
   },
-  /* ... rest of your styles ... */
+  
 });

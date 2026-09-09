@@ -22,10 +22,17 @@ import {
 } from "@/icons";
 import { authService } from "@api/services/authService";
 import { saveUserSession } from "@utils/userSession";
-import {
-  GoogleSignin,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
+
+let GoogleSignin: any = null;
+let statusCodes: any = null;
+try {
+  const googleSignIn = require("@react-native-google-signin/google-signin");
+  GoogleSignin = googleSignIn.GoogleSignin;
+  statusCodes = googleSignIn.statusCodes;
+} catch (e) {
+  console.warn("[createaccount] @react-native-google-signin not available (requires dev build):", (e as any)?.message);
+}
+
 const { width, height } = Dimensions.get("window");
 
 export default function CreateAccount() {
@@ -48,20 +55,20 @@ export default function CreateAccount() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isInstagramLoading, setIsInstagramLoading] = useState(false);
 
-  // Google Sign-In - Modern Expo approach
-  // Expo proxy is automatically used with redirect URI: https://auth.expo.io/@avi70/gully-fame-mobile
+  
+  
 
-  // Note: On Android, the library requires androidClientId, so we use webClientId value for it
-  // This is a library requirement, but we're still using the same Web Client ID
+  
+  
   const webClientId = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || undefined;
 
   useEffect(() => {
     GoogleSignin.configure({ webClientId });
   }, []);
-  // Note: hasSeenOnboarding is set when user completes onboarding (onboarding4) or skips it
-  // No need to set it here as the user might navigate here from other paths
+  
+  
 
-  // Check if terms are accepted when screen comes into focus
+  
   useEffect(() => {
     const checkTermsAccepted = async () => {
       try {
@@ -77,7 +84,7 @@ export default function CreateAccount() {
     };
     checkTermsAccepted();
 
-    // Set up interval to check periodically when screen is active (check every 1 second)
+    
     const interval = setInterval(checkTermsAccepted, 1000);
     return () => clearInterval(interval);
   }, []);
@@ -783,14 +790,14 @@ export default function CreateAccount() {
             )}
           </TouchableOpacity>
 
-          {/* OR Continue With Separator */}
+          {}
           <View style={styles.continueWithContainer}>
             <View style={styles.separatorLine} />
             <Text style={styles.continueWithText}>OR Continue With</Text>
             <View style={styles.separatorLine} />
           </View>
 
-          {/* Social Login Icons */}
+          {}
           <View style={styles.socialIconsContainer}>
             <TouchableOpacity
               style={styles.socialIconButton}

@@ -54,7 +54,7 @@ export default function VerifyOtp() {
   };
 
   useEffect(() => {
-    // Show OTP sent message for 1 second when screen loads
+    
     setSuccessMessage("OTP has been sent to your number");
     const timer = setTimeout(() => {
       setSuccessMessage("");
@@ -181,7 +181,7 @@ export default function VerifyOtp() {
           return;
         }
 
-        // Handle role change verification
+        
         if (fromRoleChange && newRole) {
           if (__DEV__) {
             console.log('✅ OTP verified for role change');
@@ -190,7 +190,7 @@ export default function VerifyOtp() {
 
           setSuccessMessage("OTP verified successfully! Updating your role...");
           
-          // Navigate back to account center with verified role change
+          
           setTimeout(() => {
             router.replace({
               pathname: "/(main)/account-center",
@@ -203,7 +203,7 @@ export default function VerifyOtp() {
           return;
         }
 
-        // Handle email change verification
+        
         if (fromEmailChange) {
           if (__DEV__) {
             console.log('✅ OTP verified for email change');
@@ -217,18 +217,18 @@ export default function VerifyOtp() {
               pathname: "/(main)/account-center",
               params: {
                 emailChangeVerified: "true",
-                newEmail: encodeURIComponent(email), // Pass the new email back
+                newEmail: encodeURIComponent(email), 
               },
             } as any);
           }, 1000);
           return;
         }
 
-        // Handle mobile change verification
+        
         if (fromMobileChange) {
           if (__DEV__) {
             console.log('✅ OTP verified for mobile change');
-            console.log('New Mobile:', email); // email param contains mobile in this case
+            console.log('New Mobile:', email); 
           }
 
           setSuccessMessage("OTP verified successfully! Your mobile number has been updated.");
@@ -238,7 +238,7 @@ export default function VerifyOtp() {
               pathname: "/(main)/account-center",
               params: {
                 mobileChangeVerified: "true",
-                newMobile: encodeURIComponent(email), // Pass the new mobile back (email param contains mobile)
+                newMobile: encodeURIComponent(email), 
               },
             } as any);
           }, 1000);
@@ -343,7 +343,7 @@ export default function VerifyOtp() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Back Button */}
+        {}
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Svg width={16} height={16} viewBox="0 0 16 16" fill="none">
             <Path
@@ -353,7 +353,7 @@ export default function VerifyOtp() {
           </Svg>
         </TouchableOpacity>
 
-        {/* Title */}
+        {}
         <Text style={[styles.title, { fontFamily: "PlayfairDisplay_600SemiBold" }]}>
           Verify Mobile Number
         </Text>
@@ -361,18 +361,18 @@ export default function VerifyOtp() {
           We have sent verification code to your mobile number
         </Text>
 
-        {/* Icon */}
+        {}
         <View style={styles.iconContainer}>
           <PhoneMessageIcon width={80} height={73} />
         </View>
 
-        {/* Instruction Text */}
+        {}
         <Text style={styles.instructionTitle}>Enter a verification code</Text>
         <Text style={styles.instructionSubtitle}>
           A verification code was sent to {getMaskedEmailOrMobile()}
         </Text>
 
-        {/* OTP Input Boxes */}
+        {}
         <View style={styles.otpContainer}>
         <View style={styles.otpRow}>
           {Array.from({ length: 6 }).map((_, index) => (
@@ -388,7 +388,7 @@ export default function VerifyOtp() {
           ))}
         </View>
 
-          {/* OTP Input - Hidden but accessible */}
+          {}
         <TextInput
           value={otp}
           onChangeText={(value) => setOtp(value.replace(/[^0-9]/g, "").slice(0, 6))}
@@ -400,7 +400,7 @@ export default function VerifyOtp() {
             caretHidden={true}
         />
         </View>
-        {/* Resend Button */}
+        {}
         <TouchableOpacity 
           style={[styles.resendButton, isResending && styles.resendButtonDisabled]} 
           activeOpacity={0.7} 
@@ -426,7 +426,7 @@ export default function VerifyOtp() {
           </View>
         ) : null}
 
-        {/* Validate Button */}
+        {}
         <TouchableOpacity 
           style={[styles.validateButton, isLoading && styles.validateButtonDisabled]} 
           activeOpacity={0.85} 

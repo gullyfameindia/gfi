@@ -17,12 +17,12 @@ export default function ReportsPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [limit] = useState(20);
   
-  // Filters
+  
   const [statusFilter, setStatusFilter] = useState<'all' | 'PENDING' | 'RESOLVED' | 'REJECTED'>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'USER' | 'CONTENT' | 'COMPETITION'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   
-  // Selected report for status update
+  
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [newStatus, setNewStatus] = useState<'RESOLVED' | 'REJECTED'>('RESOLVED');
@@ -86,7 +86,7 @@ export default function ReportsPage() {
         setShowStatusModal(false);
         setSelectedReport(null);
         setResolutionNotes('');
-        fetchReports(); // Refresh list
+        fetchReports(); 
       } else {
         alert(result.message || 'Failed to update report status');
       }
@@ -159,7 +159,7 @@ export default function ReportsPage() {
           </button>
         </div>
 
-        {/* Filters */}
+        {}
         <div className="rounded-lg bg-white shadow-sm border border-gray-200 p-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
@@ -223,7 +223,7 @@ export default function ReportsPage() {
           </div>
         </div>
 
-        {/* Reports Table */}
+        {}
         <div className="rounded-lg bg-white shadow-sm border border-gray-200 overflow-hidden">
           {loading ? (
             <div className="flex items-center justify-center py-12">
@@ -315,7 +315,7 @@ export default function ReportsPage() {
                 </table>
               </div>
 
-              {/* Pagination */}
+              {}
               {totalPages > 1 && (
                 <div className="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
                   <div className="text-sm text-gray-600">
@@ -343,7 +343,7 @@ export default function ReportsPage() {
           )}
         </div>
 
-        {/* Status Update Modal */}
+        {}
         {showStatusModal && selectedReport && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
             <div className="w-full max-w-2xl rounded-xl bg-white shadow-2xl">
@@ -364,7 +364,7 @@ export default function ReportsPage() {
               </div>
 
               <div className="p-6 space-y-6">
-                {/* Report Info */}
+                {}
                 <div className="space-y-4">
                   <div>
                     <p className="text-xs text-gray-500">Type</p>
@@ -390,7 +390,7 @@ export default function ReportsPage() {
                   )}
                 </div>
 
-                {/* Update Status Form */}
+                {}
                 {selectedReport.status === 'PENDING' && (
                   <div className="space-y-4 border-t pt-4">
                     <div>

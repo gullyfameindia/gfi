@@ -29,7 +29,7 @@ export const useAudioLibrary = () => {
     savedTracks: new Set(),
   });
 
-  // Fetch tracks from backend
+  
   const fetchTracks = useCallback(async (category: string, query?: string) => {
     setState(prev => ({ ...prev, isLoading: true, error: null }));
     try {
@@ -79,11 +79,11 @@ export const useAudioLibrary = () => {
     }
   }, []);
 
-  // Add track to timeline
+  
   const addTrack = useCallback((track: MusicTrack, startTime: number = 0) => {
     const newTrack: AudioTrackWithMetadata = {
       ...track,
-      id: `${track._id}-${Date.now()}`, // Unique ID for multiple instances of same track
+      id: `${track._id}-${Date.now()}`, 
       startTime,
       volume: 1,
     };
@@ -96,7 +96,7 @@ export const useAudioLibrary = () => {
     return newTrack;
   }, []);
 
-  // Remove track from timeline
+  
   const removeTrack = useCallback((trackId: string) => {
     setState(prev => ({
       ...prev,
@@ -104,7 +104,7 @@ export const useAudioLibrary = () => {
     }));
   }, []);
 
-  // Update track properties
+  
   const updateTrack = useCallback((trackId: string, updates: Partial<AudioTrackWithMetadata>) => {
     setState(prev => ({
       ...prev,
@@ -114,12 +114,12 @@ export const useAudioLibrary = () => {
     }));
   }, []);
 
-  // Set track volume
+  
   const setTrackVolume = useCallback((trackId: string, volume: number) => {
     updateTrack(trackId, { volume: Math.max(0, Math.min(1, volume)) });
   }, [updateTrack]);
 
-  // Toggle save audio
+  
   const toggleSaveAudio = useCallback(async (trackId: string) => {
     try {
       const result = await musicLibraryService.toggleSaveAudio(trackId);
@@ -139,7 +139,7 @@ export const useAudioLibrary = () => {
     }
   }, []);
 
-  // Clear all selected tracks
+  
   const clearTracks = useCallback(() => {
     setState(prev => ({
       ...prev,
@@ -147,7 +147,7 @@ export const useAudioLibrary = () => {
     }));
   }, []);
 
-  // Export selected tracks for publishing
+  
   const getTracksForExport = useCallback(() => {
     return state.selectedTracks.map(t => ({
       _id: t._id,
@@ -159,7 +159,7 @@ export const useAudioLibrary = () => {
     }));
   }, [state.selectedTracks]);
 
-  // Reorder tracks
+  
   const reorderTracks = useCallback((fromIndex: number, toIndex: number) => {
     setState(prev => {
       const newTracks = [...prev.selectedTracks];
@@ -170,7 +170,7 @@ export const useAudioLibrary = () => {
   }, []);
 
   return {
-    // State
+    
     selectedTracks: state.selectedTracks,
     allTracks: state.allTracks,
     isLoading: state.isLoading,
@@ -179,7 +179,7 @@ export const useAudioLibrary = () => {
     searchQuery: state.searchQuery,
     savedTracks: state.savedTracks,
 
-    // Actions
+    
     fetchTracks,
     addTrack,
     removeTrack,
@@ -190,7 +190,7 @@ export const useAudioLibrary = () => {
     getTracksForExport,
     reorderTracks,
 
-    // Helpers
+    
     setSearchQuery: (query: string) =>
       setState(prev => ({ ...prev, searchQuery: query })),
     setActiveCategory: (category: string) =>

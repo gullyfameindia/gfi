@@ -1,4 +1,4 @@
-// creta by kiro
+
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -127,7 +127,7 @@ export default function ProfileScreen({ navigation }: any) {
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         }
       >
-        {/* Profile Header */}
+        {}
         <View style={styles.profileHeader}>
           <View style={styles.profileImageContainer}>
             {profile.profileImage ? (
@@ -150,9 +150,9 @@ export default function ProfileScreen({ navigation }: any) {
           </Text>
         </View>
 
-        {/* Profile Info Cards */}
+        {}
         <View style={styles.infoSection}>
-          {/* Email Card */}
+          {}
           <View style={styles.infoCard}>
             <View style={styles.infoCardLeft}>
               <Ionicons name="mail" size={24} color="#007AFF" />
@@ -163,7 +163,7 @@ export default function ProfileScreen({ navigation }: any) {
             </View>
           </View>
 
-          {/* Mobile Card */}
+          {}
           <View style={styles.infoCard}>
             <View style={styles.infoCardLeft}>
               <Ionicons name="call" size={24} color="#007AFF" />
@@ -174,7 +174,7 @@ export default function ProfileScreen({ navigation }: any) {
             </View>
           </View>
 
-          {/* Gender Card (if available) */}
+          {}
           {profile.gender && (
             <View style={styles.infoCard}>
               <View style={styles.infoCardLeft}>
@@ -190,7 +190,7 @@ export default function ProfileScreen({ navigation }: any) {
             </View>
           )}
 
-          {/* DOB Card (if available) */}
+          {}
           {profile.dob && (
             <View style={styles.infoCard}>
               <View style={styles.infoCardLeft}>
@@ -205,7 +205,7 @@ export default function ProfileScreen({ navigation }: any) {
             </View>
           )}
 
-          {/* Bio Card (if available) */}
+          {}
           {profile.bio && (
             <View style={styles.infoCard}>
               <View style={styles.infoCardLeft}>
@@ -219,7 +219,7 @@ export default function ProfileScreen({ navigation }: any) {
           )}
         </View>
 
-        {/* Action Buttons */}
+        {}
         <View style={styles.actionSection}>
           <TouchableOpacity
             style={styles.editButton}
@@ -246,7 +246,7 @@ export default function ProfileScreen({ navigation }: any) {
           </TouchableOpacity>
         </View>
 
-        {/* Footer Spacing */}
+        {}
         <View style={styles.footerSpacing} />
       </ScrollView>
     </SafeAreaView>

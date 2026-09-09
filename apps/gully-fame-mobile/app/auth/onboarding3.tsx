@@ -17,12 +17,12 @@ import { useBranding } from "@contexts/BrandingContext";
 
 const { width, height } = Dimensions.get("window");
 
-// Default fallback image
+
 const DEFAULT_ONBOARDING3 = require("@assets/images/onboarding3.png");
 
 export default function Onboarding3() {
   const { splashImages } = useBranding();
-  // Use third splash image from API, or fallback to default
+  
   const backgroundImage = splashImages[2] ? { uri: splashImages[2] } : DEFAULT_ONBOARDING3;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;

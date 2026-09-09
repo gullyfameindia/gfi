@@ -51,10 +51,10 @@ export default function EditScreen() {
   const [selectedMusicForTrim, setSelectedMusicForTrim] = useState<any>(null);
   const [videoDuration, setVideoDuration] = useState(1);
 
-  // Calculate video duration from clips
+  
   useEffect(() => {
     if (clips.length > 0 && clips[0]?.uri) {
-      // Assume clip is at least 1 second (for demo); in real app fetch actual duration
+      
       setVideoDuration(1);
     }
   }, [clips]);
@@ -65,7 +65,7 @@ export default function EditScreen() {
         const parsedClips = JSON.parse(params.clips as string);
         setClips(parsedClips);
       } catch (e) {
-        // Try as comma-separated string
+        
         const clipStrings = String(params.clips).split(",");
         setClips(clipStrings.map((uri, index) => ({ id: index, uri })));
       }
@@ -81,7 +81,7 @@ export default function EditScreen() {
       : null;
     const entryFee = params.entryFee ? String(params.entryFee) : null;
 
-    // Include trim data if music was selected
+    
     const musicData = selectedMusicForTrim && selectedMusicForTrim.trimData
       ? {
           trackId: selectedMusicForTrim.id,
@@ -115,7 +115,7 @@ export default function EditScreen() {
           pointerEvents={selectedTool ? "none" : "auto"}
           scrollEnabled={!selectedTool}
         >
-          {/* Top Bar */}
+          {}
           <View style={styles.topBar}>
             <TouchableOpacity
               style={styles.closeButton}
@@ -140,7 +140,7 @@ export default function EditScreen() {
             </View>
           </View>
 
-          {/* Main Video Preview */}
+          {}
           <View style={styles.previewContainer}>
             <View style={styles.videoPreview}>
               {clips.length > 0 && clips[0]?.uri ? (
@@ -155,7 +155,7 @@ export default function EditScreen() {
                 </View>
               )}
 
-              {/* Collapse/Expand Arrow */}
+              {}
               <TouchableOpacity
                 style={styles.collapseButton}
                 onPress={() => {}}
@@ -165,7 +165,7 @@ export default function EditScreen() {
             </View>
           </View>
 
-          {/* Timeline Section */}
+          {}
           <View style={styles.timelineSection}>
             <View style={styles.playhead} />
             <View style={styles.timelineControls}>
@@ -198,7 +198,7 @@ export default function EditScreen() {
               </View>
             </View>
 
-            {/* Clip Timeline */}
+            {}
             <View style={styles.clipTimelineContainer}>
               <ScrollView
                 horizontal
@@ -263,7 +263,7 @@ export default function EditScreen() {
         </ScrollView>
       </SafeAreaView>
 
-      {/* Editing Tools Bottom Toolbar */}
+      {}
       <View style={styles.toolbar} pointerEvents="box-none">
         <ScrollView
           horizontal
@@ -394,7 +394,7 @@ export default function EditScreen() {
         </ScrollView>
       </View>
 
-      {/* Audio Panel - Shows when Audio tool is selected */}
+      {}
       {selectedTool === "audio" && !showTrimView && (
         <View style={styles.audioPanelOverlay} pointerEvents="box-none">
           <ScrollView
@@ -436,14 +436,14 @@ export default function EditScreen() {
         </View>
       )}
 
-      {/* Trim View */}
+      {}
       {showTrimView && selectedMusicForTrim && (
         <AudioTrimView
           music={selectedMusicForTrim}
           videoDuration={videoDuration}
           onConfirm={(trimData: AudioTrimData) => {
             console.log('[EditScreen] Audio trimmed:', trimData);
-            // Store trim data for export
+            
             setSelectedMusicForTrim({
               ...selectedMusicForTrim,
               trimData,
@@ -454,7 +454,7 @@ export default function EditScreen() {
         />
       )}
 
-      {/* Music Picker Modal */}
+      {}
       <MusicLibraryModal
         visible={showMusicPicker}
         onSelect={(music) => {

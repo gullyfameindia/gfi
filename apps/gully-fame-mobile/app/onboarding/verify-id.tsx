@@ -28,15 +28,15 @@ export default function OnboardingVerifyId() {
 
   const handleBegin = async () => {
     if (fromVerified) {
-      // If coming from verified page, after verification, go back to profile
-      // For now, just mark as verified and navigate back
+      
+      
       await AsyncStorage.setItem("faceScanDone", "true");
-      // After verification screen, navigate to profile
+      
       router.replace("/(main)/profile" as any);
       return;
     }
     
-    // If coming from KYC flow, navigate to next step (Personal Details)
+    
     if (fromKycFlow) {
       const { navigateToNextKycStep } = await import("@utils/kycValidation");
       await navigateToNextKycStep('personalDetails');

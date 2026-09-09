@@ -50,7 +50,7 @@ export default function OnboardingUploadAvatar() {
   const [errorMessage, setErrorMessage] = useState("");
 
   const handlePickImage = async () => {
-    // Ask user to choose between camera or gallery
+    
     Alert.alert("Select Image", "Choose an option", [
       {
         text: "Camera",
@@ -155,10 +155,10 @@ export default function OnboardingUploadAvatar() {
 
     setErrorMessage("");
 
-    // Format three words with separators
+    
     const threeWordsFormatted = threeWords.filter((w) => w.trim()).join(" | ");
 
-    // If coming from KYC flow, save bio and profileImage to backend before navigating
+    
     if (fromKycFlow) {
       try {
         const { authService } = await import("@api/services/authService");
@@ -175,7 +175,7 @@ export default function OnboardingUploadAvatar() {
 
         await authService.updateProfile(updateData);
 
-        // Also save to AsyncStorage
+        
         await AsyncStorage.multiSet([
           ["userBio", bio.trim()],
           ["userProfileImage", profileImage],
@@ -183,7 +183,7 @@ export default function OnboardingUploadAvatar() {
         ]);
       } catch (error) {
         console.error("Error saving profile data:", error);
-        // Continue anyway - data might still be saved
+        
       }
     }
 

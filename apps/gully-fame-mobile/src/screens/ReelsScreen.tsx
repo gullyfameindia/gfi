@@ -12,7 +12,7 @@ import {
 import { getReelsFeed } from '../api/services/reelsService';
 import type { Reel } from '../types/reels';
 import { Video, ResizeMode } from 'expo-video';
-// Importing the newly updated Support Popup
+
 import { TipPopup } from '../components/tip/TipComponents';
 
 const { height, width } = Dimensions.get('window');
@@ -32,7 +32,7 @@ const ReelsScreen = () => {
   const [reels, setReels] = useState<Reel[]>([]);
   const [error, setError] = useState('');
 
-  // States for Support Modal flow
+  
   const [isSupportVisible, setIsSupportVisible] = useState(false);
   const [selectedReelId, setSelectedReelId] = useState<number | null>(null);
 
@@ -59,7 +59,7 @@ const ReelsScreen = () => {
       const response = await getReelsFeed({ page: 1, limit: 10 });
       let fetchedReels = (response.data?.items as any) || [];
 
-      // Inject dummy reels if none are found from the API
+      
       if (fetchedReels.length === 0) {
         fetchedReels = DUMMY_VIDEOS.map((url, index) => ({
           id: `dummy-${index}`,
@@ -71,7 +71,7 @@ const ReelsScreen = () => {
 
       setReels(fetchedReels);
     } catch (err: any) {
-      // Fallback to dummy data on error
+      
       const fallbackReels = DUMMY_VIDEOS.map((url, index) => ({
         id: `dummy-${index}`,
         videoUrl: url,
@@ -79,14 +79,14 @@ const ReelsScreen = () => {
         user: { username: `dancer_${index + 1}` },
       }));
       setReels(fallbackReels as any);
-      // setError(err?.message || 'Failed to load reels');
+      
     } finally {
       setLoading(false);
     }
   };
 
   const handleSupportPress = (reelId: any) => {
-    // Parsing ID to number as expected by the component
+    
     setSelectedReelId(Number(reelId) || 0);
     setIsSupportVisible(true);
   };
@@ -104,7 +104,7 @@ console.log('REEL DEBUG:', JSON.stringify(item));
 
     return (
       <View style={styles.reelItem}>
-        {/* Real-time Dummy Video */}
+        {}
         {isNearby ? (
           <Video
             source={{ uri: videoSource }}
@@ -120,7 +120,7 @@ console.log('REEL DEBUG:', JSON.stringify(item));
           <View style={[StyleSheet.absoluteFillObject, { backgroundColor: '#111' }]} />
         )}
 
-        {/* Right Sidebar Icons Layout */}
+        {}
         <View style={styles.rightSidebar}>
           <TouchableOpacity style={styles.sidebarButton}>
             <Text style={styles.sidebarIconText}>💬</Text>
@@ -135,9 +135,9 @@ console.log('REEL DEBUG:', JSON.stringify(item));
           </TouchableOpacity>
         </View>
 
-        {/* Bottom Content Area */}
+        {}
         <View style={styles.bottomContentContainer}>
-          {/* User Info Row */}
+          {}
           <View style={styles.userInfoRow}>
             <View style={styles.avatarMock} />
             <Text style={styles.username}>@{item.user.username || 'DancerPro'}</Text>
@@ -146,19 +146,19 @@ console.log('REEL DEBUG:', JSON.stringify(item));
             </TouchableOpacity>
           </View>
 
-          {/* Caption */}
+          {}
           <Text style={styles.caption} numberOfLines={2}>
             {item.caption || 'Showing off my moves! 💃 #dance #gullyfame'}
           </Text>
 
-          {/* Audio Track Info */}
+          {}
           <Text style={styles.audioTrack}>
             🎵 Original Sound - {item.user.username || 'DancerPro'}
           </Text>
 
-          {/* Main Action Buttons Row (Matching the screenshot layout) */}
+          {}
           <View style={styles.actionButtonsRow}>
-            {/* Updated 'Tip' Button ➡️ 'Support' Button */}
+            {}
             <TouchableOpacity
               style={styles.supportButton}
               activeOpacity={0.8}
@@ -170,7 +170,7 @@ console.log('REEL DEBUG:', JSON.stringify(item));
               <Text style={styles.supportButtonText}>Support</Text>
             </TouchableOpacity>
 
-            {/* Vote Action Button */}
+            {}
             <TouchableOpacity style={styles.votedButton} activeOpacity={0.8}>
               <Text style={styles.votedButtonText}>★ Voted • 256</Text>
             </TouchableOpacity>
@@ -221,7 +221,7 @@ console.log('REEL DEBUG:', JSON.stringify(item));
         decelerationRate="fast"
       />
 
-      {/* Global Support Popup Sheet */}
+      {}
       {selectedReelId !== null && (
         <TipPopup
           visible={isSupportVisible}
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   bottomContentContainer: {
     paddingHorizontal: 16,
-    paddingBottom: 40, // Keeps spacing clear of bottom navigation tab bar area
+    paddingBottom: 40, 
     width: '100%',
     zIndex: 5,
   },

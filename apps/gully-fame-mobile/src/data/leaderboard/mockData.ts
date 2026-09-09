@@ -1,5 +1,5 @@
 import { LeaderboardAPIData } from "@/types/leaderboard";
-// A pool of names to make it look realistic for the Cultre Boat demographic
+
 const firstNames = [
   "Aarav",
   "Neha",
@@ -50,7 +50,7 @@ export const generateMockLeaderboardData = (
     const randomLastName =
       lastNames[Math.floor(Math.random() * lastNames.length)];
 
-    // Creates a realistic descending point curve
+    
     const points = Math.max(
       0,
       150000 - index * 1200 - Math.floor(Math.random() * 800),

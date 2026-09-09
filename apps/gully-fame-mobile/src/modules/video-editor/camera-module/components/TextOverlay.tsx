@@ -7,7 +7,7 @@ interface TextOverlayProps {
   overlay: TextOverlay;
   containerWidth: number;
   containerHeight: number;
-  currentTime?: number; // For video: current playback time
+  currentTime?: number; 
   isEditing?: boolean;
   onPress?: () => void;
   onDone?: () => void;
@@ -15,9 +15,9 @@ interface TextOverlayProps {
   onDelete?: () => void;
 }
 
-/**
- * Renders a single text overlay on the preview with Done/Edit/Delete buttons
- */
+
+
+
 const TextOverlayComponent: React.FC<TextOverlayProps> = ({
   overlay,
   containerWidth,
@@ -29,7 +29,7 @@ const TextOverlayComponent: React.FC<TextOverlayProps> = ({
   onEdit,
   onDelete,
 }) => {
-  // Check if text should be visible (for video timing)
+  
   const isVisible =
     overlay.startTime === undefined ||
     overlay.endTime === undefined ||
@@ -39,11 +39,11 @@ const TextOverlayComponent: React.FC<TextOverlayProps> = ({
     return null;
   }
 
-  // Calculate absolute position from relative (0-1) coordinates
+  
   const absoluteX = overlay.x * containerWidth;
   const absoluteY = overlay.y * containerHeight;
 
-  // Build text style
+  
   const textStyle: ViewStyle = {
     position: "absolute",
     left: absoluteX,
@@ -68,10 +68,10 @@ const TextOverlayComponent: React.FC<TextOverlayProps> = ({
 
   return (
     <View style={[styles.container, textStyle]}>
-      {/* Action Buttons (Show when editing) */}
+      {}
       {isEditing && (
         <View style={styles.actionButtons}>
-          {/* Done Button */}
+          {}
           <TouchableOpacity style={styles.doneButton} onPress={onDone} activeOpacity={0.7}>
             <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
               <Path
@@ -85,7 +85,7 @@ const TextOverlayComponent: React.FC<TextOverlayProps> = ({
             <Text style={styles.buttonLabel}>Done</Text>
           </TouchableOpacity>
 
-          {/* Edit Button */}
+          {}
           <TouchableOpacity style={styles.editButton} onPress={onEdit} activeOpacity={0.7}>
             <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
               <Path
@@ -106,7 +106,7 @@ const TextOverlayComponent: React.FC<TextOverlayProps> = ({
             <Text style={styles.buttonLabel}>Edit</Text>
           </TouchableOpacity>
 
-          {/* Delete Button */}
+          {}
           <TouchableOpacity style={styles.deleteButton} onPress={onDelete} activeOpacity={0.7}>
             <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
               <Path
@@ -119,7 +119,7 @@ const TextOverlayComponent: React.FC<TextOverlayProps> = ({
         </View>
       )}
 
-      {/* Text Content */}
+      {}
       <TouchableOpacity
         style={[styles.textWrapper, isEditing && styles.editing]}
         activeOpacity={0.8}

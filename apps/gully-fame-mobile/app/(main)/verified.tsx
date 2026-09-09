@@ -11,7 +11,7 @@ import {
   Dimensions,
 } from "react-native";
 import { router } from "expo-router";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router/react-navigation";
 import Svg, { Path, Circle } from "react-native-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useOwnProfile } from "@/components/profile/shared/profileHooks";
@@ -37,7 +37,7 @@ export default function VerifiedScreen() {
     checkVerificationStatus();
   }, [profileData]);
 
-  // Refresh verification status when screen comes into focus
+  
   useFocusEffect(
     useCallback(() => {
       checkVerificationStatus();
@@ -70,7 +70,7 @@ export default function VerifiedScreen() {
         hasGender,
       });
 
-      // Auto-verify KYC if all steps are completed
+      
       if (allStepsCompleted) {
         try {
           const { autoVerifyKycIfComplete } =
@@ -100,24 +100,24 @@ export default function VerifiedScreen() {
         break;
       case "dob":
       case "gender":
-        // Navigate to personal details page
+        
         const query = [
           `role=${encodeURIComponent(role)}`,
           `firstName=${encodeURIComponent(firstName)}`,
           `lastName=${encodeURIComponent(lastName)}`,
           `email=${encodeURIComponent(email)}`,
-          `fromVerified=true`, // Flag to indicate coming from verified page
+          `fromVerified=true`, 
         ].join("&");
         router.push(`/onboarding/personal-details?${query}` as any);
         break;
       case "faceScan":
-        // Navigate to face scan
+        
         const faceScanQuery = [
           `role=${encodeURIComponent(role)}`,
           `firstName=${encodeURIComponent(firstName)}`,
           `lastName=${encodeURIComponent(lastName)}`,
           `email=${encodeURIComponent(email)}`,
-          `fromVerified=true`, // Flag to indicate coming from verified page
+          `fromVerified=true`, 
         ].join("&");
         router.push(`/onboarding/face-scan?${faceScanQuery}` as any);
         break;
@@ -125,9 +125,9 @@ export default function VerifiedScreen() {
   };
 
   const handleVerifyNow = async () => {
-    // After face scan, mark as done and show verification screen
+    
     await AsyncStorage.setItem("faceScanDone", "true");
-    // Navigate to verify ID screen
+    
     const role = (await AsyncStorage.getItem("userRole")) || "participant";
     const firstName = profileData?.firstName || "";
     const lastName = profileData?.lastName || "";
@@ -153,7 +153,7 @@ export default function VerifiedScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -170,7 +170,7 @@ export default function VerifiedScreen() {
         showsVerticalScrollIndicator={false}
       >
         {isVerified && allStepsComplete ? (
-          // Verified State
+          
           <View style={styles.verifiedContainer}>
             <VerifiedBadge size={100} />
             <Text style={styles.verifiedTitle}>You're Verified! ✅</Text>

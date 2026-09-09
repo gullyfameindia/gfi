@@ -1,5 +1,5 @@
-// Created by Kiro - Hook for fetching user reels
-// Fetches user's reels/posts dynamically from API
+
+
 
 import { useState, useEffect, useCallback } from "react";
 import { reelsService, Reel } from "../api/services/reelsService";
@@ -9,7 +9,7 @@ export const useUserReels = (userId: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch user reels
+  
   const fetchUserReels = useCallback(async () => {
     if (!userId) {
       setLoading(false);
@@ -35,7 +35,38 @@ export const useUserReels = (userId: string) => {
       if (response.success && response.data) {
         console.log("[useUserReels] Reels fetched:", response.data.items.length);
         console.log("[useUserReels] Reel IDs:", response.data.items.map((r: any) => r._id || r.id).join(", "));
-        setReels(response.data.items);
+        
+        
+        console.log("[useUserReels] ===== RAW ITEMS FROM SERVICE =====");
+        if (response.data.items.length > 0) {
+          const firstReel = response.data.items[0];
+          console.log("[useUserReels] First reel keys:", Object.keys(firstReel));
+          console.log("[useUserReels] First reel ALL fields:", JSON.stringify(firstReel, null, 2));
+        }
+        console.log("[useUserReels] =====================================");
+        
+        
+        const validReels = response.data.items.filter((reel: any) => {
+          const hasVideoUrl = !!(reel.videoUrl || reel.url);
+          return hasVideoUrl; 
+        });
+
+        console.log(`[useUserReels] Total reels: ${response.data.items.length}, Valid reels with video URLs: ${validReels.length}`);
+        
+        
+        response.data.items.forEach((reel: any, idx: number) => {
+          const hasVideoUrl = !!(reel.videoUrl || reel.url);
+          console.log(`[useUserReels] Reel ${idx}:`, {
+            _id: reel._id || reel.id,
+            title: reel.title,
+            hasVideoUrl: hasVideoUrl,
+            videoUrl: reel.videoUrl || reel.url ? (reel.videoUrl || reel.url).substring(0, 60) : "❌ MISSING",
+            hasThumbnail: !!reel.thumbnail,
+            status: hasVideoUrl ? "✅ VALID" : "❌ SKIPPED (no video URL)",
+          });
+        });
+        
+        setReels(validReels);
       } else {
         setError(response.message || "Failed to fetch reels");
         console.error("[useUserReels] Error:", response.message);
@@ -49,7 +80,7 @@ export const useUserReels = (userId: string) => {
     }
   }, [userId]);
 
-  // Load reels on mount
+  
   useEffect(() => {
     fetchUserReels();
   }, [userId, fetchUserReels]);

@@ -14,7 +14,7 @@ import Svg, { Path, Circle, G, Rect } from "react-native-svg";
 
 const { width, height } = Dimensions.get("window");
 
-// Sample past competitions data
+
 const pastCompetitions = [
   {
     id: 1,
@@ -73,7 +73,7 @@ const pastCompetitions = [
   },
 ];
 
-// Top Performers of Week
+
 const topPerformersOfWeek = [
   {
     id: 1,
@@ -109,7 +109,7 @@ export default function PastCompetitionsScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
       
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -120,13 +120,13 @@ export default function PastCompetitionsScreen() {
         <View style={{ width: 40 }} />
       </View>
 
-      {/* Content */}
+      {}
       <ScrollView 
         style={styles.listContainer}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContent}
       >
-        {/* Past Competitions List */}
+        {}
         <View style={styles.competitionsSection}>
           <Text style={styles.sectionTitle}>All Past Competitions</Text>
           <ScrollView 
@@ -144,12 +144,12 @@ export default function PastCompetitionsScreen() {
                 <View style={styles.compCardImageWrapper}>
                   <Image source={comp.image} style={styles.compCardImageNew} resizeMode="cover" />
                   
-                  {/* Completed Badge */}
+                  {}
                   <View style={styles.completedBadge}>
                     <Text style={styles.completedBadgeText}>Completed</Text>
                   </View>
                   
-                  {/* Date Badge */}
+                  {}
                   <View style={styles.dateBadge}>
                     <Text style={styles.dateBadgeText}>{comp.dateRange}</Text>
                   </View>
@@ -191,7 +191,7 @@ export default function PastCompetitionsScreen() {
           </ScrollView>
         </View>
 
-        {/* Top Performers of Week Section */}
+        {}
         <View style={styles.topPerformersSection}>
           <View style={styles.sectionHeader}>
             <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -203,7 +203,7 @@ export default function PastCompetitionsScreen() {
           </View>
           
           <View style={styles.topDancersContainer}>
-            {/* Rank 2 - Left Side */}
+            {}
             <View style={styles.topDancerSide}>
               <View style={styles.dancerImageWrapper}>
                 <Image
@@ -220,10 +220,10 @@ export default function PastCompetitionsScreen() {
               <Text style={styles.dancerPoints}>{topPerformersOfWeek[1].coins} coins</Text>
             </View>
 
-            {/* Rank 1 - Center (Larger) */}
+            {}
             <View style={styles.topDancerCenter}>
               <View style={styles.dancerImageWrapper}>
-                {/* Star Icon Above Head */}
+                {}
                 <View style={styles.starIconWrapper}>
                   <Image
                     source={require("@assets/images/star.png")}
@@ -245,7 +245,7 @@ export default function PastCompetitionsScreen() {
               <Text style={styles.dancerPointsCenter}>{topPerformersOfWeek[0].coins} coins</Text>
             </View>
 
-            {/* Rank 3 - Right Side */}
+            {}
             <View style={styles.topDancerSide}>
               <View style={styles.dancerImageWrapper}>
                 <Image
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
   },
-  // Top Performers Section
+  
   topPerformersSection: {
     padding: 16,
     paddingHorizontal: 16,

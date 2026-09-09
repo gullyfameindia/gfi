@@ -1,4 +1,4 @@
-// File Route: apps/gully-fame-mobile/app/(main)/kyc-status.tsx
+
 
 import React, { useState } from "react";
 import {
@@ -16,11 +16,11 @@ import {
 import { router } from "expo-router";
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
-// KYC States: 'NOT_STARTED' | 'PENDING' | 'APPROVED' | 'REJECTED'
+
 type KYCStatusType = 'NOT_STARTED' | 'PENDING' | 'APPROVED' | 'REJECTED';
 
 export default function KYCStatusScreen() {
-  // Demo ke liye state abhi 'NOT_STARTED' rakhi hai. Aap isko badal kar baaki states test kar sakte hain.
+  
   const [kycStatus, setKycStatus] = useState<KYCStatusType>('NOT_STARTED');
   const [panNumber, setPanNumber] = useState('');
   const [aadhaarNumber, setAadhaarNumber] = useState('');
@@ -38,10 +38,10 @@ export default function KYCStatusScreen() {
     }
 
     setIsLoading(true);
-    // Yahan aapki Backend KYC API hit hogi
+    
     setTimeout(() => {
       setIsLoading(false);
-      setKycStatus('PENDING'); // Submission ke baad status pending ho jayega
+      setKycStatus('PENDING'); 
       Alert.alert("Success", "KYC Documents submitted successfully for review!");
     }, 2000);
   };
@@ -50,7 +50,7 @@ export default function KYCStatusScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="chevron-back" size={28} color="#fff" />
@@ -61,7 +61,7 @@ export default function KYCStatusScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
-        {/* --- STATE 1: APPROVED --- */}
+        {}
         {kycStatus === 'APPROVED' && (
           <View style={[styles.statusCard, { borderColor: '#25D366' }]}>
             <Ionicons name="checkmark-circle" size={60} color="#25D366" />
@@ -72,7 +72,7 @@ export default function KYCStatusScreen() {
           </View>
         )}
 
-        {/* --- STATE 2: PENDING --- */}
+        {}
         {kycStatus === 'PENDING' && (
           <View style={[styles.statusCard, { borderColor: '#EC9A15' }]}>
             <Ionicons name="time" size={60} color="#EC9A15" />
@@ -83,7 +83,7 @@ export default function KYCStatusScreen() {
           </View>
         )}
 
-        {/* --- STATE 3: REJECTED --- */}
+        {}
         {kycStatus === 'REJECTED' && (
           <View style={[styles.statusCard, { borderColor: '#ff4444' }]}>
             <Ionicons name="alert-circle" size={60} color="#ff4444" />
@@ -97,7 +97,7 @@ export default function KYCStatusScreen() {
           </View>
         )}
 
-        {/* --- STATE 4: NOT STARTED (FORM FILING) --- */}
+        {}
         {kycStatus === 'NOT_STARTED' && (
           <View>
             <View style={styles.infoBox}>
@@ -106,7 +106,7 @@ export default function KYCStatusScreen() {
               </Text>
             </View>
 
-            {/* PAN Card Section */}
+            {}
             <View style={styles.formCard}>
               <Text style={styles.cardHeading}>
                 <FontAwesome5 name="id-card" size={18} color="#EC9A15" /> PAN Card Details
@@ -123,7 +123,7 @@ export default function KYCStatusScreen() {
               />
             </View>
 
-            {/* Aadhaar Card Section */}
+            {}
             <View style={styles.formCard}>
               <Text style={styles.cardHeading}>
                 <FontAwesome5 name="fingerprint" size={18} color="#EC9A15" /> Aadhaar Card Details
@@ -140,7 +140,7 @@ export default function KYCStatusScreen() {
               />
             </View>
 
-            {/* Submit Button */}
+            {}
             <TouchableOpacity 
               style={[styles.submitButton, isLoading && styles.disabledButton]} 
               onPress={handleSubmitKYC}

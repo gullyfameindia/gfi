@@ -6,9 +6,9 @@ interface TextButtonProps {
   onPress?: () => void;
 }
 
-/**
- * Text button component for preview editor
- */
+
+
+
 const TextButton: React.FC<TextButtonProps> = ({ onPress }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={0.7}>
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    // backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -7,10 +7,10 @@ interface CameraSwitchButtonProps {
   onPress: () => void;
 }
 
-/**
- * Camera switch button (front/back toggle) with custom SVG icon.
- * Positioned to the right of the capture button.
- */
+
+
+
+
 const CameraSwitchButton: React.FC<CameraSwitchButtonProps> = ({ onPress }) => {
   return (
     <TouchableOpacity

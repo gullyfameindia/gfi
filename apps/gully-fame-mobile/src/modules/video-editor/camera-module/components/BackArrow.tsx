@@ -6,9 +6,9 @@ interface BackArrowProps {
   color?: string;
 }
 
-/**
- * Custom back arrow based on the provided SVG path.
- */
+
+
+
 const BackArrow: React.FC<BackArrowProps> = ({ size = 22, color = '#f9fafb' }) => {
   return (
     <Svg

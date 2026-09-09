@@ -25,7 +25,7 @@ export function convertDateToChatTimePassed(date: string) {
   } else if (diffInMins > 0) {
     return `${diffInMins}min ago`;
   } else {
-    // If it's under 60 seconds
+    
     return "Just now";
   }
 }

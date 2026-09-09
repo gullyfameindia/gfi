@@ -109,7 +109,7 @@ export const pastCompetitionStyles = StyleSheet.create({
         lineHeight: 22,
     },
 
-    // --- Glowing Leaderboard Title ---
+    
     leaderboardTitleContainer: {
         alignItems: "center",
         marginBottom: 8,
@@ -134,7 +134,7 @@ export const pastCompetitionStyles = StyleSheet.create({
     },
     specBoxCenter: {
         flex: 1,
-        alignItems: "center", // Center aligns the specs to look like badges
+        alignItems: "center", 
     },
     specHeaderCenter: {
         flexDirection: "row",
@@ -143,17 +143,17 @@ export const pastCompetitionStyles = StyleSheet.create({
         gap: 6,
     },
     specValueLarge: {
-        color: "#EC9A15", // Punchy orange for the participant count
+        color: "#EC9A15", 
         fontSize: 18,
         fontWeight: "800",
     },
 
-    // --- Updated Accordion Styles ---
+    
     missionBriefingCard: {
-        backgroundColor: "#2A1A0B", // Deep dark brown
+        backgroundColor: "#2A1A0B", 
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: "rgba(255, 215, 0, 0.15)", // Subtle gold border
+        borderColor: "rgba(255, 215, 0, 0.15)", 
         overflow: "hidden",
         marginHorizontal: 16,
         marginBottom: 16,
@@ -163,7 +163,7 @@ export const pastCompetitionStyles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
         padding: 16,
-        backgroundColor: "rgba(255, 215, 0, 0.05)", // Gold tint makes it look like a button
+        backgroundColor: "rgba(255, 215, 0, 0.05)", 
     },
     missionSectionTitle: {
         fontSize: 12,
@@ -186,7 +186,7 @@ export const pastCompetitionStyles = StyleSheet.create({
         width: 6,
         height: 6,
         borderRadius: 3,
-        backgroundColor: "#FF0055", // Neon pink/red dot
+        backgroundColor: "#FF0055", 
         marginTop: 8,
     },
     missionDivider: {
@@ -279,7 +279,7 @@ export const pastCompetitionStyles = StyleSheet.create({
         paddingVertical: 6,
     },
     detailsBox: {
-        backgroundColor: "rgba(0,0,0,0.2)", // Inner shadow box
+        backgroundColor: "rgba(0,0,0,0.2)", 
         borderRadius: 12,
         paddingHorizontal: 16,
         paddingVertical: 4,
@@ -319,7 +319,7 @@ export const pastCompetitionStyles = StyleSheet.create({
     },
     detailRowCompact: {
         flexDirection: "row",
-        justifyContent: "space-between", // Spread left and right correctly
+        justifyContent: "space-between", 
         alignItems: "center",
         paddingVertical: 12,
     },
@@ -335,7 +335,7 @@ export const pastCompetitionStyles = StyleSheet.create({
     aboutText: {
         fontSize: 14,
         color: "#CCC",
-        lineHeight: 22, // Better readability for paragraphs
+        lineHeight: 22, 
     },
     detailLabelCompact: {
         fontSize: 14,
@@ -343,13 +343,13 @@ export const pastCompetitionStyles = StyleSheet.create({
     },
     detailValueCompact: {
         fontSize: 14,
-        color: "#FFF", // Changed to white so it looks less aggressive
+        color: "#FFF", 
         fontWeight: "600",
         textAlign: "right",
     },
     divider: {
         height: 1,
-        backgroundColor: "rgba(255,255,255,0.08)", // Softer, modern divider
+        backgroundColor: "rgba(255,255,255,0.08)", 
     },
     entriesScroll: {
         marginTop: 8,
@@ -399,20 +399,20 @@ export const pastCompetitionStyles = StyleSheet.create({
         fontSize: 11,
         color: "#fff",
     },
-    // New Card Design - Content Below Image
+    
     compCardContainer: {
         paddingTop: 16,
         paddingBottom: 10,
         width: "100%",
     },
     compCardNew: {
-        borderRadius: 16, // Softer corners
+        borderRadius: 16, 
         overflow: "hidden",
         flexShrink: 0,
         width: width * 0.8,
-        backgroundColor: "#2E1F11", // Slightly darker to pop off the main background
+        backgroundColor: "#2E1F11", 
         borderWidth: 1,
-        borderColor: "rgba(255,255,255,0.05)", // Very subtle border
+        borderColor: "rgba(255,255,255,0.05)", 
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
@@ -421,7 +421,7 @@ export const pastCompetitionStyles = StyleSheet.create({
     },
     titleCard: {
         width: "100%",
-        borderColor: "rgba(255,255,255,0.05)", // Very subtle border
+        borderColor: "rgba(255,255,255,0.05)", 
         shadowColor: "#000",
         backgroundColor: "#2E1F11",
     },
@@ -472,7 +472,7 @@ export const pastCompetitionStyles = StyleSheet.create({
         top: 12,
         left: 12,
         backgroundColor: "rgba(0, 0, 0, 0.6)",
-        backdropFilter: "blur(4px)", // If using Expo blur view later, nice touch
+        backdropFilter: "blur(4px)", 
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 8,
@@ -509,16 +509,16 @@ export const pastCompetitionStyles = StyleSheet.create({
         fontSize: 22,
         color: "#fff",
         fontWeight: "700",
-        textAlign: "left", // Left aligned for modern look
+        textAlign: "left", 
         marginBottom: 6,
     },
     compCardSubtitle: {
         fontSize: 14,
-        color: "#EC9A15", // Make category pop
+        color: "#EC9A15", 
         fontWeight: "600",
         textAlign: "left",
     },
-    // Winner Section - Yellow Background (Linear Gradient)
+    
     winnerSection: {
         padding: 20,
         marginTop: 0,
@@ -591,7 +591,7 @@ export const pastCompetitionStyles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "600",
     },
-    // Final Results - Top 3
+    
     finalResultsSection: {
         paddingHorizontal: 16,
         marginBottom: 0,
@@ -718,7 +718,7 @@ export const pastCompetitionStyles = StyleSheet.create({
         fontWeight: "700",
         textAlign: "center",
     },
-    // Top Entries
+    
     topEntriesScroll: {
         gap: 12,
         paddingHorizontal: 0,
@@ -754,7 +754,7 @@ export const pastCompetitionStyles = StyleSheet.create({
         color: "#999",
         marginRight: 8,
     },
-    // Winners Section (old - keeping for compatibility)
+    
     winnersHeader: {
         flexDirection: "row",
         alignItems: "center",
@@ -893,7 +893,7 @@ export const pastCompetitionStyles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "700",
     },
-    // Best Moments
+    
     bestMomentsScroll: {
         gap: 15,
         paddingHorizontal: 16,
@@ -957,7 +957,7 @@ export const pastCompetitionStyles = StyleSheet.create({
         fontSize: 14,
         opacity: 0.9,
     },
-    // More Past Competitions
+    
     pastCompScroll: {
         gap: 15,
         paddingHorizontal: 16,
@@ -1005,7 +1005,7 @@ export const pastCompetitionStyles = StyleSheet.create({
         fontSize: 13,
         fontWeight: "600",
     },
-    // Share Modal Styles
+    
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0, 0, 0, 0.7)",

@@ -94,7 +94,7 @@ export default function Categories() {
             <label className="flex items-center space-x-3">
               <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden border border-gray-200">
                 {newCategoryIconPreview ? (
-                  // eslint-disable-next-line @next/next/no-img-element
+                  
                   <img
                     src={newCategoryIconPreview}
                     alt="New category icon preview"
@@ -167,7 +167,7 @@ export default function Categories() {
                 <div className="flex items-center space-x-3 min-w-0">
                   <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden flex-shrink-0 border border-gray-200">
                     {category.icon ? (
-                      // eslint-disable-next-line @next/next/no-img-element
+                      
                       <img
                         src={category.icon}
                         alt={category.name || 'Category icon'}

@@ -1,5 +1,5 @@
-// User Profile - Fan (Viewing Another User)
-// This screen is for when viewing another user who is a fan
+
+
 
 import { router, useLocalSearchParams } from "expo-router";
 import React, { useState, useRef } from "react";
@@ -34,11 +34,11 @@ import {
 } from "@/icons";
 import { TipPopup } from "@components/tip/TipComponents";
 
-// Share Icon Component
+
 
 const { width, height } = Dimensions.get("window");
 
-// Tabs for participants (navbar stays consistent)
+
 const participantTabs = [
   { name: "Home", icon: HomeIconSVG, label: "" },
   { name: "Reel", icon: ReelIconSVG, label: "GullyReel" },
@@ -47,7 +47,7 @@ const participantTabs = [
   { name: "MyFame", icon: UserIconSVG, label: "" },
 ];
 
-// Videos and Photos data
+
 const videos = [
   { id: 1, image: require("@assets/images/music.png"), width: 1, height: 1 },
   {
@@ -195,7 +195,7 @@ export default function UserFanProfile() {
           }
           break;
       }
-      // Close modal after sharing
+      
       Animated.timing(shareSlideAnim, {
         toValue: height,
         duration: 300,
@@ -218,7 +218,7 @@ export default function UserFanProfile() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header with Back Button and Share Button */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
             <BackIcon color="white" size={24} />
@@ -240,7 +240,7 @@ export default function UserFanProfile() {
           </TouchableOpacity>
         </View>
 
-        {/* Fan Profile - Circle Frame Profile Section */}
+        {}
         <View style={styles.fanCircleContainer}>
           <View style={styles.fanCircleShape}>
             {profileData.profileImage ? (
@@ -254,28 +254,28 @@ export default function UserFanProfile() {
                 style={styles.fanProfileImage}
               />
             )}
-            {/* Circle frame border */}
+            {}
             <View style={styles.fanCircleFrame} />
           </View>
         </View>
 
-        {/* User Info */}
+        {}
         <UserInfoSection
           profileData={profileData}
           role="other"
           showEditButton={false}
         />
 
-        {/* Content Container */}
+        {}
         <LinearGradient
           colors={["rgba(41, 33, 24, 0.2)", "#3C2610"]}
           locations={[0.0, 0.4]}
           style={styles.contentContainer}
         >
-          {/* Stats Section */}
+          {}
           <StatsSection />
 
-          {/* Level Display - Container with level text for user profiles */}
+          {}
           <View style={styles.levelDisplayContainer}>
             <View style={styles.levelDisplayGradientWrapper}>
               <LinearGradient
@@ -289,7 +289,7 @@ export default function UserFanProfile() {
             </View>
           </View>
 
-          {/* Action Buttons - Follow, Message, and Tip */}
+          {}
           <View style={styles.actionButtons}>
             <TouchableOpacity style={styles.outlineButton}>
               <Text style={styles.outlineButtonText}>Follow</Text>
@@ -326,7 +326,7 @@ export default function UserFanProfile() {
             </TouchableOpacity>
           </View>
 
-          {/* Videos/Photos Tabs */}
+          {}
           <View style={styles.tabContainer}>
             <TouchableOpacity
               style={[styles.tab, selectedTab === "Videos" && styles.tabActive]}
@@ -356,7 +356,7 @@ export default function UserFanProfile() {
             </TouchableOpacity>
           </View>
 
-          {/* Grid Content - 2 columns layout */}
+          {}
           <View style={styles.gridContainer}>
             {(selectedTab === "Videos" ? videos : photos).map((item, index) => {
               const baseSize = (width - 28 - 4) / 2;
@@ -379,7 +379,7 @@ export default function UserFanProfile() {
         </LinearGradient>
       </ScrollView>
 
-      {/* Share Profile Modal */}
+      {}
       <Modal
         visible={shareModalVisible}
         transparent={true}
@@ -569,7 +569,7 @@ export default function UserFanProfile() {
         </TouchableOpacity>
       </Modal>
 
-      {/* Tip Modal */}
+      {}
       {currentTipUserId !== null && (
         <TipPopup
           visible={tipModalVisible}
@@ -586,7 +586,7 @@ export default function UserFanProfile() {
         />
       )}
 
-      {/* Bottom Navigation */}
+      {}
       <BottomNav
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -737,7 +737,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 4,
   },
-  // Level-Up Modal Styles
+  
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.7)",
@@ -794,7 +794,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
   },
-  // Level Display Styles
+  
   levelDisplayContainer: {
     marginHorizontal: 20,
     marginTop: 0,
@@ -826,7 +826,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.045,
     fontWeight: "600",
   },
-  // Share Modal Styles
+  
   shareModal: {
     position: "absolute",
     bottom: 0,

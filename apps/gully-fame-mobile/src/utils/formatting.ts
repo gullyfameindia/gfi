@@ -1,12 +1,12 @@
-// Created by Kiro
-// Formatting Utilities - Date, number, currency, and text formatting
 
-/**
- * Format date to readable string
- * @param date - Date to format
- * @param format - Format type (short, long, time)
- * @returns Formatted date string
- */
+
+
+
+
+
+
+
+
 export const formatDate = (
   date: string | Date,
   format: 'short' | 'long' | 'time' = 'short'
@@ -26,11 +26,11 @@ export const formatDate = (
   return dateObj.toLocaleDateString('en-US', optionsMap[format]);
 };
 
-/**
- * Format date to relative time (e.g., "2 hours ago")
- * @param date - Date to format
- * @returns Relative time string
- */
+
+
+
+
+
 export const formatRelativeTime = (date: string | Date): string => {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   const now = new Date();
@@ -57,12 +57,12 @@ export const formatRelativeTime = (date: string | Date): string => {
   return `${years} year${years > 1 ? 's' : ''} ago`;
 };
 
-/**
- * Format number with thousand separators
- * @param num - Number to format
- * @param decimals - Number of decimal places
- * @returns Formatted number string
- */
+
+
+
+
+
+
 export const formatNumber = (num: number, decimals: number = 0): string => {
   return num.toLocaleString('en-US', {
     minimumFractionDigits: decimals,
@@ -70,12 +70,12 @@ export const formatNumber = (num: number, decimals: number = 0): string => {
   });
 };
 
-/**
- * Format currency
- * @param amount - Amount to format
- * @param currency - Currency code (default: USD)
- * @returns Formatted currency string
- */
+
+
+
+
+
+
 export const formatCurrency = (amount: number, currency: string = 'USD'): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -83,21 +83,21 @@ export const formatCurrency = (amount: number, currency: string = 'USD'): string
   }).format(amount);
 };
 
-/**
- * Format percentage
- * @param value - Value to format
- * @param decimals - Number of decimal places
- * @returns Formatted percentage string
- */
+
+
+
+
+
+
 export const formatPercentage = (value: number, decimals: number = 0): string => {
   return `${formatNumber(value, decimals)}%`;
 };
 
-/**
- * Format file size
- * @param bytes - Size in bytes
- * @returns Formatted file size string
- */
+
+
+
+
+
 export const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes';
 
@@ -108,11 +108,11 @@ export const formatFileSize = (bytes: number): string => {
   return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 };
 
-/**
- * Format phone number
- * @param phone - Phone number to format
- * @returns Formatted phone number
- */
+
+
+
+
+
 export const formatPhoneNumber = (phone: string): string => {
   const cleaned = phone.replace(/\D/g, '');
 
@@ -127,42 +127,42 @@ export const formatPhoneNumber = (phone: string): string => {
   return phone;
 };
 
-/**
- * Format credit card number
- * @param cardNumber - Card number to format
- * @returns Formatted card number (last 4 digits visible)
- */
+
+
+
+
+
 export const formatCreditCard = (cardNumber: string): string => {
   const cleaned = cardNumber.replace(/\D/g, '');
   const lastFour = cleaned.slice(-4);
   return `**** **** **** ${lastFour}`;
 };
 
-/**
- * Truncate text with ellipsis
- * @param text - Text to truncate
- * @param maxLength - Maximum length
- * @returns Truncated text
- */
+
+
+
+
+
+
 export const truncateText = (text: string, maxLength: number): string => {
   if (text.length <= maxLength) return text;
   return text.slice(0, maxLength - 3) + '...';
 };
 
-/**
- * Capitalize first letter
- * @param text - Text to capitalize
- * @returns Capitalized text
- */
+
+
+
+
+
 export const capitalize = (text: string): string => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
-/**
- * Convert to title case
- * @param text - Text to convert
- * @returns Title case text
- */
+
+
+
+
+
 export const toTitleCase = (text: string): string => {
   return text
     .toLowerCase()
@@ -171,11 +171,11 @@ export const toTitleCase = (text: string): string => {
     .join(' ');
 };
 
-/**
- * Convert to slug
- * @param text - Text to convert
- * @returns Slug format
- */
+
+
+
+
+
 export const toSlug = (text: string): string => {
   return text
     .toLowerCase()
@@ -185,11 +185,11 @@ export const toSlug = (text: string): string => {
     .replace(/^-+|-+$/g, '');
 };
 
-/**
- * Format initials from name
- * @param name - Full name
- * @returns Initials (e.g., "JD" for "John Doe")
- */
+
+
+
+
+
 export const getInitials = (name: string): string => {
   return name
     .split(' ')
@@ -199,11 +199,11 @@ export const getInitials = (name: string): string => {
     .slice(0, 2);
 };
 
-/**
- * Format time duration
- * @param seconds - Duration in seconds
- * @returns Formatted duration (e.g., "1h 30m 45s")
- */
+
+
+
+
+
 export const formatDuration = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
@@ -217,21 +217,21 @@ export const formatDuration = (seconds: number): string => {
   return parts.join(' ');
 };
 
-/**
- * Format JSON with indentation
- * @param obj - Object to format
- * @param indent - Indentation spaces
- * @returns Formatted JSON string
- */
+
+
+
+
+
+
 export const formatJSON = (obj: any, indent: number = 2): string => {
   return JSON.stringify(obj, null, indent);
 };
 
-/**
- * Format email (mask middle part)
- * @param email - Email to format
- * @returns Masked email
- */
+
+
+
+
+
 export const maskEmail = (email: string): string => {
   const [localPart, domain] = email.split('@');
   const visibleChars = Math.ceil(localPart.length / 3);

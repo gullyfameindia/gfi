@@ -28,7 +28,7 @@ import {
 
 import { useRouter } from "expo-router";
 
-// Get responsive dimensions
+
 const getScreenDimensions = () => {
   const dims = Dimensions.get("window");
   return {
@@ -37,24 +37,24 @@ const getScreenDimensions = () => {
   };
 };
 
-// Initial dimensions for calculations
+
 const initialDims = getScreenDimensions();
 const SCREEN_WIDTH = initialDims.width;
 const SCREEN_HEIGHT = initialDims.height;
 
-// Core GullyFame color palette based on your separation screenshot
+
 const COLORS = {
-  background: "#1E1005", // Deep warm brown
-  surface: "#361D0A", // Lighter brown for cards, pills, search bar
-  border: "#4A2A0D", // Subtle dividers
+  background: "#1E1005", 
+  surface: "#361D0A", 
+  border: "#4A2A0D", 
   text: "#FFFFFF",
-  textMuted: "#A38F7E", // Warm muted gray
-  accent: "#EC9A15", // GullyFame orange
+  textMuted: "#A38F7E", 
+  accent: "#EC9A15", 
 };
 const THEME_COLOR = COLORS.accent;
 
-// Mock Data structured perfectly to your API schema
-// Swapped to Picsum seed URLs which guarantee a unique, working image per ID
+
+
 const MOCK_SEARCH_DATA = {
   users: [
     {
@@ -281,7 +281,7 @@ const safeImageSource = (uri: any) => {
   return { uri };
 };
 
-// ... [Keep other icon components StarIcon, CommentIcon, ShareIcon, CoinIcon, SaveIcon, MusicIcon, ThreeDotsIcon, PlayIcon, PauseIcon as they were in your code] ...
+
 
 export default function SearchScreen() {
   const insets = useSafeAreaInsets();
@@ -328,7 +328,7 @@ export default function SearchScreen() {
     return () => subscription?.remove();
   }, []);
 
-  // API Simulation Hook with MOCK DATA
+  
   useEffect(() => {
     setIsLoading(true);
 
@@ -382,7 +382,7 @@ export default function SearchScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      {/* Search Header Container (includes Pills) */}
+      {}
       <View
         style={[
           styles.headerContainer,
@@ -392,7 +392,7 @@ export default function SearchScreen() {
           },
         ]}
       >
-        {/* Search Bar */}
+        {}
         <View style={styles.searchBar}>
           <View style={styles.searchIconContainer}>
             <SearchIconSVG color="#999" />
@@ -415,7 +415,7 @@ export default function SearchScreen() {
           />
         </View>
 
-        {/* Filter Pills */}
+        {}
         <View style={styles.pillsWrapper}>
           <ScrollView
             horizontal
@@ -445,7 +445,7 @@ export default function SearchScreen() {
         </View>
       </View>
 
-      {/* Main Content Area */}
+      {}
       {isLoading ? (
         <View
           style={{
@@ -459,10 +459,10 @@ export default function SearchScreen() {
         </View>
       ) : (
         <View style={styles.mainContent}>
-          {/* ALL Tab */}
+          {}
           {activeSearchType === "all" && (
             <View style={{ flex: 1 }}>
-              {/* STICKY TOP SECTION: Stars */}
+              {}
               <View style={styles.stickyStarsContainer}>
                 <Text style={styles.sectionTitle}>Meet your Stars</Text>
                 <ScrollView
@@ -490,7 +490,7 @@ export default function SearchScreen() {
                 </ScrollView>
               </View>
 
-              {/* SCROLLABLE REMAINDER: Competitions & Reels Grid */}
+              {}
               <FlatList
                 data={searchResults.top_reels}
                 numColumns={1}
@@ -551,7 +551,7 @@ export default function SearchScreen() {
             </View>
           )}
 
-          {/* STARS Tab */}
+          {}
           {activeSearchType === "users" && (
             <FlatList
               data={searchResults.results}
@@ -580,7 +580,7 @@ export default function SearchScreen() {
             />
           )}
 
-          {/* COMPETITIONS Tab */}
+          {}
           {activeSearchType === "competitions" && (
             <FlatList
               data={searchResults.results}
@@ -610,7 +610,7 @@ export default function SearchScreen() {
             />
           )}
 
-          {/* REELS Tab (Infinite Vertical Grid) */}
+          {}
           {activeSearchType === "reels" && (
             <FlatList
               data={searchResults.results}
@@ -630,7 +630,7 @@ export default function SearchScreen() {
         </View>
       )}
 
-      {/* Bottom Nav */}
+      {}
       <BottomNav
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -638,7 +638,7 @@ export default function SearchScreen() {
         onOpenDrawer={() => setDrawerVisible(true)}
       />
 
-      {/* Drawer Menu */}
+      {}
       <DrawerMenu
         visible={drawerVisible}
         onClose={() => setDrawerVisible(false)}
@@ -721,7 +721,7 @@ const styles = StyleSheet.create({
     gap: scale(16),
   },
 
-  /* Layout Specifics */
+  
   stickyStarsContainer: {
     backgroundColor: COLORS.background,
     paddingTop: scale(16),
@@ -734,7 +734,7 @@ const styles = StyleSheet.create({
     paddingTop: scale(16),
   },
 
-  /* Top Tab Specific Items (Carousel views) */
+  
   topUserCard: {
     alignItems: "center",
     width: scale(75),
@@ -781,7 +781,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  /* Reels styling within standard 3-column grid */
+  
   topReelCard: {
     width: SCREEN_WIDTH / 3,
     height: (SCREEN_WIDTH / 3) * 1.5,
@@ -792,10 +792,10 @@ const styles = StyleSheet.create({
   gridMedia: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover", // Ensures the grid images snap exactly into the box
+    resizeMode: "cover", 
   },
 
-  /* New full-width reel styling for ALL tab */
+  
   fullReelCard: {
     width: SCREEN_WIDTH,
     alignItems: "center",
@@ -811,7 +811,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
   },
 
-  /* Users Tab Styles (Specific tab) */
+  
   userListItem: {
     flexDirection: "row",
     alignItems: "center",
@@ -853,7 +853,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 
-  /* Competitions Tab Styles (Specific tab) */
+  
   compCard: {
     height: scale(180),
     borderRadius: scale(16),

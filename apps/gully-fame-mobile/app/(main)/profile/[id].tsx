@@ -1,5 +1,5 @@
-// Smart Profile Router - Automatically routes to correct profile screen based on role
-// Easy to extend for new roles - just add to PROFILE_ROUTES in profileTypes.ts
+
+
 
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef } from "react";
@@ -12,7 +12,7 @@ export default function ProfileRouter() {
   const hasRouted = useRef(false);
   const profileIdRef = useRef<string>("");
   const lastRefreshRef = useRef<string>("");
-  // Extract stable values from params
+  
   const profileId = (params.id as string) || (params.userId as string) || "";
   const role = (params.role as string) || DEFAULT_ROLE;
   const firstName = (params.firstName as string) || "";
@@ -25,10 +25,10 @@ export default function ProfileRouter() {
       profileIdRef.current = "";
       lastRefreshRef.current = refresh;
     }
-    // Prevent multiple route attempts
+    
     if (hasRouted.current) return;
 
-    // Only proceed if profileId has changed or is newly set
+    
     if (!profileId || profileId === profileIdRef.current) {
       return;
     }
@@ -37,11 +37,11 @@ export default function ProfileRouter() {
 
     const determineRoute = async () => {
       try {
-        // Get current user's ID from AsyncStorage to compare
+        
         const currentUserId = await AsyncStorage.getItem("userId");
 
-        // Determine if viewing own profile or another user's profile
-        // If profileId is "me", empty, or matches currentUserId, it's own profile
+        
+        
         const isViewingOther =
           profileId &&
           profileId !== "me" &&
@@ -49,7 +49,7 @@ export default function ProfileRouter() {
           profileId !== currentUserId;
 
         if (isViewingOther) {
-          // Viewing another user's profile - use role from params or default
+          
           const userRole = role || DEFAULT_ROLE;
           const route = getProfileRoute(userRole, false);
 
@@ -66,7 +66,7 @@ export default function ProfileRouter() {
             },
           } as any);
         } else {
-          // Viewing own profile - get role from AsyncStorage
+          
           const userRole =
             (await AsyncStorage.getItem("userRole")) || DEFAULT_ROLE;
           const route = getProfileRoute(userRole, true);
@@ -76,7 +76,7 @@ export default function ProfileRouter() {
         }
       } catch (error) {
         console.error("Error determining profile route:", error);
-        // Default fallback - assume own profile
+        
         try {
           const userRole =
             (await AsyncStorage.getItem("userRole")) || DEFAULT_ROLE;
@@ -90,9 +90,9 @@ export default function ProfileRouter() {
     };
 
     determineRoute();
-  }, [profileId, role, firstName, lastName, bio, refresh]); // Depend on specific values, not params object
+  }, [profileId, role, firstName, lastName, bio, refresh]); 
 
-  // Show loading while determining route
+  
   return (
     <View
       style={{

@@ -1,26 +1,26 @@
-/**
- * Mock Music Tracks Data
- * Used for development when backend is unavailable
- * Production: Falls back to real API data
- */
+
+
+
+
+
 
 export interface MusicTrack {
   id: string;
   title: string;
   artist: string;
   category: string;
-  duration: number; // in seconds
+  duration: number; 
   thumbnail?: string;
   audioUrl?: string;
   usageCount?: number;
-  popularity?: number; // 1-100
+  popularity?: number; 
   isTrending?: boolean;
   isPopular?: boolean;
   isNew?: boolean;
 }
 
 export const mockMusicTracks: MusicTrack[] = [
-  // Trending
+  
   {
     id: 'track-001',
     title: 'Urban Vibes',
@@ -72,7 +72,7 @@ export const mockMusicTracks: MusicTrack[] = [
     isTrending: true,
   },
 
-  // Popular
+  
   {
     id: 'track-006',
     title: 'Musicalitunnel',
@@ -124,7 +124,7 @@ export const mockMusicTracks: MusicTrack[] = [
     isPopular: true,
   },
 
-  // New Releases
+  
   {
     id: 'track-011',
     title: 'Fresh Start',
@@ -176,7 +176,7 @@ export const mockMusicTracks: MusicTrack[] = [
     isNew: true,
   },
 
-  // Genre: Hip-Hop/Rap
+  
   {
     id: 'track-016',
     title: 'Hard Knock Life',
@@ -205,7 +205,7 @@ export const mockMusicTracks: MusicTrack[] = [
     popularity: 79,
   },
 
-  // Genre: Electronic/EDM
+  
   {
     id: 'track-019',
     title: 'Levels',
@@ -234,7 +234,7 @@ export const mockMusicTracks: MusicTrack[] = [
     popularity: 78,
   },
 
-  // Genre: Pop
+  
   {
     id: 'track-022',
     title: 'Perfect',
@@ -263,7 +263,7 @@ export const mockMusicTracks: MusicTrack[] = [
     popularity: 91,
   },
 
-  // Genre: Indie/Alternative
+  
   {
     id: 'track-025',
     title: 'Take Me Out',

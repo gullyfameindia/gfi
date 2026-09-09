@@ -13,9 +13,9 @@ interface AudioTracksPanelProps {
   onToggleExpand?: () => void;
 }
 
-/**
- * Panel for displaying and managing audio tracks
- */
+
+
+
 const AudioTracksPanel: React.FC<AudioTracksPanelProps> = ({
   tracks,
   onUpdateTrack,

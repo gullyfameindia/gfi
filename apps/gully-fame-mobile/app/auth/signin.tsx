@@ -44,20 +44,20 @@ export default function SignIn() {
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isInstagramLoading, setIsInstagramLoading] = useState(false);
 
-  // Google Sign-In - Modern Expo approach
-  // Expo proxy is automatically used with redirect URI: https://auth.expo.io/@avi70/gully-fame-mobile
-  // WebBrowser.maybeCompleteAuthSession();
+  
+  
+  
 
-  // Note: On Android, the library requires androidClientId, so we use webClientId value for it
-  // This is a library requirement, but we're still using the same Web Client ID
-  // const webClientId =
-  //     process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || undefined;
+  
+  
+  
+  
 
-  // const [request, response, promptAsync] = Google.useAuthRequest({
-  //     webClientId: webClientId,
-  //     ...(Platform.OS === "android" && { androidClientId: webClientId }), // Required by library on Android
-  //     scopes: ["openid", "profile", "email"], // Required OAuth scopes
-  // });
+  
+  
+  
+  
+  
 
   useEffect(() => {
     if (params.email) {
@@ -162,7 +162,7 @@ export default function SignIn() {
         }
         router.replace("/auth/location");
       } else {
-        // Check if it's a network error
+        
         const isNetworkError = (result as any).isNetworkError;
         let errorMsg =
           result.data?.message ||
@@ -184,7 +184,7 @@ export default function SignIn() {
       }
     } catch (error: any) {
       let errorMsg = "Something went wrong. Please try again.";
-      // Check for network errors
+      
       if (error.message && error.message.toLowerCase().includes("network")) {
         errorMsg =
           "Network error: Please check your internet connection and try again.";
@@ -250,150 +250,150 @@ export default function SignIn() {
     return "";
   };
 
-  /**
-   * Handle Google authentication response
-   * Extracts tokens and prepares them for backend
-   * Backend will decide: signup if new user, login if existing user
-   */
+  
 
-  // Google Sign-In handler
-  // const handleGoogleLogin = async (
-  //     iconType: "google" | "instagram" = "google",
-  // ) => {
-  //     setErrorMessage("");
-  //     setSuccessMessage("");
 
-  //     if (!request) {
-  //         setErrorMessage(
-  //             "Google Sign-In is not configured. Please check your environment variables.",
-  //         );
-  //         return;
-  //     }
 
-  //     // Set loading state for the specific icon clicked
-  //     if (iconType === "google") {
-  //         setIsGoogleLoading(true);
-  //     } else {
-  //         setIsInstagramLoading(true);
-  //     }
-  //     setIsSocialLoading(true);
 
-  //     try {
-  //         if (__DEV__) {
-  //             console.log("\n🚀 ========== GOOGLE LOGIN ==========");
-  //             console.log("Starting Google authentication...");
-  //             console.log("Icon Type:", iconType);
-  //             console.log("========================================\n");
-  //         }
 
-  //         await promptAsync();
-  //     } catch (error: any) {
-  //         const errorMsg =
-  //             error.message ||
-  //             "Failed to start Google sign-in. Please try again.";
-  //         setErrorMessage(errorMsg);
-  //         setIsSocialLoading(false);
-  //         setIsGoogleLoading(false);
-  //         setIsInstagramLoading(false);
+  
+  
+  
+  
+  
+  
 
-  //         if (__DEV__) {
-  //             console.error(
-  //                 "\n❌ ========== GOOGLE LOGIN EXCEPTION ==========",
-  //             );
-  //             console.error("Error Message:", error.message);
-  //             console.error("Full Error:", error);
-  //             console.error("========================================\n");
-  //         }
-  //     }
-  // };
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   const handleAppleLogin = async () => {
-    // setErrorMessage("");
-    // setSuccessMessage("");
-    // setIsSocialLoading(true);
-    // try {
-    //     if (__DEV__) {
-    //         console.log("\n🚀 ========== APPLE LOGIN ==========");
-    //         console.log("Starting Apple authentication...");
-    //         console.log("========================================\n");
-    //     }
-    //     const deviceToken = await getDeviceToken();
-    //     const deviceType = getDeviceType();
-    //     const appleId = "apple_user_id_here";
-    //     const email = "user@icloud.com";
-    //     const firstName = "Apple";
-    //     const lastName = "User";
-    //     if (__DEV__) {
-    //         console.log(
-    //             "⚠️ NOTE: Replace appleId, email, firstName, lastName with actual Apple OAuth data",
-    //         );
-    //         console.log(
-    //             "You need to integrate expo-apple-authentication or @invertase/react-native-apple-authentication",
-    //         );
-    //     }
-    //     const result = await authService.socialLogin({
-    //         appleId: appleId,
-    //         email: email,
-    //         firstName: firstName,
-    //         lastName: lastName,
-    //         device_token: deviceToken,
-    //         device_type: deviceType,
-    //     });
-    //     if (result.success) {
-    //         if (__DEV__) {
-    //             console.log(
-    //                 "\n✅ ========== APPLE LOGIN SUCCESS ==========",
-    //             );
-    //             console.log("Response Data:", result.data);
-    //             console.log(
-    //                 "Token:",
-    //                 result.data?.token ? "Received" : "Not received",
-    //             );
-    //             console.log("=====================================\n");
-    //         }
-    //         setSuccessMessage("Login successful!");
-    //         if (!result.data?.token) {
-    //             setErrorMessage(
-    //                 "Apple login failed: No token received from server.",
-    //             );
-    //             return;
-    //         }
-    //         await saveUserSession(
-    //             result.data.token,
-    //             result.data?.user || undefined,
-    //             email,
-    //             undefined,
-    //         );
-    //         await AsyncStorage.setItem("accountCreatedVia", "google");
-    //         router.replace("/auth/location");
-    //     } else {
-    //         const errorMsg =
-    //             result.data?.message ||
-    //             result.error ||
-    //             "Apple login failed. Please try again.";
-    //         setErrorMessage(errorMsg);
-    //         if (__DEV__) {
-    //             console.error(
-    //                 "\n❌ ========== APPLE LOGIN FAILED ==========",
-    //             );
-    //             console.error("Error:", errorMsg);
-    //             console.error("=====================================\n");
-    //         }
-    //     }
-    // } catch (error: any) {
-    //     const errorMsg =
-    //         error.message || "Something went wrong. Please try again.";
-    //     setErrorMessage(errorMsg);
-    //     if (__DEV__) {
-    //         console.error(
-    //             "\n❌ ========== APPLE LOGIN EXCEPTION ==========",
-    //         );
-    //         console.error("Exception:", error);
-    //         console.error("========================================\n");
-    //     }
-    // } finally {
-    //     setIsSocialLoading(false);
-    // }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
   };
 
   return (
@@ -403,7 +403,7 @@ export default function SignIn() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Logo Section with brown background */}
+        {}
         <View style={styles.logoContainer}>
           <Image
             source={require("@assets/images/gfi.png")}
@@ -412,7 +412,7 @@ export default function SignIn() {
           />
         </View>
 
-        {/* Form Section with light blue-gray background */}
+        {}
         <View style={styles.formContainer}>
           <Text
             style={[
@@ -423,7 +423,7 @@ export default function SignIn() {
             Welcome back!{"\n"}Sign in to continue
           </Text>
 
-          {/* Email or Mobile */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>
               Email/Mobile <Text style={styles.required}>*</Text>
@@ -438,7 +438,7 @@ export default function SignIn() {
             />
           </View>
 
-          {/* Password */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>
               Password <Text style={styles.required}>*</Text>
@@ -476,12 +476,12 @@ export default function SignIn() {
             </TouchableOpacity>
           </View>
 
-          {/* Or Text */}
+          {}
           <View style={styles.orContainer}>
             <Text style={styles.orText}>Or</Text>
           </View>
 
-          {/* Login via OTP Option */}
+          {}
           <TouchableOpacity
             style={styles.otpLoginButton}
             onPress={() => router.push("/auth/login-via-otp")}
@@ -504,7 +504,7 @@ export default function SignIn() {
             </View>
           ) : null}
 
-          {/* Sign In Button */}
+          {}
           <TouchableOpacity
             style={[
               styles.signInButton,
@@ -520,45 +520,45 @@ export default function SignIn() {
             )}
           </TouchableOpacity>
 
-          {/* OR Continue With Separator */}
+          {}
           <View style={styles.continueWithContainer}>
             <View style={styles.separatorLine} />
             <Text style={styles.continueWithText}>OR Continue With</Text>
             <View style={styles.separatorLine} />
           </View>
 
-          {/* Social Login Icons */}
+          {}
           <View style={styles.socialIconsContainer}>
-            {/* <TouchableOpacity
-                            style={styles.socialIconButton}
-                            activeOpacity={0.7}
-                            onPress={() => handleGoogleLogin("google")}
-                            disabled={isSocialLoading || !request}
-                        >
-                            {isGoogleLoading ? (
-                                <ActivityIndicator
-                                    size="small"
-                                    color="#EC9A15"
-                                />
-                            ) : (
-                                <GoogleIcon size={40} />
-                            )}
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={styles.socialIconButton}
-                            activeOpacity={0.7}
-                            onPress={() => handleGoogleLogin("instagram")}
-                            disabled={isSocialLoading || !request}
-                        >
-                            {isInstagramLoading ? (
-                                <ActivityIndicator
-                                    size="small"
-                                    color="#EC9A15"
-                                />
-                            ) : (
-                                <InstagramIcon size={40} />
-                            )}
-                        </TouchableOpacity> */}
+            {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
             {Platform.OS === "ios" && (
               <TouchableOpacity
                 style={[
@@ -578,7 +578,7 @@ export default function SignIn() {
             )}
           </View>
 
-          {/* Create Account Link */}
+          {}
           <View style={styles.createAccountContainer}>
             <Text style={styles.createAccountText}>
               Don&apos;t have an account?{" "}
@@ -592,7 +592,7 @@ export default function SignIn() {
           </View>
         </View>
 
-        {/* Skip Section with white background */}
+        {}
         <View style={styles.skipContainer}>
           <TouchableOpacity
             onPress={() => router.replace("/auth/location?skip=true")}
@@ -737,7 +737,7 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
   },
   skipContainer: {
-    backgroundColor: "#FFFFFF", // White background for skip section
+    backgroundColor: "#FFFFFF", 
     alignItems: "center",
     paddingVertical: 15,
   },

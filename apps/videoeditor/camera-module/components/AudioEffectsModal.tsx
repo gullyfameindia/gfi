@@ -115,7 +115,7 @@ const AudioEffectsModal: React.FC<AudioEffectsModalProps> = ({
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <SafeAreaView style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose}>
             <Text style={styles.closeButton}>Done</Text>
@@ -124,7 +124,7 @@ const AudioEffectsModal: React.FC<AudioEffectsModalProps> = ({
           <View style={{ width: 60 }} />
         </View>
 
-        {/* Tabs */}
+        {}
         <View style={styles.tabBar}>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'effects' && styles.tabActive]}
@@ -154,10 +154,10 @@ const AudioEffectsModal: React.FC<AudioEffectsModalProps> = ({
           </TouchableOpacity>
         </View>
 
-        {/* Content */}
+        {}
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           {activeTab === 'effects' ? (
-            // Effects Grid
+            
             <View style={styles.grid}>
               {AUDIO_EFFECTS.map((effect) => (
                 <TouchableOpacity
@@ -182,7 +182,7 @@ const AudioEffectsModal: React.FC<AudioEffectsModalProps> = ({
               ))}
             </View>
           ) : (
-            // Enhancements List
+            
             <View style={styles.enhancementsList}>
               {VOICE_ENHANCEMENTS.map((enhancement) => (
                 <TouchableOpacity

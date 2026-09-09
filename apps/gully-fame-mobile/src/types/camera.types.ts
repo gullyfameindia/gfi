@@ -8,7 +8,7 @@ export interface CameraClip {
   filterPreset?: any;
   textOverlays?: any[];
   musicOffset?: number;
-  // ⚡ New Property for Speed
+  
   speedConfig?: {
     type: "constant";
     value: number;

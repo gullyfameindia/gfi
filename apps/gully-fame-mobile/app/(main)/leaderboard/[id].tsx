@@ -1,4 +1,4 @@
-// File Route: apps/gully-fame-mobile/app/(main)/leaderboard/[id].tsx
+
 
 import InfiniteScrollingLeaderboard from "@/components/InfiniteScrollingLeaderboard/InfiniteScrollingLeaderboard";
 import { MOCK_LEADERBOARD_DATA } from "@/data/leaderboard/mockData";
@@ -7,7 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { leaderboardScreenStyles as styles } from "@/styles/leaderboardScreenStyles";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { BackIcon } from "@/icons";
-// Naya Import: Gift icon ke liye Ionicons use kar rahe hain
+
 import { Ionicons } from '@expo/vector-icons';
 
 function LeaderboardScreen() {
@@ -18,7 +18,7 @@ function LeaderboardScreen() {
         <SafeAreaView style={styles.safeArea} edges={["top"]}>
             <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-            {/* Gamified Header */}
+            {}
             <View style={styles.headerContainer}>
                 <View style={styles.header}>
                     <TouchableOpacity
@@ -45,7 +45,7 @@ function LeaderboardScreen() {
                         </Text>
                     </View>
 
-                    {/* Placeholder ko hata kar yahan 'Invite & Earn' link laga diya hai */}
+                    {}
                     <TouchableOpacity
                         style={styles.backButton}
                         onPress={() => router.push("/(main)/invite-friend" as any)}
@@ -55,14 +55,14 @@ function LeaderboardScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {/* Live Status Indicator */}
+                {}
                 <View style={styles.statusRow}>
                     <View style={styles.statusDot} />
                     <Text style={styles.statusText}>REFRESHES EVERY HOUR</Text>
                 </View>
             </View>
 
-            {/* The List */}
+            {}
             <View style={styles.listContainer}>
                 <InfiniteScrollingLeaderboard
                     data={MOCK_LEADERBOARD_DATA}

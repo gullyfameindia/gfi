@@ -28,13 +28,13 @@ export const LeaderboardStyles = StyleSheet.create({
     },
     leaderboardContent: {
         paddingHorizontal: 16,
-        gap: 10, // Adds literal gaps between the floating cards
+        gap: 10, 
         paddingBottom: 40,
     },
     playerBannerCard: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#2A1A0B", // Deep rich brown, matches the theme
+        backgroundColor: "#2A1A0B", 
         borderRadius: 12,
         paddingVertical: 12,
         paddingHorizontal: 16,
@@ -54,12 +54,12 @@ export const LeaderboardStyles = StyleSheet.create({
         top: 0,
         bottom: 0,
         width: 4,
-        backgroundColor: "#EC9A15", // Adds a sharp gaming edge
+        backgroundColor: "#EC9A15", 
     },
     rankBadgeContainer: {
         width: 32,
         height: 32,
-        borderRadius: 8, // Squarish gaming badge instead of a circle
+        borderRadius: 8, 
         backgroundColor: "rgba(0,0,0,0.4)",
         justifyContent: "center",
         alignItems: "center",
@@ -67,7 +67,7 @@ export const LeaderboardStyles = StyleSheet.create({
         borderColor: "rgba(255, 255, 255, 0.1)",
     },
     rankNumber: {
-        color: "#999", // Silver/grey for lower ranks
+        color: "#999", 
         fontSize: 16,
         fontWeight: "800",
     },
@@ -79,7 +79,7 @@ export const LeaderboardStyles = StyleSheet.create({
         height: 46,
         borderRadius: 23,
         borderWidth: 1.5,
-        borderColor: "rgba(255, 255, 255, 0.2)", // Subtle silver rim
+        borderColor: "rgba(255, 255, 255, 0.2)", 
     },
     leaderboardInfo: {
         flex: 1,
@@ -98,7 +98,7 @@ export const LeaderboardStyles = StyleSheet.create({
         gap: 6,
     },
     leaderboardPoints: {
-        color: "#FFD700", // Make the stars pop
+        color: "#FFD700", 
         fontSize: 13,
         fontWeight: "600",
     },
@@ -220,11 +220,11 @@ export const LeaderboardStyles = StyleSheet.create({
     },
 
     leaderboardListContainer: {
-        backgroundColor: "rgba(0, 0, 0, 0.25)", // Creates a deep, inset "glass" look
+        backgroundColor: "rgba(0, 0, 0, 0.25)", 
         borderTopLeftRadius: 24,
         borderTopRightRadius: 24,
         borderWidth: 1,
-        borderColor: "rgba(255, 215, 0, 0.1)", // Faint gold trim
+        borderColor: "rgba(255, 215, 0, 0.1)", 
         overflow: "hidden",
     },
 

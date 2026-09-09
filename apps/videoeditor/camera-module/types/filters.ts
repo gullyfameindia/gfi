@@ -1,35 +1,35 @@
-/**
- * Filter Preset Configuration
- * Snapchat-style creative filters with full control over color grading
- */
+
+
+
+
 export type FilterPreset = {
   name: string;
-  // Basic adjustments
-  brightness?: number; // -1.0 to 1.0 (0 = no change)
-  contrast?: number; // 0.0 to 2.0 (1.0 = no change, <1.0 = less contrast, >1.0 = more contrast)
-  saturation?: number; // 0.0 to 3.0 (1.0 = no change, 0.0 = grayscale)
-  gamma?: number; // 0.1 to 3.0 (1.0 = no change)
-  // Color temperature / tint
-  temperature?: number; // -1.0 to 1.0 (0 = neutral, positive = warm, negative = cool)
-  tint?: number; // -1.0 to 1.0 (0 = neutral, positive = magenta, negative = green)
-  // Optional effects
+  
+  brightness?: number; 
+  contrast?: number; 
+  saturation?: number; 
+  gamma?: number; 
+  
+  temperature?: number; 
+  tint?: number; 
+  
   vignette?: {
-    angle: number; // 0 to 360 (degrees)
-    x0: number; // 0.0 to 1.0 (center X)
-    y0: number; // 0.0 to 1.0 (center Y)
+    angle: number; 
+    x0: number; 
+    y0: number; 
   };
   grain?: {
-    strength: number; // 0.0 to 1.0
+    strength: number; 
   };
 };
 
-// Legacy FilterConfig for backward compatibility (used by UI preview)
+
 export type FilterConfig = {
   name: string;
   brightness?: number;
   contrast?: number;
   saturation?: number;
-  // Extended fields for full preset support
+  
   gamma?: number;
   temperature?: number;
   tint?: number;
@@ -43,16 +43,16 @@ export type FilterConfig = {
   };
 };
 
-/**
- * Comprehensive filter presets
- * Creative looks similar to popular social media apps
- */
+
+
+
+
 export const FILTER_PRESETS: FilterPreset[] = [
   {
     name: 'Original',
-    // All defaults = no change
+    
   },
-  // Basic Color Filters
+  
   {
     name: 'Boost',
     saturation: 1.3,
@@ -156,7 +156,7 @@ export const FILTER_PRESETS: FilterPreset[] = [
     saturation: 0.95,
     temperature: -0.15,
   },
-  // Cool Variants
+  
   {
     name: 'Simple Cool',
     temperature: -0.3,
@@ -198,7 +198,7 @@ export const FILTER_PRESETS: FilterPreset[] = [
     contrast: 1.15,
     brightness: -0.05,
   },
-  // Warm Variants
+  
   {
     name: 'Simple Warm',
     temperature: 0.3,
@@ -238,7 +238,7 @@ export const FILTER_PRESETS: FilterPreset[] = [
     contrast: 0.95,
     brightness: 0.08,
   },
-  // Location-based Filters
+  
   {
     name: 'Oslo',
     temperature: -0.4,
@@ -288,10 +288,10 @@ export const FILTER_PRESETS: FilterPreset[] = [
     contrast: 1.25,
     brightness: 0.1,
   },
-  // Special Effects
+  
   {
     name: 'Negative',
-    // Special handling needed - inverted colors
+    
     contrast: 2.0,
     saturation: 0,
   },
@@ -325,7 +325,7 @@ export const FILTER_PRESETS: FilterPreset[] = [
     saturation: 1.15,
     gamma: 1.2,
   },
-  // Legacy filters (keeping for compatibility)
+  
   {
     name: 'Grayscale',
     saturation: 0,
@@ -396,5 +396,5 @@ export const FILTER_PRESETS: FilterPreset[] = [
   },
 ];
 
-// Legacy FILTERS array for UI compatibility
+
 export const FILTERS: FilterConfig[] = FILTER_PRESETS;

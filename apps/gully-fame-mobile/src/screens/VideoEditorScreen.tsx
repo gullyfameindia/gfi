@@ -1,5 +1,5 @@
-// Created by Kiro - Video Editor Screen (Integrated with ModernPreviewEditor)
-// Handles video editing with trimming, filters, text, music, and export pipeline
+
+
 
 import React, { useState, useEffect } from "react";
 import {
@@ -18,11 +18,11 @@ import {
   VideoExportOptions,
 } from "../api/services/videoEditorService";
 
-// 🎬 Importing the premium editor component and types
+
 import ModernPreviewEditor from "../modules/video-editor/camera-module/components/ModernPreviewEditor";
 import type { CameraClip } from "../types/camera.types";
 
-// ⚡ Naya Import SpeedSelector ke liye
+
 import SpeedSelector from "../components/ui/SpeedSelector"; 
 
 interface VideoEditorScreenProps {
@@ -35,13 +35,13 @@ const { width } = Dimensions.get("window");
 const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation }) => {
   const videoUri = route?.params?.videoUri || "";
 
-  // Core Session & Loading States
+  
   const [session, setSession] = useState<EditingSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [processingMessage, setProcessingMessage] = useState("");
 
-  // 🔄 Unified state to catch all interactive edits from ModernPreviewEditor
+  
   const [clip, setClip] = useState<CameraClip>({
     id: `clip_${Date.now()}`,
     uri: videoUri,
@@ -51,17 +51,17 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
     filterPreset: null,
     textOverlays: [],
     musicOffset: 0,
-    // ⚡ Initialize Default Speed here
+    
     speedConfig: { type: 'constant', value: 1.0 }
   });
 
-  // ✅ Initialize editing session on mount
+  
   useEffect(() => {
     initializeSession();
   }, []);
 
-  // ✅ Create backend editing session
-  // ✅ Create backend editing session (With Duration Debugger)
+  
+  
   const initializeSession = async () => {
     try {
       setLoading(true);
@@ -70,10 +70,10 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
       if (response.success && response.data) {
         setSession(response.data);
         
-        // 🔥 DEBUG: Agar backend se duration 0 ya missing ho, toh fallback 15s lagayein
+        
         let videoDuration = response.data.duration || 15;
         
-        // Agar duration milliseconds mein hai (e.g. 5000), toh use seconds mein convert karein
+        
         if (videoDuration > 1000) {
           videoDuration = videoDuration / 1000;
         }
@@ -95,9 +95,9 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
     }
   };
 
-  // ✅ Capture live changes from the timeline component (With Logger)
+  
   const handleClipUpdate = (updatedClip: CameraClip) => {
-    // 🔥 DEBUG LOG: Dekhte hain click karne par values badal rahi hain ya nahi
+    
     console.log("🔄 UI Clicked - New Trim Data:", {
       trimStart: updatedClip.trimStart,
       trimEnd: updatedClip.trimEnd,
@@ -105,7 +105,7 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
     setClip(updatedClip);
   };
 
-  // ⚡ New Handler for Speed Change
+  
   const handleSpeedChange = (newSpeed: number) => {
     setClip(prev => ({
       ...prev,
@@ -113,24 +113,24 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
     }));
   };
 
-  // 🚀 Sequential Processing Pipeline when user hits "Next"
+  
   const handleNextPipeline = async () => {
     if (!session) return;
 
     try {
       setProcessing(true);
 
-      // 1️⃣ Step: Apply Trim if timeline handles were dragged
+      
       if (clip.trimStart > 0 || clip.trimEnd < (session.duration || 0)) {
         setProcessingMessage("Trimming your video clip...");
         await videoEditorService.trimVideo(session.id, clip.trimStart || 0, clip.trimEnd || session.duration);
       }
 
-      // ⚡ Step 1.5: Apply Speed adjustment before filters
+      
       const currentSpeed = clip.speedConfig?.value || 1.0;
       if (currentSpeed !== 1.0) {
         setProcessingMessage(`Adjusting speed to ${currentSpeed}x...`);
-        // Note: Make sure `changeVideoSpeed` exists in your videoEditorService backend
+        
         if ((videoEditorService as any).changeVideoSpeed) {
            await (videoEditorService as any).changeVideoSpeed(session.id, currentSpeed);
         } else {
@@ -138,7 +138,7 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
         }
       }
 
-      // 2️⃣ Step: Apply Look/Filter
+      
       if (clip.filterPreset && clip.filterPreset.name !== "Original") {
         setProcessingMessage(`Applying ${clip.filterPreset.name} filter...`);
         const filter: VideoFilter = {
@@ -150,7 +150,7 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
         await videoEditorService.applyFilter(session.id, filter);
       }
 
-      // 3️⃣ Step: Add Text Track layers
+      
       if (clip.textOverlays && clip.textOverlays.length > 0) {
         setProcessingMessage("Baking text overlays...");
         for (const overlay of clip.textOverlays) {
@@ -167,11 +167,11 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
         }
       }
 
-      // 4️⃣ Step: Render & Export final file
+      
       setProcessingMessage("Compiling final render...");
       const options: VideoExportOptions = {
-        quality: "medium", // Matches your original default
-        resolution: "720p", // Matches your original default
+        quality: "medium", 
+        resolution: "720p", 
         format: "mp4",
       };
 
@@ -184,7 +184,7 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
             onPress: () => {
               navigation?.navigate("ReelsScreen", {
                 exportedVideoUri: response.data?.videoUri,
-                musicOffset: clip.musicOffset, // Forwarding dynamic sync data
+                musicOffset: clip.musicOffset, 
               });
             },
           },
@@ -201,7 +201,7 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
     }
   };
 
-  // Loading State Spinner
+  
   if (loading) {
     return (
       <View style={styles.centeredContainer}>
@@ -211,7 +211,7 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
     );
   }
 
-  // Processing Pipeline Overlay
+  
   if (processing) {
     return (
       <View style={styles.centeredContainer}>
@@ -223,7 +223,7 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
 
   return (
     <View style={styles.container}>
-      {/* 🎬 Feeding state and control loops directly into your layout component */}
+      {}
       <ModernPreviewEditor
         clip={clip}
         onClipUpdate={handleClipUpdate}
@@ -233,7 +233,7 @@ const VideoEditorScreen: React.FC<VideoEditorScreenProps> = ({ route, navigation
         canRedo={false}
       />
 
-      {/* ⚡ Injecting the Speed Selector overlapping the bottom */}
+      {}
       <View style={styles.speedSelectorWrapper}>
         <SpeedSelector 
           speed={clip.speedConfig?.value || 1.0} 
@@ -267,10 +267,10 @@ const styles = StyleSheet.create({
     color: "#4CAF50",
     fontWeight: "600",
   },
-  // ⚡ Positioning for the speed selector
+  
   speedSelectorWrapper: {
     position: 'absolute',
-    bottom: 120, // Aapke UI ke hisab se isko adjust kar lena agar buttons ke upar/neeche karna ho
+    bottom: 120, 
     left: 0,
     right: 0,
     zIndex: 100,

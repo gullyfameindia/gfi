@@ -9,10 +9,10 @@ interface FilterThumbnailProps extends Omit<ImageProps, 'style'> {
   style?: ViewStyle;
 }
 
-/**
- * Thumbnail image component with filter overlay preview
- * Shows the same visual filter effect as FilteredVideo for consistency
- */
+
+
+
+
 const FilterThumbnail: React.FC<FilterThumbnailProps> = ({
   source,
   filter,
@@ -30,7 +30,7 @@ const FilterThumbnail: React.FC<FilterThumbnailProps> = ({
         {...imageProps}
       />
       
-      {/* Filter color overlay - simulates filter effect */}
+      {}
       {filterOverlayStyle && (
         <View style={filterOverlayStyle} />
       )}

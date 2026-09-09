@@ -14,25 +14,35 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import * as FileSystem from 'expo-file-system';
-import * as MediaLibrary from 'expo-media-library';
 import Svg, { Path } from 'react-native-svg';
 import type { CameraClip, CameraClipArray } from '../types/camera.types';
 import { exportAndCombineClips } from '../utils/videoExporter';
-import { uploadVideoComplete } from '../../../../api/services/videoUploadService';
 import type { VideoUploadRequest } from '../../../../api/services/videoUploadService';
+
+
+let MediaLibrary: any = null;
+try {
+  MediaLibrary = require('expo-media-library');
+} catch (e) {
+  
+  if (typeof e === 'object' && e !== null && 'message' in e) {
+    console.debug("[ExportScreen] Deferred module load: expo-media-library not available");
+  }
+}
 
 interface ExportScreenProps {
   clips: CameraClipArray;
   onBack: () => void;
   onComplete?: () => void;
   autoUpload?: boolean;
+  selectedMusic?: any | null;
 }
 
-/**
- * Export screen with progress indicator, save to gallery, and backend upload
- * PRODUCTION READY: Complete upload pipeline integration
- */
-const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, autoUpload = false }) => {
+
+
+
+
+const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, autoUpload = false, selectedMusic = null }) => {
   const [exporting, setExporting] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -41,13 +51,13 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, 
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const progressAnim = React.useRef(new Animated.Value(0)).current;
 
-  // Upload form state
+  
   const [showUploadForm, setShowUploadForm] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  // Request media library permission
+  
   useEffect(() => {
     const requestPermission = async () => {
       try {
@@ -62,7 +72,7 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, 
     requestPermission();
   }, [onBack]);
 
-  // Animate progress bar
+  
   useEffect(() => {
     Animated.timing(progressAnim, {
       toValue: progress,
@@ -78,43 +88,48 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, 
   const handleExport = useCallback(async () => {
     if (exporting || clips.length === 0) return;
 
+    console.log('[ExportScreen] 🎬 [VERIFICATION] handleExport started - clips.length:', clips.length);
     setExporting(true);
     setProgress(0);
     setStatus('Initializing export...');
     setExportedUri(null);
 
     try {
-      // Update progress
+      
       setProgress(0.1);
       setStatus('Processing clips...');
 
-      // Export and combine clips
+      console.log('[ExportScreen] 🎬 [VERIFICATION] Calling exportAndCombineClips...');
+      
       const outputUri = await exportAndCombineClips(
         clips,
         (currentProgress: number, currentStatus: string) => {
+          console.log('[ExportScreen] 📊 Export progress:', Math.round(currentProgress * 100) + '%', '-', currentStatus);
           setProgress(currentProgress);
           setStatus(currentStatus);
         }
       );
 
+      console.log('[ExportScreen] ✅ [VERIFICATION] Export completed - outputUri:', outputUri?.substring(0, 60));
+      
       setProgress(0.9);
       setStatus('Saving to gallery...');
 
-      // Save to gallery
+      
       if (outputUri) {
         try {
           const asset = await MediaLibrary.createAssetAsync(outputUri);
           await MediaLibrary.createAlbumAsync('Gully Fame', asset, false);
-          console.log('[ExportScreen] Video saved to gallery');
+          console.log('[ExportScreen] ✅ [VERIFICATION] Video saved to gallery');
         } catch (galleryError) {
-          console.warn('[ExportScreen] Gallery save failed:', galleryError);
+          console.warn('[ExportScreen] ⚠️ Gallery save failed:', galleryError);
         }
 
         setProgress(1);
         setStatus('Export complete!');
         setExportedUri(outputUri);
 
-        // Auto show upload form if enabled
+        
         if (autoUpload) {
           setShowUploadForm(true);
         }
@@ -122,7 +137,7 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, 
         throw new Error('Export failed: No output file');
       }
     } catch (error: any) {
-      console.error('[ExportScreen] Export error:', error);
+      console.error('[ExportScreen] ❌ [VERIFICATION FAILED] Export error:', error?.message);
       Alert.alert(
         'Export Failed',
         error?.message || 'An error occurred while exporting. Please try again.',
@@ -151,6 +166,9 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, 
     setStatus('Uploading to server...');
 
     try {
+      console.log('[ExportScreen] 🎵 [VERIFICATION] Building upload request');
+      console.log('  selectedMusic:', selectedMusic ? { id: selectedMusic.id, title: selectedMusic.title } : 'none');
+      
       const uploadRequest: VideoUploadRequest = {
         videoUri: exportedUri,
         title: title.trim(),
@@ -160,7 +178,28 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, 
         fps: 30,
       };
 
-      const result = await uploadVideoComplete(uploadRequest, (stage, prog) => {
+      
+      if (selectedMusic && selectedMusic.id) {
+        console.log('[ExportScreen] ✅ [VERIFICATION] Adding music to upload request');
+        (uploadRequest as any).music = {
+          id: selectedMusic.id,
+          name: selectedMusic.title,
+        };
+        console.log('[ExportScreen] 🎵 [VERIFICATION] Upload request music payload:', JSON.stringify((uploadRequest as any).music));
+      } else {
+        console.log('[ExportScreen] ⚠️ [VERIFICATION] No music selected for upload');
+      }
+
+      console.log('[ExportScreen] ✅ [VERIFICATION] Calling uploadVideoComplete with request:', {
+        title: uploadRequest.title,
+        duration: uploadRequest.duration,
+        music: (uploadRequest as any).music
+      });
+
+      
+      const { uploadVideoComplete } = await import('../../../../api/services/videoUploadService');
+      
+      const result = await uploadVideoComplete(exportedUri, uploadRequest, (stage: string, prog: number) => {
         setStatus(`${stage.replace(/_/g, ' ')}...`);
         setProgress(prog / 100);
       });
@@ -187,7 +226,7 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, 
         throw new Error(result.message || 'Upload failed');
       }
     } catch (error: any) {
-      console.error('[ExportScreen] Upload error:', error);
+      console.error('[ExportScreen] ❌ [VERIFICATION FAILED] Upload error:', error);
       const errorMsg = error?.message || 'Failed to upload video. Please try again.';
       setUploadError(errorMsg);
       setStatus('Upload failed');
@@ -205,7 +244,7 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, 
     }
   }, [exportedUri, title, description, uploading, calculateTotalDuration, onComplete, onBack]);
 
-  // Auto-start export when screen loads
+  
   useEffect(() => {
     if (clips.length > 0 && !exporting && !exportedUri) {
       handleExport();
@@ -319,7 +358,7 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, 
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={onBack} style={styles.backButton} disabled={exporting || uploading}>
           <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -338,11 +377,11 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, 
         <View style={styles.backButton} />
       </View>
 
-      {/* Content */}
+      {}
       <View style={styles.content}>
         {exporting || uploading ? (
           <>
-            {/* Progress Indicator */}
+            {}
             <View style={styles.progressContainer}>
               <View style={styles.progressBarBackground}>
                 <Animated.View
@@ -352,10 +391,10 @@ const ExportScreen: React.FC<ExportScreenProps> = ({ clips, onBack, onComplete, 
               <Text style={styles.progressText}>{Math.round(progress * 100)}%</Text>
             </View>
 
-            {/* Status Text */}
+            {}
             <Text style={styles.statusText}>{status}</Text>
 
-            {/* Spinner */}
+            {}
             <ActivityIndicator size="large" color="#ec9a15" style={styles.spinner} />
           </>
         ) : exportedUri && !uploadSuccess ? (
@@ -551,7 +590,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
   },
-  // Upload form styles
+  
   formLabel: {
     color: '#ffffff',
     fontSize: 16,

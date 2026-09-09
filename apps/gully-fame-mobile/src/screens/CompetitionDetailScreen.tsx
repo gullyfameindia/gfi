@@ -1,5 +1,5 @@
-// Created by Kiro
-// Competition Detail Screen - Display competition details, leaderboard, and participants
+
+
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -50,14 +50,14 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
     fetchCompetitionData();
   }, []);
 
-  // Fetch competition data
+  
   const fetchCompetitionData = async () => {
     try {
       setLoading(true);
-      // Simulate API call
+      
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Mock leaderboard data
+      
       setParticipants([
         {
           id: '1',
@@ -103,14 +103,14 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
     }
   };
 
-  // Handle refresh
+  
   const handleRefresh = async () => {
     setRefreshing(true);
     await fetchCompetitionData();
     setRefreshing(false);
   };
 
-  // Handle join competition
+  
   const handleJoinCompetition = () => {
     Alert.alert(
       'Join Competition',
@@ -128,7 +128,7 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
     );
   };
 
-  // Handle leave competition
+  
   const handleLeaveCompetition = () => {
     Alert.alert(
       'Leave Competition',
@@ -147,7 +147,7 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
     );
   };
 
-  // Render leaderboard item
+  
   const renderLeaderboardItem = ({ item }: { item: Participant }) => (
     <View style={styles.leaderboardItem}>
       <View style={styles.rankContainer}>
@@ -211,7 +211,7 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
           <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         }
       >
-        {/* Header Image */}
+        {}
         {competition.image && (
           <Image
             source={{ uri: competition.image }}
@@ -219,11 +219,11 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
           />
         )}
 
-        {/* Competition Info */}
+        {}
         <View style={styles.infoSection}>
           <Text style={styles.title}>{competition.title}</Text>
 
-          {/* Meta Info */}
+          {}
           <View style={styles.metaContainer}>
             {competition.participants && (
               <View style={styles.metaItem}>
@@ -241,7 +241,7 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
             )}
           </View>
 
-          {/* Dates */}
+          {}
           {(competition.startDate || competition.endDate) && (
             <View style={styles.datesContainer}>
               {competition.startDate && (
@@ -264,7 +264,7 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
           )}
         </View>
 
-        {/* Tab Navigation */}
+        {}
         <View style={styles.tabContainer}>
           <TouchableOpacity
             style={[
@@ -301,10 +301,10 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
           </TouchableOpacity>
         </View>
 
-        {/* Tab Content */}
+        {}
         {activeTab === 'details' ? (
           <View style={styles.contentSection}>
-            {/* Description */}
+            {}
             {competition.description && (
               <View style={styles.detailCard}>
                 <Text style={styles.detailTitle}>About</Text>
@@ -312,7 +312,7 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
               </View>
             )}
 
-            {/* Rules */}
+            {}
             {competition.rules && (
               <View style={styles.detailCard}>
                 <Text style={styles.detailTitle}>Rules</Text>
@@ -320,7 +320,7 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
               </View>
             )}
 
-            {/* Prize Info */}
+            {}
             {competition.prize && (
               <View style={styles.detailCard}>
                 <Text style={styles.detailTitle}>Prize Pool</Text>
@@ -330,7 +330,7 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
           </View>
         ) : (
           <View style={styles.contentSection}>
-            {/* Leaderboard */}
+            {}
             {participants.length > 0 ? (
               <FlatList
                 data={participants}
@@ -347,7 +347,7 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
           </View>
         )}
 
-        {/* Action Button */}
+        {}
         <View style={styles.actionSection}>
           {joined ? (
             <TouchableOpacity
@@ -368,7 +368,7 @@ export default function CompetitionDetailScreen({ route, navigation }: any) {
           )}
         </View>
 
-        {/* Footer Spacing */}
+        {}
         <View style={styles.footerSpacing} />
       </ScrollView>
     </SafeAreaView>

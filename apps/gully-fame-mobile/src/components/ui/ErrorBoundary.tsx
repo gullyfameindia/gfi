@@ -1,4 +1,4 @@
-// apps/gully-fame-mobile/src/components/ui/ErrorBoundary.tsx
+
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
@@ -12,7 +12,7 @@ export class ErrorBoundary extends React.Component<{children: React.ReactNode}, 
   }
 
   componentDidCatch(error: Error) {
-    // Sentry mein log karo (baad mein integrate karenge)
+    
     console.error('App Error:', error);
   }
 

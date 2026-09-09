@@ -48,6 +48,7 @@ interface TimelineEditorProps {
   onSelectOverlay?: (type: 'image' | 'emoji', content: string | number) => void;
   onDeleteOverlay?: (id: string) => void;
   setActiveOverlayId?: (id: string | null) => void;
+  onOverlayTransformEnd?: (id: string, transform: { x: number; y: number; scale: number; rotation: number }) => void;
 }
 
 const TimelineEditor: React.FC<TimelineEditorProps> = ({
@@ -67,7 +68,11 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
   onSelectOverlay,
   onDeleteOverlay,
   setActiveOverlayId,
+  onOverlayTransformEnd,
 }) => {
+  
+  console.log("✅ REAL EDITOR CONFIRMED - apps/videoeditor/camera-module/components/timeline/TimelineEditor.tsx");
+  
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedClipId, setSelectedClipId] = useState<string | undefined>();
@@ -82,7 +87,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
   const [selectedTextOverlay, setSelectedTextOverlay] = useState<TextOverlay | null>(null);
   const [selectedOverlayId, setSelectedOverlayId] = useState<string | null>(null);
   
-  // 🔥 Trash Bin Animation States
+  
   const [isDraggingSticker, setIsDraggingSticker] = useState(false);
   const [isHoveringTrash, setIsHoveringTrash] = useState(false);
   const trashOpacity = useRef(new RNAnimated.Value(0)).current;
@@ -102,7 +107,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
   const selectedClipSpeedConfig = useMemo((): SpeedSelection => {
     if (selectedClipId) {
       const target = clips.find((c) => c.id === selectedClipId);
-      // @ts-ignore
+      
       return target?.speedConfig || { type: 'constant', value: 1 };
     }
     return { type: 'constant', value: 1 };
@@ -164,7 +169,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
     setTimeout(() => { isDraggingTimeline.current = false; }, 200);
   }, [totalDuration]);
 
-  // --- TRASH LOGIC START ---
+  
   const TRASH_ZONE_Y = previewDimensions.height - 80; 
   const TRASH_ZONE_X_MIN = (SCREEN_WIDTH / 2) - 40;
   const TRASH_ZONE_X_MAX = (SCREEN_WIDTH / 2) + 40;
@@ -179,7 +184,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
   }, [trashOpacity]);
 
   const handleStickerDragUpdate = useCallback((x: number, y: number) => {
-    // Check agar sticker Trash zone ke andar aaya
+    
     const inTrashZone = y > TRASH_ZONE_Y && x > TRASH_ZONE_X_MIN && x < TRASH_ZONE_X_MAX;
     setIsHoveringTrash(inTrashZone);
   }, [TRASH_ZONE_Y, TRASH_ZONE_X_MIN, TRASH_ZONE_X_MAX]);
@@ -194,12 +199,12 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
       useNativeDriver: true,
     }).start();
 
-    // Agar delete zone mein chora, toh sticker remove kardo
+    
     if (y > TRASH_ZONE_Y && x > TRASH_ZONE_X_MIN && x < TRASH_ZONE_X_MAX) {
       if (onDeleteOverlay) onDeleteOverlay(id);
     }
   }, [TRASH_ZONE_Y, TRASH_ZONE_X_MIN, TRASH_ZONE_X_MAX, onDeleteOverlay, trashOpacity]);
-  // --- TRASH LOGIC END ---
+  
 
   const handleClipPress = useCallback((clip: CameraClip) => {
     setSelectedClipId(clip.id);
@@ -367,7 +372,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
   return (
     <View style={styles.container}>
       
-      {/* TOP HEADER */}
+      {}
       <View style={styles.topHeader}>
          <TouchableOpacity onPress={onBack} style={{ padding: 4 }}>
             <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
@@ -388,7 +393,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
          </View>
       </View>
 
-      {/* VIDEO PREVIEW AREA - TOP */}
+      {}
       <View 
         style={styles.videoPreviewArea}
         onLayout={(event) => {
@@ -420,6 +425,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
              onDragStart={handleStickerDragStart}
              onDragUpdate={handleStickerDragUpdate}
              onDragEnd={handleStickerDragEnd}
+             onTransformEnd={onOverlayTransformEnd}
            />
         ))}
 
@@ -432,12 +438,12 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
         )}
       </View>
 
-      {/* EDITING AREA - BOTTOM (3 COLUMN LAYOUT) */}
+      {}
       <View style={styles.editingAreaContainer}>
         
-        {/* LEFT COLUMN - CONTROLS */}
+        {}
         <View style={styles.leftControls}>
-          {/* Play/Pause Button - Orange Circle */}
+          {}
           <TouchableOpacity style={styles.playButtonLarge} onPress={togglePlayPause}>
             {isPlaying ? (
               <Svg width={24} height={24} viewBox="0 0 24 24" fill="none"><Path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" fill="#000" /></Svg>
@@ -446,14 +452,14 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
             )}
           </TouchableOpacity>
 
-          {/* Add Audio Button */}
+          {}
           <TouchableOpacity style={styles.addAudioButton}>
             <Text style={{ fontSize: 16, color: '#fff' }}>+</Text>
             <Text style={{ fontSize: 9, color: '#888', marginTop: 2 }}>Add</Text>
             <Text style={{ fontSize: 9, color: '#888' }}>audio</Text>
           </TouchableOpacity>
 
-          {/* Delete Button */}
+          {}
           {selectedClipId && (
             <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteClip}>
               <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -464,7 +470,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
           )}
         </View>
 
-        {/* CENTER COLUMN - TIMELINE */}
+        {}
         <View style={styles.centerEditingArea}>
           <View style={styles.timelineWrapper}>
             <View style={styles.playheadLine} pointerEvents="none" />
@@ -489,7 +495,7 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
             </TouchableOpacity>
           </View>
 
-          {/* Time Display & Controls Row */}
+          {}
           <View style={styles.timeControlsRow}>
             <View style={styles.timeDisplaySmall}>
               <Text style={styles.timeText}>{formatTime(currentTime)} / {formatTime(totalDuration)}</Text>
@@ -498,26 +504,26 @@ const TimelineEditor: React.FC<TimelineEditorProps> = ({
           </View>
         </View>
 
-        {/* RIGHT COLUMN - CONTROLS */}
+        {}
         <View style={styles.rightControls}>
-          {/* Undo Button */}
+          {}
           <TouchableOpacity onPress={onUndo} disabled={!canUndo} style={{ opacity: canUndo ? 1 : 0.4, padding: 8 }}>
             <Svg width={20} height={20} viewBox="0 0 24 24" fill="none"><Path d="M9 14L4 9l5-5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><Path d="M4 9h10c3.3 0 6 2.7 6 6s-2.7 6-6 6H9" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></Svg>
           </TouchableOpacity>
 
-          {/* Redo Button */}
+          {}
           <TouchableOpacity onPress={onRedo} disabled={!canRedo} style={{ opacity: canRedo ? 1 : 0.4, padding: 8 }}>
             <Svg width={20} height={20} viewBox="0 0 24 24" fill="none"><Path d="M15 14l5-5-5-5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><Path d="M20 9H10C6.7 9 4 11.7 4 15s2.7 6 6 6h5" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></Svg>
           </TouchableOpacity>
 
-          {/* Volume/Audio Icon */}
+          {}
           <TouchableOpacity style={styles.volumeButton}>
             <Svg width={20} height={20} viewBox="0 0 24 24" fill="none"><Path d="M3 9v6a2 2 0 002 2h4l5 5v-16l-5 5H5a2 2 0 00-2 2z" stroke="#888" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></Svg>
           </TouchableOpacity>
         </View>
       </View>
 
-      {/* BOTTOM TOOLBAR */}
+      {}
       <View style={styles.bottomToolbar}>
         {isReady && (
           <PreviewActionButtons
@@ -574,7 +580,7 @@ const styles = StyleSheet.create({
     borderRadius: 20 
   },
 
-  /* VIDEO PREVIEW AREA - TOP */
+  
   videoPreviewArea: {
     height: SCREEN_HEIGHT * 0.30,
     width: '100%',
@@ -601,7 +607,7 @@ const styles = StyleSheet.create({
     alignItems: 'center' 
   },
 
-  /* EDITING AREA - 3 COLUMN LAYOUT */
+  
   editingAreaContainer: {
     flex: 1,
     flexDirection: 'row',
@@ -610,7 +616,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(255, 255, 255, 0.08)',
   },
 
-  /* LEFT COLUMN - CONTROLS */
+  
   leftControls: {
     width: 70,
     backgroundColor: '#0A0A0A',
@@ -655,7 +661,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  /* CENTER COLUMN - EDITING AREA */
+  
   centerEditingArea: {
     flex: 1,
     backgroundColor: '#0A0A0A',
@@ -726,7 +732,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
 
-  /* RIGHT COLUMN - CONTROLS */
+  
   rightControls: {
     width: 60,
     backgroundColor: '#0A0A0A',
@@ -747,7 +753,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  /* BOTTOM TOOLBAR */
+  
   bottomToolbar: { 
     height: 65, 
     backgroundColor: '#0A0A0A', 
@@ -756,7 +762,7 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(255, 255, 255, 0.08)',
   },
 
-  /* Legacy/hidden styles */
+  
   mainEditingArea: { display: 'none' },
   videoCanvas: { display: 'none' },
   trashContainer: { display: 'none' },

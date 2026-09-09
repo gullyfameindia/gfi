@@ -26,7 +26,7 @@ export default function FilterButton({ mediaUri, onFilterApply }: Props) {
   const [availableFilters, setAvailableFilters] = useState<FilterConfig[]>(FILTERS);
   const [loading, setLoading] = useState(false);
 
-  // Load available filters from videoEditorService when modal opens
+  
   useEffect(() => {
     if (visible) {
       loadFilters();
@@ -38,7 +38,7 @@ export default function FilterButton({ mediaUri, onFilterApply }: Props) {
     try {
       const result = await videoEditorService.getVideoFilters();
       if (result.success && result.data) {
-        // Convert mock VideoFilter to FilterConfig format
+        
         const convertedFilters: FilterConfig[] = result.data
           .filter(f => f.category === 'filter')
           .map((mockFilter, idx) => ({
@@ -47,14 +47,14 @@ export default function FilterButton({ mediaUri, onFilterApply }: Props) {
             contrast: mockFilter.parameters?.contrast ?? 0,
             saturation: mockFilter.parameters?.saturation ?? 0,
             temperature: mockFilter.parameters?.warmth ?? 0,
-            // Add to available list
+            
           }));
 
-        // Add "Original" filter first
+        
         const filtersWithOriginal: FilterConfig[] = [
           { name: 'Original' },
           ...convertedFilters,
-          ...FILTERS.slice(1), // Include preset filters as fallback
+          ...FILTERS.slice(1), 
         ];
 
         setAvailableFilters(filtersWithOriginal);
@@ -74,22 +74,22 @@ export default function FilterButton({ mediaUri, onFilterApply }: Props) {
     setVisible(false);
   };
 
-  // Layout configuration
-  const screenWidth = Dimensions.get('window').width;
-  const panelPadding = 40; // Left and right padding
-  const itemSpacing = 12; // Space between items
-  const columnsPerView = 4.5; // Show 4.5 columns (so user can peek at next items)
-  const rows = 3; // Fixed 3 rows
   
-  // Calculate item size
+  const screenWidth = Dimensions.get('window').width;
+  const panelPadding = 40; 
+  const itemSpacing = 12; 
+  const columnsPerView = 4.5; 
+  const rows = 3; 
+  
+  
   const availableWidth = screenWidth - panelPadding;
   const itemWidth = (availableWidth - (columnsPerView * itemSpacing)) / columnsPerView;
   
-  // Organize filters into columns (each column has 3 items for 3 rows)
+  
   const totalColumns = Math.ceil(availableFilters.length / rows);
   const totalWidth = (totalColumns * itemWidth) + ((totalColumns + 1) * itemSpacing);
 
-  // Create columns array: each column contains filters for all 3 rows
+  
   const columns: FilterConfig[][] = [];
   for (let col = 0; col < totalColumns; col++) {
     const columnFilters: FilterConfig[] = [];
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   scrollContainer: {
-    height: 300, // Fixed height for 3 rows
+    height: 300, 
   },
   loadingContainer: {
     height: 300,

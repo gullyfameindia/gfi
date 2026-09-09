@@ -1,7 +1,7 @@
 import apiClient from '../axios';
 import { ApiResponse } from '../types';
 
-// ==================== Type Definitions ====================
+
 
 export interface CompetitionSponsor {
   _id: string;
@@ -43,12 +43,12 @@ export interface CompetitionsResponse {
   total?: number;
 }
 
-// ==================== API Functions ====================
 
-/**
- * Get all competitions
- * Spec: GET user/competitions?page=1&limit=20
- */
+
+
+
+
+
 export async function getCompetitions(params?: {
   page?: number;
   limit?: number;
@@ -113,14 +113,14 @@ export async function getCompetitions(params?: {
   }
 }
 
-/**
- * Get competition by ID
- */
+
+
+
 export async function getCompetitionById(competitionId: string): Promise<ApiResponse<Competition>> {
   try {
     console.log('[competitionService] GET competitions/:id', { competitionId });
     
-    // First get competitions, then find the one with matching ID
+    
     const competitionsResponse = await getCompetitions({ page: 1, limit: 100 });
     
     if (competitionsResponse.success && competitionsResponse.data) {
@@ -154,9 +154,9 @@ export async function getCompetitionById(competitionId: string): Promise<ApiResp
   }
 }
 
-/**
- * Get competitions by status
- */
+
+
+
 export async function getCompetitionsByStatus(
   status: 'CREATED' | 'APPROVED' | 'CANCELLED' | 'COMPLETED' | 'live',
   params?: { page?: number; limit?: number }
@@ -196,7 +196,7 @@ export async function getCompetitionsByStatus(
   }
 }
 
-// ==================== Service Export ====================
+
 
 export const competitionService = {
   getCompetitions,

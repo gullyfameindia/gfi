@@ -81,7 +81,7 @@ const EnhancedAudioTracksPanel: React.FC<EnhancedAudioTracksPanelProps> = ({
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <SafeAreaView style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose}>
             <Text style={styles.closeButton}>Done</Text>
@@ -92,7 +92,7 @@ const EnhancedAudioTracksPanel: React.FC<EnhancedAudioTracksPanelProps> = ({
           </TouchableOpacity>
         </View>
 
-        {/* Audio Stats */}
+        {}
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
             <Text style={styles.statLabel}>Tracks</Text>
@@ -110,7 +110,7 @@ const EnhancedAudioTracksPanel: React.FC<EnhancedAudioTracksPanelProps> = ({
           </View>
         </View>
 
-        {/* Audio Tracks List */}
+        {}
         <ScrollView style={styles.tracksContainer} showsVerticalScrollIndicator={false}>
           {audioTracks.length === 0 ? (
             <View style={styles.emptyState}>
@@ -133,7 +133,7 @@ const EnhancedAudioTracksPanel: React.FC<EnhancedAudioTracksPanelProps> = ({
           )}
         </ScrollView>
 
-        {/* Master Volume Control */}
+        {}
         {audioTracks.length > 0 && (
           <View style={styles.masterControl}>
             <View style={styles.masterHeader}>
@@ -149,7 +149,7 @@ const EnhancedAudioTracksPanel: React.FC<EnhancedAudioTracksPanelProps> = ({
         )}
       </SafeAreaView>
 
-      {/* Effects Modal */}
+      {}
       <AudioEffectsModal
         visible={showEffectsModal}
         onClose={() => setShowEffectsModal(false)}

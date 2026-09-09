@@ -18,7 +18,7 @@ import { scale, scaleVertical, getFontSize, wp, hp, spacing } from '../../utils/
 
 const { width, height } = Dimensions.get('window');
 
-// Coin Icon - Enhanced design
+
 const CoinIcon = ({ size = 24, color = '#EC9A15' }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Circle cx="12" cy="12" r="10" fill={color} />
@@ -33,7 +33,7 @@ const CoinIcon = ({ size = 24, color = '#EC9A15' }) => (
   </Svg>
 );
 
-// UPI Icon
+
 const UPIIcon = ({ size = 24 }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Path
@@ -45,7 +45,7 @@ const UPIIcon = ({ size = 24 }) => (
   </Svg>
 );
 
-// Card Icon
+
 const CardIcon = ({ size = 24 }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Rect x="2" y="6" width="20" height="12" rx="2" stroke="#666" strokeWidth="2" />
@@ -53,7 +53,7 @@ const CardIcon = ({ size = 24 }) => (
   </Svg>
 );
 
-// QR Icon
+
 const QRIcon = ({ size = 24 }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <Rect x="3" y="3" width="8" height="8" stroke="#666" strokeWidth="2" />
@@ -63,7 +63,7 @@ const QRIcon = ({ size = 24 }) => (
   </Svg>
 );
 
-// Sparkle Animation Component
+
 const SparkleAnimation = ({ visible }: { visible: boolean }) => {
   const sparkles = useRef(
     Array.from({ length: 8 }, () => ({
@@ -140,11 +140,11 @@ const SparkleAnimation = ({ visible }: { visible: boolean }) => {
   );
 };
 
-// Success Popup Component
+
 export const SuccessPopup = ({
   visible,
   onClose,
-  message = '🎉 Support Sent Successfully!', // Updated copy text
+  message = '🎉 Support Sent Successfully!', 
 }: {
   visible: boolean;
   onClose: () => void;
@@ -199,7 +199,7 @@ export const SuccessPopup = ({
   );
 };
 
-// Payment Method Sheet Component (for Fan users)
+
 export const PaymentMethodSheet = ({
   visible,
   onClose,
@@ -320,7 +320,7 @@ export const PaymentMethodSheet = ({
   );
 };
 
-// Main Tip Popup Component (Serving as Support Component now)
+
 export const TipPopup = ({
   visible,
   onClose,
@@ -336,19 +336,19 @@ export const TipPopup = ({
   const [userRole, setUserRole] = useState<string>('');
   const [selectedAmount, setSelectedAmount] = useState<number>(0);
   const [customAmount, setCustomAmount] = useState<string>('');
-  const [coinBalance, setCoinBalance] = useState<number>(500); // Dummy balance
+  const [coinBalance, setCoinBalance] = useState<number>(500); 
   const [showPaymentMethod, setShowPaymentMethod] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showInsufficientCoins, setShowInsufficientCoins] = useState(false);
 
-  // New States for Warning Modal
+  
   const [showWarning, setShowWarning] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useState(false);
 
-  // Participant coin amounts
+  
   const coinAmounts = [50, 100, 200];
-  // Fan money amounts
+  
   const moneyAmounts = [10, 50, 100, 200];
 
   useEffect(() => {
@@ -364,7 +364,7 @@ export const TipPopup = ({
     loadUserRole();
   }, []);
 
-  // Check user preference for warning modal on mount
+  
   useEffect(() => {
     const checkWarningPreference = async () => {
       const isHidden = await AsyncStorage.getItem('hideSupportWarning');
@@ -410,7 +410,7 @@ export const TipPopup = ({
     }
   };
 
-  // Intermediary Check function before finalizing support
+  
   const handleConfirmTip = async () => {
     if (selectedAmount <= 0) return;
 
@@ -419,7 +419,7 @@ export const TipPopup = ({
       return;
     }
 
-    // Checking explicit storage value to respect "Do Not Show Again"
+    
     const hideWarning = await AsyncStorage.getItem('hideSupportWarning');
     if (hideWarning === 'true') {
       executeSupportAction();
@@ -428,7 +428,7 @@ export const TipPopup = ({
     }
   };
 
-  // The actual execution wrapper logic
+  
   const executeSupportAction = () => {
     if (isParticipant) {
       setIsLoading(true);
@@ -443,7 +443,7 @@ export const TipPopup = ({
     }
   };
 
-  // Triggered when user confirms warning modal
+  
   const handleWarningAgree = async () => {
     if (dontShowAgain) {
       await AsyncStorage.setItem('hideSupportWarning', 'true');
@@ -493,7 +493,7 @@ export const TipPopup = ({
             >
               <View style={styles.bottomSheetHandle} />
               
-              {/* Updated Copy Texts */}
+              {}
               <Text style={styles.bottomSheetTitle}>Show Your Support</Text>
 
               {isParticipant ? (
@@ -586,7 +586,7 @@ export const TipPopup = ({
                 </>
               )}
 
-              {/* Updated Button Text to Confirm Support */}
+              {}
               <TouchableOpacity
                 style={[
                   styles.confirmButton,
@@ -606,7 +606,7 @@ export const TipPopup = ({
         </TouchableOpacity>
       </Modal>
 
-      {/* ⚠️ Added Dynamic Interstitial Warning Alert Modal with "Do not show again" checkbox */}
+      {}
       <Modal transparent visible={showWarning} animationType="fade" onRequestClose={() => setShowWarning(false)}>
         <View style={styles.modalCenteredOverlay}>
           <View style={styles.warningAlertBox}>
@@ -638,7 +638,7 @@ export const TipPopup = ({
         </View>
       </Modal>
 
-      {/* Insufficient Coins Popup */}
+      {}
       <Modal transparent visible={showInsufficientCoins} animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.insufficientCoinsModal}>
@@ -664,7 +664,7 @@ export const TipPopup = ({
         </View>
       </Modal>
 
-      {/* Payment Method Sheet */}
+      {}
       <PaymentMethodSheet
         visible={showPaymentMethod}
         onClose={() => setShowPaymentMethod(false)}
@@ -672,7 +672,7 @@ export const TipPopup = ({
         onContinue={handlePaymentContinue}
       />
 
-      {/* Success Popup */}
+      {}
       <SuccessPopup visible={showSuccess} onClose={handleSuccessClose} />
     </>
   );
@@ -1013,7 +1013,7 @@ const styles = StyleSheet.create({
     fontSize: getFontSize(24),
   },
   
-  // Warning Box Custom Styles
+  
   warningAlertBox: {
     backgroundColor: '#1a1a1a',
     width: wp(85),

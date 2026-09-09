@@ -87,7 +87,7 @@ const AdvancedTextEditorModal: React.FC<AdvancedTextEditorModalProps> = ({
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <SafeAreaView style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose}>
             <Text style={styles.cancelButton}>Cancel</Text>
@@ -99,7 +99,7 @@ const AdvancedTextEditorModal: React.FC<AdvancedTextEditorModalProps> = ({
         </View>
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* Text Input */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Text</Text>
             <TextInput
@@ -115,7 +115,7 @@ const AdvancedTextEditorModal: React.FC<AdvancedTextEditorModalProps> = ({
             <Text style={styles.charCounter}>{text.length} / 100</Text>
           </View>
 
-          {/* Font Size */}
+          {}
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Font Size</Text>
@@ -148,7 +148,7 @@ const AdvancedTextEditorModal: React.FC<AdvancedTextEditorModalProps> = ({
             </ScrollView>
           </View>
 
-          {/* Font Weight */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Font Weight</Text>
             <View style={styles.optionsRow}>
@@ -175,7 +175,7 @@ const AdvancedTextEditorModal: React.FC<AdvancedTextEditorModalProps> = ({
             </View>
           </View>
 
-          {/* Text Alignment */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Alignment</Text>
             <View style={styles.optionsRow}>
@@ -196,7 +196,7 @@ const AdvancedTextEditorModal: React.FC<AdvancedTextEditorModalProps> = ({
             </View>
           </View>
 
-          {/* Text Color */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Text Color</Text>
             <View style={styles.colorGrid}>
@@ -220,7 +220,7 @@ const AdvancedTextEditorModal: React.FC<AdvancedTextEditorModalProps> = ({
             </View>
           </View>
 
-          {/* Background Color */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Background</Text>
             <View style={styles.colorGrid}>
@@ -256,7 +256,7 @@ const AdvancedTextEditorModal: React.FC<AdvancedTextEditorModalProps> = ({
             </View>
           </View>
 
-          {/* Opacity */}
+          {}
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Opacity</Text>
@@ -279,7 +279,7 @@ const AdvancedTextEditorModal: React.FC<AdvancedTextEditorModalProps> = ({
             </View>
           </View>
 
-          {/* Rotation */}
+          {}
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Rotation</Text>
@@ -304,7 +304,7 @@ const AdvancedTextEditorModal: React.FC<AdvancedTextEditorModalProps> = ({
             </View>
           </View>
 
-          {/* Stroke */}
+          {}
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Outline</Text>
@@ -348,7 +348,7 @@ const AdvancedTextEditorModal: React.FC<AdvancedTextEditorModalProps> = ({
             )}
           </View>
 
-          {/* Preview */}
+          {}
           <View style={styles.previewSection}>
             <Text style={styles.sectionTitle}>Preview</Text>
             <View

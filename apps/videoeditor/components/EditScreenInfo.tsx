@@ -41,9 +41,9 @@ export default function EditScreenInfo({ path }: { path: string }) {
           style={styles.helpLink}
           href="https://docs.expo.io/get-started/create-a-new-app/#opening-the-app-on-your-phonetablet"
         >
-          {/* ✅ UPDATED BY KIRO - Fixed unescaped apostrophe */}
-          {/* OLD CODE: doesn't automatically (unescaped apostrophe) */}
-          {/* NEW CODE: doesn&rsquo;t automatically (properly escaped) */}
+          {}
+          {}
+          {}
           <Text style={styles.helpLinkText} lightColor={Colors.light.tint}>
             Tap here if your app doesn&rsquo;t automatically update after making changes
           </Text>

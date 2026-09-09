@@ -136,7 +136,7 @@ export default function LoginViaEmail() {
   };
 
   const handlePasswordLogin = () => {
-    // Navigate to signin with email pre-filled if available
+    
     if (email) {
       router.push(
         `/auth/signin?email=${encodeURIComponent(email.trim().toLowerCase())}` as any,
@@ -147,7 +147,7 @@ export default function LoginViaEmail() {
   };
 
   const handleOTPLogin = () => {
-    // Navigate to login-via-otp with email pre-filled if available
+    
     if (email) {
       router.push(
         `/auth/login-via-otp?email=${encodeURIComponent(email.trim().toLowerCase())}` as any,
@@ -164,7 +164,7 @@ export default function LoginViaEmail() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Logo Section with brown background */}
+        {}
         <View style={styles.logoContainer}>
           <Image
             source={require("@assets/images/gfi.png")}
@@ -173,7 +173,7 @@ export default function LoginViaEmail() {
           />
         </View>
 
-        {/* Form Section with light blue-gray background */}
+        {}
         <View style={styles.formContainer}>
           <Text
             style={[
@@ -184,7 +184,7 @@ export default function LoginViaEmail() {
             Login via Email
           </Text>
 
-          {/* Email Input */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>
               Email <Text style={styles.required}>*</Text>
@@ -200,12 +200,12 @@ export default function LoginViaEmail() {
             />
           </View>
 
-          {/* Or Text */}
+          {}
           <View style={styles.orContainer}>
             <Text style={styles.orText}>Or</Text>
           </View>
 
-          {/* Sign in via Password or OTP Text */}
+          {}
           <View style={styles.loginViaContainer}>
             <View style={styles.loginViaRow}>
               <Text style={styles.loginViaText}>Sign in via </Text>
@@ -228,7 +228,7 @@ export default function LoginViaEmail() {
             </View>
           ) : null}
 
-          {/* Send OTP Button */}
+          {}
           <TouchableOpacity
             style={[
               styles.sendOtpButton,
@@ -244,14 +244,14 @@ export default function LoginViaEmail() {
             )}
           </TouchableOpacity>
 
-          {/* OR Continue With Separator */}
+          {}
           <View style={styles.continueWithContainer}>
             <View style={styles.separatorLine} />
             <Text style={styles.continueWithText}>OR Continue With</Text>
             <View style={styles.separatorLine} />
           </View>
 
-          {/* Social Login Icons */}
+          {}
           <View style={styles.socialIconsContainer}>
             <TouchableOpacity
               style={styles.socialIconButton}
@@ -275,7 +275,7 @@ export default function LoginViaEmail() {
             )}
           </View>
 
-          {/* Create Account Link */}
+          {}
           <View style={styles.createAccountContainer}>
             <Text style={styles.createAccountText}>
               Don&apos;t have an account?{" "}
@@ -289,7 +289,7 @@ export default function LoginViaEmail() {
           </View>
         </View>
 
-        {/* Skip Section with white background */}
+        {}
         <View style={styles.skipContainer}>
           <TouchableOpacity
             onPress={() => router.replace("/auth/location?skip=true")}

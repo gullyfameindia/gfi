@@ -49,7 +49,7 @@ function CategoriesCarousel({ categories }: CategoriesCarouselProps) {
         const intervalId = setInterval(() => {
             step = (step + 1) % sequence.length;
             setActiveIndex(sequence[step]);
-        }, 3500); // Moves every 3.5 seconds
+        }, 3500); 
 
         return () => clearInterval(intervalId);
     }, [displayCategories.length]);

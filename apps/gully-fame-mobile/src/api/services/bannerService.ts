@@ -1,7 +1,7 @@
 import apiClient from '../axios';
 import { ApiResponse } from '../types';
 
-// ==================== Type Definitions ====================
+
 
 export interface Banner {
   id: string;
@@ -22,7 +22,7 @@ export interface BannersResponse {
   limit?: number;
 }
 
-// ==================== API Functions ====================
+
 
 
 
@@ -37,7 +37,7 @@ export async function getBanners(params?: {
   try {
     console.log('[bannerService] GET Banners', { page, limit });
     
-    // Banners should be publicly accessible - skip authentication
+    
     const response = await apiClient.get<any>(endpoint, {
       skipAuth: true,
     });
@@ -47,7 +47,7 @@ export async function getBanners(params?: {
       let payload = responseData.data;
       let rawItems: any[] = [];
 
-      // Handle different response formats
+      
       if (Array.isArray(payload.Banners)) {
         rawItems = payload.Banners;
       } else if (Array.isArray(payload.banners)) {
@@ -61,7 +61,7 @@ export async function getBanners(params?: {
       }
 
       const items: Banner[] = rawItems
-        .filter((b) => b.isActive !== false) // Only active banners
+        .filter((b) => b.isActive !== false) 
         .map((b) => ({
           id: b._id?.toString() || b.id?.toString() || '',
           title: b.title || '',
@@ -100,7 +100,7 @@ export async function getBanners(params?: {
       },
     };
   } catch (error: any) {
-    // Banners are public - suppress auth errors
+    
     if (error.response?.status === 401 || error.message?.includes('token') || error.message?.includes('Unauthorized')) {
       console.warn('[bannerService] GET Banners - Auth error (suppressed, banners should be public)');
       return {
@@ -132,7 +132,7 @@ export async function getBanners(params?: {
 }
 
 
-  // Get active banners only (public endpoint)
+  
  
 export async function getActiveBanners(): Promise<ApiResponse<Banner[]>> {
   try {
@@ -165,7 +165,7 @@ export async function getActiveBanners(): Promise<ApiResponse<Banner[]>> {
   }
 }
 
-// ==================== Service Export ====================
+
 
 export const bannerService = {
   getBanners,

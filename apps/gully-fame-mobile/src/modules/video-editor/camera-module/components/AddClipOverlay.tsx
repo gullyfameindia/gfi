@@ -20,10 +20,10 @@ interface AddClipOverlayProps {
   onSelectGallery: (clip: CameraClip) => void;
 }
 
-/**
- * Overlay that appears when user clicks Add button
- * Shows options to select Camera or Gallery
- */
+
+
+
+
 const AddClipOverlay: React.FC<AddClipOverlayProps> = ({
   visible,
   onClose,
@@ -31,7 +31,7 @@ const AddClipOverlay: React.FC<AddClipOverlayProps> = ({
   onSelectGallery,
 }) => {
   const handleSelectGallery = useCallback(async () => {
-    // Request permission
+    
     let permission = await ImagePicker.getMediaLibraryPermissionsAsync();
     if (permission.status !== 'granted') {
       permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -42,7 +42,7 @@ const AddClipOverlay: React.FC<AddClipOverlayProps> = ({
       return;
     }
 
-    // Open gallery
+    
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsMultipleSelection: false,

@@ -3,7 +3,7 @@ import type { ApiResponse } from './apiTypes';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://gullyfame.com/v1/api/';
 
-// ==================== Type Definitions ====================
+
 
 export interface Report {
   id: string;
@@ -54,13 +54,13 @@ export interface ReportsListResponse {
   };
 }
 
-// ==================== Universal Response Parser ====================
 
-/**
- * Universal parser that handles both API response formats:
- * { code: 1, message: "...", data: ... }
- * { rCode: 1, msg: "...", rData: ... }
- */
+
+
+
+
+
+
 function parseApiResponse<T>(response: any): { success: boolean; data?: T; message?: string } {
   const success = response.code === 1 || response.rCode === 1;
   const payload = response.data || response.rData;
@@ -163,12 +163,12 @@ async function makeRequest<T>(
   }
 }
 
-// ==================== Reports APIs ====================
 
-/**
- * Get list of reports
- * GET /admin/reports?page=1&limit=20&type=USER&status=PENDING
- */
+
+
+
+
+
 export async function getReports(
   params?: ReportsListParams
 ): Promise<ApiResponse<ReportsListResponse>> {
@@ -215,10 +215,10 @@ export async function getReports(
   };
 }
 
-/**
- * Update report status
- * PUT /admin/reports/{reportId}/status
- */
+
+
+
+
 export async function updateReportStatus(
   reportId: string,
   data: UpdateReportStatusRequest

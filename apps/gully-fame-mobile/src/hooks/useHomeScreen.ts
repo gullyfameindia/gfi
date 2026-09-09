@@ -28,12 +28,12 @@ const FALLBACK_DATA: HomeScreenData = {
     categories:           fallbackCategories,
 };
 
-// ✅ Relative image path ko full URL mein convert karo
+
 const toFullUrl = (path: string | undefined): string => {
     if (!path) return '';
-    if (path.startsWith('http')) return path; // already full URL
-    // BASE_URL = "http://103.194.228.68:3552/v1/api/"
-    // Image server = "http://103.194.228.68:3552"
+    if (path.startsWith('http')) return path; 
+    
+    
     const serverUrl = BASE_URL?.replace('/v1/api/', '') ?? '';
     return `${serverUrl}${path}`;
 };
@@ -47,45 +47,45 @@ async function fetchHomeScreen(): Promise<HomeScreenData> {
         const data = resp.data?.data;
         if (!data) return FALLBACK_DATA;
 
-        // ✅ Banners — image path fix karo
+        
         const banners = data.banners?.map((b: any) => ({
             ...b,
             image: toFullUrl(b.image),
         })) ?? heroSlides;
 
-        // ✅ Categories — icon path fix karo
+        
         const categories = data.categories?.map((c: any) => ({
             ...c,
             icon: toFullUrl(c.icon),
             image: toFullUrl(c.image),
         })) ?? fallbackCategories;
 
-        // ✅ Trending — image fix karo
+        
         const trending = data.trending?.map((t: any) => ({
             ...t,
             image: toFullUrl(t.image),
         })) ?? [];
 
-        // ✅ Upcoming competitions
+        
         const upcomingCompetitions = data.upcomingCompetitions?.map((c: any) => ({
             ...c,
             image: toFullUrl(c.image),
         })) ?? upcomingCompetitionsMock;
 
-        // ✅ Past competitions
+        
         const pastCompetitions = data.pastCompetitions?.map((c: any) => ({
             ...c,
             image: toFullUrl(c.image),
         })) ?? pastCompetitionsMock;
 
-        // ✅ Live competitions — API mein nahi hai, upcoming se filter karo
-        // Jab backend add kare tab update hoga
+        
+        
         const liveCompetitions = data.liveCompetitions?.map((c: any) => ({
             ...c,
             image: toFullUrl(c.image),
         })) ?? [];
 
-        // ✅ Top competitors
+        
         const topCompetitors = data.topCompetitors?.map((c: any) => ({
             ...c,
             image: toFullUrl(c.image),

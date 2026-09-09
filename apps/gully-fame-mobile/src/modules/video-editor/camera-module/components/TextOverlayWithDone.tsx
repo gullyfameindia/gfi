@@ -14,10 +14,10 @@ interface TextOverlayWithDoneProps {
   onDelete: () => void;
 }
 
-/**
- * Text overlay component with Done button that appears on video/photo
- * Shows Done, Edit, and Delete buttons when selected
- */
+
+
+
+
 const TextOverlayWithDone: React.FC<TextOverlayWithDoneProps> = ({
   overlay,
   containerWidth,
@@ -66,7 +66,7 @@ const TextOverlayWithDone: React.FC<TextOverlayWithDoneProps> = ({
       ]}
       {...panResponder.panHandlers}
     >
-      {/* Text Content */}
+      {}
       <View
         style={[
           styles.textWrapper,
@@ -100,13 +100,13 @@ const TextOverlayWithDone: React.FC<TextOverlayWithDoneProps> = ({
         </Text>
       </View>
 
-      {/* Selection Border */}
+      {}
       {isSelected && <View style={styles.selectionBorder} />}
 
-      {/* Action Buttons (Show when selected) */}
+      {}
       {isSelected && (
         <View style={styles.actionButtons}>
-          {/* Done Button */}
+          {}
           <TouchableOpacity style={styles.doneButton} onPress={onDone} activeOpacity={0.7}>
             <Svg width={16} height={16} viewBox="0 0 24 24" fill="none">
               <Path
@@ -120,7 +120,7 @@ const TextOverlayWithDone: React.FC<TextOverlayWithDoneProps> = ({
             <Text style={styles.buttonLabel}>Done</Text>
           </TouchableOpacity>
 
-          {/* Edit Button */}
+          {}
           <TouchableOpacity style={styles.editButton} onPress={onEdit} activeOpacity={0.7}>
             <Svg width={16} height={16} viewBox="0 0 24 24" fill="none">
               <Path
@@ -141,7 +141,7 @@ const TextOverlayWithDone: React.FC<TextOverlayWithDoneProps> = ({
             <Text style={styles.buttonLabel}>Edit</Text>
           </TouchableOpacity>
 
-          {/* Delete Button */}
+          {}
           <TouchableOpacity style={styles.deleteButton} onPress={onDelete} activeOpacity={0.7}>
             <Svg width={16} height={16} viewBox="0 0 24 24" fill="none">
               <Path

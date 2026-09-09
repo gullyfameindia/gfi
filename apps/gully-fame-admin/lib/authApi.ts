@@ -102,7 +102,7 @@ export function logoutAdmin() {
   setToken(null);
   setAdminData(null);
   
-  // Clear role from storage
+  
   const storage = safeLocalStorage();
   if (storage) {
     storage.removeItem('userRole');
@@ -183,7 +183,7 @@ export async function loginAdmin(
       console.log(`${logPrefix} - Response data:`, JSON.stringify(data, null, 2));
     }
 
-    // Check for both success flags and response codes
+    
     const successFlag = response.ok && (data.success === true || data.code === 1 || data.rCode === 1);
 
     if (!successFlag) {
@@ -234,7 +234,7 @@ export async function loginAdmin(
       };
     }
 
-    // Determine role from response or use the login role
+    
     const userRole = (admin?.role || payload?.role || role)?.toLowerCase() as 'admin' | 'sponsor' | undefined;
     setToken(token, userRole || 'admin');
     if (admin) {
@@ -336,7 +336,7 @@ export async function getCurrentAdmin(): Promise<ApiResponse<AdminUser>> {
       console.log(`${logPrefix} - Response data:`, JSON.stringify(data, null, 2));
     }
 
-    // Handle multiple response formats: {status: true}, {code: 1}, {rCode: 1}
+    
     const isSuccess = 
       response.ok && (
         data.status === true || 

@@ -46,7 +46,7 @@ const OverlayEditorModal: React.FC<OverlayEditorModalProps> = ({
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <SafeAreaView style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -64,7 +64,7 @@ const OverlayEditorModal: React.FC<OverlayEditorModalProps> = ({
         </View>
 
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          {/* Overlay Type Selection */}
+          {}
           <Text style={styles.label}>Select Overlay Type</Text>
           <View style={styles.typeGrid}>
             {OVERLAY_TYPES.map((type) => (
@@ -89,7 +89,7 @@ const OverlayEditorModal: React.FC<OverlayEditorModalProps> = ({
             ))}
           </View>
 
-          {/* Preview */}
+          {}
           <View style={styles.previewBox}>
             <Text style={styles.previewLabel}>Preview</Text>
             <View
@@ -110,7 +110,7 @@ const OverlayEditorModal: React.FC<OverlayEditorModalProps> = ({
             />
           </View>
 
-          {/* Opacity Control */}
+          {}
           <View style={styles.controlSection}>
             <View style={styles.controlHeader}>
               <Text style={styles.controlLabel}>Opacity</Text>
@@ -124,7 +124,7 @@ const OverlayEditorModal: React.FC<OverlayEditorModalProps> = ({
             </View>
           </View>
 
-          {/* Intensity Control */}
+          {}
           <View style={styles.controlSection}>
             <View style={styles.controlHeader}>
               <Text style={styles.controlLabel}>Intensity</Text>
@@ -138,7 +138,7 @@ const OverlayEditorModal: React.FC<OverlayEditorModalProps> = ({
             </View>
           </View>
 
-          {/* Info */}
+          {}
           <View style={styles.infoBox}>
             <Text style={styles.infoText}>
               💡 Overlays add creative effects to your video. Adjust opacity and intensity
@@ -147,7 +147,7 @@ const OverlayEditorModal: React.FC<OverlayEditorModalProps> = ({
           </View>
         </ScrollView>
 
-        {/* Apply Button */}
+        {}
         <TouchableOpacity style={styles.applyButton} onPress={handleApply}>
           <Text style={styles.applyButtonText}>Apply Overlay</Text>
         </TouchableOpacity>

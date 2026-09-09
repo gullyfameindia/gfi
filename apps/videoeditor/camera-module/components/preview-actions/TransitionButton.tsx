@@ -6,9 +6,9 @@ interface TransitionButtonProps {
   onPress?: () => void;
 }
 
-/**
- * Transition button component for preview editor
- */
+
+
+
 const TransitionButton: React.FC<TransitionButtonProps> = ({ onPress }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={0.7}>

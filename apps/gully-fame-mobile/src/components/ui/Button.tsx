@@ -9,7 +9,7 @@ import {
   TextStyle 
 } from 'react-native';
 
-// Blueprint Colors: Primary (#E91E63), Background (#121212)
+
 const PRIMARY_COLOR = '#E91E63'; 
 const DISABLED_COLOR = '#444';
 const WHITE = '#FFFFFF';
@@ -23,11 +23,11 @@ interface ButtonProps {
   textStyle?: StyleProp<TextStyle>;
 }
 
-/**
- * A reusable Button component adhering to the Gully Fame Design System.
- * In a real blueprint implementation, this would use Tailwind/Styled Components 
- * and Poppins font family.
- */
+
+
+
+
+
 export const Button: React.FC<ButtonProps> = ({ 
   title, 
   onPress, 
@@ -59,11 +59,11 @@ export const Button: React.FC<ButtonProps> = ({
 const styles = StyleSheet.create({
   button: {
     height: 50,
-    borderRadius: 12, // Slightly more rounded corners for mobile aesthetic
+    borderRadius: 12, 
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    // Shadow for visual depth
+    
     shadowColor: PRIMARY_COLOR,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -73,6 +73,6 @@ const styles = StyleSheet.create({
   text: {
     color: WHITE,
     fontSize: 16,
-    // fontWeight removed - using fontFamily instead
+    
   },
 });

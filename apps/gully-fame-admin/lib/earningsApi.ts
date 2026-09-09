@@ -3,7 +3,7 @@ import type { ApiResponse } from './apiTypes';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://gullyfame.com/v1/api/';
 
-// ==================== Type Definitions ====================
+
 
 export interface Earnings {
   id: string;
@@ -62,13 +62,13 @@ export interface EarningsListResponse {
   totalPages?: number;
 }
 
-// ==================== Universal Response Parser ====================
 
-/**
- * Universal parser that handles both API response formats:
- * { code: 1, message: "...", data: ... }
- * { rCode: 1, msg: "...", rData: ... }
- */
+
+
+
+
+
+
 function parseApiResponse<T>(response: any): { success: boolean; data?: T; message?: string } {
   const success = response.code === 1 || response.rCode === 1;
   const payload = response.data || response.rData;
@@ -171,12 +171,12 @@ async function makeRequest<T>(
   }
 }
 
-// ==================== Earnings APIs ====================
 
-/**
- * Get list of earnings
- * GET /admin/earnings?page=1&limit=20&userId=...&type=...&category=...&status=...
- */
+
+
+
+
+
 export async function getEarnings(
   params?: EarningsListParams
 ): Promise<ApiResponse<EarningsListResponse>> {
@@ -227,10 +227,10 @@ export async function getEarnings(
   };
 }
 
-/**
- * Get user earnings
- * GET /admin/earnings?userId={userId}&page=1&limit=20
- */
+
+
+
+
 export async function getUserEarnings(
   userId: string,
   params?: { page?: number; limit?: number }
@@ -241,10 +241,10 @@ export async function getUserEarnings(
   });
 }
 
-/**
- * Get list of winners
- * GET /admin/winners
- */
+
+
+
+
 export async function getWinners(): Promise<ApiResponse<Winner[]>> {
   const endpoint = 'admin/winners';
   const response = await makeRequest<Winner[]>('GET', endpoint);
@@ -274,10 +274,10 @@ export async function getWinners(): Promise<ApiResponse<Winner[]>> {
   };
 }
 
-/**
- * Get top earners
- * GET /admin/winners/top-earners
- */
+
+
+
+
 export async function getTopEarners(): Promise<ApiResponse<TopEarner[]>> {
   const endpoint = 'admin/winners/top-earners';
   const response = await makeRequest<TopEarner[]>('GET', endpoint);

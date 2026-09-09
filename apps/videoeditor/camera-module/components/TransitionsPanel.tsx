@@ -10,9 +10,9 @@ interface TransitionsPanelProps {
   onToggleExpand?: () => void;
 }
 
-/**
- * Panel for displaying and managing transitions
- */
+
+
+
 const TransitionsPanel: React.FC<TransitionsPanelProps> = ({
   transitions,
   onDeleteTransition,

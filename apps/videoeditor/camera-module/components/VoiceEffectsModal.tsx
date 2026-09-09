@@ -23,14 +23,14 @@ interface VoiceEffect {
 }
 
 const VOICE_EFFECTS: VoiceEffect[] = [
-  // Voice Effects
+  
   { id: 'none', name: 'None', description: 'Original voice', icon: 'close-circle-outline', category: 'effect' },
   { id: 'helium', name: 'Helium', description: 'High pitched voice', icon: 'balloon', category: 'effect' },
   { id: 'low', name: 'Low', description: 'Deep voice tone', icon: 'volume-low', category: 'effect' },
   { id: 'toy_speaker', name: 'Toy Speaker', description: 'Compressed, robotic', icon: 'speaker', category: 'effect' },
   { id: 'microphone', name: 'Microphone', description: 'Mic simulation', icon: 'microphone', category: 'effect' },
   { id: 'android', name: 'Android', description: 'Robotic effect', icon: 'robot', category: 'effect' },
-  // Voice Enhancements
+  
   { id: 'clarity', name: 'Clarity', description: 'Enhance clarity', icon: 'volume-high', category: 'enhancement' },
   { id: 'echo', name: 'Echo', description: 'Add echo effect', icon: 'repeat', category: 'enhancement' },
   { id: 'reverb', name: 'Reverb', description: 'Spacious sound', icon: 'volume-vibrate', category: 'enhancement' },
@@ -118,7 +118,7 @@ const VoiceEffectsModal: React.FC<VoiceEffectsModalProps> = ({
       onRequestClose={onClose}
     >
       <SafeAreaView style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose} style={styles.backButton}>
             <MaterialCommunityIcons name="chevron-left" size={28} color="#fff" />
@@ -129,7 +129,7 @@ const VoiceEffectsModal: React.FC<VoiceEffectsModalProps> = ({
           </TouchableOpacity>
         </View>
 
-        {/* Tabs */}
+        {}
         <View style={styles.tabsContainer}>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'effect' && styles.tabActive]}
@@ -149,7 +149,7 @@ const VoiceEffectsModal: React.FC<VoiceEffectsModalProps> = ({
           </TouchableOpacity>
         </View>
 
-        {/* Effects Grid */}
+        {}
         <FlatList
           data={effectsData}
           renderItem={renderEffect}

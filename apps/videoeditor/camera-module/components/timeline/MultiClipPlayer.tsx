@@ -8,18 +8,18 @@ import FilteredVideo from '../FilteredVideo';
 
 interface MultiClipPlayerProps {
   clips: CameraClip[];
-  currentTime: number; // Timeline time
+  currentTime: number; 
   isPlaying: boolean;
   onTimeUpdate?: (time: number) => void;
   onLoad?: () => void;
   onEnd?: () => void;
   filter?: import('../../types/filters').FilterConfig;
-  isDraggingTimeline?: boolean; // Flag to indicate timeline dragging
+  isDraggingTimeline?: boolean; 
 }
 
-/**
- * Multi-clip video player that seamlessly plays across clip boundaries with Velocity Engine Support
- */
+
+
+
 const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
   clips,
   currentTime,
@@ -40,22 +40,22 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
   const lastUpdateTimeRef = useRef(0);
   const isDraggingTimelineRef = useRef(false);
   
-  // Update dragging state
+  
   React.useEffect(() => {
     isDraggingTimelineRef.current = isDraggingTimeline;
   }, [isDraggingTimeline]);
 
-  // ⚡ Velocity Engine Interceptor: Adjusts standard timeline delta matching clip playback speed configuration
+  
   const currentClipData = React.useMemo(() => {
     const data = getClipAtTimelineTime(clips, currentTime);
     if (!data) return null;
 
     const { clip, localTime } = data;
-    // @ts-ignore
+    
     const speedConfig = clip.speedConfig || { type: 'constant', value: 1 };
     const speedValue = speedConfig.type === 'constant' ? (speedConfig.value ?? 1) : 1;
 
-    // Convert raw timeline local time to physical scaled video playback time
+    
     const trimStart = clip.trimStart ?? 0;
     const timelineDelta = localTime - trimStart;
     const adjustedLocalTime = trimStart + (timelineDelta * speedValue);
@@ -67,27 +67,27 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
     };
   }, [clips, currentTime]);
 
-  // Extract precise playback speed rate for the active segment
+  
   const currentSpeed = currentClipData?.speedValue ?? 1;
 
-  // Update current clip when timeline time changes
+  
   useEffect(() => {
     if (currentClipData) {
       const { clip, localTime } = currentClipData;
       
       if (currentClipId !== clip.id) {
-        // Switch to new clip
+        
         setCurrentClipId(clip.id);
         setCurrentClipLocalTime(localTime);
         
-        // Pause all other clips
+        
         videoRefs.current.forEach((ref, id) => {
           if (id !== clip.id && ref?.current) {
             ref.current.pauseAsync().catch(console.warn);
           }
         });
       } else {
-        // Same clip, just update time
+        
         setCurrentClipLocalTime(localTime);
       }
     } else {
@@ -95,7 +95,7 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
     }
   }, [currentClipData, currentClipId]);
 
-  // Seek to position when currentTime changes externally - throttled during dragging
+  
   useEffect(() => {
     if (isSeekingRef.current || !currentClipData) return;
     
@@ -103,7 +103,7 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
     const videoRef = videoRefs.current.get(clip.id);
     
     if (videoRef?.current && clip.type === 'video') {
-      // During timeline dragging, only seek when dragging stops
+      
       if (isDraggingTimeline) {
         return;
       }
@@ -117,15 +117,15 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
     }
   }, [currentTime, currentClipData, isDraggingTimeline]);
 
-  // Handle play/pause & Runtime Playback Speed adjustments
+  
   useEffect(() => {
     if (!currentClipData) return;
     
     const { clip } = currentClipData;
     
-    // For images, auto-advance to next clip after 3 seconds when playing
+    
     if (clip.type === 'photo' && isPlaying) {
-      const imageDisplayTime = 3000; // 3 seconds
+      const imageDisplayTime = 3000; 
       const timeout = setTimeout(() => {
         const currentIndex = clips.findIndex((c) => c.id === clip.id);
         if (currentIndex < clips.length - 1) {
@@ -133,7 +133,7 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
           const nextClipStart = nextClip.timelineStart ?? 0;
           onTimeUpdate?.(nextClipStart);
         } else {
-          // End of timeline - parent component should handle stopping playback
+          
           onEnd?.();
         }
       }, imageDisplayTime);
@@ -144,7 +144,7 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
     
     if (videoRef?.current && clip.type === 'video') {
       if (isPlaying) {
-        // Enforce active hardware rate mapping alongside async pipeline trigger
+        
         videoRef.current.setRateAsync(currentSpeed, true).catch(console.warn);
         videoRef.current.playAsync().catch(console.warn);
       } else {
@@ -153,7 +153,7 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
     }
   }, [isPlaying, currentClipData, clips, onTimeUpdate, onEnd, currentSpeed]);
 
-  // Setup playback status monitoring
+  
   useEffect(() => {
     if (!isPlaying || !currentClipData) {
       if (playbackStatusIntervalRef.current) {
@@ -163,7 +163,7 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
       return;
     }
 
-    // Poll for playback status updates - throttled for performance
+    
     playbackStatusIntervalRef.current = setInterval(() => {
       if (!currentClipData || isDraggingTimelineRef.current) return;
       
@@ -176,37 +176,37 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
             const localTime = status.positionMillis / 1000;
             setCurrentClipLocalTime(localTime);
             
-            // Throttle timeline updates to reduce lag
+            
             const now = Date.now();
-            if (now - lastUpdateTimeRef.current < 100) return; // Update max every 100ms
+            if (now - lastUpdateTimeRef.current < 100) return; 
             lastUpdateTimeRef.current = now;
             
-            // ⚡ Reverse Matrix Map: Convert native video time back to timeline duration format factoring speed rate
+            
             const timelineStart = clip.timelineStart ?? 0;
             const trimStart = clip.trimStart ?? 0;
             const timelineTime = timelineStart + (localTime - trimStart) / currentSpeed;
             
-            // Update timeline time
+            
             onTimeUpdate?.(Math.max(0, timelineTime));
             
-            // Check if clip ended
+            
             if (status.didJustFinish || (localTime >= (clip.trimEnd ?? clip.duration))) {
-              // Move to next clip or end
+              
               const currentIndex = clips.findIndex((c) => c.id === clip.id);
               if (currentIndex < clips.length - 1) {
-                // Switch to next clip
+                
                 const nextClip = clips[currentIndex + 1];
                 const nextClipStart = nextClip.timelineStart ?? 0;
                 onTimeUpdate?.(nextClipStart);
               } else {
-                // End of timeline
+                
                 onEnd?.();
               }
             }
           }
         }).catch(console.warn);
       }
-    }, 100); // Reduced to 10fps for better performance
+    }, 100); 
 
     return () => {
       if (playbackStatusIntervalRef.current) {
@@ -216,10 +216,10 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
     };
   }, [isPlaying, currentClipData, clips, onTimeUpdate, onEnd, currentSpeed]);
 
-  // Handle video load
+  
   const handleVideoLoad = useCallback((clipId: string, status: any) => {
     if (status.isLoaded && clipId === currentClipId) {
-      // Seek to correct position
+      
       const localTime = currentClipLocalTime;
       const videoRef = videoRefs.current.get(clipId);
       if (videoRef?.current) {
@@ -235,7 +235,7 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
     }
   }, [currentClipId, currentClipLocalTime, isPlaying, onLoad, currentSpeed]);
 
-  // Render current clip
+  
   if (!currentClipData) {
     console.warn('🎬 MultiClipPlayer: currentClipData is null - clips.length:', clips?.length ?? 0, 'currentTime:', currentTime);
     return <View style={[styles.container, { width: '100%' }]} />;
@@ -244,7 +244,7 @@ const MultiClipPlayer: React.FC<MultiClipPlayerProps> = ({
   const { clip } = currentClipData;
   console.log('🎬 MultiClipPlayer: Rendering clip - id:', clip.id, 'uri:', clip.uri?.substring(0, 50), 'type:', clip.type, 'localTime:', currentClipData.localTime);
 
-  // Create or get video ref
+  
   const videoRef = useMemo(() => {
     if (clip.type === 'video') {
       let ref = videoRefs.current.get(clip.id);
@@ -299,5 +299,5 @@ const styles = StyleSheet.create({
   },
 });
 
-// Memoize to prevent unnecessary re-renders
+
 export default memo(MultiClipPlayer);

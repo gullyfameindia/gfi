@@ -8,13 +8,13 @@ interface FilteredImageProps extends ImageProps {
   source: { uri: string };
 }
 
-/**
- * Image component with filter support using overlay effects
- * Uses View overlays with colored backgrounds and opacity to simulate filter effects
- * This approach works without requiring native modules
- */
+
+
+
+
+
 const FilteredImage: React.FC<FilteredImageProps> = ({ filter, style, ...props }) => {
-  // If no filter or Original filter, render normal image
+  
   if (!filter || filter.name === 'Original') {
     return <Image {...props} style={style} />;
   }
@@ -23,7 +23,7 @@ const FilteredImage: React.FC<FilteredImageProps> = ({ filter, style, ...props }
 
   const filterOverlayStyle = getFilterOverlayFromProperties(filter);
 
-  // Get brightness overlay
+  
   const getBrightnessOverlay = (): ViewStyle | null => {
     if (!filter) return null;
 
@@ -49,14 +49,14 @@ const FilteredImage: React.FC<FilteredImageProps> = ({ filter, style, ...props }
     return null;
   };
 
-  // Get contrast overlay
+  
   const getContrastOverlay = (): ViewStyle | null => {
     if (!filter) return null;
 
     const contrast = filter.contrast || 1.0;
 
     if (contrast > 1.0 && filter.name !== 'Grayscale') {
-      // High contrast - dark overlay
+      
       const contrastOverlay: ViewStyle = {
         ...StyleSheet.absoluteFillObject,
         pointerEvents: 'none',
@@ -65,7 +65,7 @@ const FilteredImage: React.FC<FilteredImageProps> = ({ filter, style, ...props }
       };
       return contrastOverlay;
     } else if (contrast < 1.0 && filter.name !== 'Grayscale') {
-      // Low contrast - light overlay
+      
       const contrastOverlay: ViewStyle = {
         ...StyleSheet.absoluteFillObject,
         pointerEvents: 'none',
@@ -85,17 +85,17 @@ const FilteredImage: React.FC<FilteredImageProps> = ({ filter, style, ...props }
     <View style={style}>
       <Image {...props} style={StyleSheet.absoluteFill} />
       
-      {/* Filter color overlay */}
+      {}
       {filterOverlayStyle && (
         <View style={filterOverlayStyle} />
       )}
       
-      {/* Contrast overlay */}
+      {}
       {contrastOverlayStyle && (
         <View style={contrastOverlayStyle} />
       )}
       
-      {/* Brightness overlay */}
+      {}
       {brightnessOverlayStyle && (
         <View style={brightnessOverlayStyle} />
       )}

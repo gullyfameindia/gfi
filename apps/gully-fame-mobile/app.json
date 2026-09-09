@@ -3,7 +3,7 @@
     "name": "gully-fame-mobile",
     "slug": "gully-fame-mobile",
     "version": "1.0.0",
-    "backgroundColor": "#3C2610", 
+    "backgroundColor": "#3C2610",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "gullyfamemobile",
@@ -47,6 +47,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-dev-client",
       "@react-native-google-signin/google-signin",
       [
         "expo-media-library",
@@ -62,10 +63,19 @@
           "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
-      ]
+      ],
+      "@sentry/react-native",
+      "expo-asset",
+      "expo-font",
+      "expo-image",
+      "expo-secure-store",
+      "expo-splash-screen",
+      "expo-status-bar",
+      "expo-video",
+      "expo-web-browser"
     ],
     "experiments": {
-      "typedRoutes": true,
+      "typedRoutes": false,
       "reactCompiler": false
     },
     "extra": {

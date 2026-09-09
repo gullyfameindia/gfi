@@ -63,11 +63,11 @@ export default function GullyFameHome() {
   const [dimensions, setDimensions] = useState(getDimensions());
   const insets = useSafeAreaInsets();
 
-  // Feed Tabs State
+  
   const [feedTab, setFeedTab] = useState<"trending" | "for-you" | "popular" | "saved">("trending");
   const [feedLoading, setFeedLoading] = useState(false);
 
-  // API States
+  
   const [banners, setBanners] = useState<homePageHeroSlidesAPIData[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [trendingData, setTrendingData] = useState<any[]>([]);
@@ -79,11 +79,11 @@ export default function GullyFameHome() {
   const [upcomingCompetitions, setUpcomingCompeitions] = useState<any[]>(upcomingCompetitionsMock);
   const [topCompetitors, setTopCompetitors] = useState<any[]>([]);
 
-  // Reel viewer state
+  
   const [showReelViewer, setShowReelViewer] = useState(false);
   const [selectedReelIndex, setSelectedReelIndex] = useState(0);
 
-  // Animations
+  
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const liveDotBlink = useRef(new Animated.Value(1)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -109,36 +109,36 @@ export default function GullyFameHome() {
       }
     }
 
-    // Load feed data from feedService with mock fallback
+    
     async function loadFeedData() {
       try {
-        // Load categories
+        
         const categoriesResult = await feedService.getCategories();
         if (categoriesResult.success && categoriesResult.data) {
           setCategories(categoriesResult.data as any[]);
           console.log(`[HomeScreen] Loaded ${categoriesResult.data.length} categories (${categoriesResult.message})`);
         }
 
-        // Load trending reels
+        
         const trendingResult = await feedService.getTrendingReels(1, 10);
         if (trendingResult.success && trendingResult.data) {
           setTrendingData(trendingResult.data.reels as any[]);
           console.log(`[HomeScreen] Loaded ${trendingResult.data.reels.length} trending reels (${trendingResult.message})`);
         }
 
-        // Load for you reels
+        
         const forYouResult = await feedService.getForYouReels(1, 10);
         if (forYouResult.success && forYouResult.data) {
           setForYouData(forYouResult.data.reels as any[]);
         }
 
-        // Load popular reels
+        
         const popularResult = await feedService.getPopularReels(1, 10);
         if (popularResult.success && popularResult.data) {
           setPopularData(popularResult.data.reels as any[]);
         }
 
-        // Load saved reels
+        
         const savedResult = await feedService.getSavedReels(1, 10);
         if (savedResult.success && savedResult.data) {
           setSavedData(savedResult.data.reels as any[]);
@@ -152,12 +152,12 @@ export default function GullyFameHome() {
     loadFeedData();
   }, []);
 
-  // Formatted Data Memos
+  
   const liveCompetitionsFull = useMemo(
     () =>
       liveCompetitions.map((comp) => ({
         defaultThumbnailImage: require("@assets/images/trending_reel2.png"),
-        // ✅ FIX: Coerce input to safe number types
+        
         people: convertToFormattedString(Number(comp.participants ?? 0)),
         endDate: comp.endDate ? String(comp.endDate) : new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
         prize: convertToFormattedPrize(comp.prize),
@@ -211,7 +211,7 @@ export default function GullyFameHome() {
     };
   }, []);
 
-  // Animations setup (Blink and Heartbeat)
+  
   useEffect(() => {
     fadeAnim.setValue(1);
     const blinkAnimation = Animated.loop(
@@ -374,7 +374,7 @@ export default function GullyFameHome() {
         return <CategoriesCarousel categories={categories}></CategoriesCarousel>;
 
       case "trending":
-        // Show feed tabs and selected feed data
+        
         const currentFeedData = 
           feedTab === "trending" ? trendingData :
           feedTab === "for-you" ? forYouData :
@@ -389,7 +389,7 @@ export default function GullyFameHome() {
               </View>
             </View>
 
-            {/* Feed Tabs */}
+            {}
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -615,7 +615,7 @@ export default function GullyFameHome() {
                       <View style={styles.compInfoRow}>
                         <View style={styles.compInfoItem}>
                           <LimitedTimeEventClockIcon />
-                          {/* ✅ FIX: Date String type safety guard */}
+                          {}
                           <Text style={styles.upcomingCompDeadline}>
                             {convertDateToDaysLeft(comp.endDate ? String(comp.endDate) : "")} Days Left
                           </Text>
@@ -701,7 +701,7 @@ export default function GullyFameHome() {
                       <View style={styles.compInfoRow}>
                         <View style={styles.compInfoItem}>
                           <LimitedTimeEventClockIcon></LimitedTimeEventClockIcon>
-                          {/* ✅ FIX: Date String type safety guard */}
+                          {}
                           <Text style={styles.upcomingCompDeadline}>
                             {convertDateToDaysLeft(comp.endDate ? String(comp.endDate) : "")} Days Left
                           </Text>
@@ -792,7 +792,7 @@ export default function GullyFameHome() {
                       </View>
                       <View style={styles.viewsRow}>
                         <ViewsEyeIcon size={15}></ViewsEyeIcon>
-                        {/* ✅ FIX: Number coercion format safety */}
+                        {}
                         <Text style={styles.pastCompViews}>
                           {convertToFormattedString(Number(comp.views ?? 0))} Views
                         </Text>
@@ -868,7 +868,7 @@ export default function GullyFameHome() {
                   <Text style={styles.hallOfFameName} numberOfLines={1}>
                     {competitor.name}
                   </Text>
-                  {/* ✅ FIX: Coerce leader stats to safe numbers */}
+                  {}
                   <Text style={styles.hallOfFamePoints}>
                     {convertToFormattedString(Number(competitor.points ?? 0))} pts
                   </Text>

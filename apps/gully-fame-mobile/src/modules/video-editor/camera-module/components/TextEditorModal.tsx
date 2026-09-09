@@ -1,4 +1,4 @@
-// PATH: apps/gully-fame-mobile/src/modules/video-editor/camera-module/components/TextEditorModal.tsx
+
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
@@ -45,7 +45,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
   const [textAlign, setTextAlign] = useState<TextAlign>('center');
   const [hasBackground, setHasBackground] = useState(false);
   
-  // Keep original data intact
+  
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(5);
   const [x, setX] = useState(0.5);
@@ -53,7 +53,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
   const [rotation, setRotation] = useState(0);
   const [opacity, setOpacity] = useState(1);
 
-  // Tab state fixed: 'font' | 'color'
+  
   const [activeTab, setActiveTab] = useState<'font' | 'color'>('font');
   const inputRef = useRef<TextInput>(null);
 
@@ -66,7 +66,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
         setTextAlign(overlay.textAlign || 'center');
         setHasBackground(!!overlay.backgroundColor);
         
-        // Restore timeline/position data
+        
         setStartTime(overlay.startTime ?? 0);
         setEndTime(overlay.endTime ?? 5);
         setX(overlay.x ?? 0.5);
@@ -74,7 +74,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
         setRotation(overlay.rotation ?? 0);
         setOpacity(overlay.opacity ?? 1);
       } else {
-        // Defaults for new text
+        
         setText('');
         setColor('#FFFFFF');
         setFontFamily(FONTS[0]);
@@ -86,7 +86,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
         setY(0.5);
       }
       
-      // Auto focus keyboard with slight delay for smooth animation
+      
       setTimeout(() => inputRef.current?.focus(), 150);
     } else {
       Keyboard.dismiss();
@@ -107,7 +107,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
       fontFamily,
       textAlign,
       backgroundColor: hasBackground ? (color === '#FFFFFF' ? '#000000' : '#FFFFFF') : undefined,
-      fontSize: 36, // Base size
+      fontSize: 36, 
       fontWeight: 'bold',
       x,
       y,
@@ -131,18 +131,18 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
         style={styles.container} 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {/* Transparent background overlay - Tapping outside saves and closes */}
+        {}
         <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={handleSave} />
 
         <SafeAreaView style={styles.safeArea}>
-          {/* Top Header - Done Button */}
+          {}
           <View style={styles.header}>
             <TouchableOpacity onPress={handleSave} style={styles.doneButton}>
               <Text style={styles.doneText}>Done</Text>
             </TouchableOpacity>
           </View>
 
-          {/* Main Typing Area */}
+          {}
           <View style={styles.typingArea} pointerEvents="box-none">
             <View style={[
               styles.textInputWrapper,
@@ -170,14 +170,14 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
             </View>
           </View>
 
-          {/* Bottom Tools Menu (Above Keyboard) */}
+          {}
           <View style={styles.toolsContainer}>
             <View style={styles.dragIndicator} />
             
-            {/* Main Toolbar Icons */}
+            {}
             <View style={styles.toolbarRow}>
               
-              {/* Keyboard Icon */}
+              {}
               <TouchableOpacity style={styles.iconButtonSolid} onPress={() => inputRef.current?.focus()}>
                 <Svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                   <Rect x="2" y="6" width="20" height="12" rx="2" stroke="#FFF" strokeWidth="2"/>
@@ -187,24 +187,24 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
                 </Svg>
               </TouchableOpacity>
 
-              {/* Font Style Tab */}
+              {}
               <TouchableOpacity onPress={() => setActiveTab('font')}>
                 <Text style={[styles.toolIconText, activeTab === 'font' && styles.activeToolText]}>Aa</Text>
               </TouchableOpacity>
 
-              {/* Color Wheel Tab */}
+              {}
               <TouchableOpacity onPress={() => setActiveTab('color')}>
                 <View style={[styles.colorWheel, activeTab === 'color' && styles.activeColorWheel]}>
                   <View style={[styles.colorWheelInner, { backgroundColor: color }]} />
                 </View>
               </TouchableOpacity>
 
-              {/* Background Toggle */}
+              {}
               <TouchableOpacity style={styles.bgToggleButton} onPress={() => setHasBackground(!hasBackground)}>
                 <Text style={[styles.toolIconText, hasBackground && styles.activeToolText]}>A</Text>
               </TouchableOpacity>
 
-              {/* Alignment Toggle */}
+              {}
               <TouchableOpacity onPress={toggleAlignment}>
                 <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                   <Path d={textAlign === 'center' ? "M4 6H20M7 12H17M4 18H20" : textAlign === 'left' ? "M4 6H20M4 12H14M4 18H20" : "M4 6H20M10 12H20M4 18H20"} stroke="#FFF" strokeWidth="2" strokeLinecap="round"/>
@@ -212,7 +212,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
               </TouchableOpacity>
             </View>
 
-            {/* Sub-menu (Fonts or Colors) */}
+            {}
             <View style={styles.subMenuContainer}>
               {activeTab === 'font' ? (
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.fontScroll}>

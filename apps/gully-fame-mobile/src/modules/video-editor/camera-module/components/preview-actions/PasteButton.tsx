@@ -69,7 +69,7 @@ const PasteButton: React.FC<PasteButtonProps> = ({ onPress, onPaste }) => {
         onRequestClose={() => setShowModal(false)}
       >
         <SafeAreaView style={styles.modalContainer}>
-          {/* Header */}
+          {}
           <View style={styles.modalHeader}>
             <TouchableOpacity onPress={() => setShowModal(false)} style={styles.closeButton}>
               <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -87,7 +87,7 @@ const PasteButton: React.FC<PasteButtonProps> = ({ onPress, onPaste }) => {
           </View>
 
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-            {/* Info */}
+            {}
             <View style={styles.infoBox}>
               <Text style={styles.infoTitle}>Clipboard Content</Text>
               <Text style={styles.infoText}>
@@ -95,7 +95,7 @@ const PasteButton: React.FC<PasteButtonProps> = ({ onPress, onPaste }) => {
               </Text>
             </View>
 
-            {/* Clipboard Content Display */}
+            {}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>Content Preview</Text>
               <View style={styles.contentBox}>
@@ -108,7 +108,7 @@ const PasteButton: React.FC<PasteButtonProps> = ({ onPress, onPaste }) => {
               <Text style={styles.charCount}>{clipboardContent.length} characters</Text>
             </View>
 
-            {/* Options */}
+            {}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>Paste As</Text>
               <View style={styles.optionsContainer}>
@@ -156,7 +156,7 @@ const PasteButton: React.FC<PasteButtonProps> = ({ onPress, onPaste }) => {
               </View>
             </View>
 
-            {/* Paste Button */}
+            {}
             <TouchableOpacity
               style={[styles.pasteButton, !clipboardContent.trim() && styles.pasteButtonDisabled]}
               onPress={handlePaste}
@@ -165,7 +165,7 @@ const PasteButton: React.FC<PasteButtonProps> = ({ onPress, onPaste }) => {
               <Text style={styles.pasteButtonText}>Paste</Text>
             </TouchableOpacity>
 
-            {/* Tips */}
+            {}
             <View style={styles.tipsBox}>
               <Text style={styles.tipsTitle}>💡 Tips:</Text>
               <Text style={styles.tipsText}>

@@ -1,12 +1,12 @@
-/**
- * Video editing types for segment-based speed editing
- */
+
+
+
 
 export interface SpeedSegment {
   id: string;
-  startTime: number; // Start time in seconds
-  endTime: number; // End time in seconds
-  speed: number; // Speed multiplier (0.3, 0.5, 1, 2, 3, 4)
+  startTime: number; 
+  endTime: number; 
+  speed: number; 
 }
 
 export interface VideoSegment {
@@ -14,18 +14,18 @@ export interface VideoSegment {
   startTime: number;
   endTime: number;
   speed: number;
-  thumbnailUri?: string; // Optional thumbnail for this segment
+  thumbnailUri?: string; 
 }
 
-/**
- * Converts a clip with speed segments to individual video segments
- */
+
+
+
 export function createVideoSegmentsFromClip(
   duration: number,
   segments: SpeedSegment[]
 ): VideoSegment[] {
   if (segments.length === 0) {
-    // Default: single segment at 1x
+    
     return [
       {
         id: 'segment-0',
@@ -44,9 +44,9 @@ export function createVideoSegmentsFromClip(
   }));
 }
 
-/**
- * Gets the speed segment at a specific time
- */
+
+
+
 export function getSegmentAtTime(
   segments: SpeedSegment[],
   time: number

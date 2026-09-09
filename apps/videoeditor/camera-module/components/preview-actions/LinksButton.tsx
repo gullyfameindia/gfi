@@ -83,7 +83,7 @@ const LinksButton: React.FC<LinksButtonProps> = ({ onPress, onLinkAdd, links = [
         onRequestClose={() => setShowModal(false)}
       >
         <SafeAreaView style={styles.modalContainer}>
-          {/* Header */}
+          {}
           <View style={styles.modalHeader}>
             <TouchableOpacity onPress={() => setShowModal(false)} style={styles.closeButton}>
               <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -101,7 +101,7 @@ const LinksButton: React.FC<LinksButtonProps> = ({ onPress, onLinkAdd, links = [
           </View>
 
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-            {/* URL Input */}
+            {}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>URL</Text>
               <TextInput
@@ -115,7 +115,7 @@ const LinksButton: React.FC<LinksButtonProps> = ({ onPress, onLinkAdd, links = [
               />
             </View>
 
-            {/* Link Text Input */}
+            {}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>Link Text</Text>
               <TextInput
@@ -129,7 +129,7 @@ const LinksButton: React.FC<LinksButtonProps> = ({ onPress, onLinkAdd, links = [
               <Text style={styles.charCount}>{text.length}/50</Text>
             </View>
 
-            {/* Info */}
+            {}
             <View style={styles.infoBox}>
               <Text style={styles.infoTitle}>How it works:</Text>
               <Text style={styles.infoText}>
@@ -138,7 +138,7 @@ const LinksButton: React.FC<LinksButtonProps> = ({ onPress, onLinkAdd, links = [
               </Text>
             </View>
 
-            {/* Add Button */}
+            {}
             <TouchableOpacity
               style={[styles.addButton, (!url.trim() || !text.trim()) && styles.addButtonDisabled]}
               onPress={handleAddLink}
@@ -147,7 +147,7 @@ const LinksButton: React.FC<LinksButtonProps> = ({ onPress, onLinkAdd, links = [
               <Text style={styles.addButtonText}>Add Link</Text>
             </TouchableOpacity>
 
-            {/* Existing Links */}
+            {}
             {links.length > 0 && (
               <View style={styles.section}>
                 <Text style={styles.sectionLabel}>Links ({links.length})</Text>

@@ -6,9 +6,9 @@ interface HomeScreenProps {
   onOpenCamera: () => void;
 }
 
-/**
- * Entry screen with a centered "Upload" button that opens the camera.
- */
+
+
+
 const HomeScreen: React.FC<HomeScreenProps> = ({ onOpenCamera }) => {
   return (
     <SafeAreaView style={cameraStyles.homeContainer}>

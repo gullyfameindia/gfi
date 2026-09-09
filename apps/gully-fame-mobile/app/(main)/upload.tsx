@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Alert } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import VideoEditorModule from '@modules/video-editor';
+
+
+let VideoEditorModule: any = null;
 
 const CameraUploadScreen = () => {
   const params = useLocalSearchParams();
@@ -11,6 +13,24 @@ const CameraUploadScreen = () => {
   const entryFee = params.entryFee ? String(params.entryFee) : null;
   const [showVideoEditor, setShowVideoEditor] = useState(false);
   const [roleVerified, setRoleVerified] = useState(false);
+  const [isVideoEditorLoaded, setIsVideoEditorLoaded] = useState(false);
+
+  
+  useEffect(() => {
+    if (showVideoEditor && !isVideoEditorLoaded) {
+      (async () => {
+        try {
+          const module = await import('@modules/video-editor');
+          VideoEditorModule = module.default;
+          setIsVideoEditorLoaded(true);
+        } catch (error) {
+          console.error('[CameraUploadScreen] Failed to load VideoEditorModule:', error);
+          Alert.alert('Error', 'Failed to load video editor');
+          setShowVideoEditor(false);
+        }
+      })();
+    }
+  }, [showVideoEditor, isVideoEditorLoaded]);
 
   useEffect(() => {
     const verifyRole = async () => {
@@ -25,7 +45,7 @@ const CameraUploadScreen = () => {
         );
       } else {
         setRoleVerified(true);
-        // Open VideoEditor directly instead of camera screen
+        
         setShowVideoEditor(true);
       }
     };
@@ -34,7 +54,7 @@ const CameraUploadScreen = () => {
 
   const handleVideoEditorExport = (clips: any[]) => {
     setShowVideoEditor(false);
-    // Navigate to upload screen with clips
+    
     router.push({
       pathname: '/(main)/camera/upload',
       params: {
@@ -56,6 +76,9 @@ const CameraUploadScreen = () => {
   }
 
   if (showVideoEditor) {
+    if (!isVideoEditorLoaded) {
+      return <View style={{ flex: 1, backgroundColor: '#000', justifyContent: 'center', alignItems: 'center' }} />;
+    }
     return (
       <VideoEditorModule
         onExport={handleVideoEditorExport}

@@ -27,7 +27,7 @@ export interface ReelsResponse {
   total?: number;
 }
 
-// Get Reels Feed
+
 export async function getReelsFeed(params?: any): Promise<ApiResponse<ReelsResponse>> {
   try {
     console.log("[reelsService] GET Reels Feed");
@@ -83,7 +83,7 @@ export async function getReelsFeed(params?: any): Promise<ApiResponse<ReelsRespo
   }
 }
 
-// Get Reel by ID
+
 export async function getReelById(reelId: string): Promise<ApiResponse<Reel>> {
   try {
     console.log("[reelsService] GET Reel By ID", { reelId });
@@ -119,7 +119,7 @@ export async function getReelById(reelId: string): Promise<ApiResponse<Reel>> {
   }
 }
 
-// Like Reel
+
 export async function likeReel(reelId: string): Promise<ApiResponse<any>> {
   try {
     console.log("[reelsService] LIKE Reel", { reelId });
@@ -153,7 +153,7 @@ export async function likeReel(reelId: string): Promise<ApiResponse<any>> {
   }
 }
 
-// Unlike Reel
+
 export async function unlikeReel(reelId: string): Promise<ApiResponse<any>> {
   try {
     console.log("[reelsService] UNLIKE Reel", { reelId });
@@ -187,7 +187,7 @@ export async function unlikeReel(reelId: string): Promise<ApiResponse<any>> {
   }
 }
 
-// Comment on Reel
+
 export async function commentReel(reelId: string, comment: string): Promise<ApiResponse<any>> {
   try {
     console.log("[reelsService] COMMENT Reel", { reelId, comment });
@@ -221,12 +221,12 @@ export async function commentReel(reelId: string, comment: string): Promise<ApiR
   }
 }
 
-// Upload Reel
+
 export async function uploadReel(formData: FormData): Promise<ApiResponse<Reel>> {
   try {
     console.log("[reelsService] UPLOAD Reel");
 
-    // Use GET_UPLOAD_URL endpoint (presigned URL flow)
+    
     const response = await apiClient.post<any>(API_ENDPOINTS.REELS.GET_UPLOAD_URL, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
@@ -267,12 +267,15 @@ export async function getUserReels(
   try {
     console.log("[reelsService] GET User Reels", { userId, params });
 
-    // Use the USER.GET_REELS endpoint which is "user/reels"
-    // This gets the logged-in user's reels, not someone else's
-    const endpoint = API_ENDPOINTS.USER.GET_REELS;
-    console.log("[reelsService] Using endpoint:", endpoint);
     
-    const response = await apiClient.get<any>(endpoint, { params });
+    
+    const queryParams = {
+      ...params,
+      userId, 
+    };
+    console.log("[reelsService] Using endpoint: reels with params:", queryParams);
+    
+    const response = await apiClient.get<any>("reels", { params: queryParams });
     const responseData = response.data as any;
 
     console.log("[reelsService] Response code:", responseData.code);
@@ -290,6 +293,22 @@ export async function getUserReels(
       }
 
       console.log("[reelsService] Reels found:", reels.length);
+      
+      
+      if (reels.length > 0) {
+        console.log("[reelsService] ===== RAW FIRST REEL FROM API =====");
+        console.log("[reelsService] RAW Reel (stringified):", JSON.stringify(reels[0], null, 2));
+        console.log("[reelsService] ALL KEYS in first reel:", Object.keys(reels[0]));
+        console.log("[reelsService] videoUrl field:", reels[0].videoUrl);
+        console.log("[reelsService] thumbnail field:", reels[0].thumbnail);
+        console.log("[reelsService] checking video_url:", (reels[0] as any).video_url);
+        console.log("[reelsService] checking mediaUrl:", (reels[0] as any).mediaUrl);
+        console.log("[reelsService] checking media.url:", (reels[0] as any).media?.url);
+        console.log("[reelsService] checking contentUrl:", (reels[0] as any).contentUrl);
+        console.log("[reelsService] checking url:", (reels[0] as any).url);
+        console.log("[reelsService] =====================================");
+      }
+      
       reels.forEach((reel: any) => {
         console.log("[reelsService]   - Reel ID:", reel._id || reel.id, "- Status:", reel.status || reel.published);
       });

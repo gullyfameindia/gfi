@@ -16,16 +16,16 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
 import Svg, { Path, Circle } from "react-native-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-// TODO: Uncomment when payment APIs are ready
-// import { initiateRazorpayPayment, handlePaymentError, extractAmountFromString } from "../../../src/api/services/paymentService";
+
+
 import { getUserSession } from "../../../src/utils/userSession";
 
 const { width } = Dimensions.get("window");
 
-// TODO: Uncomment Razorpay options when payment APIs are ready
+
 const paymentMethods = [
-  // { id: "razorpay", label: "Razorpay UPI", helper: "Pay with UPI / Netbanking" },
-  // { id: "card", label: "Credit / Debit Card", helper: "Visa, Mastercard, Rupay" },
+  
+  
   { id: "wallet", label: "GFI Coins Wallet", helper: "Use available coin balance" },
 ];
 
@@ -37,13 +37,13 @@ export default function CompetitionPaymentScreen() {
 
   const competitionName = competitionNameParam ? decodeURIComponent(competitionNameParam) : "Gully Fame Competition";
   const entryFee = entryFeeParam ? decodeURIComponent(entryFeeParam) : "Free Entry";
-  // Default to wallet since Razorpay is disabled
+  
   const [selectedMethod, setSelectedMethod] = useState("wallet");
   const [showApprovalModal, setShowApprovalModal] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [userSession, setUserSession] = useState<any>(null);
 
-  // Load user session data
+  
   useEffect(() => {
     const loadUserData = async () => {
       try {
@@ -57,10 +57,10 @@ export default function CompetitionPaymentScreen() {
   }, []);
 
   const handlePay = async () => {
-    // Handle wallet payment (existing flow)
+    
     if (selectedMethod === "wallet") {
       try {
-        // Store joined competition in AsyncStorage
+        
         const joinedCompetitions = await AsyncStorage.getItem("joinedCompetitions");
         const joined = joinedCompetitions ? JSON.parse(joinedCompetitions) : {};
         joined[competitionId] = {
@@ -86,100 +86,100 @@ export default function CompetitionPaymentScreen() {
       return;
     }
 
-    // TODO: Uncomment when payment APIs are ready
-    // Handle Razorpay/Card payment
-    /*
-    if (selectedMethod === "razorpay" || selectedMethod === "card") {
-      try {
-        setIsProcessing(true);
+    
+    
+    
 
-        // Extract amount (handle "Free Entry" case)
-        if (entryFee.toLowerCase().includes("free")) {
-          Alert.alert("Free Entry", "This competition has free entry. No payment required.");
-          setIsProcessing(false);
-          return;
-        }
 
-        let amount: number;
-        try {
-          amount = extractAmountFromString(entryFee);
-        } catch (error) {
-          Alert.alert("Invalid Amount", "Unable to process payment. Please check the entry fee.");
-          setIsProcessing(false);
-          return;
-        }
 
-        // Prepare payment parameters
-        const paymentParams = {
-          amount: amount,
-          description: `Entry fee for ${competitionName}`,
-          competitionId: competitionId,
-          competitionName: competitionName,
-          userId: userSession?.userId || "",
-          userEmail: userSession?.email || "",
-          userContact: userSession?.mobile || "",
-          userName: userSession ? `${userSession.firstName} ${userSession.lastName}`.trim() : "",
-        };
 
-        // Initiate Razorpay payment
-        const paymentResult = await initiateRazorpayPayment(paymentParams);
 
-        setIsProcessing(false);
 
-        if (paymentResult.success) {
-          // Payment successful
-          try {
-            // Store joined competition in AsyncStorage
-            const joinedCompetitions = await AsyncStorage.getItem("joinedCompetitions");
-            const joined = joinedCompetitions ? JSON.parse(joinedCompetitions) : {};
-            joined[competitionId] = {
-              id: competitionId,
-              name: competitionName,
-              status: "pending",
-              joinedAt: new Date().toISOString(),
-              paymentId: paymentResult.paymentId,
-              orderId: paymentResult.orderId,
-            };
-            await AsyncStorage.setItem("joinedCompetitions", JSON.stringify(joined));
 
-            // Show success modal
-            setShowApprovalModal(true);
-            setTimeout(() => {
-              setShowApprovalModal(false);
-              const encodedCompetitionName = encodeURIComponent(competitionName);
-              router.replace(
-                `/(main)/competition/upcoming/${competitionId}?competitionName=${encodedCompetitionName}&fromPayment=true` as any
-              );
-            }, 2500);
-          } catch (error) {
-            console.error("Error saving payment data:", error);
-            // Even if saving fails, payment was successful
-            Alert.alert(
-              "Payment Successful",
-              "Your payment was successful. Please contact support if you don't see your entry.",
-              [
-                {
-                  text: "OK",
-                  onPress: () => {
-                    router.back();
-                  },
-                },
-              ]
-            );
-          }
-        } else {
-          // Payment failed or cancelled
-          handlePaymentError(paymentResult);
-          // Don't navigate away - let user retry
-        }
-      } catch (error: any) {
-        setIsProcessing(false);
-        console.error("Error processing payment:", error);
-        Alert.alert("Payment Error", error.message || "An unexpected error occurred. Please try again.");
-      }
-      return;
-    }
-    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   };
 
   const handleCloseModal = () => {

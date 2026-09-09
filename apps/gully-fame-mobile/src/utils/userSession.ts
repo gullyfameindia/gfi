@@ -40,10 +40,10 @@ export const saveUserSession = async (
     await setAuthToken(token);
     await AsyncStorage.setItem("isLoggedIn", "true");
 
-    // Extract userId - try multiple field names
+    
     let userId = userData?.id || (userData as any)?._id || "";
 
-    // If we still don't have userId, try to fetch it from the profile endpoint
+    
     if (!userId) {
       if (__DEV__) {
         console.log("⚠️ No userId found in userData, attempting to fetch from profile endpoint");

@@ -1,5 +1,5 @@
-// Created by Kiro
-// Reels Context - Manage reels feed state globally
+
+
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { reelsService } from '../api/services/reelsService';
@@ -31,18 +31,18 @@ export interface Comment {
 }
 
 interface ReelsContextType {
-  // State
+  
   reels: Reel[];
   selectedReel: Reel | null;
   reelComments: Comment[];
   loading: boolean;
   error: string | null;
 
-  // Pagination
+  
   page: number;
   hasMore: boolean;
 
-  // Actions
+  
   fetchReelsFeed: (pageNum?: number) => Promise<void>;
   fetchReelById: (id: string) => Promise<Reel | null>;
   fetchReelComments: (reelId: string) => Promise<void>;
@@ -58,18 +58,18 @@ interface ReelsContextType {
 const ReelsContext = createContext<ReelsContextType | undefined>(undefined);
 
 export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
-  // State
+  
   const [reels, setReels] = useState<Reel[]>([]);
   const [selectedReel, setSelectedReel] = useState<Reel | null>(null);
   const [reelComments, setReelComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Pagination
+  
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  // Fetch reels feed
+  
   const fetchReelsFeed = useCallback(async (pageNum: number = 1) => {
     try {
       setLoading(true);
@@ -96,21 +96,21 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  // Fetch single reel by ID
+  
   const fetchReelById = useCallback(
     async (id: string): Promise<Reel | null> => {
       try {
         setLoading(true);
         setError(null);
 
-        // Find in existing reels first
+        
         const existing = reels.find((r) => r.id === id);
         if (existing) {
           setSelectedReel(existing);
           return existing;
         }
 
-        // If not found, fetch from API
+        
         const result = await reelsService.getReelById(id);
 
         if (result.success && result.data) {
@@ -131,13 +131,13 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
     [reels]
   );
 
-  // Fetch reel comments
+  
   const fetchReelComments = useCallback(async (reelId: string) => {
     try {
       setLoading(true);
       setError(null);
 
-      // Mock comments - in real app, fetch from API
+      
       const mockComments: Comment[] = [
         {
           id: '1',
@@ -166,7 +166,7 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  // Like reel
+  
   const likeReel = useCallback(async (reelId: string): Promise<boolean> => {
     try {
       setError(null);
@@ -174,7 +174,7 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
       const result = await reelsService.likeReel(reelId);
 
       if (result.success) {
-        // Update reel in list
+        
         setReels((prev) =>
           prev.map((reel) =>
             reel.id === reelId
@@ -183,7 +183,7 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
           )
         );
 
-        // Update selected reel
+        
         if (selectedReel?.id === reelId) {
           setSelectedReel((prev) =>
             prev
@@ -204,7 +204,7 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [selectedReel]);
 
-  // Unlike reel
+  
   const unlikeReel = useCallback(async (reelId: string): Promise<boolean> => {
     try {
       setError(null);
@@ -212,7 +212,7 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
       const result = await reelsService.unlikeReel(reelId);
 
       if (result.success) {
-        // Update reel in list
+        
         setReels((prev) =>
           prev.map((reel) =>
             reel.id === reelId
@@ -221,7 +221,7 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
           )
         );
 
-        // Update selected reel
+        
         if (selectedReel?.id === reelId) {
           setSelectedReel((prev) =>
             prev
@@ -242,7 +242,7 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [selectedReel]);
 
-  // Comment on reel
+  
   const commentReel = useCallback(
     async (reelId: string, text: string): Promise<boolean> => {
       try {
@@ -251,7 +251,7 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
         const result = await reelsService.commentReel(reelId, text);
 
         if (result.success) {
-          // Add comment to list
+          
           const newComment: Comment = {
             id: Date.now().toString(),
             userId: 'currentUser',
@@ -263,7 +263,7 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
 
           setReelComments((prev) => [newComment, ...prev]);
 
-          // Update comment count
+          
           setReels((prev) =>
             prev.map((reel) =>
               reel.id === reelId
@@ -292,7 +292,7 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
     [selectedReel]
   );
 
-  // Upload reel
+  
   const uploadReel = useCallback(async (data: any): Promise<boolean> => {
     try {
       setLoading(true);
@@ -301,7 +301,7 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
       const result = await reelsService.uploadReel(data);
 
       if (result.success) {
-        // Add new reel to beginning of list
+        
         const newReel: Reel = {
           id: Date.now().toString(),
           title: data.title,
@@ -330,30 +330,30 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  // Clear error
+  
   const clearError = useCallback(() => {
     setError(null);
   }, []);
 
-  // Clear selected reel
+  
   const clearSelectedReel = useCallback(() => {
     setSelectedReel(null);
     setReelComments([]);
   }, []);
 
   const value: ReelsContextType = {
-    // State
+    
     reels,
     selectedReel,
     reelComments,
     loading,
     error,
 
-    // Pagination
+    
     page,
     hasMore,
 
-    // Actions
+    
     fetchReelsFeed,
     fetchReelById,
     fetchReelComments,
@@ -373,7 +373,7 @@ export const ReelsProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Custom hook to use ReelsContext
+
 export const useReels = () => {
   const context = useContext(ReelsContext);
   if (context === undefined) {

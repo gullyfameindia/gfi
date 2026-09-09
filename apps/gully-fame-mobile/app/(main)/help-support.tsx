@@ -1,4 +1,4 @@
-// File Route: apps/gully-fame-mobile/app/(main)/help-support.tsx
+
 
 import React, { useState } from "react";
 import {
@@ -15,7 +15,7 @@ import {
 import { router } from "expo-router";
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 
-// Dummy FAQs Data for Gully Fame
+
 const faqsData = [
   {
     id: 1,
@@ -44,9 +44,9 @@ export default function HelpSupportScreen() {
 
   const toggleFaq = (id: number) => {
     if (expandedFaq === id) {
-      setExpandedFaq(null); // Close if already open
+      setExpandedFaq(null); 
     } else {
-      setExpandedFaq(id); // Open selected
+      setExpandedFaq(id); 
     }
   };
 
@@ -62,12 +62,12 @@ export default function HelpSupportScreen() {
 
   const handleWhatsAppSupport = async () => {
     const message = "Hello Gully Fame Support team, I need some help regarding the app.";
-    const whatsappUrl = `whatsapp://send?phone=+919999999999&text=${encodeURIComponent(message)}`; // Replace with real support number
+    const whatsappUrl = `whatsapp://send?phone=+919999999999&text=${encodeURIComponent(message)}`; 
     const canOpen = await Linking.canOpenURL(whatsappUrl);
     if (canOpen) {
       await Linking.openURL(whatsappUrl);
     } else {
-      // Fallback to web link if WhatsApp app is not installed
+      
       await Linking.openURL(`https://wa.me/919999999999?text=${encodeURIComponent(message)}`);
     }
   };
@@ -76,7 +76,7 @@ export default function HelpSupportScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="chevron-back" size={28} color="#fff" />
@@ -87,7 +87,7 @@ export default function HelpSupportScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
-        {/* Top Illustration/Text Card */}
+        {}
         <View style={styles.topCard}>
           <Ionicons name="headset-outline" size={50} color="#EC9A15" style={{ marginBottom: 12 }} />
           <Text style={styles.topTitle}>How can we help you?</Text>
@@ -96,7 +96,7 @@ export default function HelpSupportScreen() {
           </Text>
         </View>
 
-        {/* Contact Modes */}
+        {}
         <Text style={styles.sectionTitle}>Contact Support</Text>
         <View style={styles.contactContainer}>
           <TouchableOpacity style={styles.contactCard} onPress={handleWhatsAppSupport} activeOpacity={0.8}>
@@ -116,7 +116,7 @@ export default function HelpSupportScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* FAQs Section */}
+        {}
         <Text style={styles.sectionTitle}>Frequently Asked Questions</Text>
         <View style={styles.faqContainer}>
           {faqsData.map((faq) => {

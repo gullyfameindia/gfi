@@ -1,10 +1,16 @@
-// Camera Service
-// Handles video recording, compression, and upload functionality
+
+
 
 import * as FileSystem from "expo-file-system";
-import * as MediaLibrary from "expo-media-library";
 import { ApiResponse } from "../types";
 import apiClient from "../axios";
+
+let MediaLibrary: any = null;
+try {
+  MediaLibrary = require("expo-media-library");
+} catch (e) {
+  console.warn("[cameraService] expo-media-library not available (requires dev build):", (e as any)?.message);
+}
 
 export interface VideoFile {
   uri: string;
@@ -28,12 +34,12 @@ export interface ReelUploadData {
   tags?: string[];
 }
 
-// Save video to media library
+
 export async function saveVideoToLibrary(videoUri: string): Promise<ApiResponse<string>> {
   try {
     console.log("[cameraService] Saving video to library:", videoUri);
 
-    // Request media library permissions
+    
     const permission = await MediaLibrary.requestPermissionsAsync();
     if (!permission.granted) {
       return {
@@ -44,7 +50,7 @@ export async function saveVideoToLibrary(videoUri: string): Promise<ApiResponse<
       };
     }
 
-    // Save video to media library
+    
     const asset = await MediaLibrary.createAssetAsync(videoUri);
     const album = await MediaLibrary.getAlbumAsync("Gully Fame");
 
@@ -72,7 +78,7 @@ export async function saveVideoToLibrary(videoUri: string): Promise<ApiResponse<
   }
 }
 
-//  Get video file info
+
 export async function getVideoFileInfo(videoUri: string): Promise<ApiResponse<VideoFile>> {
   try {
     console.log("[cameraService] Getting video file info:", videoUri);
@@ -113,7 +119,7 @@ export async function getVideoFileInfo(videoUri: string): Promise<ApiResponse<Vi
   }
 }
 
-//  Upload video to backend
+
 export async function uploadVideo(
   videoUri: string,
   reelData: ReelUploadData,
@@ -122,7 +128,7 @@ export async function uploadVideo(
   try {
     console.log("[cameraService] Uploading video:", { videoUri, reelData });
 
-    // Get video file info
+    
     const fileInfoResponse = await getVideoFileInfo(videoUri);
     if (!fileInfoResponse.success || !fileInfoResponse.data) {
       return {
@@ -135,7 +141,7 @@ export async function uploadVideo(
 
     const videoFile = fileInfoResponse.data;
 
-    // Create FormData
+    
     const formData = new FormData();
     formData.append("video", {
       uri: videoFile.uri,
@@ -155,7 +161,7 @@ export async function uploadVideo(
       formData.append("tags", JSON.stringify(reelData.tags));
     }
 
-    // Upload video
+    
     const response = await apiClient.post<any>("reels/upload", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
@@ -201,7 +207,7 @@ export async function uploadVideo(
   }
 }
 
-//  Delete video file
+
 export async function deleteVideoFile(videoUri: string): Promise<ApiResponse<boolean>> {
   try {
     console.log("[cameraService] Deleting video file:", videoUri);
@@ -226,14 +232,14 @@ export async function deleteVideoFile(videoUri: string): Promise<ApiResponse<boo
   }
 }
 
-//   Get video duration (requires FFmpeg)
+
 export async function getVideoDuration(videoUri: string): Promise<ApiResponse<number>> {
   try {
     console.log("[cameraService] Getting video duration:", videoUri);
 
-    // Note: This requires FFmpeg integration
-    // For now, return placeholder
-    // TODO: Implement with FFmpeg when available
+    
+    
+    
 
     return {
       success: true,
@@ -251,7 +257,7 @@ export async function getVideoDuration(videoUri: string): Promise<ApiResponse<nu
   }
 }
 
-//  Compress video (requires FFmpeg)
+
 export async function compressVideo(
   videoUri: string,
   quality: "low" | "medium" | "high" = "medium"
@@ -259,9 +265,9 @@ export async function compressVideo(
   try {
     console.log("[cameraService] Compressing video:", { videoUri, quality });
 
-    // Note: This requires FFmpeg integration
-    // For now, return original URI
-    // TODO: Implement with FFmpeg when available
+    
+    
+    
 
     return {
       success: true,

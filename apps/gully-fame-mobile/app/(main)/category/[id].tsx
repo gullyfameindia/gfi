@@ -21,7 +21,7 @@ import { getCategories } from "@/api/services/categoryService";
 
 const { width, height } = Dimensions.get("window");
 
-// Default category data (fallback)
+
 const defaultCategoryData = {
   name: "Category",
   tagline: "Explore amazing content",
@@ -167,7 +167,7 @@ const topPerformers = [
 ];
 
 
-// Competition Card Component with Animation
+
 const CompetitionCard = React.memo(({ comp, index, type }: any) => {
   const scaleAnim = React.useRef(new Animated.Value(0)).current;
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
@@ -190,13 +190,13 @@ const CompetitionCard = React.memo(({ comp, index, type }: any) => {
   }, []);
 
   const handlePress = React.useCallback(async () => {
-    // For upcoming competitions, validate KYC before allowing navigation
+    
     if (type !== "live") {
       const { validateKycBeforeCompetition } = await import('@utils/kycValidation');
       const isValid = await validateKycBeforeCompetition();
       
       if (!isValid) {
-        return; // KYC validation failed, user will be redirected
+        return; 
       }
     }
     
@@ -286,7 +286,7 @@ export default function CategoryDetailScreen() {
   
   const [activeTab, setActiveTab] = useState(tab === "reels" ? "reels" : "competitions");
 
-  // Fetch categories and find the matching one
+  
   useEffect(() => {
     const fetchCategoryData = async () => {
       try {
@@ -301,7 +301,7 @@ export default function CategoryDetailScreen() {
               name: foundCategory.name,
               tagline: foundCategory.tagline || `${foundCategory.name} content`,
               description: foundCategory.description || `Explore ${foundCategory.name}`,
-              banner: require("@assets/images/carousel1.png"), // Default banner
+              banner: require("@assets/images/carousel1.png"), 
               following: "0",
               activeContests: 0,
               topDancers: 0,
@@ -326,7 +326,7 @@ export default function CategoryDetailScreen() {
   const [selectedCategoryId, setSelectedCategoryId] = useState(id);
   const [statusFilter, setStatusFilter] = useState<"live" | "past" | "upcoming" | "all">("live");
   
-  // Memoize handlers to prevent unnecessary re-renders
+  
   const handleFilterChange = React.useCallback((status: "live" | "past" | "upcoming" | "all") => {
     setStatusFilter(status);
   }, []);
@@ -335,7 +335,7 @@ export default function CategoryDetailScreen() {
     setActiveTab(tabName);
   }, []);
   
-  // Blinking animation for live dot
+  
   const liveDotBlink = React.useRef(new Animated.Value(1)).current;
   
   React.useEffect(() => {
@@ -362,7 +362,7 @@ export default function CategoryDetailScreen() {
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
       
       <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Top Bar */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -370,7 +370,7 @@ export default function CategoryDetailScreen() {
             </Svg>
           </TouchableOpacity>
           
-          {/* Category Dropdown */}
+          {}
           <TouchableOpacity 
             style={styles.categoryDropdown}
             onPress={() => setFilterVisible(true)}
@@ -384,7 +384,7 @@ export default function CategoryDetailScreen() {
           <View style={{ width: 24 }} />
         </View>
 
-        {/* Hero Section */}
+        {}
         <ImageBackground
           source={category.banner}
           style={styles.heroSection}
@@ -409,7 +409,7 @@ export default function CategoryDetailScreen() {
           </LinearGradient>
         </ImageBackground>
 
-        {/* Stats Section */}
+        {}
         <View style={styles.statsSection}>
           <View style={styles.statItem}>
             <Svg width={26} height={26} viewBox="0 0 24 24" fill="none">
@@ -444,7 +444,7 @@ export default function CategoryDetailScreen() {
           </View>
         </View>
 
-        {/* Tab Buttons */}
+        {}
         <View style={styles.tabButtons}>
           <TouchableOpacity
             style={[styles.tabButton, activeTab === "competitions" && styles.tabButtonActive]}
@@ -467,7 +467,7 @@ export default function CategoryDetailScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Filter Options - Only show for competitions tab */}
+        {}
         {activeTab === "competitions" && (
           <View style={styles.filterContainer}>
             <View style={styles.filterRow}>
@@ -488,11 +488,11 @@ export default function CategoryDetailScreen() {
           </View>
         )}
 
-        {/* Content */}
+        {}
         {activeTab === "competitions" ? (
           <View style={styles.content}>
             {(() => {
-              // Filter competitions based on status
+              
               let filteredComps: any[] = [];
               
               if (statusFilter === "live") {
@@ -502,7 +502,7 @@ export default function CategoryDetailScreen() {
               } else if (statusFilter === "past") {
                 filteredComps = pastCompetitions.map(comp => ({ ...comp, type: "past" }));
               } else {
-                // All - combine all types
+                
                 filteredComps = [
                   ...liveCompetitions.map(comp => ({ ...comp, type: "live" })),
                   ...upcomingCompetitions.map(comp => ({ ...comp, type: "upcoming" })),
@@ -520,7 +520,7 @@ export default function CategoryDetailScreen() {
                 );
               }
 
-              // Group by type for display
+              
               const liveComps = filteredComps.filter(c => c.type === "live");
               const upcomingComps = filteredComps.filter(c => c.type === "upcoming");
               const pastComps = filteredComps.filter(c => c.type === "past");
@@ -598,7 +598,7 @@ export default function CategoryDetailScreen() {
                             style={styles.compCardNew}
                             activeOpacity={0.9}
                             onPress={() => {
-                              // Navigate to details page first
+                              
                               router.push(`/(main)/competition/upcoming/${comp.id}` as any);
                             }}
                           >
@@ -627,13 +627,13 @@ export default function CategoryDetailScreen() {
                                   style={styles.joinBtnNew}
                                   onPress={async (e) => {
                                     e.stopPropagation();
-                                    // Validate KYC before joining
+                                    
                                     const { validateKycBeforeCompetition } = await import('@utils/kycValidation');
                                     const isValid = await validateKycBeforeCompetition();
                                     if (!isValid) {
-                                      return; // KYC validation failed, user will be redirected
+                                      return; 
                                     }
-                                    // Navigate to details page first
+                                    
                                     router.push(`/(main)/competition/upcoming/${comp.id}` as any);
                                   }}
                                 >
@@ -698,13 +698,13 @@ export default function CategoryDetailScreen() {
               );
             })()}
 
-            {/* Top 3 Performers */}
+            {}
             <View style={styles.section}>
               <View style={[styles.sectionHeader, { justifyContent: 'center', width: '100%' }]}>
                 <Text style={[styles.sectionTitle, { textAlign: 'center', width: '100%' }]}>Top Three Performers This Week</Text>
               </View>
               <View style={styles.topDancersContainer}>
-                {/* Rank 2 - Left Side */}
+                {}
                 {topPerformers
                   .filter((d) => d.rank === 2)
                   .map((dancer) => {
@@ -716,7 +716,7 @@ export default function CategoryDetailScreen() {
                         key={dancer.rank} 
                         style={styles.topDancerSide}
                         onPress={() => {
-                          // Use userId from dancer data (will come from API)
+                          
                           const userId = dancer.userId || `performer${dancer.rank}`;
                           const firstName = dancer.firstName || dancer.name?.split(' ')[0] || dancer.name || 'User';
                           const lastName = dancer.lastName || dancer.name?.split(' ').slice(1).join(' ') || '';
@@ -753,7 +753,7 @@ export default function CategoryDetailScreen() {
                     );
                   })}
 
-                {/* Rank 1 - Center (Larger) */}
+                {}
                 {topPerformers
                   .filter((d) => d.rank === 1)
                   .map((dancer) => {
@@ -780,7 +780,7 @@ export default function CategoryDetailScreen() {
                         activeOpacity={0.8}
                       >
                         <View style={styles.dancerImageWrapper}>
-                          {/* Star Icon Above Head */}
+                          {}
                           <View style={styles.starIconWrapper}>
                             <Image
                               source={require("@assets/images/star.png")}
@@ -808,7 +808,7 @@ export default function CategoryDetailScreen() {
                     );
                   })}
 
-                {/* Rank 3 - Right Side */}
+                {}
                 {topPerformers
                   .filter((d) => d.rank === 3)
                   .map((dancer) => {
@@ -820,7 +820,7 @@ export default function CategoryDetailScreen() {
                         key={dancer.rank} 
                         style={styles.topDancerSide}
                         onPress={() => {
-                          // Use userId from dancer data (will come from API)
+                          
                           const userId = dancer.userId || `performer${dancer.rank}`;
                           const firstName = dancer.firstName || dancer.name?.split(' ')[0] || dancer.name || 'User';
                           const lastName = dancer.lastName || dancer.name?.split(' ').slice(1).join(' ') || '';
@@ -876,20 +876,20 @@ export default function CategoryDetailScreen() {
                   >
                     <View style={styles.reelStats}>
                       <View style={styles.reelStat}>
-                        {/* <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
-                          <Path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="#fff" strokeWidth={2}/>
-                          <Circle cx="12" cy="12" r="3" stroke="#fff" strokeWidth={2}/>
-                        </Svg> */}
-                        {/* <Text style={styles.reelStatText}>{reel.views}</Text> */}
+                        {
+
+
+}
+                        {}
                       </View>
                       <View style={styles.reelStat}>
-                        {/* <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
-                          <Path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="#FF6B6B"/>
-                        </Svg> */}
-                        {/* <Text style={styles.reelStatText}>{reel.likes}</Text> */}
+                        {
+
+}
+                        {}
                       </View>
                     </View>
-                    {/* <Text style={styles.reelCreator}>@{reel.creator}</Text> */}
+                    {}
                   </LinearGradient>
                 </TouchableOpacity>
               ))}
@@ -900,7 +900,7 @@ export default function CategoryDetailScreen() {
         <View style={{ height: 40 }} />
       </ScrollView>
 
-      {/* Category Filter Popup */}
+      {}
       <Modal
         visible={filterVisible}
         transparent={true}
@@ -1240,7 +1240,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 13,
   },
-  // Top Dancers - Podium Design with Center Focus
+  
   topDancersContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -1263,7 +1263,7 @@ const styles = StyleSheet.create({
     position: "relative",
     marginBottom: 6,
   },
-  // Side dancers (rank 2 & 3)
+  
   dancerImageSide: {
     width: width * 0.24,
     height: width * 0.24,
@@ -1271,7 +1271,7 @@ const styles = StyleSheet.create({
     borderWidth: 2.5,
     borderColor: "#EC9A15",
   },
-  // Center dancer (rank 1 - larger and scaled up)
+  
   dancerImageCenter: {
     width: width * 0.28,
     height: width * 0.28,
@@ -1515,7 +1515,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: "#999",
   },
-  // New Card Design - Content Below Image
+  
   compCardNew: {
     width: width * 0.75,
     borderRadius: 10,

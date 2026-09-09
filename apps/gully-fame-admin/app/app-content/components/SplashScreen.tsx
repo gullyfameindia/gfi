@@ -29,7 +29,7 @@ export default function SplashScreen() {
 
           console.log("[SplashScreen] Initial fetch - Images from API:", images);
 
-          // Type definition added here
+          
           const baseImages: Array<{ id: number; url: string | null; file: File | null }> = [
             { id: 1, url: null, file: null },
             { id: 2, url: null, file: null },
@@ -96,7 +96,7 @@ export default function SplashScreen() {
               if (result.success && result.data) {
                 const images = (result.data as any).splashScreens || (result.data as any).images || [];
                 
-                // Type definition added here
+                
                 const baseImages: Array<{ id: number; url: string | null; file: File | null }> = [
                   { id: 1, url: null, file: null },
                   { id: 2, url: null, file: null },
@@ -205,7 +205,7 @@ export default function SplashScreen() {
                 if (refreshResult.success && refreshResult.data) {
                   const images = (refreshResult.data as any).images || [];
                   
-                  // Type definition added here
+                  
                   const baseImages: Array<{ id: number; url: string | null; file: File | null }> = [
                     { id: 1, url: null, file: null },
                     { id: 2, url: null, file: null },

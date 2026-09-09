@@ -23,21 +23,21 @@ function TopTenLeaderboard({ performers }: TopTenLeaderbaordProps) {
     };
     return (
         <View style={styles.leaderboardSection}>
-            {/* Removed the solid list container. We want floating cards now. */}
+            {}
             <ScrollView
                 contentContainerStyle={styles.leaderboardContent}
                 showsVerticalScrollIndicator={false}
             >
                 {performers.map((performer) => (
                     <TouchableOpacity
-                        style={styles.playerBannerCard} // NEW style
+                        style={styles.playerBannerCard} 
                         onPress={() =>
                             onNavigate(performer.userId || performer.id)
                         }
                         key={performer.rank}
                         activeOpacity={0.8}
                     >
-                        {/* Gamified accent strip on the left */}
+                        {}
                         <View style={styles.cardAccentStrip} />
 
                         <View style={styles.rankBadgeContainer}>

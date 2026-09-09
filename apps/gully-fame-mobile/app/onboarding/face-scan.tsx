@@ -52,10 +52,10 @@ export default function OnboardingFaceScan() {
     }
 
     try {
-      // Mark face scan as done
+      
       await AsyncStorage.setItem("faceScanDone", "true");
       
-      // Auto-verify KYC if all steps are completed
+      
       try {
         const { autoVerifyKycIfComplete } = await import("@utils/kycValidation");
         await autoVerifyKycIfComplete();
@@ -63,20 +63,20 @@ export default function OnboardingFaceScan() {
         console.log("Could not auto-verify KYC:", error);
       }
       
-      // If coming from KYC flow, mark as completed and navigate to KYC status
+      
       if (fromKycFlow) {
-        // Clear KYC flow flag
+        
         await AsyncStorage.removeItem('kycFlowActive');
         
-        // Auto-verify KYC if all steps are completed
+        
         try {
           const { autoVerifyKycIfComplete, areAllKycStepsCompleted } = await import("@utils/kycValidation");
           
-          // Check if all steps are completed
+          
           const allStepsCompleted = await areAllKycStepsCompleted();
           
           if (allStepsCompleted) {
-            // Trigger auto-verification
+            
             await autoVerifyKycIfComplete();
             
             if (__DEV__) {
@@ -87,13 +87,13 @@ export default function OnboardingFaceScan() {
           console.log("Could not auto-verify KYC:", error);
         }
         
-        // Navigate directly to KYC status page (completed)
+        
         const { navigateToNextKycStep } = await import("@utils/kycValidation");
         await navigateToNextKycStep('kycCompleted');
         return;
       }
       
-      // If coming from verified page, navigate to verify-id screen
+      
       if (fromVerified) {
         const query = [
           `role=${encodeURIComponent(role)}`,
@@ -106,7 +106,7 @@ export default function OnboardingFaceScan() {
         return;
       }
 
-      // Otherwise, continue with normal onboarding flow
+      
       const backendRole = role === 'participant' ? 'participants' : (role === 'fan' ? 'fan' : 'participants');
       
       await AsyncStorage.multiSet([
@@ -197,7 +197,7 @@ export default function OnboardingFaceScan() {
               setTimeout(() => handleFinish(true), 0);
             }}
           >
-            {/* <Text style={styles.secondaryButtonText}>Skip for now (limited features)</Text> */}
+            {}
           </TouchableOpacity>
         )}
       </ScrollView>

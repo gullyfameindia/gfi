@@ -35,4 +35,4 @@ export const InstagramIcon = ({ size = 40 }) => (
   </Svg>
 );
 
-// Keep GoogleIcon for backward compatibility (if needed elsewhere)
+

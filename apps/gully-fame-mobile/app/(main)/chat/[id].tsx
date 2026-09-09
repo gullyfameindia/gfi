@@ -28,7 +28,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackIcon, MicIcon, SendIcon } from "@/icons";
 import { chatScreenStyles as styles } from "@/styles/chatScreenStyles";
 import Message from "@/components/ChatMessage/ChatMessage";
-// Get initial dimensions
+
 const getDimensions = () => Dimensions.get("window");
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const allChatsForForward = [
@@ -51,7 +51,7 @@ const allChatsForForward = [
     isOnline: true,
   },
 ];
-// Reaction emojis
+
 const REACTION_EMOJIS = ["❤️", "😂", "😮", "😢", "🙏", "🔥"];
 export default function ChatDetailScreen() {
   const { id, name } = useLocalSearchParams();
@@ -81,7 +81,7 @@ export default function ChatDetailScreen() {
   const actionBarOpacity = useRef(new Animated.Value(0)).current;
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // API State
+  
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState<ChatMessageAPIData[]>([]);
   const [chatUserName, setChatUserName] = useState(name || "User");
@@ -113,22 +113,22 @@ export default function ChatDetailScreen() {
     return () => subscription?.remove();
   }, []);
 
-  // Fetch current user ID and chat user profile
+  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const userId = await AsyncStorage.getItem("userId");
         setCurrentUserId(userId);
 
-        // Fetch chat user profile if we have chatUserId
+        
         if (chatUserId && chatUserId !== "new") {
           try {
-            // Try to get user profile - if there's a getUserById endpoint, use it
-            // For now, we'll use the name from params or fallback
+            
+            
             if (name) {
               setChatUserName(name);
             }
-            // TODO: Add getUserById API call if available to get avatar and other details
+            
           } catch (error) {
             console.error("Error fetching chat user profile:", error);
           }
@@ -140,7 +140,7 @@ export default function ChatDetailScreen() {
     fetchUserData();
   }, [chatUserId, name]);
 
-  // Fetch chat details from API
+  
   useEffect(() => {
     const fetchChatDetails = async () => {
       if (!chatUserId || chatUserId === "new") {
@@ -165,7 +165,7 @@ export default function ChatDetailScreen() {
             "[ChatDetailScreen] Failed to fetch chat:",
             response.message,
           );
-          // Show error state (no mock fallback)
+          
           Alert.alert(
             "Error Loading Chat",
             response.message || "Failed to load conversation. Please try again.",
@@ -190,7 +190,7 @@ export default function ChatDetailScreen() {
     }
   }, [chatUserId, currentUserId]);
 
-  // Connect websocket on screen open
+  
   useEffect(() => {
     const connectSocket = async () => {
       if (!chatUserId || chatUserId === "new" || !currentUserId) return;
@@ -201,7 +201,7 @@ export default function ChatDetailScreen() {
           onMessageReceived: (newMessage: ChatMessageAPIData) => {
             console.log("[ChatDetailScreen] Real-time message received:", newMessage._id);
             setMessages((prev) => {
-              // Avoid duplicates
+              
               if (prev.find((m) => m._id === newMessage._id)) {
                 return prev;
               }
@@ -210,7 +210,7 @@ export default function ChatDetailScreen() {
           },
           onMessageDelivered: (messageId: string) => {
             console.log("[ChatDetailScreen] Message delivered:", messageId);
-            // Update message status if needed
+            
           },
           onMessageDeleted: (messageId: string) => {
             console.log("[ChatDetailScreen] Message deleted:", messageId);
@@ -220,7 +220,7 @@ export default function ChatDetailScreen() {
             console.log("[ChatDetailScreen] Socket connected");
             setSocketConnected(true);
             setSocketError(null);
-            // Mark conversation as read when socket connects
+            
             socketChatService.markConversationRead(chatUserId);
           },
           onDisconnected: () => {
@@ -240,7 +240,7 @@ export default function ChatDetailScreen() {
 
     connectSocket();
 
-    // Disconnect on unmount
+    
     return () => {
       console.log("[ChatDetailScreen] Disconnecting socket on unmount");
       socketChatService.disconnect();
@@ -261,11 +261,11 @@ export default function ChatDetailScreen() {
     try {
       setSending(true);
       const messageText = message.trim();
-      setMessage(""); // Clear input immediately for better UX
+      setMessage(""); 
 
       console.log("[ChatDetailScreen] Sending message to:", chatUserId);
 
-      // Try socket first if connected
+      
       if (socketChatService.isConnected()) {
         console.log("[ChatDetailScreen] Sending via socket");
         const socketResult = await socketChatService.sendMessage(
@@ -276,22 +276,22 @@ export default function ChatDetailScreen() {
 
         if (socketResult.success) {
           console.log("[ChatDetailScreen] Message sent via socket");
-          // Message will appear via socket event listener
+          
           return;
         } else {
           console.warn("[ChatDetailScreen] Socket send failed, falling back to REST");
         }
       }
 
-      // Fallback to REST API
+      
       console.log("[ChatDetailScreen] Sending via REST API");
       const response = await chatService.sendChat(chatUserId, messageText);
 
       if (response.success) {
-        // Add message to local state immediately
+        
         if (!currentUserId) return;
         const newMessage: ChatMessageAPIData = {
-          _id: Date.now().toString(), // Temporary ID
+          _id: Date.now().toString(), 
           message: messageText,
           receiver_id: chatUserId,
           sender_id: currentUserId,
@@ -302,7 +302,7 @@ export default function ChatDetailScreen() {
       } else {
         if (!currentUserId) return;
         const newMessage: ChatMessageAPIData = {
-          _id: Date.now().toString(), // Temporary ID
+          _id: Date.now().toString(), 
           message: messageText,
           receiver_id: chatUserId,
           sender_id: currentUserId,
@@ -310,12 +310,12 @@ export default function ChatDetailScreen() {
         };
         setMessages((prev) => [...prev, newMessage]);
         console.warn("Couldn't send message to backend, updating UI");
-        setMessage(messageText); // Restore message on error
+        setMessage(messageText); 
       }
     } catch (error: any) {
       console.error("[ChatDetailScreen] Error sending message:", error);
       Alert.alert("Error", "Failed to send message. Please try again.");
-      setMessage(message.trim()); // Restore message on error
+      setMessage(message.trim()); 
     } finally {
       setSending(false);
     }
@@ -325,25 +325,25 @@ export default function ChatDetailScreen() {
     Alert.alert("Voice Recording", "Voice recording feature coming soon!");
   };
 
-  // Handle message long press - show action bar above bubble
+  
   const handleMessageLongPress = useCallback(
     (msg: any, event: any) => {
       if (isMultiSelectMode) return;
 
-      // Clear any existing timer
+      
       if (longPressTimer.current) {
         clearTimeout(longPressTimer.current);
       }
 
       setSelectedMessage(msg);
 
-      // Calculate position for action bar above the bubble
+      
       if (event && event.nativeEvent) {
         const { pageY } = event.nativeEvent;
         actionBarPosition.setValue({ x: SCREEN_WIDTH / 2, y: pageY - 60 });
       }
 
-      // Animate action bar in
+      
       Animated.parallel([
         Animated.timing(actionBarOpacity, {
           toValue: 1,
@@ -355,7 +355,7 @@ export default function ChatDetailScreen() {
     [isMultiSelectMode, actionBarPosition, actionBarOpacity],
   );
 
-  // Handle message press (for multi-select)
+  
   const handleMessagePress = useCallback(
     (msgId: string) => {
       if (isMultiSelectMode) {
@@ -373,7 +373,7 @@ export default function ChatDetailScreen() {
     [isMultiSelectMode],
   );
 
-  // Hide action bar
+  
   const hideActionBar = useCallback(() => {
     Animated.timing(actionBarOpacity, {
       toValue: 0,
@@ -384,26 +384,26 @@ export default function ChatDetailScreen() {
     });
   }, [actionBarOpacity]);
 
-  // Copy message
+  
   const handleCopyMessage = useCallback(() => {
     if (selectedMessage) {
       Clipboard.setString(selectedMessage.text);
       hideActionBar();
-      // Show toast (simplified - you can use a toast library)
+      
       Alert.alert("Copied", "Message copied to clipboard");
     }
   }, [selectedMessage, hideActionBar]);
 
-  // Forward message(s)
+  
   const handleForwardMessage = useCallback(() => {
     if (isMultiSelectMode && selectedMessages.size > 0) {
-      // Forward multiple messages
+      
       const messagesToForward = messages.filter((m: any) =>
         selectedMessages.has(m._id),
       );
       setForwardingMessages(messagesToForward);
     } else if (selectedMessage) {
-      // Forward single message
+      
       setForwardingMessages([selectedMessage]);
     }
     hideActionBar();
@@ -418,7 +418,7 @@ export default function ChatDetailScreen() {
     messages,
   ]);
 
-  // Delete message(s)
+  
   const handleDeleteMessage = useCallback(() => {
     if (isMultiSelectMode && selectedMessages.size > 0) {
       Alert.alert(
@@ -431,7 +431,7 @@ export default function ChatDetailScreen() {
             style: "destructive",
             onPress: async () => {
               try {
-                // Delete each message via API
+                
                 const deletePromises = Array.from(selectedMessages).map((msgId) =>
                   chatService.deleteMessage(msgId)
                 );
@@ -459,7 +459,7 @@ export default function ChatDetailScreen() {
           style: "destructive",
           onPress: async () => {
             try {
-              // Delete message via API
+              
               await chatService.deleteMessage(selectedMessage._id);
               setMessages((prev) =>
                 prev.filter((msg) => msg._id !== selectedMessage._id),
@@ -474,7 +474,7 @@ export default function ChatDetailScreen() {
     }
   }, [isMultiSelectMode, selectedMessages, selectedMessage, hideActionBar]);
 
-  // React to message
+  
   const handleReactToMessage = useCallback(
     (emoji: string) => {
       if (selectedMessage) {
@@ -496,7 +496,7 @@ export default function ChatDetailScreen() {
     [selectedMessage, hideActionBar],
   );
 
-  // Enter multi-select mode
+  
   const handleSelectMessage = useCallback(() => {
     if (selectedMessage) {
       setIsMultiSelectMode(true);
@@ -505,7 +505,7 @@ export default function ChatDetailScreen() {
     }
   }, [selectedMessage, hideActionBar]);
 
-  // Send forwarded messages
+  
   const handleSendForwardedMessages = useCallback(() => {
     if (selectedForwardChats.length === 0) {
       Alert.alert(
@@ -515,7 +515,7 @@ export default function ChatDetailScreen() {
       return;
     }
 
-    // Forward messages to selected chats
+    
     Alert.alert(
       "Forwarded",
       `Message forwarded to ${selectedForwardChats.length} chat(s)`,
@@ -532,7 +532,7 @@ export default function ChatDetailScreen() {
     >
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      {/* Header */}
+      {}
       <View
         style={[
           styles.header,
@@ -606,7 +606,7 @@ export default function ChatDetailScreen() {
         )}
       </View>
 
-      {/* Messages List */}
+      {}
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#EC9A15" />
@@ -670,21 +670,21 @@ export default function ChatDetailScreen() {
               pointerEvents="box-none"
             >
               <View style={styles.actionBarContent}>
-                {/* Copy */}
+                {}
                 <TouchableOpacity
                   style={styles.actionBarButton}
                   onPress={handleCopyMessage}
                 >
                   <Text style={styles.actionBarButtonText}>Copy</Text>
                 </TouchableOpacity>
-                {/* Forward */}
+                {}
                 <TouchableOpacity
                   style={styles.actionBarButton}
                   onPress={handleForwardMessage}
                 >
                   <Text style={styles.actionBarButtonText}>Forward</Text>
                 </TouchableOpacity>
-                {/* Delete */}
+                {}
                 <TouchableOpacity
                   style={styles.actionBarButton}
                   onPress={handleDeleteMessage}
@@ -698,14 +698,14 @@ export default function ChatDetailScreen() {
                     Delete
                   </Text>
                 </TouchableOpacity>
-                {/* React */}
+                {}
                 <TouchableOpacity
                   style={styles.actionBarButton}
                   onPress={() => {}}
                 >
                   <Text style={styles.actionBarButtonText}>React</Text>
                 </TouchableOpacity>
-                {/* Select */}
+                {}
                 <TouchableOpacity
                   style={styles.actionBarButton}
                   onPress={handleSelectMessage}
@@ -714,7 +714,7 @@ export default function ChatDetailScreen() {
                 </TouchableOpacity>
               </View>
 
-              {/* Reaction emoji row */}
+              {}
               <View style={styles.reactionRow}>
                 {REACTION_EMOJIS.map((emoji) => (
                   <TouchableOpacity
@@ -729,7 +729,7 @@ export default function ChatDetailScreen() {
             </Animated.View>
           )}
 
-          {/* INVISIBLE DISMISS OVERLAY */}
+          {}
           {selectedMessage && !isMultiSelectMode && (
             <TouchableOpacity
               style={StyleSheet.absoluteFillObject}
@@ -740,7 +740,7 @@ export default function ChatDetailScreen() {
         </View>
       )}
 
-      {/* Input */}
+      {}
       <View
         style={[
           styles.inputContainer,
@@ -780,7 +780,7 @@ export default function ChatDetailScreen() {
       {Platform.OS === "android" && (
         <View style={{ height: androidKeyboardSpacer }}></View>
       )}
-      {/* Forward Screen Modal */}
+      {}
       <Modal
         visible={showForwardScreen}
         transparent={true}
@@ -860,7 +860,7 @@ export default function ChatDetailScreen() {
         </View>
       </Modal>
 
-      {/* Header Menu Modal */}
+      {}
       <Modal
         visible={showMenu}
         transparent={true}

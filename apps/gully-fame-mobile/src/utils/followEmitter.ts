@@ -1,7 +1,7 @@
-// Created by Kiro - Follow Update Emitter
-// Global event emitter for real-time follow/unfollow updates
 
-// ✅ CREATED BY KIRO - Event emitter for real-time follow updates
+
+
+
 class FollowUpdateEmitter {
   private listeners: ((event: { type: "follow" | "unfollow"; userId: string }) => void)[] = [];
 
@@ -17,5 +17,5 @@ class FollowUpdateEmitter {
   }
 }
 
-// Global emitter instance
+
 export const followUpdateEmitter = new FollowUpdateEmitter();

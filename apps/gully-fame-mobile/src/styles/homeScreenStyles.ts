@@ -9,7 +9,7 @@ export const homeScreenStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#3C2610",
   },
-  // Header Navbar - Clean Design
+  
   navbar: {
     flexDirection: "row",
     justifyContent: "center",
@@ -63,7 +63,7 @@ export const homeScreenStyles = StyleSheet.create({
   scrollContent: {
     paddingBottom: scaleVertical(20),
   },
-  // Hero Section - Premium Design with Radial Gradient
+  
   heroSection: {
     height: hp(45),
     minHeight: hp(45),
@@ -131,7 +131,7 @@ export const homeScreenStyles = StyleSheet.create({
     letterSpacing: 0.3,
   },
 
-  // Section Styles - Enhanced
+  
 
   sectionHeaderWithIcon: {
     marginBottom: 16,
@@ -166,7 +166,7 @@ export const homeScreenStyles = StyleSheet.create({
     fontSize: width * 0.038,
     color: "#fff",
   },
-  // Circular Categories - Premium Design
+  
   sectionTitle: {
     fontSize: width * 0.044,
     color: "#fff",
@@ -183,7 +183,7 @@ export const homeScreenStyles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 16,
   },
-  // Trending Reels - TOP Event Cards Design
+  
   trendingScroll: {
     paddingRight: wp(5),
     paddingBottom: scaleVertical(5),
@@ -191,7 +191,7 @@ export const homeScreenStyles = StyleSheet.create({
   },
   trendingReelCardWrapper: {
     marginRight: wp(4),
-    width: wp(45), // Fixed width for consistent card sizing
+    width: wp(45), 
   },
   trendingReelCard: {
     width: "100%",
@@ -281,7 +281,7 @@ export const homeScreenStyles = StyleSheet.create({
     fontSize: getFontSize(12),
     fontFamily: "Inter_500Medium",
   },
-  // Trending Competitions - Enhanced Design
+  
   trendingCompCard: {
     width: width * 0.45,
     marginRight: width * 0.025,
@@ -353,7 +353,7 @@ export const homeScreenStyles = StyleSheet.create({
     fontSize: width * 0.028,
     opacity: 0.9,
   },
-  // Upcoming Competitions - Premium Design
+  
   competitionsScroll: {
     paddingRight: wp(5),
     paddingBottom: scaleVertical(5),
@@ -448,7 +448,7 @@ export const homeScreenStyles = StyleSheet.create({
     fontSize: getFontSize(11),
     fontFamily: "Inter_500Medium",
   },
-  // Past Competitions - Enhanced Design
+  
   pastCompScroll: {
     paddingRight: width * 0.05,
     paddingBottom: 5,
@@ -557,9 +557,9 @@ export const homeScreenStyles = StyleSheet.create({
     fontFamily: "Inter_700Bold",
   },
 
-  // ------------------------------------------------------------------
-  // Hall of Fame (Replaces Top Dancers Container)
-  // ------------------------------------------------------------------
+  
+  
+  
   hallOfFameSection: {
     paddingBottom: scaleVertical(15),
   },
@@ -603,7 +603,7 @@ export const homeScreenStyles = StyleSheet.create({
     fontFamily: "Inter_600SemiBold",
   },
 
-  // ------------------------------------------------------------------
+  
 
   stickyHeader: {
     position: "absolute",
@@ -633,7 +633,7 @@ export const homeScreenStyles = StyleSheet.create({
     alignItems: "center",
     position: "relative",
   },
-  // Full Screen Reels Container (replaces ScrollView when scrolled past banner)
+  
   reelsFullScreenContainer: {
     position: "absolute",
     top: 0,
@@ -660,7 +660,7 @@ export const homeScreenStyles = StyleSheet.create({
     height: height,
   },
   reelsFlatListContent: {
-    // Content container for FlatList
+    
   },
   reelInlineItem: {
     width: width,
@@ -679,7 +679,7 @@ export const homeScreenStyles = StyleSheet.create({
     right: 0,
     bottom: 0,
     justifyContent: "space-between",
-    paddingBottom: height * 0.15, // Space for bottom nav
+    paddingBottom: height * 0.15, 
   },
   reelInlineBottomContent: {
     position: "absolute",
@@ -773,7 +773,7 @@ export const homeScreenStyles = StyleSheet.create({
   },
   gamificationCardWrapper: {
     paddingHorizontal: wp(5),
-    marginTop: hp(-6), // Overlaps the hero banner beautifully
+    marginTop: hp(-6), 
     marginBottom: scaleVertical(20),
     zIndex: 20,
   },
@@ -845,9 +845,9 @@ export const homeScreenStyles = StyleSheet.create({
     fontFamily: "Inter_700Bold",
   },
 
-  // ------------------------------------------------------------------
-  // Gamification Updates for existing Cards
-  // ------------------------------------------------------------------
+  
+  
+  
   glowingCard: {
     borderWidth: 1,
     borderColor: "rgba(255, 59, 48, 0.5)",

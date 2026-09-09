@@ -64,7 +64,7 @@ const TextToSpeechModal: React.FC<TextToSpeechModalProps> = ({
 
     setIsProcessing(true);
     try {
-      // Create TTS configuration
+      
       const ttsConfig: TextToSpeechConfig = {
         id: `tts_${Date.now()}`,
         text: text.trim(),
@@ -74,20 +74,20 @@ const TextToSpeechModal: React.FC<TextToSpeechModalProps> = ({
         rate,
         startTime,
         volume: 1,
-        duration: (text.length / 5) + (pitch * rate), // Estimate duration
+        duration: (text.length / 5) + (pitch * rate), 
         audioEffect: 'none',
       };
 
-      // Generate audio
+      
       const audioUri = await synthesizeTextToSpeech(ttsConfig);
       
-      // Update config with generated audio URI
+      
       ttsConfig.audioUri = audioUri;
 
-      // Call onGenerate callback
+      
       onGenerate(ttsConfig);
 
-      // Reset form
+      
       setText('');
       setSelectedVoice('alex');
       setPitch(1);
@@ -129,7 +129,7 @@ const TextToSpeechModal: React.FC<TextToSpeechModalProps> = ({
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={styles.keyboardAvoid}
         >
-          {/* Header */}
+          {}
           <View style={styles.header}>
             <TouchableOpacity onPress={onClose} disabled={isProcessing}>
               <MaterialCommunityIcons name="close" size={28} color="#fff" />
@@ -152,7 +152,7 @@ const TextToSpeechModal: React.FC<TextToSpeechModalProps> = ({
           </View>
 
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-            {/* Text Input */}
+            {}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>📝 Enter Text</Text>
               <TextInput
@@ -171,7 +171,7 @@ const TextToSpeechModal: React.FC<TextToSpeechModalProps> = ({
               </Text>
             </View>
 
-            {/* Voice Selection */}
+            {}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>🎤 Select Voice</Text>
               <FlatList
@@ -184,7 +184,7 @@ const TextToSpeechModal: React.FC<TextToSpeechModalProps> = ({
               />
             </View>
 
-            {/* Pitch Control */}
+            {}
             <View style={styles.section}>
               <View style={styles.sliderHeader}>
                 <Text style={styles.sectionTitle}>🎵 Pitch</Text>
@@ -206,7 +206,7 @@ const TextToSpeechModal: React.FC<TextToSpeechModalProps> = ({
               </View>
             </View>
 
-            {/* Rate Control */}
+            {}
             <View style={styles.section}>
               <View style={styles.sliderHeader}>
                 <Text style={styles.sectionTitle}>⏱️ Speed</Text>
@@ -228,7 +228,7 @@ const TextToSpeechModal: React.FC<TextToSpeechModalProps> = ({
               </View>
             </View>
 
-            {/* Preview Section */}
+            {}
             <View style={styles.section}>
               <Text style={styles.sectionTitle}>👂 Preview</Text>
               <View style={styles.previewCard}>

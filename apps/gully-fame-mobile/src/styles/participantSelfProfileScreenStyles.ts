@@ -6,14 +6,14 @@ export const participantSelfProfileScreenStyles = StyleSheet.create({
         backgroundColor: "#3C2610",
     },
     rankCardContainer: {
-        backgroundColor: "rgba(255, 255, 255, 0.04)", // Changed from black to faint white
+        backgroundColor: "rgba(255, 255, 255, 0.04)", 
         borderRadius: 16,
         padding: 16,
         marginHorizontal: 20,
         marginBottom: 24,
         borderWidth: 1,
         borderColor: "rgba(236, 154, 21, 0.3)",
-        // Remove the heavy black shadow so it blends smoother
+        
         shadowColor: "#EC9A15",
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.1,
@@ -31,7 +31,7 @@ export const participantSelfProfileScreenStyles = StyleSheet.create({
         color: "#EC9A15",
         fontSize: 12,
         fontWeight: "700",
-        fontFamily: "Rubik_500Medium", // Adjust if you use a different font family name
+        fontFamily: "Rubik_500Medium", 
     },
     progressFraction: {
         color: "#9CA3AF",
@@ -55,7 +55,7 @@ export const participantSelfProfileScreenStyles = StyleSheet.create({
         textAlign: "center",
     },
 
-    // --- Achievements / Trophy Case ---
+    
     achievementsContainer: {
         paddingHorizontal: 20,
         marginBottom: 24,
@@ -111,7 +111,7 @@ export const participantSelfProfileScreenStyles = StyleSheet.create({
         width: width * 0.42,
         height: width * 0.42,
         borderRadius: width * 0.21,
-        padding: 4, // This acts as the border thickness!
+        padding: 4, 
         shadowColor: "#FFD700",
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.6,
@@ -123,7 +123,7 @@ export const participantSelfProfileScreenStyles = StyleSheet.create({
         height: "100%",
         borderRadius: width * 0.21,
         borderWidth: 3,
-        borderColor: "#3C2610", // Gives separation between the gradient and the photo
+        borderColor: "#3C2610", 
         resizeMode: "cover",
     },
     rankBadgeContainer: {
@@ -169,7 +169,7 @@ export const participantSelfProfileScreenStyles = StyleSheet.create({
         fontWeight: "600",
     },
 
-    // --- Edit Modal Social Inputs ---
+    
     socialInputContainer: {
         flexDirection: "row",
         alignItems: "center",
@@ -179,7 +179,7 @@ export const participantSelfProfileScreenStyles = StyleSheet.create({
         borderColor: "#444",
         paddingHorizontal: 12,
     },
-    // --- Social Links ---
+    
     socialLinksContainer: {
         flexDirection: "row",
         justifyContent: "center",
@@ -191,7 +191,7 @@ export const participantSelfProfileScreenStyles = StyleSheet.create({
     socialIconButton: {
         width: 44,
         height: 44,
-        borderRadius: 22, // Makes it a perfect circle
+        borderRadius: 22, 
         backgroundColor: "rgba(255, 255, 255, 0.08)",
         justifyContent: "center",
         alignItems: "center",
@@ -302,7 +302,7 @@ export const participantSelfProfileScreenStyles = StyleSheet.create({
         borderRadius: 4,
     },
 
-    // --- Edit Bio Modal Styles ---
+    
     editBioOverlay: {
         flex: 1,
         backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -406,7 +406,7 @@ export const participantSelfProfileScreenStyles = StyleSheet.create({
         fontSize: 16,
     },
 
-    // --- Level-Up Modal Styles ---
+    
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0, 0, 0, 0.7)",
@@ -462,5 +462,32 @@ export const participantSelfProfileScreenStyles = StyleSheet.create({
         color: "#fff",
         fontSize: 16,
         fontWeight: "700",
+    },
+    
+    
+    gridItemImage: {
+        width: "100%",
+        height: "100%",
+        borderRadius: 4,
+        backgroundColor: "#2d2420",
+    },
+    playIconContainer: {
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.3)",
+    },
+    playIcon: {
+        fontSize: 32,
+        color: "#EC9A15",
+        fontWeight: "bold",
+    },
+    noReelsText: {
+        color: "#999",
+        fontSize: 14,
+        textAlign: "center",
+        marginTop: 20,
     },
 });

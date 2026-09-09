@@ -2,16 +2,16 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface ZoomButtonsProps {
-  zoom: number; // Current zoom level (1-4)
+  zoom: number; 
   onZoomChange: (zoom: number) => void;
   disabled?: boolean;
 }
 
-/**
- * Discrete zoom buttons (1x, 2x, 3x, 4x)
- * Displayed as a horizontal row below the camera preview
- * Matches the first screenshot design
- */
+
+
+
+
+
 const ZoomButtons: React.FC<ZoomButtonsProps> = ({ zoom, onZoomChange, disabled = false }) => {
   const zoomLevels = [1, 2, 3, 4];
 

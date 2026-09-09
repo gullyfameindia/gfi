@@ -11,10 +11,10 @@ interface TimerSelectorProps {
   disabled?: boolean;
 }
 
-/**
- * Timer selector component with clock icon.
- * Shows 10, 15, 30 second options in a modal.
- */
+
+
+
+
 const TimerSelector: React.FC<TimerSelectorProps> = ({ duration, onDurationChange, disabled = false }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [buttonLayout, setButtonLayout] = useState({ x: 0, y: 0, width: 0, height: 0, buttonY: 0, buttonHeight: 0, buttonCenterY: 0, arrowTop: 0 });
@@ -28,34 +28,34 @@ const TimerSelector: React.FC<TimerSelectorProps> = ({ duration, onDurationChang
       buttonRef.current.measure((x, y, width, height, pageX, pageY) => {
         const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
         
-        // Responsive spacing based on screen size
-        const spacing = screenWidth * 0.02; // 2% of screen width
-        const estimatedPopupWidth = screenWidth * 0.18; // 18% of screen width (min 60px)
+        
+        const spacing = screenWidth * 0.02; 
+        const estimatedPopupWidth = screenWidth * 0.18; 
         let popupLeft = pageX + width + spacing;
         
-        // Ensure popup doesn't go off-screen on the right
-        const safeAreaMargin = screenHeight * 0.015; // 1.5% of screen height
+        
+        const safeAreaMargin = screenHeight * 0.015; 
         if (popupLeft + estimatedPopupWidth > screenWidth - safeAreaMargin) {
           popupLeft = screenWidth - estimatedPopupWidth - safeAreaMargin;
         }
         
-        // Calculate button center Y position
+        
         const buttonCenterY = pageY + height / 2;
         
-        // Use estimated popup height (will be corrected on layout)
-        // Rough estimate: ~35px per option including padding/margins
-        const optionsCount = 3;
-        const estimatedPopupHeight = optionsCount * (screenHeight * 0.045); // ~4.5% per option
         
-        // Center the popup on the button (will be adjusted when actual dimensions are known)
+        
+        const optionsCount = 3;
+        const estimatedPopupHeight = optionsCount * (screenHeight * 0.045); 
+        
+        
         let popupTop = buttonCenterY - (estimatedPopupHeight / 2);
         
-        // Ensure popup doesn't go off-screen
+        
         const minTop = safeAreaMargin;
         const maxTop = screenHeight - estimatedPopupHeight - safeAreaMargin;
         popupTop = Math.max(minTop, Math.min(popupTop, maxTop));
         
-        // Store initial layout - will update when popup is measured
+        
         setButtonLayout({ 
           x: popupLeft,
           y: popupTop,
@@ -64,7 +64,7 @@ const TimerSelector: React.FC<TimerSelectorProps> = ({ duration, onDurationChang
           buttonCenterY,
           width, 
           height,
-          arrowTop: 0 // Will be calculated after popup measurement
+          arrowTop: 0 
         });
         setModalVisible(true);
       });
@@ -82,16 +82,16 @@ const TimerSelector: React.FC<TimerSelectorProps> = ({ duration, onDurationChang
         const actualPopupHeight = height;
         const buttonCenterY = buttonLayout.buttonCenterY;
         
-        // Responsive safe area margin
-        const safeAreaMargin = screenHeight * 0.015; // 1.5% of screen height
         
-        // Recalculate popup position with actual height
+        const safeAreaMargin = screenHeight * 0.015; 
+        
+        
         let popupTop = buttonCenterY - (actualPopupHeight / 2) - 30;
         const minTop = safeAreaMargin;
         const maxTop = screenHeight - actualPopupHeight - safeAreaMargin;
         popupTop = Math.max(minTop, Math.min(popupTop, maxTop));
         
-        // Calculate arrow position to point at button center
+        
         const arrowTopPosition = buttonCenterY - popupTop - 30;
         
         setButtonLayout(prev => ({
@@ -166,7 +166,7 @@ const TimerSelector: React.FC<TimerSelectorProps> = ({ duration, onDurationChang
             ]}
             pointerEvents="auto"
           >
-            {/* Arrow pointing left - aligned to button center */}
+            {}
             {buttonLayout.arrowTop > 0 && (
               <View style={[cameraStyles.timerModalArrow, { 
                 top: buttonLayout.arrowTop - (cameraStyles.timerModalArrow.borderTopWidth || 7)

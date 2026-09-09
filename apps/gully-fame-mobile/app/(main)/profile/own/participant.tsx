@@ -1,10 +1,10 @@
-// Own Profile - Participant
-// This screen is for when a participant views their own profile
+
+
 
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router/react-navigation";
 import { participantSelfProfileScreenStyles as styles } from "@/styles/participantSelfProfileScreenStyles";
 import {
     Dimensions,
@@ -18,6 +18,8 @@ import {
     TextInput,
     Linking,
     Animated,
+    ActivityIndicator,
+    Alert,
 } from "react-native";
 import BottomNav from "@components/layout/BottomNav";
 import { LinearGradient } from "expo-linear-gradient";
@@ -39,10 +41,11 @@ import ProfileBurgerMenuModal from "@/components/modals/ProfileBurgerMenuModal/P
 import Svg, { Path } from "react-native-svg";
 import { useFollowStats } from "@/hooks/useFollowStats";
 import { useUserReels } from "@/hooks/useUserReels";
+import InstagramStyleVideoGrid from "@/components/profile/InstagramStyleVideoGrid";
 
 const { width } = Dimensions.get("window");
 
-// Tabs for participants
+
 const participantTabs = [
     { name: "Home", icon: HomeIconSVG, label: "" },
     { name: "Reel", icon: ReelIconSVG, label: "GullyReel" },
@@ -51,7 +54,7 @@ const participantTabs = [
     { name: "MyFame", icon: UserIconSVG, label: "" },
 ];
 
-// Social Icons
+
 const XIconSVG = ({ width = 26, height = 26, color = "#fff" }) => (
     <Svg width={width} height={height} viewBox="0 0 24 24" fill={color}>
         <Path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.008 4.076H5.059z" />
@@ -66,12 +69,12 @@ const InstagramIconSVG = ({ width = 26, height = 26, color = "#fff" }) => (
 
 const formatHandle = (input: string) => {
     if (!input) return "";
-    // Strip URLs
+    
     let clean = input.replace(
         /(https?:\/\/)?(www\.)?(instagram\.com|x\.com|twitter\.com)\/?/g,
         "",
     );
-    // Strip existing @ symbols and trailing slashes
+    
     clean = clean.replace(/^@/, "").replace(/\/$/, "");
     return `@${clean}`;
 };
@@ -91,10 +94,10 @@ export default function OwnParticipantProfile() {
     const [levelUpModalVisible, setLevelUpModalVisible] = useState(false);
     const [userRanking, setUserRanking] = useState<number | null>(null);
 
-    // ✅ CREATED BY KIRO - Get follow stats with real-time updates
+    
     const { stats: followStats } = useFollowStats(profileData.id || "");
 
-    // ✅ CREATED BY KIRO - Get user reels dynamically
+    
     const { reels: userReels, loading: reelsLoading } = useUserReels(profileData.id || "");
 
     useEffect(() => {
@@ -114,7 +117,7 @@ export default function OwnParticipantProfile() {
         ).start();
     }, []);
 
-    // Load ranking once on mount
+    
     useEffect(() => {
         const loadRanking = async () => {
             try {
@@ -126,16 +129,16 @@ export default function OwnParticipantProfile() {
                 }
             } catch (error) {
                 console.error("Error loading ranking:", error);
-                setUserRanking(6); // Default fallback
+                setUserRanking(6); 
             }
         };
         loadRanking();
-    }, []); // Only run once on mount
+    }, []); 
 
-    // Reload data when screen comes into focus - only if needed
+    
     useFocusEffect(
         React.useCallback(() => {
-            // Only reload if we don't have basic data
+            
             if (!profileData.firstName && !profileData.lastName) {
                 reloadProfile();
             }
@@ -146,7 +149,7 @@ export default function OwnParticipantProfile() {
         router.replace("/(main)" as any);
     };
 
-    // ✅ CREATED BY KIRO - Navigate to followers list
+    
     const handleFollowersPress = () => {
         const currentUserId = profileData.id || profileData._id || "";
         if (!currentUserId) {
@@ -159,7 +162,7 @@ export default function OwnParticipantProfile() {
         } as any);
     };
 
-    // ✅ CREATED BY KIRO - Navigate to following list
+    
     const handleFollowingPress = () => {
         const currentUserId = profileData.id || profileData._id || "";
         if (!currentUserId) {
@@ -174,7 +177,7 @@ export default function OwnParticipantProfile() {
 
     const handleEditBio = () => {
         setTempBio(profileData.bio || "");
-        // Parse three words or use defaults
+        
         const threeWordsStr = profileData.threeWords || "";
         if (threeWordsStr) {
             const words = threeWordsStr
@@ -183,7 +186,7 @@ export default function OwnParticipantProfile() {
                 .filter((w) => w);
             setTempThreeWords([words[0] || "", words[1] || "", words[2] || ""]);
         } else {
-            // Use default values
+            
             setTempThreeWords([
                 "🎵 MusicLover",
                 "💃 DanceFreak",
@@ -198,7 +201,7 @@ export default function OwnParticipantProfile() {
             .filter((w) => w.trim())
             .join(" | ");
 
-        // 1. Update Local UI State
+        
         setProfileData((prev) => ({
             ...prev,
             bio: tempBio,
@@ -208,7 +211,7 @@ export default function OwnParticipantProfile() {
         }));
 
         try {
-            // 2. Update Local Storage
+            
             await AsyncStorage.multiSet([
                 ["userBio", tempBio],
                 ["userThreeWords", threeWordsFormatted],
@@ -216,7 +219,7 @@ export default function OwnParticipantProfile() {
                 ["userXLink", tempX],
             ]);
 
-            // 3. Update Backend API
+            
             const updateData: any = {
                 bio: tempBio,
                 instagramLink: tempInsta,
@@ -272,7 +275,7 @@ export default function OwnParticipantProfile() {
                 contentContainerStyle={styles.scrollContent}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Header with Back Button and Menu */}
+                {}
                 <View style={styles.header}>
                     <TouchableOpacity
                         onPress={handleBackPress}
@@ -292,7 +295,7 @@ export default function OwnParticipantProfile() {
                     </TouchableOpacity>
                 </View>
 
-                {/* Participant Profile - Star Profile Section */}
+                {}
                 <Animated.View
                     style={[
                         styles.gamifiedAvatarContainer,
@@ -300,7 +303,7 @@ export default function OwnParticipantProfile() {
                     ]}
                 >
                     <LinearGradient
-                        colors={["#FFD700", "#FF8C00", "#FF0055"]} // Gold to Neon Pink
+                        colors={["#FFD700", "#FF8C00", "#FF0055"]} 
                         style={styles.avatarGradientRing}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 1 }}
@@ -315,13 +318,13 @@ export default function OwnParticipantProfile() {
                         />
                     </LinearGradient>
 
-                    {/* Rank Badge cutting into the frame */}
+                    {}
                     <View style={styles.rankBadgeContainer}>
                         <Text style={styles.rankBadgeText}>STAR</Text>
                     </View>
                 </Animated.View>
 
-                {/* User Info */}
+                {}
                 <UserInfoSection
                     profileData={profileData}
                     onEditBio={handleEditBio}
@@ -331,7 +334,7 @@ export default function OwnParticipantProfile() {
                 />
 
                 <View style={styles.socialLinksContainer}>
-                    {/* Fallback to catch both naming conventions from backend/frontend */}
+                    {}
                     {profileData.instagramLink ||
                     (profileData as any).instagram ? (
                         <TouchableOpacity
@@ -371,13 +374,13 @@ export default function OwnParticipantProfile() {
                     ) : null}
                 </View>
 
-                {/* Content Container */}
+                {}
                 <LinearGradient
                     colors={["rgba(41, 33, 24, 0.2)", "#3C2610"]}
                     locations={[0.0, 0.4]}
                     style={styles.contentContainer}
                 >
-                    {/* 1. Stats Section */}
+                    {}
                     <StatsSection
                         photos={userReels.length}
                         followers={followStats.followers}
@@ -386,7 +389,7 @@ export default function OwnParticipantProfile() {
                         onFollowingPress={handleFollowingPress}
                     />
 
-                    {/* 2. Unified Rank & Progression Card */}
+                    {}
                     <View style={styles.rankCardContainer}>
                         <LevelUpSection
                             onPress={() => setLevelUpModalVisible(true)}
@@ -403,14 +406,14 @@ export default function OwnParticipantProfile() {
                                 </Text>
                             </View>
                             <View style={styles.progressBarBackground}>
-                                {/* Gradient Fill for the progress bar */}
+                                {}
                                 <LinearGradient
                                     colors={["#FFE066", "#EC9A15"]}
                                     start={{ x: 0, y: 0 }}
                                     end={{ x: 1, y: 0 }}
                                     style={[
                                         styles.progressBarFill,
-                                        { width: "60%" }, // Dynamic width here
+                                        { width: "60%" }, 
                                     ]}
                                 />
                             </View>
@@ -420,7 +423,7 @@ export default function OwnParticipantProfile() {
                         </View>
                     </View>
 
-                    {/* 3. Trophy Case */}
+                    {}
                     <View style={styles.achievementsContainer}>
                         <Text style={styles.achievementsTitle}>
                             Trophy Case
@@ -447,7 +450,7 @@ export default function OwnParticipantProfile() {
                         </ScrollView>
                     </View>
 
-                    {/* 4. Videos/Photos Tabs */}
+                    {}
                     <View style={styles.tabContainer}>
                         <TouchableOpacity
                             style={[
@@ -485,45 +488,19 @@ export default function OwnParticipantProfile() {
                         </TouchableOpacity>
                     </View>
 
-                    {/* Grid Content - 2 columns layout */}
-                    <View style={styles.gridContainer}>
-                        {reelsLoading ? (
-                            <ActivityIndicator size="large" color="#EC9A15" />
-                        ) : userReels.length > 0 ? (
-                            userReels.map((item, index) => {
-                                const baseSize = (width - 28 - 4) / 2;
-                                const itemStyle = {
-                                    width: baseSize,
-                                    height: baseSize,
-                                    marginRight: index % 2 === 0 ? 4 : 0,
-                                    marginBottom: 4,
-                                };
-                                return (
-                                    <TouchableOpacity
-                                        key={item._id || index}
-                                        style={[styles.gridItem, itemStyle]}
-                                    >
-                                        <Image
-                                            source={{
-                                                uri: item.thumbnail || item.videoUrl,
-                                            }}
-                                            style={styles.gridItemImage}
-                                        />
-                                        {/* Play Icon for Videos */}
-                                        <View style={styles.playIconContainer}>
-                                            <Text style={styles.playIcon}>▶</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                );
-                            })
-                        ) : (
-                            <Text style={styles.noReelsText}>No reels yet</Text>
-                        )}
+                    {}
+                    <View style={{ flex: 1, height: "auto", minHeight: 400 }}>
+                        <InstagramStyleVideoGrid
+                            reels={userReels}
+                            loading={reelsLoading}
+                            userId={profileData.id || profileData._id}
+                            onRefresh={reloadProfile}
+                        />
                     </View>
                 </LinearGradient>
             </ScrollView>
 
-            {/* Level-Up Popup Modal */}
+            {}
             <Modal
                 visible={levelUpModalVisible}
                 transparent={true}
@@ -590,14 +567,14 @@ export default function OwnParticipantProfile() {
                 </TouchableOpacity>
             </Modal>
 
-            {/* Hamburger Menu Modal */}
+            {}
             <ProfileBurgerMenuModal
                 isVisible={menuVisible}
                 onClose={() => setMenuVisible(false)}
                 profileData={profileData}
             ></ProfileBurgerMenuModal>
 
-            {/* Edit Bio Modal */}
+            {}
             <Modal
                 visible={editBioVisible}
                 transparent={true}
@@ -736,7 +713,7 @@ export default function OwnParticipantProfile() {
                 </View>
             </Modal>
 
-            {/* Bottom Navigation */}
+            {}
             <BottomNav
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}

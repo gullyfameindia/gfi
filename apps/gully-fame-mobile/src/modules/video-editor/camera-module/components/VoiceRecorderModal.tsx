@@ -9,9 +9,16 @@ import {
   Alert,
   Animated,
 } from "react-native";
-import { Audio } from "expo-av";
 import Svg, { Path, Circle } from "react-native-svg";
 import type { VoiceOverlay } from "../types/voiceOverlay.types";
+
+let Audio: any = null;
+try {
+  const expoAv = require("expo-av");
+  Audio = expoAv.Audio;
+} catch (e) {
+  console.warn("[VoiceRecorderModal] expo-av not available (requires dev build):", (e as any)?.message);
+}
 
 interface VoiceRecorderModalProps {
   visible: boolean;
@@ -140,7 +147,7 @@ const VoiceRecorderModal: React.FC<VoiceRecorderModalProps> = ({
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <SafeAreaView style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -157,9 +164,9 @@ const VoiceRecorderModal: React.FC<VoiceRecorderModalProps> = ({
           <View style={styles.closeButton} />
         </View>
 
-        {/* Content */}
+        {}
         <View style={styles.content}>
-          {/* Recording Indicator */}
+          {}
           <View style={styles.recordingContainer}>
             <Animated.View
               style={[
@@ -176,10 +183,10 @@ const VoiceRecorderModal: React.FC<VoiceRecorderModalProps> = ({
             </Text>
           </View>
 
-          {/* Timer */}
+          {}
           <Text style={styles.timer}>{formatTime(recordingTime)}</Text>
 
-          {/* Waveform Placeholder */}
+          {}
           <View style={styles.waveformContainer}>
             {Array.from({ length: 20 }).map((_, i) => (
               <View
@@ -198,7 +205,7 @@ const VoiceRecorderModal: React.FC<VoiceRecorderModalProps> = ({
             ))}
           </View>
 
-          {/* Controls */}
+          {}
           <View style={styles.controls}>
             {!isRecording && !recordingUri && (
               <TouchableOpacity style={styles.recordButton} onPress={startRecording}>
@@ -231,7 +238,7 @@ const VoiceRecorderModal: React.FC<VoiceRecorderModalProps> = ({
             )}
           </View>
 
-          {/* Info */}
+          {}
           <View style={styles.infoBox}>
             <Text style={styles.infoText}>
               💡 Tip: Record your voice and it will be added to the timeline at the current

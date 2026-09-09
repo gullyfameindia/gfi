@@ -1,4 +1,4 @@
-// File Route: apps/gully-fame-mobile/app/(main)/profile/index.tsx
+
 
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -24,7 +24,7 @@ import {
 } from "@/icons";
 import Svg, { Path, Rect, G } from "react-native-svg";
 import { LinearGradient } from "expo-linear-gradient";
-// Naya Import: Invite icon ke liye Ionicons use kar rahe hain
+
 import { Ionicons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get("window");
@@ -223,7 +223,7 @@ export default function MyFameScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
 
-      {/* Header (Updated with Invite Button) */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -234,7 +234,7 @@ export default function MyFameScreen() {
         
         <Text style={styles.headerTitle}>Leaderboard</Text>
         
-        {/* Khali view ko hata kar yahan 'Invite Friend' ka button laga diya hai */}
+        {}
         <TouchableOpacity
           onPress={() => router.push("/(main)/invite-friend" as any)}
           style={styles.backButton}
@@ -244,15 +244,15 @@ export default function MyFameScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Subtitle */}
+      {}
       <Text style={styles.subtitle}>
         🔥 Who&apos;s ruling the gullies right now?
       </Text>
 
-      {/* Top 3 Podium */}
+      {}
       <View style={styles.podiumContainer}>
         <View style={styles.topThreeContainer}>
-          {/* Rank 2 - Silver */}
+          {}
           <TouchableOpacity
             style={styles.podiumItem}
             onPress={() =>
@@ -293,7 +293,7 @@ export default function MyFameScreen() {
             </View>
           </TouchableOpacity>
 
-          {/* Rank 1 - Gold with Crown */}
+          {}
           <TouchableOpacity
             style={[styles.podiumItem, styles.podiumFirst]}
             onPress={() =>
@@ -358,7 +358,7 @@ export default function MyFameScreen() {
             </View>
           </TouchableOpacity>
 
-          {/* Rank 3 - Bronze */}
+          {}
           <TouchableOpacity
             style={styles.podiumItem}
             onPress={() =>
@@ -401,7 +401,7 @@ export default function MyFameScreen() {
         </View>
       </View>
 
-      {/* Enhanced Leaderboard */}
+      {}
       <View style={styles.leaderboardSection}>
         <View style={styles.leaderboardListContainer}>
           <ScrollView

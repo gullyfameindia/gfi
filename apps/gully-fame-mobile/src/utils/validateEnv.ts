@@ -1,4 +1,4 @@
-// apps/gully-fame-mobile/src/utils/validateEnv.ts
+
 
 const required = [
   'EXPO_PUBLIC_API_BASE_URL',

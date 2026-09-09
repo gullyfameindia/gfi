@@ -1,33 +1,33 @@
-// Created by Kiro
-// Storage Utilities - AsyncStorage helpers with encryption/decryption
+
+
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-/**
- * Simple encryption (base64 - for demo only, use proper encryption in production)
- * @param text - Text to encrypt
- * @returns Encrypted text
- */
+
+
+
+
+
 const encrypt = (text: string): string => {
   return Buffer.from(text).toString('base64');
 };
 
-/**
- * Simple decryption (base64 - for demo only, use proper decryption in production)
- * @param encryptedText - Encrypted text
- * @returns Decrypted text
- */
+
+
+
+
+
 const decrypt = (encryptedText: string): string => {
   return Buffer.from(encryptedText, 'base64').toString('utf-8');
 };
 
-/**
- * Save item to AsyncStorage
- * @param key - Storage key
- * @param value - Value to save
- * @param encrypt - Whether to encrypt the value
- * @returns Promise
- */
+
+
+
+
+
+
+
 export const saveItem = async (
   key: string,
   value: any,
@@ -47,12 +47,12 @@ export const saveItem = async (
   }
 };
 
-/**
- * Get item from AsyncStorage
- * @param key - Storage key
- * @param isEncrypted - Whether the value is encrypted
- * @returns Retrieved value or null
- */
+
+
+
+
+
+
 export const getItem = async (
   key: string,
   isEncrypted: boolean = false
@@ -66,7 +66,7 @@ export const getItem = async (
       value = decrypt(value);
     }
 
-    // Try to parse as JSON
+    
     try {
       return JSON.parse(value);
     } catch {
@@ -78,11 +78,11 @@ export const getItem = async (
   }
 };
 
-/**
- * Remove item from AsyncStorage
- * @param key - Storage key
- * @returns Promise
- */
+
+
+
+
+
 export const removeItem = async (key: string): Promise<void> => {
   try {
     await AsyncStorage.removeItem(key);
@@ -92,10 +92,10 @@ export const removeItem = async (key: string): Promise<void> => {
   }
 };
 
-/**
- * Clear all items from AsyncStorage
- * @returns Promise
- */
+
+
+
+
 export const clearStorage = async (): Promise<void> => {
   try {
     await AsyncStorage.clear();
@@ -105,10 +105,10 @@ export const clearStorage = async (): Promise<void> => {
   }
 };
 
-/**
- * Get all keys from AsyncStorage
- * @returns Array of keys
- */
+
+
+
+
 export const getAllKeys = async (): Promise<readonly string[]> => {
   try {
     return await AsyncStorage.getAllKeys();
@@ -118,11 +118,11 @@ export const getAllKeys = async (): Promise<readonly string[]> => {
   }
 };
 
-/**
- * Get multiple items from AsyncStorage
- * @param keys - Array of keys
- * @returns Object with key-value pairs
- */
+
+
+
+
+
 export const getMultipleItems = async (keys: string[]): Promise<Record<string, any>> => {
   try {
     const values = await AsyncStorage.multiGet(keys);
@@ -145,11 +145,11 @@ export const getMultipleItems = async (keys: string[]): Promise<Record<string, a
   }
 };
 
-/**
- * Save multiple items to AsyncStorage
- * @param items - Object with key-value pairs
- * @returns Promise
- */
+
+
+
+
+
 export const saveMultipleItems = async (items: Record<string, any>): Promise<void> => {
   try {
     const pairs = Object.entries(items).map(([key, value]) => [
@@ -164,11 +164,11 @@ export const saveMultipleItems = async (items: Record<string, any>): Promise<voi
   }
 };
 
-/**
- * Remove multiple items from AsyncStorage
- * @param keys - Array of keys
- * @returns Promise
- */
+
+
+
+
+
 export const removeMultipleItems = async (keys: string[]): Promise<void> => {
   try {
     await AsyncStorage.multiRemove(keys);
@@ -178,11 +178,11 @@ export const removeMultipleItems = async (keys: string[]): Promise<void> => {
   }
 };
 
-/**
- * Check if key exists in AsyncStorage
- * @param key - Storage key
- * @returns true if exists, false otherwise
- */
+
+
+
+
+
 export const hasItem = async (key: string): Promise<boolean> => {
   try {
     const value = await AsyncStorage.getItem(key);
@@ -193,10 +193,10 @@ export const hasItem = async (key: string): Promise<boolean> => {
   }
 };
 
-/**
- * Get storage size (approximate)
- * @returns Approximate size in bytes
- */
+
+
+
+
 export const getStorageSize = async (): Promise<number> => {
   try {
     const keys = await AsyncStorage.getAllKeys();
@@ -216,11 +216,11 @@ export const getStorageSize = async (): Promise<number> => {
   }
 };
 
-/**
- * Save user session
- * @param userData - User data to save
- * @returns Promise
- */
+
+
+
+
+
 export const saveUserSession = async (userData: any): Promise<void> => {
   try {
     await saveMultipleItems({
@@ -241,10 +241,10 @@ export const saveUserSession = async (userData: any): Promise<void> => {
   }
 };
 
-/**
- * Get user session
- * @returns User session data or null
- */
+
+
+
+
 export const getUserSession = async (): Promise<any> => {
   try {
     const keys = [
@@ -267,10 +267,10 @@ export const getUserSession = async (): Promise<any> => {
   }
 };
 
-/**
- * Clear user session
- * @returns Promise
- */
+
+
+
+
 export const clearUserSession = async (): Promise<void> => {
   try {
     const keys = [
@@ -293,11 +293,11 @@ export const clearUserSession = async (): Promise<void> => {
   }
 };
 
-/**
- * Save preferences
- * @param preferences - Preferences object
- * @returns Promise
- */
+
+
+
+
+
 export const savePreferences = async (preferences: Record<string, any>): Promise<void> => {
   try {
     await saveItem('appPreferences', preferences);
@@ -307,10 +307,10 @@ export const savePreferences = async (preferences: Record<string, any>): Promise
   }
 };
 
-/**
- * Get preferences
- * @returns Preferences object or empty object
- */
+
+
+
+
 export const getPreferences = async (): Promise<Record<string, any>> => {
   try {
     const prefs = await getItem('appPreferences');
@@ -321,12 +321,12 @@ export const getPreferences = async (): Promise<Record<string, any>> => {
   }
 };
 
-/**
- * Update preference
- * @param key - Preference key
- * @param value - Preference value
- * @returns Promise
- */
+
+
+
+
+
+
 export const updatePreference = async (key: string, value: any): Promise<void> => {
   try {
     const prefs = await getPreferences();

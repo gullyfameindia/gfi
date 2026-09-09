@@ -1,5 +1,5 @@
-// Created by Kiro
-// Edit Profile Screen - Update user profile information
+
+
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -48,7 +48,7 @@ export default function EditProfileScreen({ route, navigation }: any) {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Validate form
+  
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -73,13 +73,13 @@ export default function EditProfileScreen({ route, navigation }: any) {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle input change
+  
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
-    // Clear error for this field
+    
     if (errors[field]) {
       setErrors((prev) => ({
         ...prev,
@@ -88,7 +88,7 @@ export default function EditProfileScreen({ route, navigation }: any) {
     }
   };
 
-  // Handle save profile
+  
   const handleSaveProfile = async () => {
     if (!validateForm()) {
       return;
@@ -124,7 +124,7 @@ export default function EditProfileScreen({ route, navigation }: any) {
     }
   };
 
-  // Handle cancel
+  
   const handleCancel = () => {
     Alert.alert('Discard Changes', 'Are you sure you want to discard changes?', [
       { text: 'Keep Editing', style: 'cancel' },
@@ -143,7 +143,7 @@ export default function EditProfileScreen({ route, navigation }: any) {
         style={styles.keyboardAvoid}
       >
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-          {/* Profile Image Section */}
+          {}
           <View style={styles.imageSection}>
             {profile?.profileImage ? (
               <Image
@@ -161,9 +161,9 @@ export default function EditProfileScreen({ route, navigation }: any) {
             </TouchableOpacity>
           </View>
 
-          {/* Form Section */}
+          {}
           <View style={styles.formSection}>
-            {/* First Name */}
+            {}
             <View style={styles.formGroup}>
               <Text style={styles.label}>First Name *</Text>
               <TextInput
@@ -180,7 +180,7 @@ export default function EditProfileScreen({ route, navigation }: any) {
               )}
             </View>
 
-            {/* Last Name */}
+            {}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Last Name *</Text>
               <TextInput
@@ -197,7 +197,7 @@ export default function EditProfileScreen({ route, navigation }: any) {
               )}
             </View>
 
-            {/* Email */}
+            {}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Email *</Text>
               <TextInput
@@ -215,7 +215,7 @@ export default function EditProfileScreen({ route, navigation }: any) {
               )}
             </View>
 
-            {/* Mobile */}
+            {}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Mobile *</Text>
               <TextInput
@@ -233,7 +233,7 @@ export default function EditProfileScreen({ route, navigation }: any) {
               )}
             </View>
 
-            {/* Gender */}
+            {}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Gender</Text>
               <View style={styles.genderContainer}>
@@ -264,7 +264,7 @@ export default function EditProfileScreen({ route, navigation }: any) {
               </View>
             </View>
 
-            {/* Date of Birth */}
+            {}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Date of Birth</Text>
               <TextInput
@@ -278,7 +278,7 @@ export default function EditProfileScreen({ route, navigation }: any) {
               />
             </View>
 
-            {/* Bio */}
+            {}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Bio</Text>
               <TextInput
@@ -295,7 +295,7 @@ export default function EditProfileScreen({ route, navigation }: any) {
             </View>
           </View>
 
-          {/* Action Buttons */}
+          {}
           <View style={styles.buttonSection}>
             <TouchableOpacity
               style={[styles.button, styles.cancelButton]}
@@ -328,7 +328,7 @@ export default function EditProfileScreen({ route, navigation }: any) {
             </TouchableOpacity>
           </View>
 
-          {/* Footer Spacing */}
+          {}
           <View style={styles.footerSpacing} />
         </ScrollView>
       </KeyboardAvoidingView>

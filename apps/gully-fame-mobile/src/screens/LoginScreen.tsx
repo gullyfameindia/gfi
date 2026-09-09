@@ -1,6 +1,6 @@
-//
 
-// kiro code
+
+
 
 import React, { useState } from "react";
 import {
@@ -16,10 +16,10 @@ import {
   ScrollView,
 } from "react-native";
 import { useAuth } from "../contexts/AuthContext";
-// CHANGE THIS:
-// import * as userApi from '../api/services/userService';
 
-// TO THIS:
+
+
+
 import { authService } from "../api/services/authService";
 
 export default function LoginScreen({ navigation }: any) {
@@ -29,7 +29,7 @@ export default function LoginScreen({ navigation }: any) {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ userId?: string; password?: string }>({});
 
-  // Form validation
+  
   const validateForm = () => {
     const newErrors: { userId?: string; password?: string } = {};
 
@@ -47,7 +47,7 @@ export default function LoginScreen({ navigation }: any) {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle login
+  
   const handleLogin = async () => {
     if (!validateForm()) {
       return;
@@ -57,10 +57,10 @@ export default function LoginScreen({ navigation }: any) {
     try {
       console.log("[LoginScreen] Attempting login with:", { userId });
 
-      // CHANGE THIS:
-      // const response = await userApi.loginUser({...});
+      
+      
 
-      // TO THIS:
+      
       const response = await authService.login({
         userId: userId.trim(),
         viaPassword: true,
@@ -70,7 +70,7 @@ export default function LoginScreen({ navigation }: any) {
       if (response.success && response.data?.token) {
         console.log("[LoginScreen] Login successful");
 
-        // Save token and user data
+        
         await login(response.data.token);
 
         Alert.alert("Success", "Login successful!");
@@ -88,7 +88,7 @@ export default function LoginScreen({ navigation }: any) {
     }
   };
 
-  // Handle forgot password
+  
   const handleForgotPassword = async () => {
     if (!userId.trim()) {
       Alert.alert("Error", "Please enter your email or mobile number");
@@ -97,10 +97,10 @@ export default function LoginScreen({ navigation }: any) {
 
     setIsLoading(true);
     try {
-      // FROM:
-      // const response = await userApi.forgotPassword(userId.trim());
+      
+      
 
-      // TO:
+      
       const response = await authService.forgotPassword(userId.trim());
 
       if (response.success) {
@@ -121,15 +121,15 @@ export default function LoginScreen({ navigation }: any) {
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <Text style={styles.title}>Gully Fame</Text>
           <Text style={styles.subtitle}>Welcome Back!</Text>
         </View>
 
-        {/* Form */}
+        {}
         <View style={styles.form}>
-          {/* Email/Mobile Input */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Email or Mobile</Text>
             <TextInput
@@ -148,7 +148,7 @@ export default function LoginScreen({ navigation }: any) {
             {errors.userId && <Text style={styles.errorText}>{errors.userId}</Text>}
           </View>
 
-          {/* Password Input */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Password</Text>
             <TextInput
@@ -168,7 +168,7 @@ export default function LoginScreen({ navigation }: any) {
             {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
           </View>
 
-          {/* Forgot Password Link */}
+          {}
           <TouchableOpacity
             onPress={handleForgotPassword}
             disabled={isLoading}
@@ -177,7 +177,7 @@ export default function LoginScreen({ navigation }: any) {
             <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
           </TouchableOpacity>
 
-          {/* Login Button */}
+          {}
           <TouchableOpacity
             style={[styles.loginButton, isLoading && styles.loginButtonDisabled]}
             onPress={handleLogin}
@@ -190,10 +190,10 @@ export default function LoginScreen({ navigation }: any) {
             )}
           </TouchableOpacity>
 
-          {/* ✅ UPDATED BY KIRO - Fixed unescaped apostrophe */}
-          {/* OLD CODE: Don't have (unescaped apostrophe) */}
-          {/* NEW CODE: Don&rsquo;t have (properly escaped) */}
-          {/* Register Link */}
+          {}
+          {}
+          {}
+          {}
           <View style={styles.registerContainer}>
             <Text style={styles.registerText}>Don&rsquo;t have an account? </Text>
             <TouchableOpacity onPress={() => navigation?.navigate("Register")} disabled={isLoading}>

@@ -24,7 +24,7 @@ import {
   ViewToken,
 } from "react-native";
 
-// Conditional FFmpeg import - only available in development builds
+
 let FFmpegKit: any = null;
 let ReturnCode: any = null;
 let isFFmpegAvailable = false;
@@ -39,12 +39,12 @@ try {
   isFFmpegAvailable = false;
 }
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
-import { Video as AVVideo, ResizeMode, Audio } from "expo-av";
+import { VideoView, useVideoPlayer } from "expo-video";
 import Svg, { Path } from "react-native-svg";
 import BottomNav from "../../../src/components/layout/BottomNav";
 import DrawerMenu from "../../../src/components/layout/DrawerMenu";
 import { useLocalSearchParams, router } from "expo-router";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "expo-router/react-navigation";
 import { TipPopup } from "../../../src/components/tip/TipComponents";
 
 import { ReelViewer } from "../../../src/components/reel/ReelViewer";
@@ -80,17 +80,17 @@ import {
   ThreeDotsIcon,
 } from "@/icons";
 
-// Get screen dimensions - keep as constants for FlatList paging
+
 const { width, height } = Dimensions.get("window");
 
-// Icons
 
-// Reel data with video files - matching IDs from search page
-// ✅ KIRO: Edit by kiro - Removed all video file references (files deleted to reduce build size)
+
+
+
 const reelData = [
   {
     id: 1,
-    userId: "660b8e3f1c5d7a4b2f9e1234", // Mock ObjectId
+    userId: "660b8e3f1c5d7a4b2f9e1234", 
     username: "@Suhani0098000",
     caption: "Good morining every one #goodmorning\nGood morining every\none #goodmorning",
     musicName: "On the way - (alan walker) - music hip hop brand new york",
@@ -99,7 +99,7 @@ const reelData = [
   },
   {
     id: 2,
-    userId: "660b8e3f1c5d7a4b2f9e1235", // Mock ObjectId
+    userId: "660b8e3f1c5d7a4b2f9e1235", 
     username: "@DancerPro",
     caption: "Showing off my moves! 💃 #dance #gullyfame",
     musicName: "Original Sound - DancerPro",
@@ -108,7 +108,7 @@ const reelData = [
   },
   {
     id: 3,
-    userId: "660b8e3f1c5d7a4b2f9e1236", // Mock ObjectId
+    userId: "660b8e3f1c5d7a4b2f9e1236", 
     username: "@ChefMaster",
     caption: "Cooking up something special! 🍳 #cooking #food",
     musicName: "Cooking Vibes - ChefMaster",
@@ -117,7 +117,7 @@ const reelData = [
   },
   {
     id: 4,
-    userId: "660b8e3f1c5d7a4b2f9e1237", // Mock ObjectId
+    userId: "660b8e3f1c5d7a4b2f9e1237", 
     username: "@ComedyKing",
     caption: "Laugh out loud! 😂 #comedy #funny",
     musicName: "Funny Moments - ComedyKing",
@@ -126,7 +126,7 @@ const reelData = [
   },
   {
     id: 5,
-    userId: "660b8e3f1c5d7a4b2f9e1238", // Mock ObjectId
+    userId: "660b8e3f1c5d7a4b2f9e1238", 
     username: "@MusicStar",
     caption: "New track dropping soon! 🎵 #music #newrelease",
     musicName: "Original Sound - MusicStar",
@@ -167,6 +167,52 @@ const reelData = [
   },
 ];
 
+
+
+
+interface ReelVideoPlayerProps {
+  reel: any;
+  isVisible: boolean;
+  videoRefs: React.MutableRefObject<Map<number, ReturnType<typeof useVideoPlayer>>>;
+}
+
+function ReelVideoPlayer({ reel, isVisible, videoRefs }: ReelVideoPlayerProps) {
+  const player = useVideoPlayer(reel.video, (player) => {
+    player.loop = true;
+    player.muted = false;
+  });
+
+  
+  React.useEffect(() => {
+    videoRefs.current.set(reel.id, player);
+    return () => {
+      videoRefs.current.delete(reel.id);
+    };
+  }, [player, reel.id]);
+
+  
+  React.useEffect(() => {
+    if (isVisible && AppState.currentState === "active") {
+      setTimeout(() => {
+        if (AppState.currentState === "active") {
+          player.play().catch(() => {});
+        }
+      }, 100);
+    } else {
+      player.pause();
+    }
+  }, [isVisible, player]);
+
+  return (
+    <VideoView
+      style={styles.reelImage}
+      player={player}
+      contentFit="cover"
+      allowsFullscreen
+    />
+  );
+}
+
 export default function GullyReelScreen() {
   const params = useLocalSearchParams();
   const insets = useSafeAreaInsets();
@@ -179,7 +225,7 @@ export default function GullyReelScreen() {
   const flatListRef = useRef<FlatList<(typeof reelData)[0]>>(null);
   const [showMoreShareOptions, setShowMoreShareOptions] = useState(false);
   const [currentVisibleIndex, setCurrentVisibleIndex] = useState<number | null>(null);
-  const videoRefs = useRef<Map<number, AVVideo>>(new Map());
+  const videoRefs = useRef<Map<number, ReturnType<typeof useVideoPlayer>>>(new Map());
   const [showStarAnimation, setShowStarAnimation] = useState<number | null>(null);
   const [showThreeDotsMenu, setShowThreeDotsMenu] = useState(false);
   const [currentReelForMenu, setCurrentReelForMenu] = useState<number | null>(null);
@@ -207,19 +253,19 @@ export default function GullyReelScreen() {
   const playPauseIconOpacity = useRef(new Animated.Value(0)).current;
   const THEME_COLOR = "#EC9A15";
 
-  // ✅ CREATED BY KIRO - Follow state management for reels
+  
   const [followingStates, setFollowingStates] = useState<{ [key: string]: boolean }>({});
 
-  // Responsive positioning constants
+  
   const BOTTOM_NAV_HEIGHT = scale(60);
   const ACTION_ICONS_BOTTOM = BOTTOM_NAV_HEIGHT + scale(12);
   const ACTION_ICONS_CONTAINER_HEIGHT = scale(50);
   const LEFT_CONTENT_BOTTOM = ACTION_ICONS_BOTTOM + ACTION_ICONS_CONTAINER_HEIGHT + scale(24);
 
-  // Status bar height
+  
   const statusBarHeight = getStatusBarHeight();
 
-  // Memoize reel data to prevent unnecessary re-renders
+  
   const memoizedReels = useMemo(() => reels, [reels]);
   useEffect(() => {
     const initAudio = async () => {
@@ -227,7 +273,7 @@ export default function GullyReelScreen() {
         await Audio.setAudioModeAsync({
           playsInSilentModeIOS: true,
           staysActiveInBackground: false,
-          shouldDuckAndroid: true, // Lowers other app volumes instead of crashing
+          shouldDuckAndroid: true, 
           playThroughEarpieceAndroid: false,
         });
       } catch (e) {
@@ -236,19 +282,19 @@ export default function GullyReelScreen() {
     };
     initAudio();
   }, []);
-  // Initialize comment likes state
+  
   useEffect(() => {
     const initialLikes = new Map<number, { likes: number; isLiked: boolean }>();
-    // Sample comments data
+    
     initialLikes.set(1, { likes: 12, isLiked: false });
     initialLikes.set(2, { likes: 8, isLiked: true });
     initialLikes.set(3, { likes: 5, isLiked: false });
-    initialLikes.set(4, { likes: 3, isLiked: false }); // Reply comment
+    initialLikes.set(4, { likes: 3, isLiked: false }); 
     setCommentLikes(initialLikes);
   }, []);
   useEffect(() => {
     const subscription = AppState.addEventListener("change", (nextAppState) => {
-      // If the app goes to the background or inactive state, pause all videos
+      
       if (nextAppState !== "active") {
         videoRefs.current.forEach((videoRef) => {
           if (videoRef) {
@@ -266,54 +312,54 @@ export default function GullyReelScreen() {
     if (params.reelId && flatListRef.current) {
       const reelIndex = parseInt(params.reelId as string) - 1;
       if (reelIndex >= 0 && reelIndex < reels.length) {
-        // Set visible index immediately for instant playback
+        
         setCurrentVisibleIndex(reelIndex);
-        // Scroll to index immediately - no delay for instant video start
+        
         setTimeout(() => {
           flatListRef.current?.scrollToIndex({
             index: reelIndex,
             animated: false,
           });
           const videoRef = videoRefs.current.get(reels[reelIndex].id);
-          // Add AppState check
+          
           if (videoRef && AppState.currentState === "active") {
             videoRef.playAsync().catch(() => { });
           }
         }, 50);
       }
     } else {
-      // Set first video as visible by default
+      
       setCurrentVisibleIndex(0);
     }
   }, [params.reelId, reels.length]);
 
-  // Cleanup all videos when screen loses focus
+  
   useFocusEffect(
     useCallback(() => {
       return () => {
-        // Pause all videos when navigating away
+        
         videoRefs.current.forEach((videoRef) => {
           if (videoRef) {
             videoRef.pauseAsync().catch(() => { });
           }
         });
-        // Cleanup animations
+        
         starAnimations.current.clear();
       };
     }, [])
   );
 
-  // Control video playback based on visibility - optimized to prevent lag and crashes
+  
   useEffect(() => {
     if (currentVisibleIndex === null) return;
 
-    // Create a map of reel IDs to indices for faster lookup
+    
     const reelIdToIndex = new Map<number, number>();
     reels.forEach((reel, index) => {
       reelIdToIndex.set(reel.id, index);
     });
 
-    // Small delay to ensure video is ready before playing - prevents crashes
+    
     const playTimeout = setTimeout(() => {
       const currentReel = reels[currentVisibleIndex];
       if (currentReel) {
@@ -321,7 +367,7 @@ export default function GullyReelScreen() {
         if (videoRef && AppState.currentState === "active") {
           videoRef.playAsync().catch((error: any) => {
             console.log("Play error:", error);
-            // Retry once after a short delay
+            
             setTimeout(() => {
               if (AppState.currentState === "active") {
                 videoRef.playAsync().catch(() => { });
@@ -332,7 +378,7 @@ export default function GullyReelScreen() {
       }
     }, 150);
 
-    // Pause all other videos - optimized lookup
+    
     videoRefs.current.forEach((videoRef, reelId) => {
       const reelIndex = reelIdToIndex.get(reelId);
       const shouldPlay = currentVisibleIndex === reelIndex;
@@ -345,7 +391,7 @@ export default function GullyReelScreen() {
     return () => clearTimeout(playTimeout);
   }, [currentVisibleIndex, reels]);
 
-  // Viewability callback to track visible video
+  
   const onViewableItemsChangedRef = useRef(({ viewableItems }: { viewableItems: ViewToken[] }) => {
     if (
       viewableItems.length > 0 &&
@@ -376,7 +422,7 @@ export default function GullyReelScreen() {
   const executeDownloadWithWatermark = async (reelData: any) => {
     setIsDownloading(true);
     try {
-      // Check if FFmpeg is available for watermarking
+      
       if (!isFFmpegAvailable) {
         Alert.alert(
           "Feature Not Available",
@@ -416,14 +462,14 @@ export default function GullyReelScreen() {
       if (ReturnCode.isSuccess(returnCode)) {
         const asset = await MediaLibrary.createAssetAsync(outputUri);
 
-        // 2. Check if the GullyFame album already exists
+        
         const existingAlbum = await MediaLibrary.getAlbumAsync("GullyFame");
 
         if (existingAlbum) {
-          // If it exists, just slide the new video in
+          
           await MediaLibrary.addAssetsToAlbumAsync([asset], existingAlbum, false);
         } else {
-          // If it's their first time downloading, create the album with this video
+          
           await MediaLibrary.createAlbumAsync("GullyFame", asset, false);
         }
 
@@ -452,18 +498,18 @@ export default function GullyReelScreen() {
     try {
       switch (option) {
         case "copy":
-          // Copy to clipboard
+          
           try {
             if (Platform.OS === "web") {
               await navigator.clipboard.writeText(reelUrl);
               Alert.alert("Copied!", "Link copied to clipboard");
             } else {
-              // For React Native, show the URL for manual copying
-              // In production, you would install @react-native-clipboard/clipboard
+              
+              
               Alert.alert("Copy Link", reelUrl, [{ text: "OK" }]);
             }
           } catch {
-            // Fallback: show URL in alert
+            
             Alert.alert("Copy Link", reelUrl);
           }
           break;
@@ -527,7 +573,7 @@ export default function GullyReelScreen() {
           }
           break;
       }
-      // Close modal after sharing
+      
       Animated.timing(slideAnim, {
         toValue: height,
         duration: 300,
@@ -544,10 +590,10 @@ export default function GullyReelScreen() {
 
   const handleLike = useCallback(
     (id: number) => {
-      // 1. Find the reel FIRST (using the current 'reels' state)
+      
       const targetReel = reels.find((r) => r.id === id);
 
-      // 2. Trigger side-effects/animations OUTSIDE the state updater
+      
       if (targetReel && !targetReel.isLiked) {
         setShowVotePopup(id);
         votePopupAnim.setValue(0);
@@ -558,7 +604,7 @@ export default function GullyReelScreen() {
         }).start(() => setShowVotePopup(null));
       }
 
-      // 3. Keep the state updater purely for data!
+      
       setReels((prevReels) =>
         prevReels.map((reel) =>
           reel.id === id
@@ -594,7 +640,7 @@ export default function GullyReelScreen() {
           }
         }
 
-        // Animate icon fade in
+        
         playPauseIconOpacity.setValue(0);
         Animated.timing(playPauseIconOpacity, {
           toValue: 1,
@@ -602,12 +648,12 @@ export default function GullyReelScreen() {
           useNativeDriver: true,
         }).start();
 
-        // Clear existing timeout
+        
         if (playPauseIconTimeout.current) {
           clearTimeout(playPauseIconTimeout.current);
         }
 
-        // Hide icon after 1 second with fade out
+        
         playPauseIconTimeout.current = setTimeout(() => {
           Animated.timing(playPauseIconOpacity, {
             toValue: 0,
@@ -631,7 +677,7 @@ export default function GullyReelScreen() {
       if (now - lastTap.current.time < DOUBLE_TAP_DELAY && lastTap.current.id === id) {
         const targetReel = reels.find((r) => r.id === id);
 
-        // Trigger animations first
+        
         if (targetReel && !targetReel.isLiked) {
           if (!starAnimations.current.has(id)) {
             starAnimations.current.set(id, {
@@ -663,7 +709,7 @@ export default function GullyReelScreen() {
           });
         }
 
-        // Then update state purely
+        
         setReels((prevReels) =>
           prevReels.map((r) =>
             r.id === id && !r.isLiked ? { ...r, isLiked: true, likes: r.likes + 1 } : r
@@ -696,20 +742,20 @@ export default function GullyReelScreen() {
     setReels((prevReels) => {
       const nextBatch = reelData.map((reel, i) => ({
         ...reel,
-        id: prevReels.length + i + 1, // naya unique id
+        id: prevReels.length + i + 1, 
       }));
       return [...prevReels, ...nextBatch];
     });
   }, []);
 
-  // ✅ CREATED BY KIRO - Handle follow user from reel
+  
   const handleFollowUser = async (userId: string, username: string, reelId: number) => {
     try {
       console.log(`[ReelScreen] Following user: ${username} (${userId})`);
       const response = await followService.followUser(userId);
 
       if (response.success) {
-        // Update reel object to mark as followed
+        
         setReels((prevReels) =>
           prevReels.map((reel) =>
             reel.id === reelId ? { ...reel, isFollowed: true } : reel
@@ -732,14 +778,14 @@ export default function GullyReelScreen() {
     }
   };
 
-  // ✅ CREATED BY KIRO - Handle unfollow user from reel
+  
   const handleUnfollowUser = async (userId: string, username: string, reelId: number) => {
     try {
       console.log(`[ReelScreen] Unfollowing user: ${username} (${userId})`);
       const response = await followService.unfollowUser(userId);
 
       if (response.success) {
-        // Update reel object to mark as unfollowed
+        
         setReels((prevReels) =>
           prevReels.map((reel) =>
             reel.id === reelId ? { ...reel, isFollowed: false } : reel
@@ -779,7 +825,7 @@ export default function GullyReelScreen() {
         isFocused && currentVisibleIndex !== null && Math.abs(currentVisibleIndex - index) <= 1;
       return (
         <View style={styles.reelContainer}>
-          {/* Reel Video - Full Screen */}
+          {}
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => {
@@ -797,41 +843,16 @@ export default function GullyReelScreen() {
             style={styles.videoTouchable}
           >
             {shouldLoadVideo ? (
-              <AVVideo
-                ref={(ref) => {
-                  if (ref) {
-                    videoRefs.current.set(reel.id, ref);
-                  } else {
-                    videoRefs.current.delete(reel.id);
-                  }
-                }}
-                source={reel.video}
-                style={styles.reelImage}
-                resizeMode={ResizeMode?.COVER || "cover"}
-                shouldPlay={false}
-                isLooping={true}
-                isMuted={false}
-                useNativeControls={false}
-                usePoster={false}
-                // progressUpdateIntervalMillis={1000}
-                onLoad={(status) => {
-                  if (isVisible && status.isLoaded) {
-                    const videoRef = videoRefs.current.get(reel.id);
-                    if (videoRef && AppState.currentState === "active") {
-                      setTimeout(() => {
-                        if (AppState.currentState === "active") {
-                          videoRef.playAsync().catch(() => { });
-                        }
-                      }, 100);
-                    }
-                  }
-                }}
+              <ReelVideoPlayer 
+                reel={reel}
+                isVisible={isVisible}
+                videoRefs={videoRefs}
               />
             ) : (
               <View style={[styles.reelImage, { backgroundColor: "#111" }]} />
             )}
 
-            {/* Star Animation Overlay */}
+            {}
             {showAnimation && (
               <Animated.View
                 style={[
@@ -848,9 +869,9 @@ export default function GullyReelScreen() {
             )}
           </TouchableOpacity>
 
-          {/* Overlay Content */}
+          {}
           <View style={styles.overlay} pointerEvents="box-none">
-            {/* Gamified Quest Tracker (Top Left) */}
+            {}
             <View style={styles.questTracker}>
               <Text style={styles.questIcon}>🎯</Text>
               <View>
@@ -859,7 +880,7 @@ export default function GullyReelScreen() {
               </View>
             </View>
 
-            {/* Top Right - Three Dots Menu Button */}
+            {}
             <TouchableOpacity
               style={styles.threeDotsButton}
               onPress={() => {
@@ -877,19 +898,19 @@ export default function GullyReelScreen() {
               <ThreeDotsIcon color="#fff" size={24} />
             </TouchableOpacity>
 
-            {/* RIGHT SIDE VERTICAL ICONS */}
+            {}
             <View style={styles.rightActionContainer}>
               <TouchableOpacity
                 style={styles.rightActionButton}
                 onPress={() => {
-                  // 1. Reset animation value to bottom of screen
+                  
                   slideAnim.setValue(height);
-                  // 2. Show the modal background
+                  
                   setCommentModalVisible(true);
-                  // 3. Animate the modal content sliding up into view
+                  
                   Animated.timing(slideAnim, {
                     toValue: 0,
-                    duration: 300, // Matches the duration you use to close it
+                    duration: 300, 
                     useNativeDriver: true,
                   }).start();
                 }}
@@ -901,7 +922,7 @@ export default function GullyReelScreen() {
               <TouchableOpacity
                 style={styles.rightActionButton}
                 onPress={() => {
-                  // Pop open the Share Modal using the exact same logic
+                  
                   slideAnim.setValue(height);
                   setShareModalVisible(true);
                   Animated.timing(slideAnim, {
@@ -915,7 +936,7 @@ export default function GullyReelScreen() {
                 <Text style={styles.actionIconCount}>{reel.shares || 0}</Text>
               </TouchableOpacity>
 
-              {/* Download Button (Text Removed for clean UI) */}
+              {}
               <TouchableOpacity
                 style={styles.rightActionButton}
                 onPress={() => {
@@ -927,7 +948,7 @@ export default function GullyReelScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* Play/Pause Icon Overlay */}
+            {}
             {showPlayPauseIcon && showPlayPauseIcon.reelId === reel.id && (
               <View style={styles.playPauseIconContainer} pointerEvents="none">
                 <Animated.View
@@ -942,14 +963,14 @@ export default function GullyReelScreen() {
               </View>
             )}
 
-            {/* BOTTOM CONTENT AREA (Full Width layout) */}
+            {}
             <View
               style={[styles.bottomContent, { bottom: BOTTOM_NAV_HEIGHT + scale(16) }]}
               pointerEvents="box-none"
             >
-              {/* Profile Info restored! Wrapped in a container so it doesn't overlap icons */}
+              {}
               <View style={styles.bottomInfoContainer}>
-                {/* Profile Row */}
+                {}
                 <View style={styles.profileRow}>
                   <TouchableOpacity style={styles.profileImageContainer}>
                     <Image
@@ -980,7 +1001,7 @@ export default function GullyReelScreen() {
                   </TouchableOpacity>
                 </View>
 
-                {/* Caption */}
+                {}
                 <View style={styles.captionContainer}>
                   <Text
                     style={styles.caption}
@@ -1006,7 +1027,7 @@ export default function GullyReelScreen() {
                   )}
                 </View>
 
-                {/* Music Row */}
+                {}
                 <View style={styles.musicRow}>
                   <MusicIcon color="#fff" size={16} />
                   <Text style={styles.musicName} numberOfLines={1}>
@@ -1015,9 +1036,9 @@ export default function GullyReelScreen() {
                 </View>
               </View>
 
-              {/* FULL WIDTH ACTION PILLS (Tip & Vote) */}
+              {}
               <View style={styles.bottomButtonsRow}>
-                {/* Tip Button Wrapper */}
+                {}
                 <View style={styles.flexButtonWrapper}>
                   <TouchableOpacity
                     style={styles.tipButton}
@@ -1031,9 +1052,9 @@ export default function GullyReelScreen() {
                   </TouchableOpacity>
                 </View>
 
-                {/* Vote Button Wrapper with Floating Text */}
+                {}
                 <View style={styles.flexButtonWrapper}>
-                  {/* Floating Gamified Text */}
+                  {}
                   {showVotePopup === reel.id && (
                     <Animated.View
                       style={[
@@ -1099,7 +1120,7 @@ export default function GullyReelScreen() {
     [
       currentVisibleIndex,
       showStarAnimation,
-      showVotePopup, // <-- Make sure this is in your dependencies!
+      showVotePopup, 
       handleDoubleTap,
       handleLike,
       handleSave,
@@ -1110,7 +1131,7 @@ export default function GullyReelScreen() {
     <SafeAreaView style={styles.container} edges={[]}>
       <StatusBar barStyle="light-content" backgroundColor="#000" translucent />
 
-      {/* Back Button */}
+      {}
       <View style={styles.backButtonContainer}>
         <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
           <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -1164,7 +1185,7 @@ export default function GullyReelScreen() {
         }}
       />
 
-      {/* Comment Modal */}
+      {}
       <Modal
         visible={commentModalVisible}
         transparent={true}
@@ -1196,7 +1217,7 @@ export default function GullyReelScreen() {
             >
               <View style={styles.handleBar} />
 
-              {/* Header - No Borders */}
+              {}
               <View style={styles.commentHeader}>
                 <Text style={styles.commandPanelTitle}>COMMENTS</Text>
                 <TouchableOpacity
@@ -1304,7 +1325,7 @@ export default function GullyReelScreen() {
                                 </TouchableOpacity>
                               </View>
 
-                              {/* Clean text toggle */}
+                              {}
                               {comment.replies && comment.replies.length > 0 && (
                                 <TouchableOpacity
                                   onPress={() => {
@@ -1362,7 +1383,7 @@ export default function GullyReelScreen() {
                             </TouchableOpacity>
                           </View>
 
-                          {/* Nested Replies - Indented without borders */}
+                          {}
                           {expandedReplies.has(comment.id) &&
                             comment.replies &&
                             comment.replies.length > 0 && (
@@ -1437,9 +1458,9 @@ export default function GullyReelScreen() {
                     })}
                   </ScrollView>
 
-                  {/* Input area remains exactly the same */}
+                  {}
                   <View style={styles.gamifiedInputWrapper}>
-                    <View style={styles.gamifiedInputContainer}>{/* ... */}</View>
+                    <View style={styles.gamifiedInputContainer}>{}</View>
                   </View>
                 </KeyboardAvoidingView>
               </View>
@@ -1447,7 +1468,7 @@ export default function GullyReelScreen() {
           </Animated.View>
         </TouchableOpacity>
       </Modal>
-      {/* Share Modal */}
+      {}
       <Modal
         visible={shareModalVisible}
         transparent={true}
@@ -1486,10 +1507,10 @@ export default function GullyReelScreen() {
             ]}
           >
             <TouchableOpacity activeOpacity={1} onPress={(e) => e.stopPropagation()}>
-              {/* Handle Bar */}
+              {}
               <View style={styles.handleBar} />
 
-              {/* Header */}
+              {}
               <View style={styles.shareHeader}>
                 <Text style={styles.shareHeaderTitle}>Share</Text>
                 <TouchableOpacity
@@ -1508,7 +1529,7 @@ export default function GullyReelScreen() {
                 </TouchableOpacity>
               </View>
 
-              {/* Friends List */}
+              {}
               <View style={styles.friendsSection}>
                 <Text style={styles.sectionTitle}>Send to</Text>
                 <ScrollView
@@ -1548,7 +1569,7 @@ export default function GullyReelScreen() {
                 </ScrollView>
               </View>
 
-              {/* Share Options */}
+              {}
               <View style={styles.shareOptionsSection}>
                 <Text style={styles.sectionTitle}>Share to</Text>
                 <ScrollView
@@ -1557,7 +1578,7 @@ export default function GullyReelScreen() {
                   showsHorizontalScrollIndicator={false}
                   style={styles.shareOptionsList}
                 >
-                  {/* Initial options: Copy, WhatsApp, WhatsApp Status, Instagram */}
+                  {}
                   <TouchableOpacity style={styles.shareOption} onPress={() => handleShare("copy")}>
                     <View style={[styles.shareOptionIconCircle, { backgroundColor: "#66620" }]}>
                       <Image
@@ -1637,7 +1658,7 @@ export default function GullyReelScreen() {
                     </Text>
                   </TouchableOpacity>
 
-                  {/* More options: Snapchat, Download, Facebook, Twitter - shown when More is clicked */}
+                  {}
                   {showMoreShareOptions && (
                     <>
                       <TouchableOpacity
@@ -1731,13 +1752,13 @@ export default function GullyReelScreen() {
                     </>
                   )}
 
-                  {/* More Button - only show if more options are not visible */}
+                  {}
                   {!showMoreShareOptions && (
                     <TouchableOpacity
                       style={styles.shareOption}
                       onPress={() => {
                         setShowMoreShareOptions(true);
-                        // Scroll to show the new icons when "More" is clicked
+                        
                         setTimeout(() => {
                           shareScrollViewRef.current?.scrollToEnd({
                             animated: true,
@@ -1767,7 +1788,7 @@ export default function GullyReelScreen() {
         </TouchableOpacity>
       </Modal>
 
-      {/* Three Dots Menu Modal - Bottom Overlay */}
+      {}
       <Modal
         visible={showThreeDotsMenu}
         transparent={true}
@@ -1922,7 +1943,7 @@ export default function GullyReelScreen() {
         animationType="fade"
         onRequestClose={() => !isDownloading && setDownloadModalVisible(false)}
       >
-        {/* We add the inline justifyContent and alignItems here to force it center */}
+        {}
         <View style={[styles.modalOverlay, { justifyContent: "center", alignItems: "center" }]}>
           <View style={styles.downloadCard}>
             <Text style={styles.downloadTitle}>Save to Gallery?</Text>
@@ -1954,7 +1975,7 @@ export default function GullyReelScreen() {
           </View>
         </View>
       </Modal>
-      {/* Bottom Navigation */}
+      {}
       <BottomNav
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -1962,10 +1983,10 @@ export default function GullyReelScreen() {
         onOpenDrawer={() => setDrawerVisible(true)}
       />
 
-      {/* Drawer Menu */}
+      {}
       <DrawerMenu visible={drawerVisible} onClose={() => setDrawerVisible(false)} />
 
-      {/* Tip Popup */}
+      {}
       {currentTipReelId !== null && (
         <TipPopup
           visible={tipModalVisible}
@@ -1975,7 +1996,7 @@ export default function GullyReelScreen() {
           }}
           reelId={currentTipReelId}
           onTipSuccess={(amount) => {
-            // Update tip count for the reel
+            
             if (currentTipReelId !== null) {
               try {
                 setReels((prevReels) =>
@@ -1996,7 +2017,7 @@ export default function GullyReelScreen() {
         />
       )}
 
-      {/* ReelViewer for Full Screen */}
+      {}
       <ReelViewer
         visible={reelViewerVisible}
         reels={reels.map((reel) => ({
@@ -2014,7 +2035,7 @@ export default function GullyReelScreen() {
 }
 
 const styles = StyleSheet.create({
-  // --- SOFT GLASS CARD STYLES ---
+  
   logEntryCard: {
     backgroundColor: "rgba(255, 255, 255, 0.04)",
     borderRadius: scale(16),
@@ -2027,14 +2048,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
-  // --- CLEAN HIERARCHY STYLES (No Lines) ---
+  
   viewRepliesButton: {
     marginTop: scale(10),
     marginBottom: scale(4),
     alignSelf: "flex-start",
   },
   viewRepliesText: {
-    color: "#EC9A15", // Glowy orange text to act as the primary call-to-action
+    color: "#EC9A15", 
     fontSize: getFontSize(12),
     fontWeight: "700",
   },
@@ -2052,20 +2073,20 @@ const styles = StyleSheet.create({
   },
   repliesContainer: {
     marginTop: scale(12),
-    // 44px indent perfectly aligns the reply avatar with the start of the parent's text
-    // (32px parent avatar width + 12px margin)
+    
+    
     paddingLeft: scale(44),
   },
   logReplyCard: {
     flexDirection: "row",
-    marginBottom: scale(12), // Spacing between multiple replies
+    marginBottom: scale(12), 
   },
   replyAvatar: {
-    width: scale(22), // Scaled down to emphasize it's a sub-comment
+    width: scale(22), 
     height: scale(22),
     borderRadius: scale(11),
     marginRight: scale(10),
-    marginTop: scale(2), // Aligns the smaller avatar with the top of the text
+    marginTop: scale(2), 
   },
   replyContent: {
     flex: 1,
@@ -2111,23 +2132,23 @@ const styles = StyleSheet.create({
 
   repliesSpine: {
     position: "absolute",
-    left: scale(15), // Hits the exact center of the 32px parent avatar above it
-    top: scale(-12), // Reaches up to the parent comment area
-    bottom: scale(20), // Stops exactly at the middle of the last reply's avatar
+    left: scale(15), 
+    top: scale(-12), 
+    bottom: scale(20), 
     width: 1.5,
-    backgroundColor: "rgba(255, 255, 255, 0.15)", // Subtle vertical line
+    backgroundColor: "rgba(255, 255, 255, 0.15)", 
   },
 
   replyThreadPeg: {
     position: "absolute",
-    left: scale(-29), // Reaches backward from the padding to hit the vertical spine
-    top: scale(11), // Hits the exact vertical center of the 24px reply avatar
-    width: scale(20), // Creates the horizontal line with an 8px gap before the avatar
+    left: scale(-29), 
+    top: scale(11), 
+    width: scale(20), 
     height: 1.5,
     backgroundColor: "rgba(255, 255, 255, 0.15)",
   },
   cleanCommentRow: {
-    paddingVertical: scale(14), // Gives breathing room between comments
+    paddingVertical: scale(14), 
     backgroundColor: "transparent",
   },
   cleanReplyRow: {
@@ -2137,25 +2158,25 @@ const styles = StyleSheet.create({
   replyThreadConnector: {
     position: "absolute",
     left: 0,
-    top: scale(12), // Centers the line with the middle of the reply avatar
+    top: scale(12), 
     width: scale(12),
     height: 1.5,
-    backgroundColor: "rgba(255, 255, 255, 0.15)", // Horizontal line pointing to the avatar
+    backgroundColor: "rgba(255, 255, 255, 0.15)", 
   },
 
   gamifiedModal: {
-    backgroundColor: "#2A1B0D", // Matches Options menu
+    backgroundColor: "#2A1B0D", 
     borderTopLeftRadius: scale(24),
     borderTopRightRadius: scale(24),
     height: height * 0.7,
     borderTopWidth: 1,
-    borderColor: "rgba(236, 154, 21, 0.3)", // Orange glow
+    borderColor: "rgba(236, 154, 21, 0.3)", 
     shadowColor: "#EC9A15",
     shadowOffset: { width: 0, height: -5 },
     shadowOpacity: 0.15,
     shadowRadius: 15,
     elevation: 10,
-    paddingTop: scale(10), // Gives the handle bar breathing room
+    paddingTop: scale(10), 
   },
   handleBar: {
     width: scale(40),
@@ -2163,7 +2184,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255, 255, 255, 0.2)",
     borderRadius: scale(2),
     alignSelf: "center",
-    marginBottom: scale(8), // Pushes the header down naturally
+    marginBottom: scale(8), 
   },
   commentHeader: {
     flexDirection: "row",
@@ -2171,7 +2192,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: spacing.lg,
     paddingBottom: spacing.md,
-    // Removed borders here completely
+    
   },
 
   usernameRow: {
@@ -2198,12 +2219,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     paddingTop: scale(8),
     paddingBottom: Platform.OS === "ios" ? scale(32) : scale(20),
-    backgroundColor: "#2A1B0D", // Matches modal base to cover scroll gaps
+    backgroundColor: "#2A1B0D", 
   },
   gamifiedInputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.4)", // Darker inner well
+    backgroundColor: "rgba(0, 0, 0, 0.4)", 
     borderRadius: scale(24),
     paddingHorizontal: scale(6),
     paddingVertical: scale(6),
@@ -2251,17 +2272,17 @@ const styles = StyleSheet.create({
   },
   integratedCommentRow: {
     paddingVertical: scale(14),
-    borderBottomWidth: StyleSheet.hairlineWidth, // Ultra-thin line
-    borderBottomColor: "rgba(236, 154, 21, 0.15)", // Subtle glowing orange tint
-    backgroundColor: "transparent", // Let the modal background shine through
+    borderBottomWidth: StyleSheet.hairlineWidth, 
+    borderBottomColor: "rgba(236, 154, 21, 0.15)", 
+    backgroundColor: "transparent", 
   },
   integratedReplyRow: {
     flexDirection: "row",
     marginTop: scale(12),
     paddingTop: scale(12),
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: "rgba(255, 255, 255, 0.05)", // Very faint white separator for replies
-    paddingLeft: scale(20), // Stronger indent so replies look distinct
+    borderTopColor: "rgba(255, 255, 255, 0.05)", 
+    paddingLeft: scale(20), 
   },
   backButton: {
     width: scale(40),
@@ -2331,7 +2352,7 @@ const styles = StyleSheet.create({
   },
 
   gamifiedCommentCard: {
-    backgroundColor: "rgba(255, 255, 255, 0.03)", // Glass card effect
+    backgroundColor: "rgba(255, 255, 255, 0.03)", 
     borderRadius: scale(16),
     padding: scale(12),
     marginBottom: scale(12),
@@ -2345,7 +2366,7 @@ const styles = StyleSheet.create({
     paddingTop: scale(12),
     borderTopWidth: 1,
     borderTopColor: "rgba(255, 255, 255, 0.05)",
-    paddingLeft: scale(8), // Slight indent
+    paddingLeft: scale(8), 
   },
 
   threeDotsButton: {
@@ -2362,7 +2383,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.3)",
     borderRadius: scale(22),
   },
-  // Action Icons Container - Fixed position, horizontally aligned, no background
+  
   actionIconsContainer: {
     position: "absolute",
     right: scale(1),
@@ -2372,9 +2393,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     zIndex: 10,
   },
-  // Tip Button - Left aligned
+  
   tipButton: {
-    width: "100%", // Explicitly fill the flex wrapper
+    width: "100%", 
     backgroundColor: "#EC9A15",
     paddingVertical: scale(12),
     borderRadius: scale(25),
@@ -2389,26 +2410,26 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   bottomInfoContainer: {
-    width: width * 0.75, // Force the width so it breaks text early
+    width: width * 0.75, 
     marginBottom: scale(12),
-    paddingRight: scale(16), // Extra padding to keep it off the right edge
+    paddingRight: scale(16), 
   },
-  // Action Icons Group - Right aligned - Standardized gaps
+  
   actionIconsGroup: {
     flexDirection: "row",
     alignItems: "center",
-    gap: scale(16), // Consistent gap between icons
+    gap: scale(16), 
   },
   actionIconButton: {
     alignItems: "center",
     justifyContent: "center",
-    gap: scale(4), // Gap between icon and count
+    gap: scale(4), 
     width: scale(50),
     height: scale(50),
     minWidth: scale(50),
     minHeight: scale(50),
   },
-  // Horizontal Line - Centered, small, after icons
+  
   horizontalLine: {
     position: "absolute",
     alignSelf: "center",
@@ -2420,7 +2441,7 @@ const styles = StyleSheet.create({
   },
   questTracker: {
     position: "absolute",
-    top: Platform.OS === "ios" ? scale(100) : scale(90), // Positioned below back button
+    top: Platform.OS === "ios" ? scale(100) : scale(90), 
     left: spacing.lg,
     flexDirection: "row",
     alignItems: "center",
@@ -2454,7 +2475,7 @@ const styles = StyleSheet.create({
     zIndex: 20,
   },
   floatingXPText: {
-    color: "#FFD700", // Bright gold
+    color: "#FFD700", 
     fontSize: getFontSize(16),
     fontWeight: "900",
     fontStyle: "italic",
@@ -2464,16 +2485,16 @@ const styles = StyleSheet.create({
   },
   actionIconCount: {
     color: "#fff",
-    fontSize: getFontSize(11), // Shrunk from 13 to 11
+    fontSize: getFontSize(11), 
     fontWeight: "600",
     textShadowColor: "rgba(0, 0, 0, 0.8)",
     textShadowOffset: { width: 0, height: scale(1) },
     textShadowRadius: scale(3),
     marginTop: scale(2),
-    marginBottom: scale(10), // Give it some space before the next icon
+    marginBottom: scale(10), 
     textAlign: "center",
   },
-  // Music Bar - Fixed position above action icons
+  
   musicBarContainer: {
     position: "absolute",
     flexDirection: "row",
@@ -2568,13 +2589,13 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
   },
   commandPanelModal: {
-    backgroundColor: "#2A1B0D", // Deep rich brown/black
+    backgroundColor: "#2A1B0D", 
     borderTopLeftRadius: scale(24),
     borderTopRightRadius: scale(24),
     paddingHorizontal: spacing.lg,
     paddingBottom: Platform.OS === "ios" ? scale(40) : scale(24),
     borderTopWidth: 1,
-    borderColor: "rgba(236, 154, 21, 0.3)", // Glowing top edge
+    borderColor: "rgba(236, 154, 21, 0.3)", 
     shadowColor: "#EC9A15",
     shadowOffset: { width: 0, height: -5 },
     shadowOpacity: 0.15,
@@ -2595,7 +2616,7 @@ const styles = StyleSheet.create({
   commandItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.05)", // Glass effect
+    backgroundColor: "rgba(255, 255, 255, 0.05)", 
     borderRadius: scale(16),
     padding: scale(12),
     borderWidth: 1,
@@ -2609,7 +2630,7 @@ const styles = StyleSheet.create({
     width: scale(40),
     height: scale(40),
     borderRadius: scale(12),
-    backgroundColor: "rgba(236, 154, 21, 0.15)", // Subtle neon orange backdrop
+    backgroundColor: "rgba(236, 154, 21, 0.15)", 
     alignItems: "center",
     justifyContent: "center",
     marginRight: scale(14),
@@ -2714,15 +2735,15 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   username: {
-    color: "#ffffff", // explicitly set white
+    color: "#ffffff", 
     fontSize: getFontSize(15),
     fontWeight: "600",
-    textShadowColor: "rgba(0, 0, 0, 0.8)", // Darker shadow for visibility
+    textShadowColor: "rgba(0, 0, 0, 0.8)", 
     textShadowOffset: { width: 0, height: scale(1) },
     textShadowRadius: scale(2),
   },
   caption: {
-    color: "#ffffff", // explicitly set white
+    color: "#ffffff", 
     fontSize: getFontSize(14),
     marginTop: 0,
     marginBottom: 0,
@@ -2746,7 +2767,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   musicName: {
-    color: "#ffffff", // explicitly set white
+    color: "#ffffff", 
     fontSize: getFontSize(13),
     flex: 1,
     fontWeight: "500",
@@ -2754,7 +2775,7 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: scale(1) },
     textShadowRadius: scale(3),
   },
-  // Modal Styles
+  
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.7)",
@@ -2882,7 +2903,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   flexButtonWrapper: {
-    flex: 1, // This tells both buttons to grow equally
+    flex: 1, 
     alignItems: "center",
     justifyContent: "center",
   },
@@ -2997,28 +3018,28 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: scale(4),
   },
-  // Row for Tip & Vote pills
+  
   bottomButtonsRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: scale(12), // Gap between the two buttons
-    width: "100%", // Forces full width
+    gap: scale(12), 
+    width: "100%", 
   },
-  // The Vote states
+  
   voteButtonActive: {
     backgroundColor: "#EC9A15",
   },
   voteButtonInactive: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Dark semi-transparent pill
+    backgroundColor: "rgba(0, 0, 0, 0.5)", 
     borderWidth: 1,
     borderColor: "#EC9A15",
   },
-  // Update your bottom content to give it a bit more width
+  
   bottomContent: {
     position: "absolute",
     left: spacing.lg,
-    right: spacing.lg, // This locks the container to both edges
+    right: spacing.lg, 
     justifyContent: "flex-end",
     zIndex: 10,
     marginBottom: scale(4),

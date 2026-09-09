@@ -3,7 +3,7 @@ import type { ApiResponse } from './apiTypes';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://gullyfame.com/v1/api/';
 
-// ==================== Type Definitions ====================
+
 
 export interface Competition {
   id: string;
@@ -132,13 +132,13 @@ export interface CompetitionListResponse {
   totalPages?: number;
 }
 
-// ==================== Universal Response Parser ====================
 
-/**
- * Universal parser that handles both API response formats:
- * { code: 1, message: "...", data: ... }
- * { rCode: 1, msg: "...", rData: ... }
- */
+
+
+
+
+
+
 function parseApiResponse<T>(response: any): { success: boolean; data?: T; message?: string } {
   const success = response.code === 1 || response.rCode === 1;
   const payload = response.data || response.rData;
@@ -241,12 +241,12 @@ async function makeRequest<T>(
   }
 }
 
-// ==================== Competition APIs ====================
 
-/**
- * Get list of competitions
- * GET /admin/competitions?status=CREATED&sponsorId=...
- */
+
+
+
+
+
 export async function getCompetitions(
   params?: CompetitionListParams
 ): Promise<ApiResponse<CompetitionListResponse>> {
@@ -263,14 +263,14 @@ export async function getCompetitions(
 
   if (response.success && response.data) {
     const items = (Array.isArray(response.data) ? response.data : response.data.data || response.data.items || []).map((comp: any) => {
-      // Handle prizePool vs prizeAmount - API uses prizePool
+      
       const prizeAmount = comp.prizePool || comp.prizeAmount || 0;
-      // Handle sponsorId - can be string or object
+      
       const sponsorId = typeof comp.sponsorId === 'object' && comp.sponsorId?._id 
         ? comp.sponsorId._id 
         : (comp.sponsorId || '');
       
-      // For sponsor-created competitions, if status is APPROVED, change it to LIVE
+      
       let normalizedStatus = comp.status || 'CREATED';
       if (sponsorId && normalizedStatus === 'APPROVED') {
         normalizedStatus = 'LIVE';
@@ -280,9 +280,9 @@ export async function getCompetitions(
         ...comp,
         id: comp.id || comp._id || '',
         status: normalizedStatus,
-        prizeAmount, // Normalize to prizeAmount
-        prizePool: prizeAmount, // Keep prizePool for compatibility
-        sponsorId, // Normalize to string
+        prizeAmount, 
+        prizePool: prizeAmount, 
+        sponsorId, 
       };
     });
 
@@ -306,24 +306,24 @@ export async function getCompetitions(
   };
 }
 
-/**
- * Get competition by ID
- * GET /admin/competitions/{id}
- */
+
+
+
+
 export async function getCompetitionById(competitionId: string): Promise<ApiResponse<Competition>> {
   const endpoint = `admin/competitions/${competitionId}`;
   const response = await makeRequest<Competition>('GET', endpoint);
 
   if (response.success && response.data) {
     const comp = response.data;
-    // Handle prizePool vs prizeAmount - API uses prizePool
+    
     const prizeAmount = comp.prizePool || comp.prizeAmount || 0;
-    // Handle sponsorId - can be string or object
+    
     const sponsorId = typeof comp.sponsorId === 'object' && comp.sponsorId?._id 
       ? comp.sponsorId._id 
       : (comp.sponsorId || '');
     
-    // For sponsor-created competitions, if status is APPROVED, change it to LIVE
+    
     let normalizedStatus = comp.status || 'CREATED';
     if (sponsorId && normalizedStatus === 'APPROVED') {
       normalizedStatus = 'LIVE';
@@ -335,9 +335,9 @@ export async function getCompetitionById(competitionId: string): Promise<ApiResp
         ...comp,
         id: comp.id || comp._id || competitionId,
         status: normalizedStatus,
-        prizeAmount, // Normalize to prizeAmount
-        prizePool: prizeAmount, // Keep prizePool for compatibility
-        sponsorId, // Normalize to string
+        prizeAmount, 
+        prizePool: prizeAmount, 
+        sponsorId, 
       },
       message: response.message || 'Competition fetched successfully',
     };
@@ -350,10 +350,10 @@ export async function getCompetitionById(competitionId: string): Promise<ApiResp
   };
 }
 
-/**
- * Create competition
- * POST /admin/competitions
- */
+
+
+
+
 export async function createCompetition(
   data: CreateCompetitionRequest
 ): Promise<ApiResponse<Competition>> {
@@ -388,17 +388,17 @@ export async function createCompetition(
   };
 }
 
-/**
- * Update competition
- * PUT /admin/competitions/{id}
- */
+
+
+
+
 export async function updateCompetition(
   competitionId: string,
   data: UpdateCompetitionRequest
 ): Promise<ApiResponse<Competition>> {
   const endpoint = `admin/competitions/${competitionId}`;
   
-  // Convert prizeAmount to prizePool if provided
+  
   const updateData: any = { ...data };
   if (updateData.prizeAmount !== undefined) {
     updateData.prizePool = updateData.prizeAmount;
@@ -434,11 +434,11 @@ export async function updateCompetition(
   };
 }
 
-/**
- * Approve competition
- * POST /admin/competitions/{id}/approve
- * For sponsor-created competitions, sets status to 'LIVE' instead of 'APPROVED'
- */
+
+
+
+
+
 export async function approveCompetition(competitionId: string): Promise<ApiResponse<Competition>> {
   const endpoint = `admin/competitions/${competitionId}/approve`;
   const response = await makeRequest<Competition>('POST', endpoint);
@@ -450,8 +450,8 @@ export async function approveCompetition(competitionId: string): Promise<ApiResp
       ? comp.sponsorId._id 
       : (comp.sponsorId || '');
     
-    // For sponsor-created competitions, set status to 'LIVE' instead of 'APPROVED'
-    // Check if competition has a sponsorId (sponsor-created)
+    
+    
     const isSponsorCreated = !!sponsorId;
     const newStatus = isSponsorCreated ? 'LIVE' : (comp.status || 'APPROVED');
     
@@ -486,10 +486,10 @@ export async function approveCompetition(competitionId: string): Promise<ApiResp
   };
 }
 
-/**
- * Reject competition
- * POST /admin/competitions/{id}/reject
- */
+
+
+
+
 export async function rejectCompetition(
   competitionId: string,
   rejectionReason?: string
@@ -525,10 +525,10 @@ export async function rejectCompetition(
   };
 }
 
-/**
- * Soft delete competition
- * DELETE /admin/competitions/{id}
- */
+
+
+
+
 export async function deleteCompetition(competitionId: string): Promise<ApiResponse<void>> {
   const endpoint = `admin/competitions/${competitionId}`;
   const response = await makeRequest<void>('DELETE', endpoint);
@@ -547,10 +547,10 @@ export async function deleteCompetition(competitionId: string): Promise<ApiRespo
   };
 }
 
-/**
- * Get competition participants
- * GET /admin/competitions/{id}/participants
- */
+
+
+
+
 export async function getCompetitionParticipants(
   competitionId: string
 ): Promise<ApiResponse<CompetitionParticipant[]>> {
@@ -582,10 +582,10 @@ export async function getCompetitionParticipants(
   };
 }
 
-/**
- * Get competition leaderboard
- * GET /admin/competitions/{id}/leaderboard
- */
+
+
+
+
 export async function getCompetitionLeaderboard(
   competitionId: string
 ): Promise<ApiResponse<CompetitionLeaderboard[]>> {
@@ -619,10 +619,10 @@ export async function getCompetitionLeaderboard(
   };
 }
 
-/**
- * Declare winners
- * POST /admin/competitions/{id}/declare-winners
- */
+
+
+
+
 export async function declareWinners(
   competitionId: string,
   data: DeclareWinnersRequest

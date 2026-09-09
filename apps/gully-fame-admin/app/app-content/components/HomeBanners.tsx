@@ -15,21 +15,21 @@ export default function HomeBanners() {
   const [isLoadingList, setIsLoadingList] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Add banner state
+  
   const [showAddModal, setShowAddModal] = useState(false);
   const [newBannerTitle, setNewBannerTitle] = useState('');
   const [newBannerFile, setNewBannerFile] = useState<File | null>(null);
   const [newBannerPreview, setNewBannerPreview] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
 
-  // Edit banner state
+  
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [editBannerFile, setEditBannerFile] = useState<File | null>(null);
   const [editBannerPreview, setEditBannerPreview] = useState<string | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // Delete state
+  
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const loadBanners = async () => {

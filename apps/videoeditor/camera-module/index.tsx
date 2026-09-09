@@ -5,15 +5,15 @@ import CameraScreen from './screens/CameraScreen';
 import PreviewScreen from './screens/PreviewScreen';
 import type { CameraClipArray, CameraModuleScreenName } from './types/camera.types';
 
-/**
- * Root entry point for the self-contained camera module.
- *
- * This component owns ONLY navigation and data passed to Preview:
- * - Home → Camera → Preview
- *
- * Camera-specific UI state (mode, flash, clips) lives inside `CameraScreen`.
- * PreviewScreen receives a snapshot of clips when the user presses Next.
- */
+
+
+
+
+
+
+
+
+
 const CameraModule: React.FC = () => {
   const [screen, setScreen] = useState<CameraModuleScreenName>('Home');
   const [previewClips, setPreviewClips] = useState<CameraClipArray>([]);
@@ -43,16 +43,16 @@ const CameraModule: React.FC = () => {
 
   const handleAddClipFromPreview = useCallback((source: 'camera' | 'gallery') => {
     if (source === 'camera') {
-      // Navigate back to camera screen to record new clip
-      // Pass existing clips so they're preserved
+      
+      
       setScreen('Camera');
     }
-    // Gallery is handled in PreviewScreen via onAddClipFromGallery
+    
   }, []);
 
   const handleBackFromPreview = useCallback(() => {
-    // Go back to camera screen (not home) so user can continue adding clips
-    // Pass existing clips so they're preserved (use cameraClips which should be synced)
+    
+    
     setScreen('Camera');
   }, []);
 

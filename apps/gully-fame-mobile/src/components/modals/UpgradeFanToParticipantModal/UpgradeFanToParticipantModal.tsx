@@ -70,14 +70,14 @@ function UpgradeFanToParticipantModal({
         <Modal visible={isVisible} transparent={true} animationType="fade">
             <View style={styles.upgradeModalOverlay}>
                 <View style={styles.upgradeModalContainer}>
-                    {/* --- Image Banner Section --- */}
+                    {}
                     <View style={styles.upgradeBannerContainer}>
                         <SafeImage
                             defaultImage={upgradeBanner}
                             style={styles.upgradeImage}
-                            resizeMode="cover" // Fills the space perfectly
+                            resizeMode="cover" 
                         />
-                        {/* Absolute positioned neatly inside the image */}
+                        {}
                         <TouchableOpacity
                             onPress={onClose}
                             style={styles.upgradeCross}
@@ -88,7 +88,7 @@ function UpgradeFanToParticipantModal({
                         </TouchableOpacity>
                     </View>
 
-                    {/* --- Content Section --- */}
+                    {}
                     <View style={styles.upgradeModalContent}>
                         <Text style={styles.modalTitle}>
                             Become a Participant
@@ -127,7 +127,7 @@ function UpgradeFanToParticipantModal({
                             </View>
                         </View>
 
-                        {/* --- Button --- */}
+                        {}
                         <TouchableOpacity
                             style={styles.upgradeButton}
                             activeOpacity={0.8}

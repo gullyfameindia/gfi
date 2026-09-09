@@ -131,7 +131,7 @@ export default function LoginViaOTP() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Logo Section with brown background */}
+        {}
         <View style={styles.logoContainer}>
           <Image
             source={require("@assets/images/gfi.png")}
@@ -140,7 +140,7 @@ export default function LoginViaOTP() {
           />
         </View>
 
-        {/* Form Section with light blue-gray background */}
+        {}
         <View style={styles.formContainer}>
           <Text
             style={[
@@ -151,7 +151,7 @@ export default function LoginViaOTP() {
             Login via OTP
           </Text>
 
-          {/* Email or Mobile */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>
               Email/Mobile <Text style={styles.required}>*</Text>
@@ -167,12 +167,12 @@ export default function LoginViaOTP() {
             />
           </View>
 
-          {/* Or Text */}
+          {}
           <View style={styles.orContainer}>
             <Text style={styles.orText}>Or</Text>
           </View>
 
-          {/* Login via Password Option */}
+          {}
           <TouchableOpacity
             style={styles.passwordLoginButton}
             onPress={() => router.back()}
@@ -190,7 +190,7 @@ export default function LoginViaOTP() {
             </View>
           ) : null}
 
-          {/* Send OTP Button */}
+          {}
           <TouchableOpacity
             style={[
               styles.sendOtpButton,
@@ -206,14 +206,14 @@ export default function LoginViaOTP() {
             )}
           </TouchableOpacity>
 
-          {/* OR Continue With Separator */}
+          {}
           <View style={styles.continueWithContainer}>
             <View style={styles.separatorLine} />
             <Text style={styles.continueWithText}>OR Continue With</Text>
             <View style={styles.separatorLine} />
           </View>
 
-          {/* Social Login Icons */}
+          {}
           <View style={styles.socialIconsContainer}>
             <TouchableOpacity
               style={styles.socialIconButton}
@@ -237,7 +237,7 @@ export default function LoginViaOTP() {
             )}
           </View>
 
-          {/* Create Account Link */}
+          {}
           <View style={styles.createAccountContainer}>
             <Text style={styles.createAccountText}>
               Don&apos;t have an account?{" "}
@@ -251,7 +251,7 @@ export default function LoginViaOTP() {
           </View>
         </View>
 
-        {/* Skip Section with white background */}
+        {}
         <View style={styles.skipContainer}>
           <TouchableOpacity
             onPress={() => router.replace("/auth/location?skip=true")}

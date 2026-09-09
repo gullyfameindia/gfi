@@ -1,4 +1,4 @@
-// File Route: apps/gully-fame-mobile/app/(main)/saved.tsx
+
 
 import React, { useState } from "react";
 import {
@@ -16,9 +16,9 @@ import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
-const CARD_WIDTH = (width - 60) / 2; // 2 columns with padding
+const CARD_WIDTH = (width - 60) / 2; 
 
-// Dummy Data (Asli app me API se aayega)
+
 const savedContent = [
   {
     id: "1",
@@ -62,7 +62,7 @@ export default function SavedScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="chevron-back" size={28} color="#fff" />
@@ -71,7 +71,7 @@ export default function SavedScreen() {
         <View style={styles.backButton} />
       </View>
 
-      {/* Filter Tabs */}
+      {}
       <View style={styles.tabContainer}>
         <TouchableOpacity 
           style={[styles.tab, activeTab === "all" && styles.activeTab]} 
@@ -106,7 +106,7 @@ export default function SavedScreen() {
               <TouchableOpacity key={item.id} style={styles.card} activeOpacity={0.8}>
                 <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
                 
-                {/* Content Type Icon (Top Right) */}
+                {}
                 <View style={styles.typeBadge}>
                   <Ionicons 
                     name={item.type === 'reel' ? 'play-circle' : 'image'} 
@@ -115,7 +115,7 @@ export default function SavedScreen() {
                   />
                 </View>
 
-                {/* Info Overlay (Bottom) */}
+                {}
                 <View style={styles.infoOverlay}>
                   <Text style={styles.itemTitle} numberOfLines={1}>{item.title}</Text>
                   <Text style={styles.itemAuthor} numberOfLines={1}>{item.author}</Text>
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: "100%",
     padding: 12,
-    paddingTop: 24, // extra padding for gradient effect if we add one
+    paddingTop: 24, 
     backgroundColor: "rgba(0,0,0,0.7)",
   },
   itemTitle: {

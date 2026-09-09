@@ -3,14 +3,14 @@
 const path = require('path');
 const { spawn } = require('child_process');
 
-// Convert Windows path to file:// URL for metro config
+
 const metroConfigPath = path.resolve(__dirname, 'metro.config.js');
 const fileUrl = 'file://' + metroConfigPath.replace(/\\/g, '/');
 
-// Set environment variable
+
 process.env.METRO_CONFIG = metroConfigPath;
 
-// Start expo with the config
+
 const expo = spawn('npx', ['expo', 'start', '--clear'], {
   stdio: 'inherit',
   cwd: __dirname,

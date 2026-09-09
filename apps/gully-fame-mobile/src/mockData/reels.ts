@@ -1,7 +1,7 @@
-/**
- * Mock Reels Data for Feed
- * Used for home screen, trending, popular content
- */
+
+
+
+
 
 export interface Reel {
   id: string;
@@ -17,7 +17,7 @@ export interface Reel {
   };
   thumbnail?: string;
   videoUrl?: string;
-  duration: number; // in seconds
+  duration: number; 
   category: string;
   tags?: string[];
   likes: number;
@@ -41,7 +41,7 @@ export interface Reel {
 }
 
 export const mockReels: Reel[] = [
-  // Trending Reels
+  
   {
     id: 'reel-001',
     title: 'Epic Dance Challenge',
@@ -168,7 +168,7 @@ export const mockReels: Reel[] = [
     isTrending: true,
   },
 
-  // Popular Reels
+  
   {
     id: 'reel-006',
     title: 'Music Production Tutorial',
@@ -275,7 +275,7 @@ export const mockReels: Reel[] = [
     isPopular: true,
   },
 
-  // New Reels
+  
   {
     id: 'reel-011',
     title: 'DIY Home Decor Ideas',
@@ -349,7 +349,7 @@ export const getReelsByCategory = (category: string): Reel[] => {
 };
 
 export const getForYouReels = (): Reel[] => {
-  // Shuffle and return random selection for "For You" feed
+  
   return [...mockReels].sort(() => 0.5 - Math.random()).slice(0, 15);
 };
 

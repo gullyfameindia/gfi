@@ -11,10 +11,10 @@ export interface UseCameraPermissionsResult {
   requestPermissions: () => Promise<boolean>;
 }
 
-/**
-  * Hook that manages camera & microphone permissions using expo-camera.
-  * Returns a simple "hasPermission" flag plus detailed status for debugging.
-  */
+
+
+
+
 const useCameraPermissions = (): UseCameraPermissionsResult => {
   const [cameraStatus, setCameraStatus] = useState<PermissionStatus | null>(null);
   const [microphoneStatus, setMicrophoneStatus] =

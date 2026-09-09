@@ -1,10 +1,10 @@
 import { StyleSheet } from 'react-native';
 
-/**
- * Shared styles for all camera module screens & components.
- */
+
+
+
 export const cameraStyles = StyleSheet.create({
-  // Home screen
+  
   homeContainer: {
     flex: 1,
     backgroundColor: '#050509',
@@ -36,7 +36,7 @@ export const cameraStyles = StyleSheet.create({
     color: '#ffffff',
   },
 
-  // Camera screen
+  
   cameraContainer: {
     flex: 1,
     backgroundColor: '#000000',
@@ -80,7 +80,7 @@ export const cameraStyles = StyleSheet.create({
     fontSize: 14,
   },
 
-  // Capture button
+  
   captureButtonOuter: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -107,10 +107,10 @@ export const cameraStyles = StyleSheet.create({
   },
   captureButtonInnerCircleRecording: {
     backgroundColor: '#ef4444',
-    // Red inner circle when recording
+    
   },
 
-  // Mode toggle
+  
   modeToggle: {
     flexDirection: 'row',
     borderRadius: 999,
@@ -134,7 +134,7 @@ export const cameraStyles = StyleSheet.create({
     color: '#111827',
   },
 
-  // Flash toggle
+  
   flashToggleButton: {
     paddingHorizontal: 10,
     paddingVertical: 6,
@@ -145,38 +145,38 @@ export const cameraStyles = StyleSheet.create({
     color: '#f9fafb',
     fontSize: 13,
   },
-  // All icons aligned vertically on the left side
-  // Vertical icon overlays with equal spacing (50px between each)
+  
+  
   flashOverlay: {
     position: 'absolute',
     left: 16,
     top: '50%',
-    marginTop: -100, // Flash at top (1st icon)
+    marginTop: -100, 
     zIndex: 90,
   },
   
-  // Timer selector (below flash toggle)
+  
   timerSelectorOverlay: {
     position: 'absolute',
     left: 16,
     top: '50%',
-    marginTop: -50, // Timer second (50px below flash)
+    marginTop: -50, 
     zIndex: 90,
   },
   
-  // Speed selector (below timer selector)
+  
   speedSelectorOverlay: {
     position: 'absolute',
     left: 16,
     top: '50%',
-    marginTop: 0, // Speed third (50px below timer)
+    marginTop: 0, 
     zIndex: 90,
   },
   hdSelectorOverlay: {
     position: 'absolute',
     left: 16,
     top: '50%',
-    marginTop: 50, // HD fourth (50px below speed)
+    marginTop: 50, 
     zIndex: 90,
   },
   disabledIconButton: {
@@ -234,7 +234,7 @@ export const cameraStyles = StyleSheet.create({
     fontWeight: '700',
   },
   
-  // Timer modal (compact popup to the right)
+  
   timerModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -288,7 +288,7 @@ export const cameraStyles = StyleSheet.create({
     fontWeight: '700',
   },
   
-  // Speed modal (compact popup to the right)
+  
   speedModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -342,10 +342,10 @@ export const cameraStyles = StyleSheet.create({
     fontWeight: '700',
   },
 
-  // Recording timer
+  
   recordingTimerContainer: {
     position: 'absolute',
-    top: 56, // below the top bar so it stays visible
+    top: 56, 
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
@@ -368,7 +368,7 @@ export const cameraStyles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  // Clip list
+  
   clipListContainer: {
     width: '100%',
     paddingVertical: 8,
@@ -422,7 +422,7 @@ export const cameraStyles = StyleSheet.create({
     color: '#ef4444',
   },
 
-  // Bottom controls row (capture + next)
+  
   bottomControlsRow: {
     marginTop: 8,
     flexDirection: 'row',
@@ -442,7 +442,7 @@ export const cameraStyles = StyleSheet.create({
     fontWeight: '500',
   },
 
-  // Permissions UI
+  
   permissionContainer: {
     flex: 1,
     backgroundColor: '#050509',
@@ -469,7 +469,7 @@ export const cameraStyles = StyleSheet.create({
     fontWeight: '500',
   },
 
-  // Preview screen
+  
   previewContainer: {
     flex: 1,
     backgroundColor: '#000000',
@@ -509,7 +509,7 @@ export const cameraStyles = StyleSheet.create({
     paddingHorizontal: 24,
   },
 
-  // Gallery button next to capture button
+  
   galleryButton: {
     width: 52,
     height: 52,
@@ -520,7 +520,7 @@ export const cameraStyles = StyleSheet.create({
     marginRight: 16,
   },
 
-  // Camera switch button
+  
   cameraSwitchButton: {
     width: 44,
     height: 44,
@@ -530,7 +530,7 @@ export const cameraStyles = StyleSheet.create({
     backgroundColor: 'rgba(15, 23, 42, 0.8)',
   },
 
-  // HD Selector
+  
   hdSelectorButton: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -545,7 +545,7 @@ export const cameraStyles = StyleSheet.create({
     fontWeight: '700',
   },
 
-  // HD Modal (popup with sections)
+  
   hdModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

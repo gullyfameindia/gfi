@@ -17,7 +17,7 @@ interface AdjustButtonProps {
   currentSettings?: AdjustSettings;
 }
 
-// Custom Slider Component utilizing native PanResponder for fluid sliding
+
 interface CustomSliderProps {
   minimumValue: number;
   maximumValue: number;
@@ -70,9 +70,9 @@ const CustomSlider: React.FC<CustomSliderProps> = ({
       }}
     >
       <View style={styles.customTrack}>
-        {/* Filled active zone color track */}
+        {}
         <View style={[styles.customFill, { width: `${percentage}%` }]} />
-        {/* Circular Pointer Thumb */}
+        {}
         <View style={[styles.customThumb, { left: `${percentage}%` }]} />
       </View>
     </View>
@@ -142,19 +142,19 @@ const AdjustButton: React.FC<AdjustButtonProps> = ({
         animationType="slide"
         onRequestClose={() => setShowModal(false)}
       >
-        {/* 🛠️ FIX 1: Main overlay container transparent kiya */}
+        {}
         <View style={styles.modalOverlay}>
           
-          {/* Transparent area clicking will close layout safely */}
+          {}
           <TouchableOpacity 
             style={styles.transparentBackdrop} 
             activeOpacity={1} 
             onPress={() => setShowModal(false)} 
           />
 
-          {/* 🛠️ FIX 2: Dynamic Bottom Sheet Panel Wrapper */}
+          {}
           <View style={styles.bottomSheetContainer}>
-            {/* Header */}
+            {}
             <View style={styles.modalHeader}>
               <TouchableOpacity onPress={() => setShowModal(false)} style={styles.closeButton}>
                 <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -173,7 +173,7 @@ const AdjustButton: React.FC<AdjustButtonProps> = ({
               </TouchableOpacity>
             </View>
 
-            {/* Adjustments List */}
+            {}
             <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
               {adjustments.map((adj) => (
                 <View key={adj.key} style={styles.adjustmentRow}>
@@ -189,7 +189,7 @@ const AdjustButton: React.FC<AdjustButtonProps> = ({
                   />
                 </View>
               ))}
-              {/* Extra spacing packet at the bottom */}
+              {}
               <View style={{ height: 30 }} />
             </ScrollView>
           </View>
@@ -209,11 +209,11 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "600",
   },
-  /* 🎛️ MODAL TO OVERLAY SHEET CONVERSION STYLES */
+  
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.2)", // Translucent view factor
-    justifyContent: "flex-end", // Sliders strictly bottom zone push
+    backgroundColor: "rgba(0, 0, 0, 0.2)", 
+    justifyContent: "flex-end", 
   },
   transparentBackdrop: {
     position: 'absolute',
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#1a1a1a",
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    height: "46%", // Occupies only 46% height matrix, keeping top video fully visible
+    height: "46%", 
     width: "100%",
     borderTopWidth: 1,
     borderTopColor: "rgba(255, 255, 255, 0.08)",
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     minWidth: 40,
     textAlign: "right",
   },
-  /* 🎛️ CUSTOM SLIDER STYLES PACKET */
+  
   sliderContainer: {
     height: 34,
     justifyContent: "center",

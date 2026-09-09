@@ -1,7 +1,7 @@
-/**
- * API Integration Verifier
- * Verifies that real API endpoints work correctly and mock fallback works
- */
+
+
+
+
 
 import musicLibraryService from "../api/services/musicLibraryService";
 import videoEditorService from "../api/services/videoEditorService";
@@ -30,12 +30,12 @@ interface VerificationResult {
 class ApiIntegrationVerifier {
   private results: VerificationResult[] = [];
 
-  /**
-   * Define all API endpoints to verify
-   */
+  
+
+
   getEndpoints(): ApiEndpoint[] {
     return [
-      // Music Library Endpoints
+      
       {
         name: "Get Audio List",
         service: "musicLibraryService",
@@ -60,7 +60,7 @@ class ApiIntegrationVerifier {
         method: () => musicLibraryService.getAudioList(undefined, undefined, "beats"),
       },
 
-      // Video Editor Endpoints
+      
       {
         name: "Get Video Filters",
         service: "videoEditorService",
@@ -86,7 +86,7 @@ class ApiIntegrationVerifier {
         expectedMinCount: 1,
       },
 
-      // Feed Endpoints
+      
       {
         name: "Get Trending Reels",
         service: "feedService",
@@ -120,9 +120,9 @@ class ApiIntegrationVerifier {
     ];
   }
 
-  /**
-   * Verify all endpoints with mock data
-   */
+  
+
+
   async verifyWithMockData() {
     console.log("\n🎭 VERIFYING MOCK DATA MODE\n");
     console.log("=" + "=".repeat(79));
@@ -141,9 +141,9 @@ class ApiIntegrationVerifier {
     return this.results;
   }
 
-  /**
-   * Verify all endpoints with real API
-   */
+  
+
+
   async verifyWithApi() {
     console.log("\n🌐 VERIFYING REAL API MODE\n");
     console.log("=" + "=".repeat(79));
@@ -162,9 +162,9 @@ class ApiIntegrationVerifier {
     return this.results;
   }
 
-  /**
-   * Verify endpoint integration
-   */
+  
+
+
   private async verifyEndpoint(endpoint: ApiEndpoint, mode: "mock" | "api") {
     const startTime = Date.now();
 
@@ -172,7 +172,7 @@ class ApiIntegrationVerifier {
       const response = await endpoint.method();
       const duration = Date.now() - startTime;
 
-      // Validate response structure
+      
       if (!response.success) {
         throw new Error("Response success flag is false");
       }
@@ -181,7 +181,7 @@ class ApiIntegrationVerifier {
         throw new Error("No data in response");
       }
 
-      // Validate data count
+      
       const dataArray = Array.isArray(response.data) ? response.data : [response.data];
       if (
         endpoint.expectedMinCount &&
@@ -227,16 +227,16 @@ class ApiIntegrationVerifier {
     }
   }
 
-  /**
-   * Verify fallback behavior
-   */
+  
+
+
   async verifyFallbackBehavior() {
     console.log("\n🔄 VERIFYING FALLBACK BEHAVIOR\n");
     console.log("=" + "=".repeat(79));
 
     await mockDataLoader.initialize();
 
-    // Test 1: API fails, fallback to mock
+    
     console.log("Test 1: API fails, fallback to mock\n");
     mockDataLoader.allowAPI();
 
@@ -252,7 +252,7 @@ class ApiIntegrationVerifier {
       console.log(`❌ Fallback error: ${error.message}\n`);
     }
 
-    // Test 2: Mock-only mode
+    
     console.log("Test 2: Mock-only mode\n");
     mockDataLoader.forceMockData();
 
@@ -268,7 +268,7 @@ class ApiIntegrationVerifier {
       console.log(`❌ Mock mode error: ${error.message}\n`);
     }
 
-    // Test 3: Response time with delay
+    
     console.log("Test 3: Response time with mock delay\n");
     mockDataLoader.setMockResponseDelay(1000);
     mockDataLoader.forceMockData();
@@ -282,12 +282,12 @@ class ApiIntegrationVerifier {
       console.log(`❌ Delay test failed: ${error.message}\n`);
     }
 
-    mockDataLoader.setMockResponseDelay(0); // Reset
+    mockDataLoader.setMockResponseDelay(0); 
   }
 
-  /**
-   * Compare mock vs API responses
-   */
+  
+
+
   async compareResponses() {
     console.log("\n⚖️ COMPARING MOCK vs API RESPONSES\n");
     console.log("=" + "=".repeat(79));
@@ -312,11 +312,11 @@ class ApiIntegrationVerifier {
     for (const endpoint of endpoints) {
       console.log(`📊 ${endpoint.name}\n`);
 
-      // Get mock response
+      
       mockDataLoader.forceMockData();
       const mockResult = await endpoint.method();
 
-      // Get API response (if available)
+      
       mockDataLoader.allowAPI();
       const apiResult = await endpoint.method();
 
@@ -326,9 +326,9 @@ class ApiIntegrationVerifier {
     }
   }
 
-  /**
-   * Verify data structure consistency
-   */
+  
+
+
   async verifyDataStructure() {
     console.log("\n🔍 VERIFYING DATA STRUCTURE CONSISTENCY\n");
     console.log("=" + "=".repeat(79));
@@ -337,7 +337,7 @@ class ApiIntegrationVerifier {
     mockDataLoader.forceMockData();
 
     try {
-      // Check audio track structure
+      
       console.log("Audio Track Structure:\n");
       const audioResult = await musicLibraryService.getAudioList();
       if (audioResult.data && audioResult.data.length > 0) {
@@ -346,7 +346,7 @@ class ApiIntegrationVerifier {
         this.validateKeys(track, ["id", "title", "artist", "duration"]);
       }
 
-      // Check reel structure
+      
       console.log("\n\nReel Structure:\n");
       const reelsResult = await feedService.getTrendingReels();
       if (reelsResult.data && reelsResult.data.length > 0) {
@@ -355,7 +355,7 @@ class ApiIntegrationVerifier {
         this.validateKeys(reel, ["id", "title", "creator", "thumbnail", "likes", "views"]);
       }
 
-      // Check filter structure
+      
       console.log("\n\nVideo Filter Structure:\n");
       const filterResult = await videoEditorService.getVideoFilters();
       if (filterResult.data && filterResult.data.length > 0) {
@@ -368,9 +368,9 @@ class ApiIntegrationVerifier {
     }
   }
 
-  /**
-   * Validate required keys in object
-   */
+  
+
+
   private validateKeys(obj: any, requiredKeys: string[]): boolean {
     const missing = requiredKeys.filter((key) => !(key in obj));
     if (missing.length > 0) {
@@ -381,9 +381,9 @@ class ApiIntegrationVerifier {
     return true;
   }
 
-  /**
-   * Print verification results
-   */
+  
+
+
   private printResults(mode: string) {
     console.log("\n" + "=".repeat(80));
     console.log("📊 VERIFICATION RESULTS\n");
@@ -409,9 +409,9 @@ class ApiIntegrationVerifier {
     }
   }
 
-  /**
-   * Export results as JSON
-   */
+  
+
+
   getResults() {
     return {
       totalEndpoints: this.results.length,
@@ -420,9 +420,9 @@ class ApiIntegrationVerifier {
     };
   }
 
-  /**
-   * Run full verification suite
-   */
+  
+
+
   async runFullVerification() {
     console.log("\n\n");
     console.log("╔" + "═".repeat(78) + "╗");
@@ -442,10 +442,10 @@ class ApiIntegrationVerifier {
   }
 }
 
-// Export singleton
+
 const apiIntegrationVerifier = new ApiIntegrationVerifier();
 
-// Make globally available
+
 if (typeof global !== "undefined") {
   (global as any).__API_VERIFIER__ = apiIntegrationVerifier;
 }

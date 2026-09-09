@@ -1,4 +1,4 @@
-// File Route: apps/gully-fame-mobile/app/(main)/invite-friend.tsx
+
 
 import React, { useState } from "react";
 import {
@@ -26,7 +26,7 @@ const socialPlatforms = [
 ];
 
 export default function InviteFriendScreen() {
-  // TODO: Asli app me yeh code user ki profile API se aayega
+  
   const [userReferralCode] = useState("GULLY-8X9P");
   const [copied, setCopied] = useState(false);
 
@@ -94,7 +94,7 @@ export default function InviteFriendScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="chevron-back" size={28} color="#fff" />
@@ -105,7 +105,7 @@ export default function InviteFriendScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
-        {/* Referral Code Box */}
+        {}
         <View style={styles.referralCard}>
           <Text style={styles.referralTitle}>Your Referral Code</Text>
           <View style={styles.codeBox}>
@@ -124,7 +124,7 @@ export default function InviteFriendScreen() {
           </Text>
         </View>
 
-        {/* Share Options */}
+        {}
         <Text style={styles.sectionTitle}>Share via</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.platformsContainer}>
           {socialPlatforms.map((platform) => {
@@ -145,7 +145,7 @@ export default function InviteFriendScreen() {
           })}
         </ScrollView>
 
-        {/* How it works Info */}
+        {}
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>How it works?</Text>
           <View style={styles.stepRow}>

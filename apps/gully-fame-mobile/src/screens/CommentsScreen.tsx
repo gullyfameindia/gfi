@@ -1,5 +1,5 @@
-// Created by Kiro - Comments Screen
-// Displays all comments for a reel with add/delete/like functionality
+
+
 
 import React, { useState, useEffect } from "react";
 import {
@@ -23,7 +23,7 @@ interface CommentsScreenProps {
   navigation?: any;
 }
 
-// ✅ CREATED BY KIRO - Comments Screen Component
+
 export default function CommentsScreen({ route, navigation }: CommentsScreenProps) {
   const reelId = route?.params?.reelId || "";
 
@@ -36,12 +36,12 @@ export default function CommentsScreen({ route, navigation }: CommentsScreenProp
   const [hasMore, setHasMore] = useState(true);
   const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
 
-  // ✅ CREATED BY KIRO - Load comments on mount
+  
   useEffect(() => {
     loadComments();
   }, [reelId]);
 
-  // ✅ CREATED BY KIRO - Load comments from API
+  
   const loadComments = async (pageNum: number = 1) => {
     try {
       if (pageNum === 1) {
@@ -76,7 +76,7 @@ export default function CommentsScreen({ route, navigation }: CommentsScreenProp
     }
   };
 
-  // ✅ CREATED BY KIRO - Handle refresh
+  
   const handleRefresh = async () => {
     try {
       setRefreshing(true);
@@ -86,14 +86,14 @@ export default function CommentsScreen({ route, navigation }: CommentsScreenProp
     }
   };
 
-  // ✅ CREATED BY KIRO - Handle load more
+  
   const handleLoadMore = () => {
     if (hasMore && !loading) {
       loadComments(page + 1);
     }
   };
 
-  // ✅ CREATED BY KIRO - Handle add comment
+  
   const handleAddComment = async () => {
     if (!commentText.trim()) {
       Alert.alert("Error", "Please enter a comment");
@@ -133,7 +133,7 @@ export default function CommentsScreen({ route, navigation }: CommentsScreenProp
     }
   };
 
-  // ✅ CREATED BY KIRO - Handle delete comment
+  
   const handleDeleteComment = async (commentId: string) => {
     Alert.alert("Delete Comment", "Are you sure you want to delete this comment?", [
       { text: "Cancel", style: "cancel" },
@@ -159,7 +159,7 @@ export default function CommentsScreen({ route, navigation }: CommentsScreenProp
     ]);
   };
 
-  // ✅ CREATED BY KIRO - Handle like comment
+  
   const handleLikeComment = async (commentId: string) => {
     try {
       const isLiked = likedComments[commentId];
@@ -200,16 +200,16 @@ export default function CommentsScreen({ route, navigation }: CommentsScreenProp
     }
   };
 
-  // ✅ CREATED BY KIRO - Render comment item
+  
   const renderCommentItem = (comment: Comment) => {
-    // Safety check for comment and _id
+    
     if (!comment || !comment._id) {
       return null;
     }
 
     return (
       <View key={comment._id} style={styles.commentItem}>
-        {/* User Avatar */}
+        {}
         {comment.userAvatar ? (
           <Image source={{ uri: comment.userAvatar }} style={styles.userAvatar} />
         ) : (
@@ -218,18 +218,18 @@ export default function CommentsScreen({ route, navigation }: CommentsScreenProp
           </View>
         )}
 
-        {/* Comment Content */}
+        {}
         <View style={styles.commentContent}>
-          {/* Header */}
+          {}
           <View style={styles.commentHeader}>
             <Text style={styles.userName}>{comment.userName}</Text>
             <Text style={styles.timestamp}>{new Date(comment.createdAt).toLocaleDateString()}</Text>
           </View>
 
-          {/* Comment Text */}
+          {}
           <Text style={styles.commentText}>{comment.text}</Text>
 
-          {/* Actions */}
+          {}
           <View style={styles.commentActions}>
             <TouchableOpacity
               style={styles.actionButton}
@@ -257,7 +257,7 @@ export default function CommentsScreen({ route, navigation }: CommentsScreenProp
     );
   };
 
-  // ✅ CREATED BY KIRO - Render empty state
+  
   const renderEmptyState = () => (
     <View style={styles.emptyContainer}>
       <Text style={styles.emptyIcon}>💬</Text>
@@ -266,7 +266,7 @@ export default function CommentsScreen({ route, navigation }: CommentsScreenProp
     </View>
   );
 
-  // ✅ CREATED BY KIRO - Render loading state
+  
   if (loading && comments.length === 0) {
     return (
       <View style={styles.container}>
@@ -280,7 +280,7 @@ export default function CommentsScreen({ route, navigation }: CommentsScreenProp
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation?.goBack()}>
           <Text style={styles.backButton}>← Back</Text>
@@ -289,7 +289,7 @@ export default function CommentsScreen({ route, navigation }: CommentsScreenProp
         <View style={styles.placeholder} />
       </View>
 
-      {/* Comments List */}
+      {}
       {comments.length === 0 ? (
         renderEmptyState()
       ) : (
@@ -310,21 +310,21 @@ export default function CommentsScreen({ route, navigation }: CommentsScreenProp
         />
       )}
 
-      {/* Comment Input */}
+      {}
       <View style={styles.inputContainer}>
-        {/* ✅ UPDATED BY KIRO - OLD CODE (COMMENTED) - Input was disabled during submission
-        <TextInput
-          style={styles.input}
-          placeholder="Add a comment..."
-          value={commentText}
-          onChangeText={setCommentText}
-          multiline
-          maxLength={500}
-          editable={!submitting}
-        />
-        */}
+        {
 
-        {/* ✅ UPDATED BY KIRO - NEW CODE - Input always enabled like Instagram, user can type multiple comments */}
+
+
+
+
+
+
+
+
+}
+
+        {}
         <TextInput
           style={styles.input}
           placeholder="Add a comment..."

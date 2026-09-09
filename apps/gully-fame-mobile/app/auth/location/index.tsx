@@ -21,7 +21,7 @@ export default function LocationScreen() {
   const email = params.email ? decodeURIComponent(String(params.email)) : "";
 
   const [permissionStatus, setPermissionStatus] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false); // loading state
+  const [loading, setLoading] = useState(false); 
 
 const handleEnableLocation = async () => {
   try {
@@ -34,7 +34,7 @@ const handleEnableLocation = async () => {
       return;
     }
 
-    // Set a 5-second timeout in case location takes too long
+    
     const locationPromise = Location.getCurrentPositionAsync({});
     const timeoutPromise = new Promise((_, reject) =>
       setTimeout(() => reject(new Error("Location timeout")), 5000)
@@ -43,33 +43,33 @@ const handleEnableLocation = async () => {
     const userLocation = await Promise.race([locationPromise, timeoutPromise]);
     console.log("User Location:", userLocation);
 
-    // Check if this is a skip flow (from "Let me have a look")
+    
     const isSkipFlow = params.skip === "true";
     const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
     const isFromSignIn = !firstName && !lastName && email && !isSkipFlow;
     const accountCreated = await AsyncStorage.getItem("accountCreated");
 
     if (isSkipFlow) {
-      // User clicked "Let me have a look" - check if account was created
+      
       if (accountCreated === "true") {
-        // Account was created, go to OTP verification
+        
         const userEmail = await AsyncStorage.getItem("userEmail") || email;
         const query = `email=${encodeURIComponent(userEmail)}`;
         router.replace(`/auth/verify-otp?${query}` as any);
       } else {
-        // No account created, just go to home
-        // Note: hasSeenOnboarding should already be set from onboarding skip/completion  
+        
+        
         router.replace("/(main)/home" as any);
       }
     } else if (isFromSignIn || isLoggedIn === "true") {
-      // User is logged in - mark as logged in and go to main screen
+      
       await AsyncStorage.multiSet([
         ["isLoggedIn", "true"],
         ["profileCompleted", "true"],
       ]);
       router.replace("/(main)/home" as any);
     } else {
-      // This should not happen - if user reaches location without login, redirect to login
+      
       router.replace("/auth/signin");
     }
   } catch (error) {
@@ -85,20 +85,20 @@ const handleSkip = async () => {
     const accountCreated = await AsyncStorage.getItem("accountCreated");
     
     if (isSkipFlow) {
-      // User clicked "Let me have a look" - check if account was created
+      
       if (accountCreated === "true") {
-        // Account was created, go to OTP verification
+        
         const userEmail = await AsyncStorage.getItem("userEmail") || email;
         const query = `email=${encodeURIComponent(userEmail)}`;
         router.replace(`/auth/verify-otp?${query}` as any);
       } else {
-        // No account created, just go to home
-        // Note: hasSeenOnboarding should already be set from onboarding skip/completion
+        
+        
         router.replace("/(main)/home" as any);
       }
     } else {
-      // Regular skip - go to home
-      // Note: hasSeenOnboarding should already be set from onboarding skip/completion
+      
+      
       router.replace("/(main)/home" as any);
     }
   } catch (error) {
@@ -131,7 +131,7 @@ const handleSkip = async () => {
         <TouchableOpacity
           style={styles.button}
           onPress={handleEnableLocation}
-          disabled={loading} // disable button while loading
+          disabled={loading} 
         >
           {loading ? (
             <ActivityIndicator color="white" />

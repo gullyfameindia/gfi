@@ -11,7 +11,7 @@ export interface TransformData {
   x: number;
   y: number;
   scale: number;
-  rotation: number; // in radians
+  rotation: number; 
 }
 
 interface GestureStickerProps {
@@ -20,7 +20,7 @@ interface GestureStickerProps {
   content: string | number;
   isActive: boolean;
   onSelect: (id: string) => void;
-  // 🔥 Naye props: Drag-to-delete logic ke liye
+  
   onDragStart?: () => void;
   onDragUpdate?: (x: number, y: number) => void;
   onDragEnd?: (id: string, x: number, y: number) => void;
@@ -38,7 +38,7 @@ export const GestureSticker: React.FC<GestureStickerProps> = ({
   onDragEnd,
   onTransformEnd,
 }) => {
-  // Animating Values
+  
   const scale = useSharedValue(1);
   const savedScale = useSharedValue(1);
   
@@ -61,7 +61,7 @@ export const GestureSticker: React.FC<GestureStickerProps> = ({
     }
   };
 
-  // 1. Drag (Pan) Gesture - 🔥 Ab ye screen ki exact position track karega
+  
   const panGesture = Gesture.Pan()
     .onStart(() => {
       runOnJS(onSelect)(id);
@@ -71,7 +71,7 @@ export const GestureSticker: React.FC<GestureStickerProps> = ({
       translateX.value = savedTranslateX.value + event.translationX;
       translateY.value = savedTranslateY.value + event.translationY;
       
-      // Absolute X, Y parent ko bhejna taaki Trash icon highlight ho sake
+      
       if (onDragUpdate) runOnJS(onDragUpdate)(event.absoluteX, event.absoluteY);
     })
     .onEnd((event) => {
@@ -79,11 +79,11 @@ export const GestureSticker: React.FC<GestureStickerProps> = ({
       savedTranslateY.value = translateY.value;
       runOnJS(sendTransformUpdate)();
       
-      // Jab user ungli chode, tab check karenge ki Trash icon pe drop hua ya nahi
+      
       if (onDragEnd) runOnJS(onDragEnd)(id, event.absoluteX, event.absoluteY);
     });
 
-  // 2. Zoom (Pinch) Gesture
+  
   const pinchGesture = Gesture.Pinch()
     .onStart(() => {
       runOnJS(onSelect)(id);
@@ -96,7 +96,7 @@ export const GestureSticker: React.FC<GestureStickerProps> = ({
       runOnJS(sendTransformUpdate)();
     });
 
-  // 3. Rotation Gesture
+  
   const rotationGesture = Gesture.Rotation()
     .onUpdate((event) => {
       rotation.value = savedRotation.value + event.rotation;
@@ -106,7 +106,7 @@ export const GestureSticker: React.FC<GestureStickerProps> = ({
       runOnJS(sendTransformUpdate)();
     });
 
-  // Teeno gestures ko ek sath combine karna
+  
   const composedGesture = Gesture.Simultaneous(
     panGesture,
     Gesture.Simultaneous(pinchGesture, rotationGesture)
@@ -129,10 +129,10 @@ export const GestureSticker: React.FC<GestureStickerProps> = ({
         style={[
           styles.container,
           animatedStyle,
-          isActive && styles.activeBorder, // Active hone par clean white border aayegi
+          isActive && styles.activeBorder, 
         ]}
       >
-        {/* ❌ Delete (X) button yahan se hamesha ke liye hata diya gaya hai */}
+        {}
         
         <View style={styles.contentContainer}>
           {type === 'emoji' ? (
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   activeBorder: {
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.8)', // Professional clean white border (CapCut style)
+    borderColor: 'rgba(255, 255, 255, 0.8)', 
     borderRadius: 8,
   },
   contentContainer: {

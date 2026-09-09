@@ -16,7 +16,7 @@ const TransitionSelector: React.FC<TransitionSelectorModalProps> = ({
 }) => {
   const [selectedDuration, setSelectedDuration] = useState(300);
 
-  // Group presets by category
+  
   const groupedPresets = useMemo(() => {
     const groups: Record<string, TransitionPreset[]> = {};
     TRANSITION_PRESETS.forEach((preset) => {
@@ -168,7 +168,7 @@ const TransitionSelector: React.FC<TransitionSelectorModalProps> = ({
   return (
     <Modal visible={visible} animationType="slide" transparent={false}>
       <View style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={onCancel} style={styles.closeButton}>
             <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -185,7 +185,7 @@ const TransitionSelector: React.FC<TransitionSelectorModalProps> = ({
           <View style={styles.headerSpacer} />
         </View>
 
-        {/* Duration Control */}
+        {}
         <View style={styles.durationContainer}>
           <Text style={styles.durationLabel}>Duration</Text>
           <View style={styles.durationSlider}>
@@ -211,7 +211,7 @@ const TransitionSelector: React.FC<TransitionSelectorModalProps> = ({
           </View>
         </View>
 
-        {/* Transitions Grid */}
+        {}
         <FlatList
           data={categories}
           keyExtractor={(item) => item}

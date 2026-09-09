@@ -30,17 +30,17 @@ import TopPerformer from "@/components/home/TopDancers/TopPerformer";
 import TopTenLeaderboard from "@/components/TopTenLeaderboard/TopTenLeaderboard";
 import SafeImage from "@/components/SafeImage";
 import { apiClient } from "@/api";
-// NOTE: setLayoutAnimationEnabledExperimental is deprecated in New Architecture
-// and doesn't have any effect. Use Reanimated for animations instead if needed.
-// if (
-//     Platform.OS === "android" &&
-//     UIManager.setLayoutAnimationEnabledExperimental
-// ) {
-//     UIManager.setLayoutAnimationEnabledExperimental(true);
-// }
+
+
+
+
+
+
+
+
 const { height } = Dimensions.get("window");
 
-// --- Formatters ---
+
 const formatDateShort = (dateString: string): string => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -72,13 +72,13 @@ const formatCurrency = (amount: number): string => {
     return `₹${amount.toLocaleString("en-IN")}`;
 };
 
-// Gracefully handle strings (API) vs integers (local mock requires)
+
 const getImageSource = (source: any) => {
     if (typeof source === "string") return { uri: source };
     return source;
 };
 
-// --- Fallback Mock Data matching the API Contract ---
+
 const MOCK_PAST_DATA = {
     _id: "3",
     status: "ENDED",
@@ -202,7 +202,7 @@ export default function PastCompetitionScreen() {
         ? String(params.id)
         : MOCK_PAST_DATA._id;
 
-    // Initialize strictly with mock data to prevent blank screens
+    
     const [competitionData, setCompetitionData] = useState<any>(MOCK_PAST_DATA);
     const [shareModalVisible, setShareModalVisible] = useState(false);
     const [isRulesExpanded, setIsRulesExpanded] = useState(false);
@@ -219,7 +219,7 @@ export default function PastCompetitionScreen() {
                     `/competitions/${competitionIdFromParams}`,
                 );
                 if (resp.data.code === 1 && resp.data.message === "success") {
-                    // If API succeeds, merge with local mock to retain local banner images if API lacks them
+                    
                     setCompetitionData({
                         ...MOCK_PAST_DATA,
                         ...resp.data.data,
@@ -330,7 +330,7 @@ export default function PastCompetitionScreen() {
         }
     };
 
-    // Map Results Array
+    
     const mappedResults = (competitionData.results || []).map((r: any) => ({
         id: r.id,
         userId: r.id,
@@ -352,7 +352,7 @@ export default function PastCompetitionScreen() {
     const topThreePerformers = mappedResults.filter((p: any) => p.rank <= 3);
     const leaderboardPerformers = mappedResults.filter((p: any) => p.rank > 3);
 
-    // Map More Competitions Array
+    
     const morePastCompetitions = (
         competitionData.recommendedPastCompetitions || []
     ).map((comp: any) => ({
@@ -370,7 +370,7 @@ export default function PastCompetitionScreen() {
         <View style={styles.container}>
             <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-            {/* Header */}
+            {}
             <View style={styles.header}>
                 <TouchableOpacity
                     onPress={() => router.back()}
@@ -402,7 +402,7 @@ export default function PastCompetitionScreen() {
                 style={styles.scrollView}
                 showsVerticalScrollIndicator={false}
             >
-                {/* Banner */}
+                {}
                 <View style={styles.compCardContainer}>
                     <View style={styles.titleCard}>
                         <View style={styles.compCardImageWrapper}>
@@ -453,7 +453,7 @@ export default function PastCompetitionScreen() {
                                 </Text>
                             </View>
 
-                            {/* Event Specs: Participants & Timeline */}
+                            {}
                             <View style={styles.specsRow}>
                                 <View style={styles.specBoxCenter}>
                                     <View style={styles.specHeaderCenter}>
@@ -488,7 +488,7 @@ export default function PastCompetitionScreen() {
                                 </View>
                             </View>
 
-                            {/* Event Details Accordion */}
+                            {}
                             {(competitionData.description ||
                                 competitionData.rules) && (
                                 <TouchableOpacity
@@ -496,7 +496,7 @@ export default function PastCompetitionScreen() {
                                     activeOpacity={0.8}
                                     onPress={toggleRules}
                                 >
-                                    {/* Giving the header a gold tint makes it look clickable */}
+                                    {}
                                     <View style={styles.missionHeader}>
                                         <View style={styles.missionTitleRow}>
                                             <Text style={styles.missionIcon}>
@@ -534,7 +534,7 @@ export default function PastCompetitionScreen() {
                                                 </>
                                             )}
 
-                                            {/* Re-adding the gamified rules list! */}
+                                            {}
                                             {competitionData.rules && (
                                                 <>
                                                     {competitionData.description && (
@@ -595,7 +595,7 @@ export default function PastCompetitionScreen() {
                     </View>
                 </View>
 
-                {/* Final Results */}
+                {}
                 {mappedResults.length > 0 && (
                     <View style={styles.section}>
                         <View style={styles.finalResultsSection}>
@@ -638,7 +638,7 @@ export default function PastCompetitionScreen() {
                     </View>
                 )}
 
-                {/* More Past Competitions */}
+                {}
                 {morePastCompetitions.length > 0 && (
                     <View style={styles.section}>
                         <Text style={styles.morePastCompTitle}>
@@ -737,7 +737,7 @@ export default function PastCompetitionScreen() {
                 <View style={{ height: 20 }} />
             </ScrollView>
 
-            {/* Share Modal */}
+            {}
             <Modal
                 visible={shareModalVisible}
                 transparent={true}

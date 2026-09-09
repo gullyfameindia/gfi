@@ -16,7 +16,7 @@ import {
   Animated,
 } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router/react-navigation";
 import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path } from "react-native-svg";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -30,7 +30,7 @@ export default function AccountCenterScreen() {
   const params = useLocalSearchParams();
   const fromVerified = params.fromVerified === "true";
   const fromKycFlow = params.fromKycFlow === "true";
-  const kycStep = params.step as string | undefined; // 'bio' or 'image'
+  const kycStep = params.step as string | undefined; 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -51,26 +51,26 @@ export default function AccountCenterScreen() {
   const [originalRole, setOriginalRole] = useState<string>("");
   const [originalEmail, setOriginalEmail] = useState<string>("");
   const [originalMobile, setOriginalMobile] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(true); // Loading state to prevent flash
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
     loadUserData();
   }, []);
 
-  // Reload data when screen comes into focus
+  
   useFocusEffect(
     React.useCallback(() => {
       loadUserData();
 
-      // If coming from KYC flow, auto-enter edit mode for the specific step
+      
       if (fromKycFlow && kycStep) {
-        // Small delay to ensure data is loaded
+        
         setTimeout(() => {
           if (kycStep === "bio" && !bio.trim()) {
-            // Auto-edit bio if it's empty
+            
             setIsEditing(true);
           } else if (kycStep === "image" && !profileImage) {
-            // Auto-open image picker if no image
+            
             handlePickImage();
           }
         }, 500);
@@ -80,7 +80,7 @@ export default function AccountCenterScreen() {
 
   const loadUserData = async () => {
     try {
-      // First, load from AsyncStorage immediately (fast, cached data)
+      
       const userFirstName = await AsyncStorage.getItem("userFirstName");
       const userLastName = await AsyncStorage.getItem("userLastName");
       const userEmail = await AsyncStorage.getItem("userEmail");
@@ -101,7 +101,7 @@ export default function AccountCenterScreen() {
             ? "fan"
             : "participant";
 
-      // Parse three words
+      
       const threeWordsArray = userThreeWords
         ? userThreeWords.split("|").map((w) => w.trim())
         : ["", "", ""];
@@ -120,7 +120,7 @@ export default function AccountCenterScreen() {
         threeWords: userThreeWords || "",
       };
 
-      // Set cached data immediately to prevent flash
+      
       setFirstName(cachedData.firstName);
       setLastName(cachedData.lastName);
       setEmail(cachedData.email);
@@ -136,10 +136,10 @@ export default function AccountCenterScreen() {
       setOriginalMobile(cachedData.mobile || "");
       setOriginalData(cachedData);
 
-      // Now we can show the UI with cached data
+      
       setIsLoading(false);
 
-      // Then fetch from API in the background and update if different
+      
       if (__DEV__) {
         console.log("\n📥 ========== LOADING USER DATA ==========");
         console.log("Loaded from AsyncStorage first, now fetching from API...");
@@ -164,7 +164,7 @@ export default function AccountCenterScreen() {
               ? "fan"
               : "participant";
 
-        // Parse three words from backend
+        
         const backendThreeWords = (userData as any).threeWords || "";
         const backendThreeWordsArray = backendThreeWords
           ? backendThreeWords.split("|").map((w: string) => w.trim())
@@ -185,7 +185,7 @@ export default function AccountCenterScreen() {
           threeWords: backendThreeWords,
         };
 
-        // Update with fresh data from API
+        
         setFirstName(data.firstName);
         setLastName(data.lastName);
         setEmail(data.email);
@@ -201,7 +201,7 @@ export default function AccountCenterScreen() {
         setOriginalEmail(data.email || "");
         setOriginalMobile(data.mobile || "");
 
-        // Update cache with fresh data
+        
         await AsyncStorage.multiSet([
           ["userFirstName", data.firstName],
           ["userLastName", data.lastName],
@@ -223,14 +223,14 @@ export default function AccountCenterScreen() {
       }
     } catch (error) {
       console.error("Error loading user data:", error);
-      // Even if there's an error, we've already loaded from cache, so show the UI
+      
       setIsLoading(false);
     }
   };
 
   const handleUpdateProfile = () => {
-    // Store the current values as original when starting to edit
-    // This ensures we can detect what changed
+    
+    
     setOriginalRole(role);
     setOriginalEmail(email);
     setOriginalMobile(mobile);
@@ -238,7 +238,7 @@ export default function AccountCenterScreen() {
   };
 
   const handleCancelEdit = () => {
-    // Reset all fields to original values
+    
     setFirstName(originalData.firstName || "");
     setLastName(originalData.lastName || "");
     setEmail(originalData.email || "");
@@ -277,12 +277,12 @@ export default function AccountCenterScreen() {
 
       const backendRole = role === "participant" ? "participants" : "fan";
 
-      // Build update data - only include changed fields
+      
       const updateData: any = {
-        role: backendRole, // Always include role (backend requires it)
+        role: backendRole, 
       };
 
-      // Only include fields that have actually changed
+      
       if (firstName !== (originalData.firstName || "")) {
         updateData.firstName = firstName;
       }
@@ -332,7 +332,7 @@ export default function AccountCenterScreen() {
           console.log("✅ Profile updated successfully on backend");
         }
 
-        // Update original data with current values (only what was saved)
+        
         const threeWordsFormatted = threeWords
           .filter((w) => w.trim())
           .join(" | ");
@@ -353,9 +353,9 @@ export default function AccountCenterScreen() {
         setOriginalRole(role);
         setOriginalEmail(email);
         setOriginalMobile(mobile);
-        setIsEditing(false); // Exit edit mode, stay on same page
+        setIsEditing(false); 
 
-        // Update AsyncStorage with current values
+        
         await AsyncStorage.multiSet([
           ["userFirstName", updatedData.firstName],
           ["userLastName", updatedData.lastName],
@@ -371,20 +371,20 @@ export default function AccountCenterScreen() {
 
         Alert.alert("Success", "Your profile has been updated successfully!");
 
-        // If coming from KYC flow, navigate to next step
+        
         if (fromKycFlow) {
           if (kycStep === "bio") {
-            // Step 2 (Bio) completed → Navigate to Step 3 (Image)
+            
             const { navigateToNextKycStep } =
               await import("@utils/kycValidation");
             await navigateToNextKycStep("image");
           } else if (kycStep === "image") {
-            // Step 3 (Image) completed → Navigate to Step 4 (Face Scan)
+            
             const { navigateToNextKycStep } =
               await import("@utils/kycValidation");
             await navigateToNextKycStep("faceScan");
           } else {
-            // Default: navigate to next step
+            
             const { navigateToNextKycStep } =
               await import("@utils/kycValidation");
             await navigateToNextKycStep("image");
@@ -392,7 +392,7 @@ export default function AccountCenterScreen() {
           return;
         }
 
-        // If coming from verified page, navigate back after saving
+        
         if (fromVerified) {
           router.replace("/(main)/verified" as any);
           return;
@@ -454,7 +454,7 @@ export default function AccountCenterScreen() {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 0.5, // Reduced from 0.8 to reduce file size
+        quality: 0.5, 
         base64: true,
         allowsMultipleSelection: false,
       });
@@ -486,7 +486,7 @@ export default function AccountCenterScreen() {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 0.5, // Reduced from 0.8 to reduce file size
+        quality: 0.5, 
         base64: true,
         allowsMultipleSelection: false,
         presentationStyle:
@@ -507,19 +507,19 @@ export default function AccountCenterScreen() {
       const imageUri = asset.uri;
       let base64Image = asset.base64;
 
-      // Show preview immediately
+      
       setProfileImage(imageUri);
 
       if (base64Image) {
-        // Calculate base64 size in bytes
+        
         const base64Size = (base64Image.length * 3) / 4;
-        const maxSize = 2 * 1024 * 1024; // 2MB limit
+        const maxSize = 2 * 1024 * 1024; 
 
         if (__DEV__) {
           console.log("📸 Image size:", (base64Size / 1024).toFixed(2), "KB");
         }
 
-        // If image is still too large, reduce quality further
+        
         if (base64Size > maxSize) {
           if (__DEV__) {
             console.log(
@@ -527,9 +527,9 @@ export default function AccountCenterScreen() {
             );
           }
 
-          // Try to get a more compressed version
-          // Note: We can't re-compress here, but we can reduce quality in the picker
-          // For now, we'll show an error and ask user to select a smaller image
+          
+          
+          
           if (base64Size > maxSize * 1.5) {
             Alert.alert(
               "Image Too Large",
@@ -569,12 +569,12 @@ export default function AccountCenterScreen() {
             setOriginalData({ ...originalData, profileImage: imageDataUri });
             setProfileImage(imageDataUri);
 
-            // Show success feedback without blocking alert
+            
             if (__DEV__) {
               console.log("✅ Profile image updated successfully");
             }
 
-            // If coming from KYC flow (image step), navigate to next step (face scan)
+            
             if (fromKycFlow && kycStep === "image") {
               const { navigateToNextKycStep } =
                 await import("@utils/kycValidation");
@@ -585,7 +585,7 @@ export default function AccountCenterScreen() {
             const errorMsg =
               updateResult.error || "Failed to upload image. Please try again.";
 
-            // Check if it's a 413 error
+            
             if (
               errorMsg.includes("413") ||
               errorMsg.includes("too large") ||
@@ -607,7 +607,7 @@ export default function AccountCenterScreen() {
         } catch (error: any) {
           console.error("Error uploading image:", error);
 
-          // Check if it's a 413 error
+          
           if (
             error.message?.includes("413") ||
             error.message?.includes("too large") ||
@@ -662,7 +662,7 @@ export default function AccountCenterScreen() {
         (originalData.threeWords || "") ||
       profileImage !== (originalData.profileImage || ""));
 
-  // Show loading state only if we don't have any cached data yet
+  
   if (isLoading && !firstName && !lastName && !profileImage) {
     return (
       <View
@@ -680,7 +680,7 @@ export default function AccountCenterScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -696,7 +696,7 @@ export default function AccountCenterScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Profile Header Section with Gradient */}
+        {}
         <LinearGradient
           colors={[
             "rgba(236, 154, 21, 0.15)",
@@ -723,10 +723,10 @@ export default function AccountCenterScreen() {
                       setProfileImage(null);
                     }}
                     onLoadStart={() => {
-                      // Image is starting to load
+                      
                     }}
                     onLoadEnd={() => {
-                      // Image finished loading
+                      
                     }}
                   />
                 ) : (
@@ -778,7 +778,7 @@ export default function AccountCenterScreen() {
           </View>
         </LinearGradient>
 
-        {/* Personal Details Section */}
+        {}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <View style={styles.sectionTitleContainer}>
@@ -828,7 +828,7 @@ export default function AccountCenterScreen() {
                   : "Your account information"}
               </Text>
             </View>
-            {/* First Name */}
+            {}
             <View style={styles.fieldRow}>
               <Text style={styles.fieldLabel}>First Name</Text>
               {isEditing ? (
@@ -844,7 +844,7 @@ export default function AccountCenterScreen() {
               )}
             </View>
 
-            {/* Last Name */}
+            {}
             <View style={styles.fieldRow}>
               <Text style={styles.fieldLabel}>Last Name</Text>
               {isEditing ? (
@@ -860,7 +860,7 @@ export default function AccountCenterScreen() {
               )}
             </View>
 
-            {/* Email */}
+            {}
             <View style={styles.fieldRow}>
               <Text style={styles.fieldLabel}>Email</Text>
               {isEditing ? (
@@ -880,7 +880,7 @@ export default function AccountCenterScreen() {
               )}
             </View>
 
-            {/* Mobile */}
+            {}
             <View style={styles.fieldRow}>
               <Text style={styles.fieldLabel}>Mobile Number</Text>
               {isEditing ? (
@@ -899,7 +899,7 @@ export default function AccountCenterScreen() {
               )}
             </View>
 
-            {/* Date of Birth */}
+            {}
             <View style={styles.fieldRow}>
               <Text style={styles.fieldLabel}>Date of Birth</Text>
               {isEditing ? (
@@ -917,7 +917,7 @@ export default function AccountCenterScreen() {
               )}
             </View>
 
-            {/* Gender */}
+            {}
             <View style={styles.fieldRow}>
               <Text style={styles.fieldLabel}>Gender</Text>
               {isEditing ? (
@@ -949,7 +949,7 @@ export default function AccountCenterScreen() {
               )}
             </View>
 
-            {/* Role */}
+            {}
             <View style={styles.fieldRow}>
               <Text style={styles.fieldLabel}>Role</Text>
               {isEditing ? (
@@ -987,7 +987,7 @@ export default function AccountCenterScreen() {
               )}
             </View>
 
-            {/* Bio */}
+            {}
             <View style={styles.fieldRow}>
               <Text style={styles.fieldLabel}>Bio</Text>
               {isEditing ? (
@@ -1006,7 +1006,7 @@ export default function AccountCenterScreen() {
               )}
             </View>
 
-            {/* Describe Yourself in Three Words */}
+            {}
             <View style={styles.fieldRow}>
               <Text style={styles.fieldLabel}>
                 Describe yourself in three words
@@ -1058,7 +1058,7 @@ export default function AccountCenterScreen() {
               )}
             </View>
 
-            {/* Action Buttons */}
+            {}
             {isEditing && (
               <View style={styles.actionButtons}>
                 <TouchableOpacity
@@ -1099,7 +1099,7 @@ export default function AccountCenterScreen() {
           </View>
         </View>
 
-        {/* Password and Security Section */}
+        {}
         <View style={styles.section}>
           <View style={styles.sectionTitleContainer}>
             <View style={styles.sectionTitleIcon}>
@@ -1124,7 +1124,7 @@ export default function AccountCenterScreen() {
           </View>
 
           <View style={[styles.card, styles.securityCard]}>
-            {/* Change Password */}
+            {}
             <TouchableOpacity
               style={styles.securityOption}
               onPress={handleChangePassword}
@@ -1162,10 +1162,10 @@ export default function AccountCenterScreen() {
               </View>
             </TouchableOpacity>
 
-            {/* Divider */}
+            {}
             <View style={styles.divider} />
 
-            {/* Verification Selfie */}
+            {}
             <TouchableOpacity
               style={styles.securityOption}
               onPress={handleVerificationSelfie}
@@ -1206,7 +1206,7 @@ export default function AccountCenterScreen() {
         </View>
       </ScrollView>
 
-      {/* Instagram-style Image Picker Bottom Sheet */}
+      {}
       <Modal
         visible={imagePickerVisible}
         transparent={true}
@@ -1237,10 +1237,10 @@ export default function AccountCenterScreen() {
               activeOpacity={1}
               onPress={(e) => e.stopPropagation()}
             >
-              {/* Handle bar */}
+              {}
               <View style={styles.handleBar} />
 
-              {/* Options */}
+              {}
               <View style={styles.bottomSheetContent}>
                 <TouchableOpacity
                   style={styles.bottomSheetOption}
@@ -1277,7 +1277,7 @@ export default function AccountCenterScreen() {
         </TouchableOpacity>
       </Modal>
 
-      {/* Loading overlay for image processing */}
+      {}
       {isProcessingImage && (
         <Modal transparent={true} visible={isProcessingImage}>
           <View style={styles.loadingOverlay}>
@@ -1716,7 +1716,7 @@ const styles = StyleSheet.create({
     fontFamily: "Rubik_500Medium",
     textAlign: "center",
   },
-  // Instagram-style Bottom Sheet
+  
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",

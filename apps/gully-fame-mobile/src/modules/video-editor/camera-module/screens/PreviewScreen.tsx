@@ -1,4 +1,4 @@
-// PATH: apps/gully-fame-mobile/src/modules/video-editor/screens/PreviewScreen.tsx
+
 
 import React, { useCallback, useState, useEffect, useRef } from 'react';
 import {
@@ -14,18 +14,18 @@ import Svg, { Circle, Path, Rect } from 'react-native-svg';
 
 import ExportScreen from '../components/ExportScreen';
 import TimelineEditor from '../components/timeline/TimelineEditor';
-import MusicLibraryModal from '../components/MusicLibraryModal'; 
+import { MusicLibraryModal } from '@/components/MusicLibraryModal'; 
 import StickerLibraryModal from '../components/StickerLibraryModal';
 import MultiClipPlayer from '../components/timeline/MultiClipPlayer'; 
 
-// 🔥 NEW IMPORTS: Text Editor aur Voiceover Studio
+
 import TextEditorModal from '../components/TextEditorModal';
 import VoiceoverStudioModal from '../components/VoiceoverStudioModal';
 
 import { useUndoRedo } from '../hooks/useUndoRedo';
 import { cameraStyles } from '../styles/cameraStyles';
 import type { CameraClipArray } from '../types/camera.types';
-import type { TextOverlay } from '../types/textOverlay.types'; // Used for TextEditor
+import type { TextOverlay } from '../types/textOverlay.types'; 
 
 interface ActiveOverlay {
   id: string;
@@ -52,49 +52,59 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
   const [updatedClips, setUpdatedClips] = useState<CameraClipArray>(clips);
   const [showExport, setShowExport] = useState(false);
   
-  // Navigation States
+  
   const [isAdvancedMode, setIsAdvancedMode] = useState(false);
   
-  // MODALS VISIBILITY STATES (Buttons wiring)
+  
   const [isMusicModalVisible, setIsMusicModalVisible] = useState(false);
   const [isStickerModalVisible, setIsStickerModalVisible] = useState(false);
   
-  // 🔥 TEXT EDITOR STATE
+  
   const [isTextModeActive, setIsTextModeActive] = useState(false);
   const [selectedTextOverlay, setSelectedTextOverlay] = useState<TextOverlay | null>(null);
   
-  // 🔥 VOICEOVER STUDIO STATE
+  
   const [isVoiceModeActive, setIsVoiceModeActive] = useState(false);
   
-  // Player state
+  
+  const [selectedMusic, setSelectedMusic] = useState<any | null>(null);
+  
+  
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
 
-  // Overlays state
+  
   const [overlays, setOverlays] = useState<ActiveOverlay[]>([]);
   const [activeOverlayId, setActiveOverlayId] = useState<string | null>(null);
   const overlayCounterRef = useRef(0);
 
   const undoRedo = useUndoRedo(clips);
 
-  // Calculate total duration (Required for Voiceover Studio)
+  
   const totalDuration = React.useMemo(() => {
     return updatedClips.reduce((acc, clip) => acc + (clip.duration || 3), 0);
   }, [updatedClips]);
 
   useEffect(() => {
     if (clips && clips.length > 0) {
+      console.log('[PreviewScreen] 🎬 [VERIFICATION] Clips received from CameraScreen:');
+      clips.forEach((clip, idx) => {
+        console.log(`  [${idx}] id: ${clip.id}, uri: ${clip.uri?.substring(0, 60)}..., duration: ${clip.duration}s, type: ${clip.type}`);
+      });
       setUpdatedClips(clips);
       undoRedo.reset(clips);
+      console.log('[PreviewScreen] ✅ [VERIFICATION] Clips state updated, currentClipIndex: 0');
+    } else {
+      console.warn('[PreviewScreen] ⚠️ [VERIFICATION] No clips received or clips array is empty');
     }
   }, [clips]); 
 
-  // Tool Handlers
+  
   const handleAudioToolPress = () => setIsMusicModalVisible(true);
   const handleStickerToolPress = () => setIsStickerModalVisible(true);
   
   const handleTextToolPress = () => {
-    setSelectedTextOverlay(null); // Clear selected to open fresh editor
+    setSelectedTextOverlay(null); 
     setIsTextModeActive(true);
   };
   
@@ -128,11 +138,16 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
 
   if (showExport) {
     return (
-      <ExportScreen clips={updatedClips} onBack={() => setShowExport(false)} onComplete={() => onBack?.()} />
+      <ExportScreen 
+        clips={updatedClips} 
+        onBack={() => setShowExport(false)} 
+        onComplete={() => onBack?.()} 
+        selectedMusic={selectedMusic}
+      />
     );
   }
 
-  // ADVANCED CAPCUT STYLE EDITOR
+  
   if (isAdvancedMode) {
     return (
       <View style={styles.container}>
@@ -161,11 +176,11 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
     );
   }
 
-  // INSTAGRAM REELS STYLE QUICK PREVIEW
+  
   return (
     <View style={styles.container}>
       
-      {/* 🎬 ASLI VIDEO PLAYER RUNNING IN BACKGROUND */}
+      {}
       <View style={[StyleSheet.absoluteFillObject, { zIndex: 0, backgroundColor: '#000' }]}>
         <MultiClipPlayer
           clips={updatedClips}
@@ -175,7 +190,7 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
       </View>
 
       <SafeAreaView style={styles.safeArea}>
-        {/* TOP BAR */}
+        {}
         <View style={styles.topBar}>
           <TouchableOpacity style={styles.backButton} onPress={onBack}>
             <Svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -199,7 +214,7 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
           <View style={styles.backButton} />
         </View>
 
-        {/* BOTTOM CONTROLS AREA */}
+        {}
         <View style={styles.bottomArea}>
           
           <TouchableOpacity style={styles.swipeUpContainer} onPress={() => setIsAdvancedMode(true)}>
@@ -209,11 +224,11 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
             <Text style={styles.swipeUpText}>Swipe up to edit</Text>
           </TouchableOpacity>
 
-          {/* Horizontal Tools Row */}
+          {}
           <View style={styles.toolsContainer}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.toolsScroll}>
               
-              {/* AUDIO BUTTON */}
+              {}
               <View style={styles.toolItem}>
                 <TouchableOpacity style={styles.toolIconBox} onPress={handleAudioToolPress}>
                   <Svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -226,7 +241,7 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
                 <Text style={styles.toolLabel}>Audio</Text>
               </View>
 
-              {/* TEXT BUTTON */}
+              {}
               <View style={styles.toolItem}>
                 <TouchableOpacity style={styles.toolIconBox} onPress={handleTextToolPress}>
                   <Text style={styles.aaText}>Aa</Text>
@@ -234,7 +249,7 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
                 <Text style={styles.toolLabel}>Text</Text>
               </View>
 
-              {/* VOICE BUTTON */}
+              {}
               <View style={styles.toolItem}>
                 <TouchableOpacity style={styles.toolIconBox} onPress={handleVoiceToolPress}>
                   <Svg width="26" height="26" viewBox="0 0 24 24" fill="none">
@@ -245,7 +260,7 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
                 <Text style={styles.toolLabel}>Voice</Text>
               </View>
 
-              {/* CAPTIONS BUTTON (Placeholder for now) */}
+              {}
               <View style={styles.toolItem}>
                 <TouchableOpacity style={styles.toolIconBox}>
                   <Svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -257,7 +272,7 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
                 <Text style={styles.toolLabel}>Captions</Text>
               </View>
 
-              {/* STICKERS BUTTON */}
+              {}
               <View style={styles.toolItem}>
                 <TouchableOpacity style={styles.toolIconBox} onPress={handleStickerToolPress}>
                   <Svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -271,7 +286,7 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
             </ScrollView>
           </View>
 
-          {/* Footer Action Row */}
+          {}
           <View style={styles.footerRow}>
             <TouchableOpacity style={styles.openEditsButton} onPress={() => setIsAdvancedMode(true)}>
               <Svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ marginRight: 6 }}>
@@ -291,15 +306,22 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
         </View>
       </SafeAreaView>
 
-      {/* -------------------- */}
-      {/* ALL MODALS RENDERED HERE */}
-      {/* -------------------- */}
+      {}
+      {}
+      {}
 
       <MusicLibraryModal
         visible={isMusicModalVisible}
         onCancel={() => setIsMusicModalVisible(false)}
-        selectedMusic={null}
+        selectedMusic={selectedMusic}
         onSelect={(music) => {
+          console.log('[PreviewScreen] 🎵 [VERIFICATION] Music selected:');
+          console.log('  id:', music.id);
+          console.log('  title:', music.title);
+          console.log('  artist:', music.artist);
+          console.log('  audioUrl:', music.audioUrl?.substring(0, 60));
+          setSelectedMusic(music);
+          console.log('[PreviewScreen] ✅ [VERIFICATION] Selected music stored in state');
           setIsMusicModalVisible(false);
         }}
       />
@@ -316,7 +338,7 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
         visible={isTextModeActive} 
         overlay={selectedTextOverlay} 
         onSave={(newTextOverlay) => {
-          // You can push this overlay into your 'overlays' array or pass it to DraggableTextOverlays component later
+          
           console.log("Saving text:", newTextOverlay);
           setIsTextModeActive(false);
         }} 

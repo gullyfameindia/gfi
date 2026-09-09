@@ -12,7 +12,7 @@ interface InfiniteScrollingLeaderboardProps {
     data: LeaderboardAPIData[];
 }
 
-// Quick helper to format big numbers to K/M
+
 const formatNumber = (num: number): string => {
     if (!num) return "0";
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
@@ -35,7 +35,7 @@ const Card = React.memo(({ data }: { data: LeaderboardAPIData }) => {
             onPress={() => onNavigate(data.id)}
             activeOpacity={0.8}
         >
-            {/* Gamified accent strip on the left */}
+            {}
             <View style={styles.cardAccentStrip} />
 
             <View style={styles.rankBadgeContainer}>
@@ -132,7 +132,7 @@ function InfiniteScrollingLeaderboard({
                         </View>
                     ) : (
                         <View style={{ height: 20 }} />
-                    ) // Padding at the end of the list
+                    ) 
                 }
                 initialNumToRender={20}
                 maxToRenderPerBatch={10}

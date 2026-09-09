@@ -52,10 +52,10 @@ interface PreviewActionButtonsProps {
   startTime?: number;
 }
 
-/**
- * Bottom action buttons bar for preview editor
- * Contains all editing tools: filters, text, voice, captions, effects, etc.
- */
+
+
+
+
 const PreviewActionButtons: React.FC<PreviewActionButtonsProps> = ({
   displayUri,
   onFilter,
@@ -80,13 +80,13 @@ const PreviewActionButtons: React.FC<PreviewActionButtonsProps> = ({
   startTime = 0,
 }) => {
   
-  // 🛠️ Music Library Handler - Opens device file picker for AUDIO ONLY
+  
   const handleMusicPress = async () => {
     try {
-      // Use ImageLibraryOptions with explicit Audio type for iOS/Android compatibility
+      
       const imagePicker = require('expo-image-picker');
       
-      // Request permissions first (required on newer Android)
+      
       const { status } = await imagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert('⚠️ Permission Denied', 'We need access to your media library to select music');
@@ -94,7 +94,7 @@ const PreviewActionButtons: React.FC<PreviewActionButtonsProps> = ({
       }
 
       const result = await imagePicker.launchImageLibraryAsync({
-        mediaTypes: imagePicker.MediaTypeOptions.Audio, // AUDIO ONLY
+        mediaTypes: imagePicker.MediaTypeOptions.Audio, 
         allowsMultipleSelection: false,
         allowsEditing: false,
         quality: 1,
@@ -104,7 +104,7 @@ const PreviewActionButtons: React.FC<PreviewActionButtonsProps> = ({
         const musicFile = result.assets[0];
         const fileName = musicFile.uri?.split('/').pop() || 'Music';
         
-        // Log for debugging
+        
         console.log('🎵 Music selected:', {
           uri: musicFile.uri?.substring(0, 80),
           fileName,
@@ -127,7 +127,7 @@ const PreviewActionButtons: React.FC<PreviewActionButtonsProps> = ({
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      {/* 🛠️ FIX: Forced handler pass kiya taaki component hide na ho */}
+      {}
       <MusicButton onPress={handleMusicPress} />
       
       <TextButton onPress={onText} />

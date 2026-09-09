@@ -23,4 +23,4 @@ export const SuccessIcon = ({ width = 75, height = 100 }) => (
   </Svg>
 );
 
-// Social Login Icons
+

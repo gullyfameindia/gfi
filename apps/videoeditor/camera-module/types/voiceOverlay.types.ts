@@ -58,6 +58,6 @@ export interface AdjustSettings {
 export interface OverlayEffect {
   id: string;
   type: 'blur' | 'vignette' | 'watermark' | 'gradient';
-  opacity: number;       // 0 to 1
-  intensity: number;     // 0 to 1
+  opacity: number;       
+  intensity: number;     
 }

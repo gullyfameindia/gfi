@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, ScrollView, Alert } from "react-native";
 import FilterButton from "./preview-actions/FilterButton";
 import MusicButton from "./preview-actions/MusicButton";
+import MusicLibraryModal from "./preview-actions/MusicLibraryModal";
 import OverlayButton from "./preview-actions/OverlayButton";
 import StickerButton from "./preview-actions/StickerButton";
 import TextButton from "./preview-actions/TextButton";
@@ -15,6 +16,7 @@ import LinksButton from "./preview-actions/LinksButton";
 import PasteButton from "./preview-actions/PasteButton";
 import TextToSpeechButton from "./preview-actions/TextToSpeechButton";
 import AudioEditorButton from "./preview-actions/AudioEditorButton";
+import type { MusicTrack } from "../../src/api/musicLibraryService";
 
 import type { FilterConfig } from "../types/filters";
 import type {
@@ -52,10 +54,10 @@ interface PreviewActionButtonsProps {
   startTime?: number;
 }
 
-/**
- * Bottom action buttons bar for preview editor
- * Contains all editing tools: filters, text, voice, captions, effects, etc.
- */
+
+
+
+
 const PreviewActionButtons: React.FC<PreviewActionButtonsProps> = ({
   displayUri,
   onFilter,
@@ -79,82 +81,73 @@ const PreviewActionButtons: React.FC<PreviewActionButtonsProps> = ({
   masterVolume = 1,
   startTime = 0,
 }) => {
+  const [musicModalVisible, setMusicModalVisible] = useState(false);
+
   
-  // 🛠️ Music Library Handler - Opens device file picker for AUDIO ONLY
-  const handleMusicPress = async () => {
-    try {
-      // Use ImageLibraryOptions with explicit Audio type for iOS/Android compatibility
-      const imagePicker = require('expo-image-picker');
-      
-      // Request permissions first (required on newer Android)
-      const { status } = await imagePicker.requestMediaLibraryPermissionsAsync();
-      if (status !== 'granted') {
-        Alert.alert('⚠️ Permission Denied', 'We need access to your media library to select music');
-        return;
-      }
+  const handleMusicPress = () => {
+    console.log("[PreviewActionButtons] Opening music library modal");
+    setMusicModalVisible(true);
+  };
 
-      const result = await imagePicker.launchImageLibraryAsync({
-        mediaTypes: imagePicker.MediaTypeOptions.Audio, // AUDIO ONLY
-        allowsMultipleSelection: false,
-        allowsEditing: false,
-        quality: 1,
-      });
-
-      if (!result.canceled && result.assets?.length > 0) {
-        const musicFile = result.assets[0];
-        const fileName = musicFile.uri?.split('/').pop() || 'Music';
-        
-        // Log for debugging
-        console.log('🎵 Music selected:', {
-          uri: musicFile.uri?.substring(0, 80),
-          fileName,
-          duration: musicFile.duration,
-        });
-        
-        Alert.alert('✅ Music Added', `File: ${fileName}`);
-        if (onMusic) onMusic();
-      }
-    } catch (error) {
-      console.error('🎵 Music error:', error);
-      Alert.alert('⚠️ Error', 'Could not open music library. Make sure you have permissions enabled.');
+  
+  const handleMusicSelect = (track: MusicTrack) => {
+    console.log("[PreviewActionButtons] Music track selected:", track.title, "by", track.artist);
+    setMusicModalVisible(false);
+    
+    
+    if (onMusic) {
+      onMusic();
     }
   };
 
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-    >
-      {/* 🛠️ FIX: Forced handler pass kiya taaki component hide na ho */}
-      <MusicButton onPress={handleMusicPress} />
-      
-      <TextButton onPress={onText} />
-      <TextToSpeechButton onPress={() => {}} onTTSGenerate={onTTSGenerate} startTime={startTime} />
-      <VoiceButton onPress={onVoiceAdd} onVoiceAdd={onVoiceAdd} startTime={startTime} />
-      <LinksButton onPress={onLinkAdd} onLinkAdd={onLinkAdd} />
-      <CaptionsButton onPress={onCaptionAdd} onCaptionAdd={onCaptionAdd} />
-      <AdjustButton onPress={onAdjustChange} onAdjustChange={onAdjustChange} />
-      <FilterButton mediaUri={displayUri || ""} onFilterApply={onFilter || (() => {})} />
-      <OverlayButton onPress={onOverlay} onApplyOverlay={onOverlayEffectAdd} />
-      <SoundFXButton onPress={onSoundFXAdd} onSoundSelect={onSoundFXAdd} />
-      <AudioEditorButton 
-        onPress={() => {}} 
-        onUpdateTracks={onUpdateAudioTracks}
-        onUpdateMixSettings={onUpdateAudioMix}
-        tracks={audioTracks}
-        masterVolume={masterVolume}
+    <View style={styles.wrapper}>
+      <MusicLibraryModal
+        visible={musicModalVisible}
+        onSelect={handleMusicSelect}
+        onCancel={() => setMusicModalVisible(false)}
       />
-      <CutoutButton onPress={onCutoutAdd} onCutoutAdd={onCutoutAdd} />
-      <StickerButton onPress={onSticker} onStickerSelect={onSticker} />
-      <PasteButton onPress={onPaste} onPaste={onPaste} />
-      <TransitionButton onPress={onTransition} />
-    </ScrollView>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+        pointerEvents="box-none"
+      >
+        {}
+        <MusicButton onPress={handleMusicPress} />
+        
+        <TextButton onPress={onText} />
+        <TextToSpeechButton onPress={() => {}} onTTSGenerate={onTTSGenerate} startTime={startTime} />
+        <VoiceButton onPress={onVoiceAdd} onVoiceAdd={onVoiceAdd} startTime={startTime} />
+        <LinksButton onPress={onLinkAdd} onLinkAdd={onLinkAdd} />
+        <CaptionsButton onPress={onCaptionAdd} onCaptionAdd={onCaptionAdd} />
+        <AdjustButton onPress={onAdjustChange} onAdjustChange={onAdjustChange} />
+        <FilterButton mediaUri={displayUri || ""} onFilterApply={onFilter || (() => {})} />
+        <OverlayButton onPress={onOverlay} onApplyOverlay={onOverlayEffectAdd} />
+        <SoundFXButton onPress={onSoundFXAdd} onSoundSelect={onSoundFXAdd} />
+        <AudioEditorButton 
+          onPress={() => {}} 
+          onUpdateTracks={onUpdateAudioTracks}
+          onUpdateMixSettings={onUpdateAudioMix}
+          tracks={audioTracks}
+          masterVolume={masterVolume}
+        />
+        <CutoutButton onPress={onCutoutAdd} onCutoutAdd={onCutoutAdd} />
+        <StickerButton onPress={onSticker} onStickerSelect={onSticker} />
+        <PasteButton onPress={onPaste} onPaste={onPaste} />
+        <TransitionButton onPress={onTransition} />
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    width: "100%",
+  },
   container: {
     backgroundColor: "#000000",
     borderTopWidth: 0.5,

@@ -1,4 +1,4 @@
-// File Route: apps/gully-fame-mobile/components/ProfileBurgerMenuModal.tsx
+
 
 import { router } from "expo-router";
 import { styles } from "./styles";
@@ -25,11 +25,11 @@ function ProfileBurgerMenuModal({
   profileData,
 }: ProfileBurgerMenuModalProps) {
   
-  // ✅ FIXED: Pass metadata query state parameter to capture deep-back history intent
+  
   const handleNavigation = (path: string) => {
     onClose();
     
-    // Smooth transition buffer queue
+    
     setTimeout(() => {
       router.push({
         pathname: path,
@@ -51,7 +51,7 @@ function ProfileBurgerMenuModal({
         onPress={onClose}
       >
         <View style={styles.menuContainer}>
-          {/* Profile Section */}
+          {}
           <View style={styles.menuProfileSection}>
             {profileData.profileImage ? (
               <Image
@@ -81,7 +81,7 @@ function ProfileBurgerMenuModal({
           <View style={styles.menuDividerGold} />
 
           <ScrollView showsVerticalScrollIndicator={false} style={styles.menuScrollView}>
-            {/* Profile Management Section */}
+            {}
             <Text style={styles.menuSectionTitle}>Profile Management</Text>
 
             <TouchableOpacity style={styles.menuItem} onPress={() => handleNavigation(`/(main)/account-center`)}>
@@ -142,7 +142,7 @@ function ProfileBurgerMenuModal({
 
             <View style={styles.menuDivider} />
 
-            {/* Settings & Help Section */}
+            {}
             <Text style={styles.menuSectionTitle}>Settings & Help</Text>
 
             <TouchableOpacity style={styles.menuItem} onPress={() => handleNavigation("/(main)/settings/help-support")}>

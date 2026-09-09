@@ -1,7 +1,7 @@
-/**
- * Mock Categories & Collections Data
- * Used for home screen categories and discovery
- */
+
+
+
+
 
 export interface Category {
   id: string;

@@ -1,5 +1,5 @@
-// Created by Kiro
-// Change Password Screen - Update user password with validation
+
+
 
 import React, { useState } from 'react';
 import {
@@ -33,7 +33,7 @@ export default function ChangePasswordScreen({ navigation }: any) {
     confirm: false,
   });
 
-  // Validate form
+  
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
@@ -67,13 +67,13 @@ export default function ChangePasswordScreen({ navigation }: any) {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle input change
+  
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
-    // Clear error for this field
+    
     if (errors[field]) {
       setErrors((prev) => ({
         ...prev,
@@ -82,7 +82,7 @@ export default function ChangePasswordScreen({ navigation }: any) {
     }
   };
 
-  // Handle change password
+  
   const handleChangePassword = async () => {
     if (!validateForm()) {
       return;
@@ -113,7 +113,7 @@ export default function ChangePasswordScreen({ navigation }: any) {
     }
   };
 
-  // Handle cancel
+  
   const handleCancel = () => {
     if (
       formData.currentPassword ||
@@ -133,7 +133,7 @@ export default function ChangePasswordScreen({ navigation }: any) {
     }
   };
 
-  // Password strength indicator
+  
   const getPasswordStrength = (password: string) => {
     let strength = 0;
     if (password.length >= 8) strength++;
@@ -157,7 +157,7 @@ export default function ChangePasswordScreen({ navigation }: any) {
         style={styles.keyboardAvoid}
       >
         <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-          {/* Header */}
+          {}
           <View style={styles.headerSection}>
             <Ionicons name="lock-closed" size={48} color="#007AFF" />
             <Text style={styles.headerTitle}>Change Password</Text>
@@ -166,9 +166,9 @@ export default function ChangePasswordScreen({ navigation }: any) {
             </Text>
           </View>
 
-          {/* Form Section */}
+          {}
           <View style={styles.formSection}>
-            {/* Current Password */}
+            {}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Current Password *</Text>
               <View style={styles.passwordInputContainer}>
@@ -205,7 +205,7 @@ export default function ChangePasswordScreen({ navigation }: any) {
               )}
             </View>
 
-            {/* New Password */}
+            {}
             <View style={styles.formGroup}>
               <Text style={styles.label}>New Password *</Text>
               <View style={styles.passwordInputContainer}>
@@ -238,7 +238,7 @@ export default function ChangePasswordScreen({ navigation }: any) {
                 <Text style={styles.errorText}>{errors.newPassword}</Text>
               )}
 
-              {/* Password Strength Indicator */}
+              {}
               {formData.newPassword && (
                 <View style={styles.strengthContainer}>
                   <View style={styles.strengthBar}>
@@ -255,7 +255,7 @@ export default function ChangePasswordScreen({ navigation }: any) {
                 </View>
               )}
 
-              {/* Password Requirements */}
+              {}
               <View style={styles.requirementsContainer}>
                 <Text style={styles.requirementsTitle}>Password must contain:</Text>
                 <View style={styles.requirement}>
@@ -293,7 +293,7 @@ export default function ChangePasswordScreen({ navigation }: any) {
               </View>
             </View>
 
-            {/* Confirm Password */}
+            {}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Confirm Password *</Text>
               <View style={styles.passwordInputContainer}>
@@ -331,7 +331,7 @@ export default function ChangePasswordScreen({ navigation }: any) {
             </View>
           </View>
 
-          {/* Action Buttons */}
+          {}
           <View style={styles.buttonSection}>
             <TouchableOpacity
               style={[styles.button, styles.cancelButton]}
@@ -364,7 +364,7 @@ export default function ChangePasswordScreen({ navigation }: any) {
             </TouchableOpacity>
           </View>
 
-          {/* Footer Spacing */}
+          {}
           <View style={styles.footerSpacing} />
         </ScrollView>
       </KeyboardAvoidingView>

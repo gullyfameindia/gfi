@@ -1,6 +1,6 @@
-// Created by Kiro
-// Reel Detail Screen - Display single reel with video player, comments, and interactions
-// ✅ UPDATED BY KIRO - Added CommentsScreen navigation integration
+
+
+
 
 import React, { useState, useEffect } from "react";
 import {
@@ -18,7 +18,7 @@ import {
   TextInput,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-// ✅ UPDATED BY KIRO - Import CommentsScreen for navigation
+
 import CommentsScreen from "./CommentsScreen";
 
 interface Reel {
@@ -61,14 +61,14 @@ export default function ReelDetailScreen({ route, navigation }: any) {
     fetchReelData();
   }, []);
 
-  // Fetch reel data and comments
+  
   const fetchReelData = async () => {
     try {
       setLoading(true);
-      // Simulate API call
+      
       await new Promise((resolve) => setTimeout(resolve, 500));
 
-      // Mock comments data
+      
       setComments([
         {
           id: "1",
@@ -106,26 +106,26 @@ export default function ReelDetailScreen({ route, navigation }: any) {
     }
   };
 
-  // Handle refresh
+  
   const handleRefresh = async () => {
     setRefreshing(true);
     await fetchReelData();
     setRefreshing(false);
   };
 
-  // Handle like
+  
   const handleLike = async () => {
     try {
       setLiked(!liked);
       setLikeCount(liked ? likeCount - 1 : likeCount + 1);
-      // API call would go here
+      
     } catch (error) {
       console.error("Error liking reel:", error);
       Alert.alert("Error", "Failed to like reel");
     }
   };
 
-  // Handle share
+  
   const handleShare = () => {
     Alert.alert("Share", "Share this reel with your friends", [
       { text: "Cancel", style: "cancel" },
@@ -133,7 +133,7 @@ export default function ReelDetailScreen({ route, navigation }: any) {
     ]);
   };
 
-  // Handle submit comment
+  
   const handleSubmitComment = async () => {
     if (!commentText.trim()) {
       Alert.alert("Error", "Please enter a comment");
@@ -142,7 +142,7 @@ export default function ReelDetailScreen({ route, navigation }: any) {
 
     try {
       setSubmittingComment(true);
-      // Simulate API call
+      
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       const newComment: Comment = {
@@ -165,7 +165,7 @@ export default function ReelDetailScreen({ route, navigation }: any) {
     }
   };
 
-  // Render comment item
+  
   const renderCommentItem = ({ item }: { item: Comment }) => (
     <View style={styles.commentItem}>
       {item.userImage ? (
@@ -222,7 +222,7 @@ export default function ReelDetailScreen({ route, navigation }: any) {
         style={styles.scrollView}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
       >
-        {/* Video Player Section */}
+        {}
         {reel.thumbnail && (
           <View style={styles.videoContainer}>
             <Image source={{ uri: reel.thumbnail }} style={styles.videoThumbnail} />
@@ -232,12 +232,12 @@ export default function ReelDetailScreen({ route, navigation }: any) {
           </View>
         )}
 
-        {/* Reel Info Section */}
+        {}
         <View style={styles.infoSection}>
           <Text style={styles.reelTitle}>{reel.title}</Text>
           <Text style={styles.reelDescription}>{reel.description}</Text>
 
-          {/* Creator Info */}
+          {}
           <View style={styles.creatorContainer}>
             {reel.creatorImage ? (
               <Image source={{ uri: reel.creatorImage }} style={styles.creatorImage} />
@@ -255,7 +255,7 @@ export default function ReelDetailScreen({ route, navigation }: any) {
             </TouchableOpacity>
           </View>
 
-          {/* Interaction Stats */}
+          {}
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
               <Ionicons name="heart" size={18} color="#d32f2f" />
@@ -271,7 +271,7 @@ export default function ReelDetailScreen({ route, navigation }: any) {
             </View>
           </View>
 
-          {/* Action Buttons */}
+          {}
           <View style={styles.actionButtonsContainer}>
             <TouchableOpacity
               style={[styles.actionButton, liked && styles.actionButtonActive]}
@@ -285,14 +285,14 @@ export default function ReelDetailScreen({ route, navigation }: any) {
               <Text style={styles.actionButtonLabel}>Like</Text>
             </TouchableOpacity>
 
-            {/* ✅ UPDATED BY KIRO - OLD CODE (COMMENTED) - Previous comment button without navigation
-            <TouchableOpacity style={styles.actionButton}>
-              <Ionicons name="chatbubble-outline" size={24} color="#999" />
-              <Text style={styles.actionButtonLabel}>Comment</Text>
-            </TouchableOpacity>
-            */}
+            {
 
-            {/* ✅ UPDATED BY KIRO - NEW CODE - Comment button now navigates to CommentsScreen with reelId */}
+
+
+
+}
+
+            {}
             <TouchableOpacity
               style={styles.actionButton}
               onPress={() => navigation.navigate("CommentsScreen", { reelId: reel.id })}
@@ -308,11 +308,11 @@ export default function ReelDetailScreen({ route, navigation }: any) {
           </View>
         </View>
 
-        {/* Comments Section */}
+        {}
         <View style={styles.commentsSection}>
           <Text style={styles.commentsSectionTitle}>Comments</Text>
 
-          {/* Comment Input */}
+          {}
           <View style={styles.commentInputContainer}>
             <TextInput
               style={styles.commentInput}
@@ -335,7 +335,7 @@ export default function ReelDetailScreen({ route, navigation }: any) {
             </TouchableOpacity>
           </View>
 
-          {/* Comments List */}
+          {}
           {comments.length > 0 ? (
             <FlatList
               data={comments}
@@ -351,7 +351,7 @@ export default function ReelDetailScreen({ route, navigation }: any) {
           )}
         </View>
 
-        {/* Footer Spacing */}
+        {}
         <View style={styles.footerSpacing} />
       </ScrollView>
     </SafeAreaView>

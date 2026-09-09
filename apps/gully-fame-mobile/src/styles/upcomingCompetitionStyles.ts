@@ -33,18 +33,18 @@ export const upcomingCompetitionStyles = StyleSheet.create({
         flex: 1,
     },
 
-    // --- Floating Action Bar ---
+    
     stickyBottomCTA: {
         position: "absolute",
         bottom: 0,
         left: 0,
         right: 0,
         paddingHorizontal: 16,
-        // Shrink the top gap
+        
         paddingTop: 8,
-        // Make the container invisible so the button truly floats
+        
         backgroundColor: "transparent",
-        // Remove the separator line
+        
         borderTopWidth: 0,
         zIndex: 100,
     },
@@ -80,12 +80,12 @@ export const upcomingCompetitionStyles = StyleSheet.create({
         shadowOpacity: 0,
     },
     disabledText: {
-        color: "#22C55E", // Green to show success
+        color: "#22C55E", 
         fontSize: 16,
         fontWeight: "700",
     },
 
-    // --- Banner & Card ---
+    
     compCardContainer: {
         paddingTop: 16,
         paddingBottom: 10,
@@ -116,7 +116,7 @@ export const upcomingCompetitionStyles = StyleSheet.create({
         position: "absolute",
         top: 16,
         left: 16,
-        backgroundColor: "#3B82F6", // A cool blue for "Upcoming"
+        backgroundColor: "#3B82F6", 
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 8,
@@ -149,13 +149,13 @@ export const upcomingCompetitionStyles = StyleSheet.create({
     },
     compCardSubtitle: {
         fontSize: 14,
-        color: "#3B82F6", // Matches upcoming badge
+        color: "#3B82F6", 
         fontWeight: "600",
         textTransform: "uppercase",
         letterSpacing: 1,
     },
 
-    // --- Hero Prize ---
+    
     heroPrizeContainer: {
         alignItems: "center",
         paddingVertical: 16,
@@ -182,7 +182,7 @@ export const upcomingCompetitionStyles = StyleSheet.create({
         textShadowRadius: 10,
     },
 
-    // --- Social Proof (Vanguard) ---
+    
     socialProofContainer: {
         flexDirection: "row",
         justifyContent: "center",
@@ -219,7 +219,7 @@ export const upcomingCompetitionStyles = StyleSheet.create({
         fontSize: 14,
     },
 
-    // --- Event Specs ---
+    
     specsRow: {
         flexDirection: "row",
         justifyContent: "space-between",
@@ -277,7 +277,7 @@ export const upcomingCompetitionStyles = StyleSheet.create({
         letterSpacing: 1,
     },
 
-    // --- Mission Briefing (Accordion) ---
+    
     missionBriefingCard: {
         backgroundColor: "#2A1A0B",
         borderRadius: 12,
@@ -357,7 +357,7 @@ export const upcomingCompetitionStyles = StyleSheet.create({
         borderRadius: 12,
         alignItems: "center",
         borderWidth: 1,
-        borderColor: "rgba(59, 130, 246, 0.3)", // Cool blue to match "Upcoming"
+        borderColor: "rgba(59, 130, 246, 0.3)", 
         shadowColor: "#3B82F6",
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.2,
@@ -384,7 +384,7 @@ export const upcomingCompetitionStyles = StyleSheet.create({
         color: "#fff",
         fontSize: 24,
         fontWeight: "900",
-        fontVariant: ["tabular-nums"], // Keeps numbers from shifting width
+        fontVariant: ["tabular-nums"], 
     },
     timeLabel: {
         color: "#999",
@@ -396,11 +396,11 @@ export const upcomingCompetitionStyles = StyleSheet.create({
         color: "#3B82F6",
         fontSize: 20,
         fontWeight: "900",
-        marginBottom: 12, // Align with numbers, not labels
+        marginBottom: 12, 
         marginHorizontal: 4,
     },
 
-    // --- Podium Loot Styles ---
+    
     podiumContainer: {
         flexDirection: "row",
         justifyContent: "space-between",

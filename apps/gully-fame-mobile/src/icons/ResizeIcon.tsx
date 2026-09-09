@@ -10,4 +10,4 @@ export const ResizeIcon = ({ color = '#fff' }) => (
   </Svg>
 );
 
-// Bottom Navigation Icons - For use with bottom nav
+

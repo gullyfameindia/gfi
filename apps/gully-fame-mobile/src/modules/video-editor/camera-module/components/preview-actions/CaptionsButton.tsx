@@ -72,7 +72,7 @@ const CaptionsButton: React.FC<CaptionsButtonProps> = ({
         onRequestClose={() => setShowModal(false)}
       >
         <SafeAreaView style={styles.modalContainer}>
-          {/* Header */}
+          {}
           <View style={styles.modalHeader}>
             <TouchableOpacity onPress={() => setShowModal(false)} style={styles.closeButton}>
               <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -90,7 +90,7 @@ const CaptionsButton: React.FC<CaptionsButtonProps> = ({
           </View>
 
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-            {/* Caption Text Input */}
+            {}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>Caption Text</Text>
               <TextInput
@@ -105,7 +105,7 @@ const CaptionsButton: React.FC<CaptionsButtonProps> = ({
               <Text style={styles.charCount}>{captionText.length}/200</Text>
             </View>
 
-            {/* Style Selection */}
+            {}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>Style</Text>
               <View style={styles.optionsRow}>
@@ -133,7 +133,7 @@ const CaptionsButton: React.FC<CaptionsButtonProps> = ({
               </View>
             </View>
 
-            {/* Position Selection */}
+            {}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>Position</Text>
               <View style={styles.optionsRow}>
@@ -159,7 +159,7 @@ const CaptionsButton: React.FC<CaptionsButtonProps> = ({
               </View>
             </View>
 
-            {/* Preview */}
+            {}
             <View style={styles.previewSection}>
               <Text style={styles.sectionLabel}>Preview</Text>
               <View style={styles.previewBox}>
@@ -185,7 +185,7 @@ const CaptionsButton: React.FC<CaptionsButtonProps> = ({
               </View>
             </View>
 
-            {/* Add Button */}
+            {}
             <TouchableOpacity
               style={[styles.addButton, !captionText.trim() && styles.addButtonDisabled]}
               onPress={handleAddCaption}
@@ -194,7 +194,7 @@ const CaptionsButton: React.FC<CaptionsButtonProps> = ({
               <Text style={styles.addButtonText}>Add Caption</Text>
             </TouchableOpacity>
 
-            {/* Existing Captions */}
+            {}
             {captions.length > 0 && (
               <View style={styles.section}>
                 <Text style={styles.sectionLabel}>Existing Captions ({captions.length})</Text>

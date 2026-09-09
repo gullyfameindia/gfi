@@ -62,21 +62,21 @@ export default function CoinsScreen() {
     ifscCode: "",
     bankName: "",
     upiId: "",
-    withdrawalMethod: "bank", // 'bank' or 'upi'
+    withdrawalMethod: "bank", 
     amount: "",
   });
 
   const totalEarned = 80000;
   const totalSpent = 150;
-  const availableBalance = 50200; // Coins available for withdrawal (completed transactions)
-  const pendingBalance = 30000; // Coins pending (will be added after 1 hour)
+  const availableBalance = 50200; 
+  const pendingBalance = 30000; 
   const currentBalance = totalEarned - totalSpent;
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -92,7 +92,7 @@ export default function CoinsScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Balance Card */}
+        {}
         <View style={styles.balanceCard}>
           <LinearGradient
             colors={["rgba(236, 154, 21, 0.2)", "rgba(236, 154, 21, 0.1)"]}
@@ -119,7 +119,7 @@ export default function CoinsScreen() {
               </View>
             </View>
 
-            {/* Withdraw Button */}
+            {}
             {availableBalance > 0 && (
               <TouchableOpacity
                 style={styles.withdrawButton}
@@ -133,7 +133,7 @@ export default function CoinsScreen() {
           </LinearGradient>
         </View>
 
-        {/* Transaction History */}
+        {}
         <Text style={styles.sectionTitle}>Transaction History</Text>
         {coinsData.map((item) => (
           <View key={item.id} style={styles.transactionCard}>
@@ -181,7 +181,7 @@ export default function CoinsScreen() {
           </View>
         ))}
 
-        {/* Add Coins Button */}
+        {}
         <TouchableOpacity style={styles.addCoinsButton}>
           <LinearGradient
             colors={["#FF6B35", "#FF8C00"]}
@@ -194,7 +194,7 @@ export default function CoinsScreen() {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Withdraw Modal */}
+      {}
       <Modal
         visible={showWithdrawModal}
         transparent={true}
@@ -372,7 +372,7 @@ export default function CoinsScreen() {
               <TouchableOpacity
                 style={styles.submitButton}
                 onPress={() => {
-                  // Validate form
+                  
                   if (
                     !withdrawForm.amount ||
                     parseFloat(withdrawForm.amount) <= 0
@@ -401,7 +401,7 @@ export default function CoinsScreen() {
                     }
                   }
 
-                  // TODO: Call API to process withdrawal
+                  
                   Alert.alert(
                     "Withdrawal Request Submitted",
                     `Your withdrawal request for ${withdrawForm.amount} GFI coins has been submitted. It will be processed within 24-48 hours.`,

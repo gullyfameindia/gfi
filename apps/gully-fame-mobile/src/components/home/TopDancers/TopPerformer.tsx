@@ -5,7 +5,7 @@ import { router } from "expo-router";
 import SafeImage from "@/components/SafeImage";
 import React from "react";
 
-// Helper to format big numbers to K/M
+
 const formatNumber = (num: number): string => {
     if (!num) return "0";
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
@@ -17,20 +17,20 @@ const TopPerformer = React.memo(
     ({ performer }: { performer: topPerformersForHomeScreenFullData }) => {
         const isTopRank = performer.rank === 1;
 
-        // Dynamic Materials based on Rank!
+        
         const getRankStyles = (rank: number) => {
             switch (rank) {
                 case 1:
                     return {
                         color: "#FFD700",
                         shadow: "rgba(255, 215, 0, 0.6)",
-                    }; // Gold
+                    }; 
                 case 2:
-                    return { color: "#E3E4E5", shadow: "transparent" }; // Silver/Platinum
+                    return { color: "#E3E4E5", shadow: "transparent" }; 
                 case 3:
-                    return { color: "#CD7F32", shadow: "transparent" }; // Bronze
+                    return { color: "#CD7F32", shadow: "transparent" }; 
                 default:
-                    return { color: "#EC9A15", shadow: "transparent" }; // Fallback Orange
+                    return { color: "#EC9A15", shadow: "transparent" }; 
             }
         };
 
@@ -62,7 +62,7 @@ const TopPerformer = React.memo(
                     <View
                         style={[
                             styles.dancerImageWrapper,
-                            // Add a massive glowing aura ONLY to 1st place
+                            
                             isTopRank && {
                                 shadowColor: rankTheme.color,
                                 shadowOffset: { width: 0, height: 0 },
@@ -88,7 +88,7 @@ const TopPerformer = React.memo(
                                 isTopRank
                                     ? styles.dancerImageCenter
                                     : styles.dancerImageSide,
-                                { borderColor: rankTheme.color }, // Inject the Gold/Silver/Bronze
+                                { borderColor: rankTheme.color }, 
                             ]}
                         />
                         <View
@@ -96,7 +96,7 @@ const TopPerformer = React.memo(
                                 isTopRank
                                     ? styles.rankBadgeLarge
                                     : styles.rankBadge,
-                                { backgroundColor: rankTheme.color }, // Inject the Gold/Silver/Bronze
+                                { backgroundColor: rankTheme.color }, 
                             ]}
                         >
                             <Text
@@ -126,7 +126,7 @@ const TopPerformer = React.memo(
                             isTopRank
                                 ? styles.dancerPointsCenter
                                 : styles.dancerPoints,
-                            // Make 1st place text gold!
+                            
                             isTopRank && { color: rankTheme.color },
                         ]}
                     >

@@ -4,7 +4,7 @@ import type { AdjustSettings } from "../types/voiceOverlay.types";
 import { applyPresetToVideo, applyPresetToImage, applyOverlaysToVideo, buildAdjustmentFilterChain, buildOverlayEffectFilterChain } from "./ffmpegFilters";
 import { clipHasFilter } from "./filterHelpers";
 
-// Conditional import for FFmpeg - only available in development builds
+
 let FFmpegKit: any = null;
 let ReturnCode: any = null;
 let isFFmpegAvailable = false;
@@ -19,22 +19,37 @@ try {
   isFFmpegAvailable = false;
 }
 
-/**
- * Export and combine multiple clips into a single video
- * 🔥 Added `overlays` array to bake stickers onto final export
- * Gracefully falls back to simple copy when FFmpeg is unavailable
- */
+
+
+
+
+
+
+
+
+
 export async function exportAndCombineClips(
   clips: CameraClipArray,
   onProgress?: (progress: number, status: string) => void,
-  overlays: any[] = [] // 👈 Naya parameter
+  overlays: any[] = [] 
 ): Promise<string> {
   if (clips.length === 0) {
     throw new Error("No clips to export");
   }
 
-  // Fallback mode for Expo Go (no FFmpeg available)
+  console.log('[videoExporter] 🎬 [VERIFICATION] exportAndCombineClips called');
+  console.log('  clips.length:', clips.length);
+  console.log('  FFmpeg available:', isFFmpegAvailable);
+  console.log('  clips:', JSON.stringify(clips.map(c => ({
+    id: c.id,
+    type: c.type,
+    duration: c.duration,
+    uri: c.uri?.substring(0, 50)
+  }))));
+
+  
   if (!isFFmpegAvailable) {
+    console.log('[videoExporter] ⚠️ Running in Expo Go mode (FFmpeg not available)');
     onProgress?.(0.1, "Running in Expo Go mode (simplified export)...");
     
     const exportsDir = `${FileSystem.cacheDirectory}exports`;
@@ -45,11 +60,15 @@ export async function exportAndCombineClips(
 
     const baseUri = exportsDir.endsWith("/") ? exportsDir : `${exportsDir}/`;
     
-    // In Expo Go, just copy the first clip as fallback
-    // In a dev build, you'd have full FFmpeg processing
+    
+    
     if (clips.length === 1) {
       const outputPath = `${baseUri}export_${Date.now()}.mp4`;
       const clip = clips[0];
+      
+      console.log('[videoExporter] ✅ [VERIFICATION] Single clip export - copying file');
+      console.log('  from:', clip.uri);
+      console.log('  to:', outputPath);
       
       if (clip.type === "video") {
         onProgress?.(0.5, "Preparing video...");
@@ -57,20 +76,26 @@ export async function exportAndCombineClips(
           from: clip.uri,
           to: outputPath,
         });
+        
+        
+        const exportedFile = await FileSystem.getInfoAsync(outputPath);
+        console.log('[videoExporter] ✅ [VERIFICATION] Export complete - file size:', (exportedFile.size || 0) / (1024 * 1024), 'MB');
+        
         onProgress?.(1.0, "Export complete!");
         return outputPath;
       } else {
         throw new Error("Image to video conversion requires FFmpeg (development build needed)");
       }
     } else {
-      throw new Error(
-        "Video concatenation requires FFmpeg. Create a development build to enable full export functionality. " +
-        "To create a dev build: eas build --platform android --profile preview"
-      );
+      const errorMsg = 
+        `Video concatenation requires FFmpeg. Your app is running in Expo Go mode. ` +
+        `To enable multi-clip export, create a development build: eas build --platform android --profile preview`;
+      console.error('[videoExporter] ❌ [VERIFICATION FAILED]', errorMsg);
+      throw new Error(errorMsg);
     }
   }
 
-  // Full FFmpeg mode (development build)
+  
   const exportsDir = `${FileSystem.cacheDirectory}exports`;
   const dirInfo = await FileSystem.getInfoAsync(exportsDir);
   if (!dirInfo.exists) {
@@ -91,12 +116,12 @@ export async function exportAndCombineClips(
     const processedPath = `${baseUri}processed_${i}_${Date.now()}.mp4`;
 
     if (clip.type === "video") {
-      // 🎬 FIX 1: Apply trim before any other processing
+      
       const trimStart = clip.trimStart ?? 0;
       const trimEnd = clip.trimEnd ?? clip.duration;
       const trimDuration = trimEnd - trimStart;
       
-      // First, apply trim if needed
+      
       let trimmedPath = clip.uri;
       if (trimStart > 0 || trimEnd < clip.duration) {
         const trimPath = `${baseUri}trimmed_${i}_${Date.now()}.mp4`;
@@ -119,7 +144,7 @@ export async function exportAndCombineClips(
         }
       }
       
-      // Apply filter if exists
+      
       let filterAppliedPath = trimmedPath;
       if (clipHasFilter(clip) && clip.filterPreset) {
         const filterPath = `${baseUri}filtered_${i}_${Date.now()}.mp4`;
@@ -127,7 +152,7 @@ export async function exportAndCombineClips(
         filterAppliedPath = filterPath;
       }
 
-      // Apply adjust settings if exists (brightness, contrast, saturation, etc)
+      
       let adjustAppliedPath = filterAppliedPath;
       if (clip.adjustSettings) {
         const adjustFilterChain = buildAdjustmentFilterChain(clip.adjustSettings);
@@ -143,7 +168,7 @@ export async function exportAndCombineClips(
             
             if (ReturnCode.isSuccess(adjustReturnCode)) {
               adjustAppliedPath = adjustPath;
-              // Clean up intermediate filter path if different
+              
               if (filterAppliedPath !== trimmedPath) {
                 try {
                   await FileSystem.deleteAsync(filterAppliedPath, { idempotent: true });
@@ -161,7 +186,7 @@ export async function exportAndCombineClips(
         }
       }
 
-      // Apply overlay effects if exists (blur, vignette, watermark, gradient)
+      
       let overlayEffectsAppliedPath = adjustAppliedPath;
       if (clip.overlayEffects && clip.overlayEffects.length > 0) {
         const overlayFilterChain = buildOverlayEffectFilterChain(clip.overlayEffects);
@@ -177,7 +202,7 @@ export async function exportAndCombineClips(
             
             if (ReturnCode.isSuccess(overlayReturnCode)) {
               overlayEffectsAppliedPath = overlayEffectsPath;
-              // Clean up intermediate adjust path if different
+              
               if (adjustAppliedPath !== filterAppliedPath) {
                 try {
                   await FileSystem.deleteAsync(adjustAppliedPath, { idempotent: true });
@@ -195,7 +220,7 @@ export async function exportAndCombineClips(
         }
       }
 
-      // If no filters or adjustments applied, copy from trimmed
+      
       if (overlayEffectsAppliedPath === trimmedPath && !filterAppliedPath) {
         await FileSystem.copyAsync({
           from: trimmedPath,
@@ -290,7 +315,7 @@ export async function exportAndCombineClips(
     throw new Error(`Failed to combine clips: ${error}`);
   }
 
-  // 🔥 FINAL MAGIC: Agar stickers/overlays select huye the, unko chipkao!
+  
   let finalVideoPath = concatOutputPath;
   if (overlays && overlays.length > 0) {
     onProgress?.(0.92, "Baking stickers & overlays...");
@@ -299,7 +324,7 @@ export async function exportAndCombineClips(
     try {
       finalVideoPath = await applyOverlaysToVideo(concatOutputPath, overlayOutputPath, overlays);
       
-      // Purani concat video delete maro space bachane ke liye
+      
       try {
         await FileSystem.deleteAsync(concatOutputPath, { idempotent: true });
       } catch (e) {}
@@ -313,7 +338,7 @@ export async function exportAndCombineClips(
   return finalVideoPath;
 }
 
-// ... (exportSingleClip waise hi rahega)
+
 export async function exportSingleClip(
   clip: CameraClip,
   outputPath: string,

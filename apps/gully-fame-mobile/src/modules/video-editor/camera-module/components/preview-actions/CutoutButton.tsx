@@ -17,7 +17,7 @@ interface CutoutButtonProps {
   onCutoutAdd?: (cutout: Cutout) => void;
 }
 
-// 🎛️ Reusable Custom Slider utilizing native PanResponder for fluid sliding matrix
+
 interface CustomSliderProps {
   minimumValue: number;
   maximumValue: number;
@@ -124,7 +124,7 @@ const CutoutButton: React.FC<CutoutButtonProps> = ({ onPress, onCutoutAdd }) => 
         onRequestClose={() => setShowModal(false)}
       >
         <SafeAreaView style={styles.modalContainer}>
-          {/* Header */}
+          {}
           <View style={styles.modalHeader}>
             <TouchableOpacity onPress={() => setShowModal(false)} style={styles.closeButton}>
               <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -142,7 +142,7 @@ const CutoutButton: React.FC<CutoutButtonProps> = ({ onPress, onCutoutAdd }) => 
           </View>
 
           <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-            {/* Type Selection */}
+            {}
             <View style={styles.section}>
               <Text style={styles.sectionLabel}>Cutout Type</Text>
               <View style={styles.typeRow}>
@@ -165,15 +165,15 @@ const CutoutButton: React.FC<CutoutButtonProps> = ({ onPress, onCutoutAdd }) => 
               </View>
             </View>
 
-            {/* Preview */}
+            {}
             <View style={styles.previewSection}>
               <Text style={styles.sectionLabel}>Preview</Text>
               <View style={styles.previewBox}>
                 <Svg width="100%" height="100%" viewBox="0 0 200 200">
-                  {/* Background */}
+                  {}
                   <Rect width="200" height="200" fill="rgba(255, 255, 255, 0.1)" />
 
-                  {/* Cutout */}
+                  {}
                   {cutoutType === "circle" && (
                     <Circle
                       cx="100"
@@ -199,7 +199,7 @@ const CutoutButton: React.FC<CutoutButtonProps> = ({ onPress, onCutoutAdd }) => 
               </View>
             </View>
 
-            {/* Size Control - Converted */}
+            {}
             <View style={styles.section}>
               <View style={styles.controlHeader}>
                 <Text style={styles.sectionLabel}>Size</Text>
@@ -213,7 +213,7 @@ const CutoutButton: React.FC<CutoutButtonProps> = ({ onPress, onCutoutAdd }) => 
               />
             </View>
 
-            {/* Rotation Control - Converted */}
+            {}
             <View style={styles.section}>
               <View style={styles.controlHeader}>
                 <Text style={styles.sectionLabel}>Rotation</Text>
@@ -227,7 +227,7 @@ const CutoutButton: React.FC<CutoutButtonProps> = ({ onPress, onCutoutAdd }) => 
               />
             </View>
 
-            {/* Opacity Control - Converted */}
+            {}
             <View style={styles.section}>
               <View style={styles.controlHeader}>
                 <Text style={styles.sectionLabel}>Opacity</Text>
@@ -241,12 +241,12 @@ const CutoutButton: React.FC<CutoutButtonProps> = ({ onPress, onCutoutAdd }) => 
               />
             </View>
 
-            {/* Add Button */}
+            {}
             <TouchableOpacity style={styles.addButton} onPress={handleAddCutout}>
               <Text style={styles.addButtonText}>Add Cutout</Text>
             </TouchableOpacity>
 
-            {/* Info */}
+            {}
             <View style={styles.infoBox}>
               <Text style={styles.infoText}>
                 💡 Cutouts create interesting visual effects by masking parts of your video.
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 18,
   },
-  /* 🎛️ NEW NATIVE RESPONSIVE SLIDER PACKET */
+  
   sliderContainer: {
     height: 40,
     justifyContent: "center",

@@ -3,21 +3,21 @@ import type { CameraClipArray } from '../types/camera.types';
 
 interface UndoRedoState {
   clips: CameraClipArray;
-  // Can add more state here like selectedClipIndex, filters, etc.
+  
 }
 
-/**
- * Hook for managing undo/redo functionality
- * Fixed: Proper state synchronization using refs to avoid stale closures
- */
+
+
+
+
 export function useUndoRedo(initialClips: CameraClipArray) {
   const [history, setHistory] = useState<UndoRedoState[]>([{ clips: initialClips }]);
   const [historyIndex, setHistoryIndex] = useState(0);
   const historyIndexRef = useRef(0);
   const historyRef = useRef<UndoRedoState[]>([{ clips: initialClips }]);
-  const maxHistorySize = 50; // Limit history to prevent memory issues
+  const maxHistorySize = 50; 
 
-  // Sync refs with state
+  
   React.useEffect(() => {
     historyIndexRef.current = historyIndex;
     historyRef.current = history;
@@ -30,23 +30,23 @@ export function useUndoRedo(initialClips: CameraClipArray) {
     setHistory((prev) => {
       const currentIndex = historyIndexRef.current;
       
-      // Remove any future history if we're not at the end
+      
       const newHistory = prev.slice(0, currentIndex + 1);
       
-      // Add new state
+      
       newHistory.push(newState);
       
-      // Limit history size
+      
       if (newHistory.length > maxHistorySize) {
         newHistory.shift();
-        // Index stays the same (we removed from the beginning)
+        
         setHistoryIndex((prevIndex) => {
           const newIndex = Math.max(0, prevIndex - 1);
           historyIndexRef.current = newIndex;
           return newIndex;
         });
       } else {
-        // Update index to point to new state
+        
         const newIndex = newHistory.length - 1;
         setHistoryIndex(newIndex);
         historyIndexRef.current = newIndex;
@@ -65,7 +65,7 @@ export function useUndoRedo(initialClips: CameraClipArray) {
     setHistoryIndex(newIndex);
     historyIndexRef.current = newIndex;
     
-    // Return the previous state
+    
     return historyRef.current[newIndex];
   }, []);
 
@@ -79,7 +79,7 @@ export function useUndoRedo(initialClips: CameraClipArray) {
     setHistoryIndex(newIndex);
     historyIndexRef.current = newIndex;
     
-    // Return the next state
+    
     return currentHistory[newIndex];
   }, []);
 

@@ -25,13 +25,13 @@ const AudioWaveformDisplay: React.FC<AudioWaveformDisplayProps> = ({
   const screenWidth = Dimensions.get('window').width;
   const [waveformData, setWaveformData] = React.useState<number[]>([]);
 
-  // Generate mock waveform data
+  
   const generateMockWaveform = () => {
-    const samples = 100; // Number of bars to display
+    const samples = 100; 
     const mockData: number[] = [];
 
     for (let i = 0; i < samples; i++) {
-      // Create a pseudo-random but consistent waveform
+      
       const frequency = Math.sin((i / samples) * Math.PI * 4) * 0.5 + 0.5;
       const randomness = Math.sin(i * 12.9898) * 0.43758 + 0.5;
       const amplitude = frequency * randomness;
@@ -54,9 +54,9 @@ const AudioWaveformDisplay: React.FC<AudioWaveformDisplayProps> = ({
     }
   }, [audioId, generateWaveform]);
 
-  // Calculate bar positions and heights
+  
   const bars = useMemo(() => {
-    const barCount = 50; // Number of bars to display
+    const barCount = 50; 
     const barWidth = (screenWidth - 32) / barCount;
     const spacing = 2;
 
@@ -67,14 +67,14 @@ const AudioWaveformDisplay: React.FC<AudioWaveformDisplayProps> = ({
     }));
   }, [waveformData, height, screenWidth]);
 
-  // Calculate crop region
+  
   const cropStartPixel = cropStart ? (cropStart / duration) * (screenWidth - 32) : 0;
   const cropEndPixel = cropEnd ? (cropEnd / duration) * (screenWidth - 32) : screenWidth - 32;
 
   return (
     <View style={[styles.container, { height }]}>
       <Svg width={screenWidth} height={height} viewBox={`0 0 ${screenWidth} ${height}`}>
-        {/* Background */}
+        {}
         <Rect
           x={0}
           y={0}
@@ -83,7 +83,7 @@ const AudioWaveformDisplay: React.FC<AudioWaveformDisplayProps> = ({
           fill="#111827"
         />
 
-        {/* Waveform bars */}
+        {}
         {bars.map((bar, index) => {
           const isCropped =
             (cropStart && bar.x < cropStartPixel + 16) ||
@@ -102,10 +102,10 @@ const AudioWaveformDisplay: React.FC<AudioWaveformDisplayProps> = ({
           );
         })}
 
-        {/* Crop indicators */}
+        {}
         {cropStart > 0 && (
           <>
-            {/* Left crop line */}
+            {}
             <Line
               x1={cropStartPixel + 16}
               y1={0}
@@ -114,7 +114,7 @@ const AudioWaveformDisplay: React.FC<AudioWaveformDisplayProps> = ({
               stroke="#ff6b6b"
               strokeWidth="2"
             />
-            {/* Left crop background */}
+            {}
             <Rect
               x={0}
               y={0}
@@ -128,7 +128,7 @@ const AudioWaveformDisplay: React.FC<AudioWaveformDisplayProps> = ({
 
         {cropEnd && cropEnd < duration && (
           <>
-            {/* Right crop line */}
+            {}
             <Line
               x1={cropEndPixel + 16}
               y1={0}
@@ -137,7 +137,7 @@ const AudioWaveformDisplay: React.FC<AudioWaveformDisplayProps> = ({
               stroke="#ff6b6b"
               strokeWidth="2"
             />
-            {/* Right crop background */}
+            {}
             <Rect
               x={cropEndPixel + 16}
               y={0}
@@ -149,7 +149,7 @@ const AudioWaveformDisplay: React.FC<AudioWaveformDisplayProps> = ({
           </>
         )}
 
-        {/* Duration time labels */}
+        {}
         <text
           x="16"
           y={height - 2}

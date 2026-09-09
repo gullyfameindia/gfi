@@ -1,11 +1,11 @@
 import { StyleSheet, ViewStyle } from 'react-native';
 import type { FilterConfig } from '../types/filters';
 
-/**
- * Generate filter overlay style based on filter properties
- * This creates visual preview effects using colored overlays
- * Shared utility for FilteredImage, FilteredVideo, and FilterThumbnail
- */
+
+
+
+
+
 export const getFilterOverlayFromProperties = (filter: FilterConfig): ViewStyle | null => {
   const overlayStyle: ViewStyle = {
     ...StyleSheet.absoluteFillObject,
@@ -15,51 +15,51 @@ export const getFilterOverlayFromProperties = (filter: FilterConfig): ViewStyle 
   let hasOverlay = false;
   const { saturation, temperature, contrast, name } = filter;
 
-  // Handle grayscale (saturation 0)
+  
   if (saturation === 0) {
-    // Base grayscale overlay
+    
     overlayStyle.backgroundColor = 'rgba(128, 128, 128, 0.6)';
     overlayStyle.opacity = 0.8;
     hasOverlay = true;
 
-    // Adjust based on temperature for cool/warm grayscale
+    
     if (temperature !== undefined && temperature !== 0) {
       if (temperature > 0) {
-        // Warm grayscale (sepia-like)
+        
         overlayStyle.backgroundColor = 'rgba(220, 200, 150, 0.6)';
       } else {
-        // Cool grayscale (blue-tinted)
+        
         overlayStyle.backgroundColor = 'rgba(150, 180, 200, 0.6)';
       }
     }
 
-    // Adjust opacity based on contrast
+    
     if (contrast !== undefined) {
       if (contrast > 1.0) {
-        overlayStyle.opacity = 0.9; // Higher contrast = more visible
+        overlayStyle.opacity = 0.9; 
       } else if (contrast < 1.0) {
-        overlayStyle.opacity = 0.6; // Lower contrast = softer
+        overlayStyle.opacity = 0.6; 
       }
     }
 
     return overlayStyle;
   }
 
-  // Handle color filters based on temperature and name
+  
   if (temperature !== undefined && temperature !== 0 && !hasOverlay) {
     if (temperature > 0) {
-      // Warm tones
+      
       overlayStyle.backgroundColor = 'rgba(255, 200, 100, 0.25)';
       overlayStyle.opacity = Math.min(0.5, Math.abs(temperature) * 0.4 + 0.25);
     } else {
-      // Cool tones
+      
       overlayStyle.backgroundColor = 'rgba(150, 200, 255, 0.25)';
       overlayStyle.opacity = Math.min(0.5, Math.abs(temperature) * 0.4 + 0.25);
     }
     hasOverlay = true;
   }
 
-  // Special named filters with specific overlays
+  
   switch (name) {
     case 'Boost':
       overlayStyle.backgroundColor = 'rgba(255, 150, 100, 0.2)';
@@ -157,7 +157,7 @@ export const getFilterOverlayFromProperties = (filter: FilterConfig): ViewStyle 
       hasOverlay = true;
       break;
     
-    // Cool variants
+    
     case 'Simple Cool':
     case 'Fade Cool':
       overlayStyle.backgroundColor = 'rgba(150, 200, 255, 0.25)';
@@ -189,7 +189,7 @@ export const getFilterOverlayFromProperties = (filter: FilterConfig): ViewStyle 
       hasOverlay = true;
       break;
     
-    // Warm variants
+    
     case 'Simple Warm':
     case 'Fade Warm':
       overlayStyle.backgroundColor = 'rgba(255, 200, 100, 0.25)';
@@ -215,7 +215,7 @@ export const getFilterOverlayFromProperties = (filter: FilterConfig): ViewStyle 
       hasOverlay = true;
       break;
     
-    // Location-based
+    
     case 'Oslo':
       overlayStyle.backgroundColor = 'rgba(150, 180, 220, 0.3)';
       overlayStyle.opacity = 0.4;
@@ -258,7 +258,7 @@ export const getFilterOverlayFromProperties = (filter: FilterConfig): ViewStyle 
       hasOverlay = true;
       break;
     
-    // Special effects
+    
     case 'Negative':
       overlayStyle.backgroundColor = 'rgba(255, 255, 255, 0.8)';
       overlayStyle.opacity = 0.95;
@@ -289,7 +289,7 @@ export const getFilterOverlayFromProperties = (filter: FilterConfig): ViewStyle 
       hasOverlay = true;
       break;
     
-    // Legacy filters
+    
     case 'Grayscale':
       overlayStyle.backgroundColor = 'rgba(128, 128, 128, 0.6)';
       overlayStyle.opacity = 0.8;

@@ -1,4 +1,4 @@
-// File Route: apps/gully-fame-mobile/app/(main)/downloads.tsx
+
 
 import React, { useState } from "react";
 import {
@@ -15,7 +15,7 @@ import {
 import { router } from "expo-router";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
-// Dummy Downloads Data (Asli app me local file system cache se aayega)
+
 const initialDownloads = [
   {
     id: "1",
@@ -67,7 +67,7 @@ export default function DownloadsScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="chevron-back" size={28} color="#fff" />
@@ -86,7 +86,7 @@ export default function DownloadsScreen() {
 
             {downloads.map((item) => (
               <View key={item.id} style={styles.downloadCard}>
-                {/* Video Thumbnail with Duration badge */}
+                {}
                 <View style={styles.thumbnailContainer}>
                   <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} />
                   <View style={styles.durationBadge}>
@@ -94,14 +94,14 @@ export default function DownloadsScreen() {
                   </View>
                 </View>
 
-                {/* Video Info */}
+                {}
                 <View style={styles.videoInfo}>
                   <Text style={styles.videoTitle} numberOfLines={2}>{item.title}</Text>
                   <Text style={styles.videoAuthor}>{item.author}</Text>
                   <Text style={styles.videoSize}>{item.size}</Text>
                 </View>
 
-                {/* Actions (Play / Delete) */}
+                {}
                 <View style={styles.actionsContainer}>
                   <TouchableOpacity style={styles.playButton} activeOpacity={0.7}>
                     <Ionicons name="play" size={20} color="#fff" />

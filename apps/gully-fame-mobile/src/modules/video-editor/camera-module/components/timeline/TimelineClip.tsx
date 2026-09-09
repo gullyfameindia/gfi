@@ -12,7 +12,7 @@ import { getClipEffectiveDuration } from '../../utils/timelineHelpers';
 
 interface TimelineClipProps {
   clip: CameraClip;
-  width: number; // Width in pixels for this clip on timeline
+  width: number; 
   thumbnailUri?: string;
   isSelected?: boolean;
   onPress?: (clip: CameraClip) => void;
@@ -21,15 +21,15 @@ interface TimelineClipProps {
   onDragStart?: (clip: CameraClip) => void;
   onDrag?: (clip: CameraClip, deltaX: number) => void;
   onDragEnd?: (clip: CameraClip) => void;
-  pixelsPerSecond: number; // Conversion factor
+  pixelsPerSecond: number; 
 }
 
 const TRIM_HANDLE_WIDTH = 12;
-const MIN_CLIP_WIDTH = 40; // Minimum width for a clip to be visible
+const MIN_CLIP_WIDTH = 40; 
 
-/**
- * Individual clip item in the timeline with thumbnail, trim handles, and drag support
- */
+
+
+
 const TimelineClip: React.FC<TimelineClipProps> = ({
   clip,
   width,
@@ -54,7 +54,7 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
   const trimStart = clip.trimStart ?? 0;
   const trimEnd = clip.trimEnd ?? clip.duration;
 
-  // Pan responder for trim handles
+  
   const createTrimPanResponder = (side: 'start' | 'end') => {
     return PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -89,7 +89,7 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
   const startTrimPanResponder = createTrimPanResponder('start');
   const endTrimPanResponder = createTrimPanResponder('end');
 
-  // Pan responder for clip body (drag to reorder)
+  
   const clipDragPanResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -98,7 +98,7 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
         onDragStart?.(clip);
       },
       onPanResponderMove: (evt) => {
-        if (isDraggingTrim.current) return; // Don't drag if trimming
+        if (isDraggingTrim.current) return; 
         onDrag?.(clip, evt.nativeEvent.pageX);
       },
       onPanResponderRelease: () => {
@@ -110,7 +110,7 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
   ).current;
 
   if (width < MIN_CLIP_WIDTH) {
-    // Clip too small to show, render minimal indicator
+    
     return (
       <View style={[styles.container, { width }, styles.minimalClip]}>
         <View style={styles.minimalIndicator} />
@@ -120,7 +120,7 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
 
   return (
     <View style={[styles.container, { width }, isSelected && styles.selected]}>
-      {/* Trim Start Handle */}
+      {}
       <View
         ref={trimStartHandleRef}
         style={[styles.trimHandle, styles.trimHandleStart]}
@@ -129,7 +129,7 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
         <View style={styles.trimHandleBar} />
       </View>
 
-      {/* Clip Body */}
+      {}
       <TouchableOpacity
         ref={clipBodyRef}
         style={styles.clipBody}
@@ -147,7 +147,7 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
           </View>
         )}
         
-        {/* Clip Info Overlay */}
+        {}
         <View style={styles.infoOverlay}>
           <Text style={styles.durationText}>
             {formatTime(effectiveDuration)}
@@ -160,7 +160,7 @@ const TimelineClip: React.FC<TimelineClipProps> = ({
         </View>
       </TouchableOpacity>
 
-      {/* Trim End Handle */}
+      {}
       <View
         ref={trimEndHandleRef}
         style={[styles.trimHandle, styles.trimHandleEnd]}
@@ -277,6 +277,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// Memoize to prevent unnecessary re-renders
+
 export default memo(TimelineClip);
 

@@ -9,13 +9,13 @@ interface ClipItemProps {
   onPress?: (clip: CameraClip) => void;
 }
 
-/**
- * Renders a single clip thumbnail for the horizontal clip list.
- * - Photos: image thumbnail.
- * - Videos: image thumbnail placeholder + "Video" badge and optional duration.
- *
- * The delete button is shown only when `onDelete` is provided.
- */
+
+
+
+
+
+
+
 const ClipItem: React.FC<ClipItemProps> = ({ clip, onDelete, onPress }) => {
   const isVideo = clip.type === 'video';
 
@@ -38,8 +38,8 @@ const ClipItem: React.FC<ClipItemProps> = ({ clip, onDelete, onPress }) => {
         onPress={handlePress}
       >
         <View style={cameraStyles.clipThumbnailWrapper}>
-        {/* For now we use the URI directly. For videos, this could be
-            swapped for a generated thumbnail when you add that feature. */}
+        {
+}
           <Image
             source={{ uri: clip.uri }}
             style={cameraStyles.clipThumbnail}

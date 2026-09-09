@@ -1,4 +1,4 @@
-// File Route: apps/gully-fame-mobile/app/(main)/help-support.tsx
+
 
 import React, { useState } from "react";
 import {
@@ -14,9 +14,9 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
-import { BackIcon } from "@/icons"; // Assuming you want to keep your custom BackIcon
+import { BackIcon } from "@/icons"; 
 
-// FAQs Data Structure
+
 interface FAQItem {
   id: number;
   question: string;
@@ -76,7 +76,7 @@ export default function HelpSupportScreen() {
       if (canOpen) {
         await Linking.openURL(whatsappUrl);
       } else {
-        // Fallback to web browser if app is missing
+        
         await Linking.openURL(`https://wa.me/919999999999?text=${encodeURIComponent(message)}`);
       }
     } catch (err) {
@@ -88,7 +88,7 @@ export default function HelpSupportScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
            <BackIcon color="white" size={24} />
@@ -99,7 +99,7 @@ export default function HelpSupportScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
-        {/* Support Banner */}
+        {}
         <View style={styles.supportBanner}>
           <Ionicons name="headset-outline" size={48} color="#EC9A15" style={styles.bannerIcon} />
           <Text style={styles.bannerTitle}>We're here to help!</Text>

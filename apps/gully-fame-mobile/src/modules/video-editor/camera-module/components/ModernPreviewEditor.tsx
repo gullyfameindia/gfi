@@ -75,18 +75,18 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
     clip.filterPreset || null
   );
 
-  // ✂️ TRIM STATES
+  
   const [trimStart, setTrimStart] = useState(0);
   const [trimEnd, setTrimEnd] = useState(0);
   const [showTrimHandles, setShowTrimHandles] = useState(false);
 
-  // 🎵 INSTAGRAM STYLE MUSIC ENGINE STATES
+  
   const [showMusicPicker, setShowMusicPicker] = useState(false);
   const [showMusicAdjuster, setShowMusicAdjuster] = useState(false);
   const [musicOffset, setMusicOffset] = useState(0); 
   const [selectedTrackName, setSelectedTrackName] = useState("Braj Ras Ringtone");
 
-  // Premium Custom Curated Tracking Feed Mock Matrix Data
+  
   const TRENDING_TRACKS = [
     { id: "1", title: "Millionaire", artist: "Yo Yo Honey Singh", duration: "0:30", views: "2.5M" },
     { id: "2", title: "Softly", artist: "Karan Aujla", duration: "0:30", views: "4.1M" },
@@ -116,7 +116,7 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
     height: SCREEN_HEIGHT,
   });
 
-  // ⚡ Reanimated Values
+  
   const playButtonScale = useSharedValue(1);
   const timelineOpacity = useSharedValue(1);
 
@@ -220,7 +220,7 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
         const time = status.positionMillis / 1000;
         const dur = status.durationMillis / 1000;
 
-        // 🛠️ Loop Threshold Guard: Break infinite frame updates re-render depth
+        
         if (Math.abs(currentTime - time) > 0.25) {
           setCurrentTime(time);
         }
@@ -532,7 +532,7 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
     }
   }, []);
 
-  // 🛠️ FIX 2: Correctly mapped from ReferenceError to launch picker window sheet
+  
   const handleMusic = useCallback(() => {
     setShowMusicPicker(true);
     if (videoRef.current) {
@@ -544,7 +544,7 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
   return (
     <View style={styles.container}>
       
-      {/* 🎥 FULL SCREEN IMMERSIVE PREVIEW BACKDROP BASE LAYER */}
+      {}
       <TouchableOpacity
         style={styles.fullScreenPreviewContainer}
         activeOpacity={1}
@@ -629,10 +629,10 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
         )}
       </TouchableOpacity>
 
-      {/* 🎛️ TRANSPARENT CONTROL OVERLAY CHANNELS CONTAINER LAYER */}
+      {}
       <View style={styles.floatingControlsContainer} pointerEvents="box-none">
         
-        {/* Top Floating Action Tray Header */}
+        {}
         <View style={styles.topBar}>
           <TouchableOpacity style={styles.topButton} onPress={onBack}>
             <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -650,10 +650,10 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
           </TouchableOpacity>
         </View>
 
-        {/* Bottom Control Clustered Row Panels */}
+        {}
         <View style={styles.bottomControlsCluster} pointerEvents="box-none">
           
-          {/* Primary Action Row Controllers */}
+          {}
           <View style={styles.actionButtons}>
             <TouchableOpacity style={styles.actionButton} onPress={handleDeletePress} activeOpacity={0.7}>
               <View style={styles.deleteIconContainer}>
@@ -683,7 +683,7 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
             </TouchableOpacity>
           </View>
 
-          {/* 🎞️ FIXED TRIM TIMELINE PANEL */}
+          {}
           {showTrimHandles && isVideo && (
             <View style={styles.trimAdjusterContainer}>
               <View style={styles.trimInfoRow}>
@@ -750,7 +750,7 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
             </View>
           )}
 
-          {/* Main Scroller Timeline Track */}
+          {}
           {isReady && (
             <View style={styles.timelineSection}>
               <View style={styles.timelineControls}>
@@ -850,7 +850,7 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
             </View>
           )}
 
-          {/* Action Tray Bottom Icons */}
+          {}
           {isReady && (
             <PreviewActionButtons
               displayUri={clip.uri}
@@ -858,7 +858,7 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
               onOverlay={handleOverlay}
               onText={handleText}
               onSticker={handleSticker}
-              onMusic={handleMusic} // Linked perfectly to choice sheet launcher function
+              onMusic={handleMusic} 
               onVoiceAdd={(voice) => {
                 const updatedClip = { ...clip, voiceOverlays: [...(clip.voiceOverlays || []), voice] };
                 onClipUpdate?.(updatedClip);
@@ -904,7 +904,7 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
         </View>
       </View>
 
-      {/* 🎵 INSTAGRAM-STYLE MUSIC PICKER BOTTOM SHEET MODAL */}
+      {}
       <Modal
         visible={showMusicPicker}
         transparent
@@ -946,7 +946,7 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
                   onPress={() => {
                     setSelectedTrackName(track.title); 
                     setShowMusicPicker(false);        
-                    setShowMusicAdjuster(true);       // Automatically triggers Trimmer adjustment pane open
+                    setShowMusicAdjuster(true);       
                   }}
                 >
                   <View style={styles.albumArtPlaceholder}>
@@ -973,7 +973,7 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
         </View>
       </Modal>
 
-      {/* 🎵 INSTAGRAM STYLE MUSIC SLIDER OVERLAY SHEET */}
+      {}
       {showMusicAdjuster && (
         <View style={styles.musicAdjusterModal}>
           <View style={styles.musicHeader}>
@@ -1003,7 +1003,7 @@ const ModernPreviewEditor: React.FC<ModernPreviewEditorProps> = ({
                 const offsetX = e.nativeEvent.contentOffset.x;
                 const calculatedOffset = Math.floor(offsetX / 10); 
                 
-                // Active threshold check protecting performance depth values
+                
                 if(musicOffset !== calculatedOffset) {
                   setMusicOffset(calculatedOffset);
                 }
@@ -1035,7 +1035,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#000000",
   },
-  /* 🎥 MAXIMUM IMMERSIVE PREVIEW VIEW STYLES BOUNDS */
+  
   fullScreenPreviewContainer: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 1,
@@ -1047,7 +1047,7 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     height: SCREEN_HEIGHT,
   },
-  /* 🎛️ FLOATING LAYER PACKETS */
+  
   floatingControlsContainer: {
     ...StyleSheet.absoluteFillObject,
     zIndex: 10,
@@ -1403,7 +1403,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "700",
   },
-  /* 🎵 INSTAGRAM STYLE MUSIC PICKER UI MATRICES */
+  
   musicPickerOverlay: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.5)",

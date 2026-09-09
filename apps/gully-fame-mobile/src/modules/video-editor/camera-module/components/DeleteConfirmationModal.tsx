@@ -15,9 +15,9 @@ interface DeleteConfirmationModalProps {
   clipType?: 'video' | 'photo';
 }
 
-/**
- * Premium delete confirmation modal
- */
+
+
+
 const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
   visible,
   onConfirm,
@@ -33,7 +33,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
     >
       <View style={styles.overlay}>
         <View style={styles.modal}>
-          {/* Icon */}
+          {}
           <View style={styles.iconContainer}>
             <View style={styles.iconBackground}>
               <Svg width={40} height={40} viewBox="0 0 24 24" fill="none">
@@ -48,15 +48,15 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
             </View>
           </View>
 
-          {/* Title */}
+          {}
           <Text style={styles.title}>Delete {clipType === 'video' ? 'Video' : 'Photo'}?</Text>
 
-          {/* Message */}
+          {}
           <Text style={styles.message}>
             This {clipType === 'video' ? 'video' : 'photo'} will be permanently deleted and cannot be undone.
           </Text>
 
-          {/* Buttons */}
+          {}
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.button, styles.cancelButton]}

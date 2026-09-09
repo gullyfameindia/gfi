@@ -2,15 +2,15 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface SpeedSelectorProps {
-  speed: number; // CameraScreen ke 'speed={speed}' se match karne ke liye badla
+  speed: number; 
   onSpeedChange: (newSpeed: number) => void;
-  disabled?: boolean; // CameraScreen se 'disabled' prop handle karne ke liye add kiya
+  disabled?: boolean; 
 }
 
 const SPEED_OPTIONS = [0.5, 1.0, 1.5, 2.0];
 
 const SpeedSelector: React.FC<SpeedSelectorProps> = ({ speed, onSpeedChange, disabled }) => {
-  // Agar photo mode hai toh speed selector ko dikhane ki zaroorat nahi hai
+  
   if (disabled) return null;
 
   return (
@@ -18,7 +18,7 @@ const SpeedSelector: React.FC<SpeedSelectorProps> = ({ speed, onSpeedChange, dis
       <Text style={styles.label}>Playback Speed:</Text>
       <View style={styles.optionsContainer}>
         {SPEED_OPTIONS.map((option) => {
-          // Fallback lagaya hai taaki agar speed na mile toh default 1.0 active rahe
+          
           const isActive = (speed || 1.0) === option;
           return (
             <TouchableOpacity

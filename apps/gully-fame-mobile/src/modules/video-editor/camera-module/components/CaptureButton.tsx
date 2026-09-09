@@ -1,4 +1,4 @@
-// PATH: apps/gully-fame-mobile/src/modules/video-editor/camera-module/components/CaptureButton.tsx
+
 
 import React, { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -9,7 +9,7 @@ interface CaptureButtonProps {
   mode: CameraModeEnum;
   isRecording: boolean;
   progress?: number; 
-  hasClips?: boolean; // Naya prop: Agar clip hai, toh progress ring show karega
+  hasClips?: boolean; 
   disabled?: boolean;
   onPress: () => void;
   onPressIn?: () => void;
@@ -30,10 +30,10 @@ const CaptureButton: React.FC<CaptureButtonProps> = ({
   const innerScale = useRef(new Animated.Value(1)).current;
   const innerBorderRadius = useRef(new Animated.Value(30)).current;
 
-  // SVG Circle progress calculations
+  
   const radius = 38;
   const circumference = 2 * Math.PI * radius;
-  // Make sure progress doesn't exceed 1
+  
   const safeProgress = Math.min(Math.max(progress, 0), 1);
   const strokeDashoffset = circumference - (safeProgress * circumference);
 
@@ -74,7 +74,7 @@ const CaptureButton: React.FC<CaptureButtonProps> = ({
     >
       <View style={styles.container}>
         <Animated.View style={[styles.svgWrapper, { transform: [{ scale: outerScale }] }]}>
-          {/* Agar record ho raha hai YA pehle se koi clip hai, toh Gradient Ring dikhao */}
+          {}
           {(isRecording || hasClips) ? (
             <Svg height="90" width="90" viewBox="0 0 90 90">
               <Defs>

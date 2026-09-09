@@ -1,5 +1,5 @@
-// Created by Kiro - KYC Verification Screen
-// Handles KYC document submission and verification status display
+
+
 
 import React, { useState, useEffect } from "react";
 import {
@@ -18,7 +18,7 @@ interface KYCScreenProps {
   navigation?: any;
 }
 
-// ✅ CREATED BY KIRO - KYC Screen Component
+
 const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
   const [kycStatus, setKycStatus] = useState<KYCStatus | null>(null);
   const [loading, setLoading] = useState(true);
@@ -29,12 +29,12 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
   const [backImageUri, setBackImageUri] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  // ✅ CREATED BY KIRO - Fetch KYC status on component mount
+  
   useEffect(() => {
     fetchKYCStatus();
   }, []);
 
-  // ✅ CREATED BY KIRO - Fetch current KYC status
+  
   const fetchKYCStatus = async () => {
     try {
       setLoading(true);
@@ -53,7 +53,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
     }
   };
 
-  // ✅ CREATED BY KIRO - Handle document upload
+  
   const handleUploadDocument = async () => {
     if (!documentNumber.trim()) {
       Alert.alert("Error", "Please enter document number");
@@ -83,7 +83,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
         setFrontImageUri(null);
         setBackImageUri(null);
         setUploadProgress(0);
-        // Refresh KYC status
+        
         await fetchKYCStatus();
       } else {
         Alert.alert("Error", response.message || "Failed to upload document");
@@ -96,7 +96,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
     }
   };
 
-  // ✅ CREATED BY KIRO - Handle KYC submission
+  
   const handleSubmitKYC = async () => {
     try {
       setSubmitting(true);
@@ -130,7 +130,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
     }
   };
 
-  // ✅ CREATED BY KIRO - Render status badge
+  
   const renderStatusBadge = (status: string) => {
     let backgroundColor = "#FFA500";
     let textColor = "#FFFFFF";
@@ -157,7 +157,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
     );
   };
 
-  // ✅ CREATED BY KIRO - Render loading state
+  
   if (loading) {
     return (
       <View style={styles.container}>
@@ -169,13 +169,13 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <Text style={styles.title}>KYC Verification</Text>
         <Text style={styles.subtitle}>Complete your identity verification</Text>
       </View>
 
-      {/* Current Status */}
+      {}
       {kycStatus && (
         <View style={styles.statusCard}>
           <Text style={styles.cardTitle}>Current Status</Text>
@@ -203,12 +203,12 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
         </View>
       )}
 
-      {/* Document Upload Section */}
+      {}
       {(!kycStatus || kycStatus.status === "rejected" || kycStatus.status === "pending") && (
         <View style={styles.uploadCard}>
           <Text style={styles.cardTitle}>Upload Documents</Text>
 
-          {/* Document Type Selection */}
+          {}
           <View style={styles.section}>
             <Text style={styles.label}>Document Type</Text>
             <View style={styles.documentTypeContainer}>
@@ -234,7 +234,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Document Number Input */}
+          {}
           <View style={styles.section}>
             <Text style={styles.label}>Document Number</Text>
             <View style={styles.input}>
@@ -242,7 +242,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
             </View>
           </View>
 
-          {/* Front Image Preview */}
+          {}
           {frontImageUri && (
             <View style={styles.section}>
               <Text style={styles.label}>Front Image</Text>
@@ -250,7 +250,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
             </View>
           )}
 
-          {/* Back Image Preview */}
+          {}
           {backImageUri && (
             <View style={styles.section}>
               <Text style={styles.label}>Back Image</Text>
@@ -258,7 +258,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
             </View>
           )}
 
-          {/* Upload Progress */}
+          {}
           {uploadProgress > 0 && uploadProgress < 100 && (
             <View style={styles.progressContainer}>
               <Text style={styles.progressLabel}>Upload Progress: {uploadProgress}%</Text>
@@ -268,7 +268,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
             </View>
           )}
 
-          {/* Upload Button */}
+          {}
           <TouchableOpacity
             style={[styles.button, submitting && styles.buttonDisabled]}
             onPress={handleUploadDocument}
@@ -281,7 +281,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
             )}
           </TouchableOpacity>
 
-          {/* Submit KYC Button */}
+          {}
           <TouchableOpacity
             style={[styles.button, styles.submitButton, submitting && styles.buttonDisabled]}
             onPress={handleSubmitKYC}
@@ -296,7 +296,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
         </View>
       )}
 
-      {/* Approved Status Message */}
+      {}
       {kycStatus && kycStatus.status === "approved" && (
         <View style={styles.approvedCard}>
           <Text style={styles.approvedTitle}>✓ KYC Verified</Text>
@@ -306,7 +306,7 @@ const KYCScreen: React.FC<KYCScreenProps> = ({ navigation }) => {
         </View>
       )}
 
-      {/* Under Review Message */}
+      {}
       {kycStatus && kycStatus.status === "under_review" && (
         <View style={styles.reviewCard}>
           <Text style={styles.reviewTitle}>⏳ Under Review</Text>

@@ -20,7 +20,7 @@ export const liveCompetitionStyles = StyleSheet.create({
     heroPrizeContainer: {
         alignItems: "center",
         paddingVertical: 16,
-        backgroundColor: "rgba(255, 215, 0, 0.05)", // Very subtle gold glow
+        backgroundColor: "rgba(255, 215, 0, 0.05)", 
         borderRadius: 12,
         marginBottom: 8,
         borderWidth: 1,
@@ -61,7 +61,7 @@ export const liveCompetitionStyles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.2)", // Slight inset look
+        backgroundColor: "rgba(0, 0, 0, 0.2)", 
         borderRadius: 12,
         paddingVertical: 12,
         paddingHorizontal: 16,
@@ -99,7 +99,7 @@ export const liveCompetitionStyles = StyleSheet.create({
         marginHorizontal: 16,
     },
     freeBadge: {
-        backgroundColor: "rgba(34, 197, 94, 0.15)", // Translucent neon green
+        backgroundColor: "rgba(34, 197, 94, 0.15)", 
         paddingHorizontal: 10,
         paddingVertical: 4,
         borderRadius: 6,
@@ -107,7 +107,7 @@ export const liveCompetitionStyles = StyleSheet.create({
         borderColor: "rgba(34, 197, 94, 0.4)",
     },
     freeBadgeText: {
-        color: "#22C55E", // Solid neon green text
+        color: "#22C55E", 
         fontSize: 12,
         fontWeight: "800",
         letterSpacing: 1,
@@ -121,13 +121,13 @@ export const liveCompetitionStyles = StyleSheet.create({
     },
     progressBarFill: {
         height: "100%",
-        backgroundColor: "#FF0055", // A vibrant neon red/pink
+        backgroundColor: "#FF0055", 
         borderRadius: 3,
         shadowColor: "#FF0055",
         shadowOffset: { width: 0, height: 0 },
         shadowOpacity: 0.8,
         shadowRadius: 4,
-        elevation: 4, // Android glow
+        elevation: 4, 
     },
     missionBriefingCard: {
         backgroundColor: "#2A1A0B",
@@ -198,7 +198,7 @@ export const liveCompetitionStyles = StyleSheet.create({
         width: 6,
         height: 6,
         borderRadius: 3,
-        backgroundColor: "#FF0055", // Neon red/pink dot
+        backgroundColor: "#FF0055", 
         marginTop: 8,
     },
     leaderboardTitleContainer: {
@@ -262,21 +262,21 @@ export const liveCompetitionStyles = StyleSheet.create({
         height: 36,
         borderRadius: 18,
         borderWidth: 2,
-        borderColor: "#40301F", // Matches the card background to create a cutout effect
+        borderColor: "#40301F", 
     },
     battlingText: {
         color: "#C7C7C7",
         fontSize: 12,
     },
     battlingCount: {
-        color: "#EC9A15", // Punchy orange
+        color: "#EC9A15", 
         fontWeight: "700",
         fontSize: 13,
     },
     starFlexBox: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "rgba(255, 215, 0, 0.08)", // Slight gold tint
+        backgroundColor: "rgba(255, 215, 0, 0.08)", 
         paddingHorizontal: 12,
         paddingVertical: 10,
         borderRadius: 12,
@@ -312,7 +312,7 @@ export const liveCompetitionStyles = StyleSheet.create({
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 6,
-        elevation: 8, // Adds a nice glow on Android
+        elevation: 8, 
     },
     halfButton: {
         flex: 1,
@@ -337,12 +337,12 @@ export const liveCompetitionStyles = StyleSheet.create({
         letterSpacing: 0.5,
     },
     disabledButton: {
-        backgroundColor: "#2A1A0B", // Dark, muted version of your theme color
+        backgroundColor: "#2A1A0B", 
         borderWidth: 1,
         borderColor: "#4A3A2A",
         justifyContent: "center",
         alignItems: "center",
-        elevation: 0, // Remove shadow so it looks "flat"
+        elevation: 0, 
     },
     disabledText: {
         color: "#888",
@@ -732,7 +732,7 @@ export const liveCompetitionStyles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#4a3a2a",
         overflow: "hidden",
-        width: (width - 32 - 10) / 2, // 32 for padding, 10 for gap, divided by 2
+        width: (width - 32 - 10) / 2, 
         marginBottom: 10,
     },
     entryThumbnailVertical: {
@@ -916,7 +916,7 @@ export const liveCompetitionStyles = StyleSheet.create({
         color: "#fff",
         fontSize: 14,
     },
-    // Share Modal Styles
+    
     shareModal: {
         backgroundColor: "#1a1a1a",
         borderTopLeftRadius: 20,
@@ -978,7 +978,7 @@ export const liveCompetitionStyles = StyleSheet.create({
         fontSize: 12,
         textAlign: "center",
     },
-    // Modal Styles
+    
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0, 0, 0, 0.8)",

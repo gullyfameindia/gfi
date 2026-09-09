@@ -56,7 +56,7 @@ const TimelineAudioPanel: React.FC<TimelineAudioPanelProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <View style={styles.stats}>
           <View style={styles.stat}>
@@ -77,7 +77,7 @@ const TimelineAudioPanel: React.FC<TimelineAudioPanelProps> = ({
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Master Volume Control */}
+        {}
         <View style={styles.masterVolumeSection}>
           <View style={styles.masterVolumeHeader}>
             <Text style={styles.masterVolumeLabel}>Master Volume</Text>
@@ -102,7 +102,7 @@ const TimelineAudioPanel: React.FC<TimelineAudioPanelProps> = ({
           </View>
         </View>
 
-        {/* Tracks */}
+        {}
         {tracks.length > 0 ? (
           <AdvancedAudioEditor
             tracks={tracks}
@@ -119,7 +119,7 @@ const TimelineAudioPanel: React.FC<TimelineAudioPanelProps> = ({
           </View>
         )}
 
-        {/* Add Track Button */}
+        {}
         {onAddTrack && (
           <TouchableOpacity style={styles.addButton} onPress={onAddTrack}>
             <MaterialCommunityIcons name="plus-circle" size={24} color="#3b82f6" />

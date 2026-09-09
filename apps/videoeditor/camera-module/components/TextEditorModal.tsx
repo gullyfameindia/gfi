@@ -33,9 +33,9 @@ const COLORS = [
 
 const FONT_SIZES = [12, 16, 20, 24, 28, 32, 36, 40, 48, 56, 64, 72];
 
-/**
- * Beautiful text editor modal for creating/editing text overlays
- */
+
+
+
 const TextEditorModal: React.FC<TextEditorModalProps> = ({
   visible,
   overlay,
@@ -60,7 +60,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
   const [startTime, setStartTime] = useState(overlay?.startTime ?? 0);
   const [endTime, setEndTime] = useState(overlay?.endTime ?? 5);
 
-  // Reset state when overlay changes
+  
   React.useEffect(() => {
     if (overlay) {
       setText(overlay.text || '');
@@ -78,7 +78,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
       setStartTime(overlay.startTime ?? 0);
       setEndTime(overlay.endTime ?? 5);
     } else {
-      // Reset to defaults for new overlay
+      
       setText('');
       setFontSize(24);
       setFontWeight('normal');
@@ -173,7 +173,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
       onRequestClose={onClose}
     >
       <SafeAreaView style={styles.container}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={onClose} style={styles.headerButton}>
             <Text style={styles.headerButtonText}>Cancel</Text>
@@ -186,7 +186,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
           </TouchableOpacity>
         </View>
 
-        {/* Preview Area */}
+        {}
         <View style={styles.previewContainer}>
           <View style={[styles.previewFrame, { width: containerWidth, height: containerHeight }]}>
             <View style={styles.previewBackground}>
@@ -233,7 +233,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
         </View>
 
         <ScrollView style={styles.editor} showsVerticalScrollIndicator={false}>
-          {/* Text Input */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Text</Text>
             <TextInput
@@ -247,7 +247,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
             />
           </View>
 
-          {/* Font Size */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Size</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.optionsRow}>
@@ -273,7 +273,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
             </ScrollView>
           </View>
 
-          {/* Font Weight */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Style</Text>
             <View style={styles.optionsRow}>
@@ -300,7 +300,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
             </View>
           </View>
 
-          {/* Text Color */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Color</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.colorRow}>
@@ -332,7 +332,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
             </ScrollView>
           </View>
 
-          {/* Background Color */}
+          {}
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text style={styles.sectionTitle}>Background</Text>
@@ -395,7 +395,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
             </ScrollView>
           </View>
 
-          {/* Alignment */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Alignment</Text>
             <View style={styles.optionsRow}>
@@ -439,7 +439,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
             </View>
           </View>
 
-          {/* Opacity */}
+          {}
           <View style={styles.section}>
             <View style={styles.sliderHeader}>
               <Text style={styles.sectionTitle}>Opacity</Text>
@@ -459,7 +459,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
             </View>
           </View>
 
-          {/* Duration (Start/End Time) */}
+          {}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Duration</Text>
             <View style={styles.durationRow}>
@@ -498,7 +498,7 @@ const TextEditorModal: React.FC<TextEditorModalProps> = ({
             </Text>
           </View>
 
-          {/* Delete Button */}
+          {}
           {overlay && onDelete && (
             <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
               <Text style={styles.deleteButtonText}>Delete Text</Text>

@@ -24,7 +24,7 @@ import {
   type Notification,
 } from "@/api/services/notificationIntegrationService";
 
-// Get initial dimensions
+
 const getDimensions = () => Dimensions.get("window");
 
 export default function NotificationsScreen() {
@@ -37,7 +37,7 @@ export default function NotificationsScreen() {
   const [loading, setLoading] = useState(true);
   const [marking, setMarking] = useState<string | null>(null);
 
-  // Listen for dimension changes (orientation, split screen, etc.)
+  
   useEffect(() => {
     const subscription = Dimensions.addEventListener("change", ({ window }) => {
       setDimensions(window);
@@ -46,7 +46,7 @@ export default function NotificationsScreen() {
     return () => subscription?.remove();
   }, []);
 
-  // Fetch notifications on screen focus
+  
   useFocusEffect(
     useCallback(() => {
       fetchNotifications();
@@ -63,7 +63,7 @@ export default function NotificationsScreen() {
         Alert.alert("Error", response.message || "Failed to load notifications");
       }
 
-      // Also fetch unread count
+      
       const countResponse = await getUnreadNotificationCount();
       if (countResponse.success) {
         setUnreadCount(countResponse.data?.count || 0);
@@ -81,20 +81,20 @@ export default function NotificationsScreen() {
       setMarking(notificationId);
       const response = await markNotificationAsRead(notificationId);
       if (response.success) {
-        // Remove from list and update unread count
+        
         setNotifications((prev) =>
           prev.map((n) =>
             n.id === notificationId ? { ...n, read: true } : n
           )
         );
         
-        // Update unread count
+        
         const countResponse = await getUnreadNotificationCount();
         if (countResponse.success) {
           setUnreadCount(countResponse.data?.count || 0);
         }
 
-        // Navigate based on notification type
+        
         navigateFromNotification(
           notifications.find((n) => n.id === notificationId)
         );
@@ -139,14 +139,14 @@ export default function NotificationsScreen() {
         }
         break;
       case "system":
-        // System notifications don't navigate
+        
         break;
       default:
         break;
     }
   };
 
-  // Animate slide when tab changes
+  
   useEffect(() => {
     Animated.spring(slideAnim, {
       toValue: activeTab === "Today" ? 0 : 1,
@@ -156,7 +156,7 @@ export default function NotificationsScreen() {
     }).start();
   }, [activeTab]);
 
-  // Filter notifications by date (Today vs Past)
+  
   const now = new Date();
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   
@@ -171,7 +171,7 @@ export default function NotificationsScreen() {
     }
   });
 
-  // Responsive scaling functions based on current dimensions
+  
   const scale = (size: number) => (dimensions.width / 375) * size;
   const scaleVertical = (size: number) => (dimensions.height / 812) * size;
   const getFontSize = (size: number) => {
@@ -179,11 +179,11 @@ export default function NotificationsScreen() {
     return Math.max(scaled, size * 0.8);
   };
 
-  // Responsive styles based on screen size
+  
   const isSmallScreen = dimensions.width < 375;
   const tabMargin = isSmallScreen ? scale(20) : scale(50);
 
-  // Create responsive styles - Reduced sizes
+  
   const responsiveStyles = {
     headerContainer: {
       ...styles.headerContainer,
@@ -293,7 +293,7 @@ export default function NotificationsScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header with curved bottom */}
+      {}
       <View style={responsiveStyles.headerContainer}>
         <View style={responsiveStyles.header}>
           <TouchableOpacity
@@ -312,9 +312,9 @@ export default function NotificationsScreen() {
           <View style={responsiveStyles.headerButton} />
         </View>
 
-        {/* Tabs */}
+        {}
         <View style={responsiveStyles.tabsContainer}>
-          {/* Animated sliding background */}
+          {}
           <Animated.View
             style={[
               styles.slidingIndicator,
@@ -374,7 +374,7 @@ export default function NotificationsScreen() {
         </View>
       </View>
 
-      {/* Content */}
+      {}
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -533,7 +533,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
   },
   scrollContent: {
-    // Responsive values set in component
+    
   },
   sectionHeading: {
     color: "#000000",
@@ -544,7 +544,7 @@ const styles = StyleSheet.create({
     }),
   },
   notificationsList: {
-    // Gap set in component
+    
   },
   notificationCard: {
     flexDirection: "row",

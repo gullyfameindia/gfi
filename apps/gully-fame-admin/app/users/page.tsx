@@ -117,11 +117,11 @@ export default function UsersPage() {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setPage(1); // Reset to first page on search
+    setPage(1); 
   };
 
   const handleFilterChange = () => {
-    setPage(1); // Reset to first page on filter change
+    setPage(1); 
   };
 
   return (
@@ -292,7 +292,7 @@ export default function UsersPage() {
               </table>
             </div>
 
-            {/* Pagination */}
+            {}
             {totalPages > 1 && (
               <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
                 <div className="flex flex-1 justify-between sm:hidden">

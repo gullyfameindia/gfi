@@ -102,7 +102,7 @@ const SoundFXButton: React.FC<SoundFXButtonProps> = ({ onPress, onSoundSelect })
         onRequestClose={() => setShowModal(false)}
       >
         <SafeAreaView style={styles.modalContainer}>
-          {/* Header */}
+          {}
           <View style={styles.modalHeader}>
             <TouchableOpacity onPress={() => setShowModal(false)} style={styles.closeButton}>
               <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -119,7 +119,7 @@ const SoundFXButton: React.FC<SoundFXButtonProps> = ({ onPress, onSoundSelect })
             <View style={styles.closeButton} />
           </View>
 
-          {/* Category Filter */}
+          {}
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -147,7 +147,7 @@ const SoundFXButton: React.FC<SoundFXButtonProps> = ({ onPress, onSoundSelect })
             ))}
           </ScrollView>
 
-          {/* Sound List */}
+          {}
           <FlatList
             data={filteredSounds}
             keyExtractor={(item) => item.id}

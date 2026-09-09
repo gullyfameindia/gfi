@@ -7,9 +7,9 @@ interface GalleryButtonProps {
   onPress: () => void;
 }
 
-/**
- * Small circular gallery button, intended to sit just left of the capture button.
- */
+
+
+
 const GalleryButton: React.FC<GalleryButtonProps> = ({ onPress }) => {
   return (
     <TouchableOpacity

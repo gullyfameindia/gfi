@@ -41,7 +41,7 @@ export default function UploadPostScreen() {
     const [allowComments, setAllowComments] = useState(true);
     const [saveToGallery, setSaveToGallery] = useState(false);
 
-    // Competition params
+    
     const competitionId = params.competitionId
         ? String(params.competitionId)
         : null;
@@ -78,7 +78,7 @@ export default function UploadPostScreen() {
             return;
         }
 
-        // Route to the comprehensive post screen with all options
+        
         router.push({
             pathname: "/(main)/upload/post",
             params: {
@@ -101,14 +101,14 @@ export default function UploadPostScreen() {
         <View style={styles.container}>
             <StatusBar barStyle="light-content" />
             <SafeAreaView style={styles.safeArea} edges={["top"]}>
-                {/* Top Bar */}
+                {}
                 <View style={styles.topBar}>
                     <TouchableOpacity
                         style={styles.closeButton}
                         onPress={() => {
                             try {
-                                // 🔥 THE FIX: Explicitly navigate back to the Video Editor route
-                                // instead of relying on the fragile router.back() history!
+                                
+                                
                                 router.navigate("/(main)/upload");
                             } catch (error) {
                                 console.error("Navigation error:", error);
@@ -129,7 +129,7 @@ export default function UploadPostScreen() {
                     contentContainerStyle={styles.scrollContent}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* Video Preview */}
+                    {}
                     <View style={styles.videoPreview}>
                         {clips.length > 0 && clips[0].uri ? (
                             <Image
@@ -146,7 +146,7 @@ export default function UploadPostScreen() {
                         )}
                     </View>
 
-                    {/* Caption Input */}
+                    {}
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Caption</Text>
                         <TextInput
@@ -164,7 +164,7 @@ export default function UploadPostScreen() {
                         </Text>
                     </View>
 
-                    {/* Cover Thumbnail Selector */}
+                    {}
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Cover Thumbnail</Text>
                         <View style={styles.coverSelector}>
@@ -188,7 +188,7 @@ export default function UploadPostScreen() {
                         </View>
                     </View>
 
-                    {/* Hashtags Section */}
+                    {}
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Hashtags</Text>
                         <View style={styles.hashtagContainer}>
@@ -216,7 +216,7 @@ export default function UploadPostScreen() {
                         </View>
                     </View>
 
-                    {/* Category Selection */}
+                    {}
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Category</Text>
                         <TouchableOpacity
@@ -269,7 +269,7 @@ export default function UploadPostScreen() {
                         )}
                     </View>
 
-                    {/* Switches Section */}
+                    {}
                     <View style={styles.section}>
                         <View style={styles.switchRow}>
                             <Text style={styles.switchLabel}>
@@ -314,7 +314,7 @@ export default function UploadPostScreen() {
                     </View>
                 </ScrollView>
 
-                {/* Post Button */}
+                {}
                 <View style={styles.postButtonContainer}>
                     <TouchableOpacity
                         style={styles.postButton}
@@ -324,7 +324,7 @@ export default function UploadPostScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {/* Cover Selection Modal */}
+                {}
                 <Modal
                     visible={showCoverModal}
                     transparent

@@ -1,4 +1,4 @@
-// File Route: apps/gully-fame-mobile/app/(main)/settings/kyc-status.tsx
+
 
 import React, { useState } from "react";
 import {
@@ -14,9 +14,9 @@ import { router } from "expo-router";
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 
-// Types of KYC Status: 'unverified' | 'pending' | 'verified' | 'rejected'
+
 export default function KYCStatusScreen() {
-  // Demo ke liye abhi 'pending' set kiya hai. Aap isse change karke dekh sakte hain.
+  
   const [status, setStatus] = useState<"unverified" | "pending" | "verified" | "rejected">("pending");
 
   const renderStatusCard = () => {
@@ -85,7 +85,7 @@ export default function KYCStatusScreen() {
             <TouchableOpacity 
               style={styles.actionButtonGold} 
               activeOpacity={0.8}
-              onPress={() => setStatus("pending")} // Demo click
+              onPress={() => setStatus("pending")} 
             >
               <Text style={styles.actionButtonTextGold}>Start Verification</Text>
             </TouchableOpacity>
@@ -98,7 +98,7 @@ export default function KYCStatusScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="chevron-back" size={28} color="#fff" />
@@ -109,20 +109,20 @@ export default function KYCStatusScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
-        {/* Security Banner */}
+        {}
         <View style={styles.securityBanner}>
           <FontAwesome5 name="lock" size={14} color="#25D366" />
           <Text style={styles.securityText}>Bank-grade 256-bit encryption. Your data is 100% secure.</Text>
         </View>
 
-        {/* Dynamic Status Card */}
+        {}
         {renderStatusCard()}
 
-        {/* Verification Steps Timeline */}
+        {}
         <Text style={styles.sectionTitle}>Verification Steps</Text>
         
         <View style={styles.stepsContainer}>
-          {/* Step 1: Phone (Always done if they are here) */}
+          {}
           <View style={styles.stepRow}>
             <View style={styles.stepIndicator}>
               <View style={[styles.stepDot, styles.stepDotCompleted]}>
@@ -136,7 +136,7 @@ export default function KYCStatusScreen() {
             </View>
           </View>
 
-          {/* Step 2: Document */}
+          {}
           <View style={styles.stepRow}>
             <View style={styles.stepIndicator}>
               <View style={[
@@ -162,7 +162,7 @@ export default function KYCStatusScreen() {
             </View>
           </View>
 
-          {/* Step 3: Face Scan */}
+          {}
           <View style={styles.stepRow}>
             <View style={styles.stepIndicator}>
               <View style={[
@@ -185,7 +185,7 @@ export default function KYCStatusScreen() {
           </View>
         </View>
 
-        {/* Support Link */}
+        {}
         <TouchableOpacity style={styles.supportLink} onPress={() => router.push("/(main)/settings/help-support" as any)}>
           <Text style={styles.supportText}>Need help with verification? <Text style={styles.supportHighlight}>Contact Support</Text></Text>
         </TouchableOpacity>
@@ -198,7 +198,7 @@ export default function KYCStatusScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#3C2610", // Premium Gully Fame Background
+    backgroundColor: "#3C2610", 
     paddingTop: Platform.OS === "android" ? 20 : 0,
   },
   header: {

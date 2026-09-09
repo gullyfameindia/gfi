@@ -101,7 +101,7 @@ async function makeGetRequest(apiName: string, endpoint: string): Promise<ApiRes
       };
     }
 
-    // Handle multiple response formats: {status: true}, {code: 1}, {rCode: 1}
+    
     const isSuccess = 
       responseData.status === true || 
       responseData.code === 1 || 
@@ -123,7 +123,7 @@ async function makeGetRequest(apiName: string, endpoint: string): Promise<ApiRes
       };
     }
 
-    // Extract data from different response formats
+    
     const payload = responseData.data || responseData.rData || responseData;
     const message = responseData.message || responseData.msg || `${apiName} fetched successfully`;
 

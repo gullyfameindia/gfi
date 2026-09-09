@@ -15,7 +15,7 @@ export default function CompetitionRules() {
       setLoading(false);
       
       if (response.success && response.data) {
-        // Handle both string and object responses
+        
         const content = typeof response.data === 'string' 
           ? response.data 
           : (response.data.competitionRules || response.data.content || '');

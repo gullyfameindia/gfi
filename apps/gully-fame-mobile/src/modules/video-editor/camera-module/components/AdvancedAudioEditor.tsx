@@ -147,7 +147,7 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>🎙️ Advanced Audio Editor</Text>
         <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
@@ -156,7 +156,7 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Master Volume Control */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>🔊 Master Volume</Text>
           <View style={styles.volumeControl}>
@@ -174,11 +174,11 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
           </View>
         </View>
 
-        {/* Per-Channel Volume Control */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>🎚️ Channel Levels</Text>
 
-          {/* Music Volume */}
+          {}
           <View style={styles.channelControl}>
             <View style={styles.channelHeader}>
               <View style={styles.channelLabel}>
@@ -197,7 +197,7 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
             />
           </View>
 
-          {/* Voice Volume */}
+          {}
           <View style={styles.channelControl}>
             <View style={styles.channelHeader}>
               <View style={styles.channelLabel}>
@@ -216,7 +216,7 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
             />
           </View>
 
-          {/* Sound Effect Volume */}
+          {}
           <View style={styles.channelControl}>
             <View style={styles.channelHeader}>
               <View style={styles.channelLabel}>
@@ -236,7 +236,7 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
           </View>
         </View>
 
-        {/* Audio Tracks List */}
+        {}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>🎵 Audio Tracks ({tracks.length})</Text>
           {tracks.length === 0 ? (
@@ -255,12 +255,12 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
           )}
         </View>
 
-        {/* Track Details Editor */}
+        {}
         {selectedTrackData && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>⚙️ Track Settings</Text>
 
-            {/* Volume */}
+            {}
             <View style={styles.trackSetting}>
               <Text style={styles.trackSettingLabel}>Volume</Text>
               <View style={styles.settingRow}>
@@ -276,7 +276,7 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
               </View>
             </View>
 
-            {/* Mute Toggle */}
+            {}
             <TouchableOpacity
               style={styles.trackSetting}
               onPress={() => updateTrackProperty(selectedTrackData.id, { isMuted: !selectedTrackData.isMuted })}
@@ -286,7 +286,7 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
               </Text>
             </TouchableOpacity>
 
-            {/* Audio Effect */}
+            {}
             <View style={styles.trackSetting}>
               <Text style={styles.trackSettingLabel}>Audio Effect</Text>
               <ScrollView
@@ -310,11 +310,11 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
               </ScrollView>
             </View>
 
-            {/* EQ Settings */}
+            {}
             <View style={styles.trackSetting}>
               <Text style={styles.trackSettingLabel}>🎵 Equalizer</Text>
 
-              {/* Bass */}
+              {}
               <View style={styles.eqControl}>
                 <Text style={styles.eqLabel}>Bass</Text>
                 <Slider
@@ -328,7 +328,7 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
                 <Text style={styles.eqValue}>{selectedTrackData.bassGain || 0}dB</Text>
               </View>
 
-              {/* Midtone */}
+              {}
               <View style={styles.eqControl}>
                 <Text style={styles.eqLabel}>Midtone</Text>
                 <Slider
@@ -342,7 +342,7 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
                 <Text style={styles.eqValue}>{selectedTrackData.midtoneGain || 0}dB</Text>
               </View>
 
-              {/* Treble */}
+              {}
               <View style={styles.eqControl}>
                 <Text style={styles.eqLabel}>Treble</Text>
                 <Slider
@@ -357,11 +357,11 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
               </View>
             </View>
 
-            {/* Fade Effects */}
+            {}
             <View style={styles.trackSetting}>
               <Text style={styles.trackSettingLabel}>⏱️ Fade Effects</Text>
 
-              {/* Fade In */}
+              {}
               <View style={styles.fadeControl}>
                 <Text style={styles.fadeLabel}>Fade In (seconds)</Text>
                 <Slider
@@ -375,7 +375,7 @@ const AdvancedAudioEditor: React.FC<AdvancedAudioEditorProps> = ({
                 <Text style={styles.fadeValue}>{(selectedTrackData.fadeIn || 0).toFixed(1)}s</Text>
               </View>
 
-              {/* Fade Out */}
+              {}
               <View style={styles.fadeControl}>
                 <Text style={styles.fadeLabel}>Fade Out (seconds)</Text>
                 <Slider

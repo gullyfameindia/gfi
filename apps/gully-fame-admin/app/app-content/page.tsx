@@ -54,13 +54,13 @@ export default function AppContentPage() {
   return (
     <DashboardLayout>
       <div className="space-y-4 md:space-y-6 p-3 sm:p-4 md:p-6">
-        {/* Header */}
+        {}
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Manage App Content</h1>
           <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-gray-500">Update app branding, content, and legal information</p>
         </div>
 
-        {/* Tabs */}
+        {}
         <div className="flex space-x-1 border-b border-gray-200 bg-white rounded-t-lg overflow-x-auto">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -81,7 +81,7 @@ export default function AppContentPage() {
           })}
         </div>
 
-        {/* Content Area */}
+        {}
         <div className="rounded-xl bg-white shadow-sm border border-gray-200 overflow-hidden">
           {renderContent()}
         </div>

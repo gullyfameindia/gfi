@@ -1,7 +1,7 @@
-/**
- * Error Handler Utility
- * Provides consistent error handling across the app with fallback strategies
- */
+
+
+
+
 
 export type ErrorType = 
   | "network" 
@@ -23,13 +23,13 @@ export interface AppError {
 }
 
 export class ErrorHandler {
-  /**
-   * Parse and categorize an error
-   */
+  
+
+
   static parseError(error: any): AppError {
     const timestamp = Date.now();
 
-    // Network error
+    
     if (error?.message?.includes("Network") || error?.code === "NETWORK_ERROR") {
       return {
         type: "network",
@@ -41,7 +41,7 @@ export class ErrorHandler {
       };
     }
 
-    // Timeout error
+    
     if (error?.code === "ECONNABORTED" || error?.message?.includes("timeout")) {
       return {
         type: "timeout",
@@ -53,7 +53,7 @@ export class ErrorHandler {
       };
     }
 
-    // HTTP errors
+    
     if (error?.response?.status) {
       const status = error.response.status;
       const statusCode = status;
@@ -117,7 +117,7 @@ export class ErrorHandler {
       };
     }
 
-    // Unknown error
+    
     return {
       type: "unknown",
       message: "An unexpected error occurred. Using cached data.",
@@ -128,9 +128,9 @@ export class ErrorHandler {
     };
   }
 
-  /**
-   * Get user-friendly error message
-   */
+  
+
+
   static getUserMessage(error: AppError): string {
     const messages: Record<ErrorType, string> = {
       network: "Unable to connect. Loading offline data...",
@@ -145,18 +145,18 @@ export class ErrorHandler {
     return messages[error.type];
   }
 
-  /**
-   * Should show retry button
-   */
+  
+
+
   static shouldShowRetry(error: AppError): boolean {
     return error.canRetry && 
            error.type !== "unauthorized" && 
            error.type !== "validation";
   }
 
-  /**
-   * Log error for debugging
-   */
+  
+
+
   static logError(error: AppError, context?: string): void {
     const prefix = context ? `[${context}]` : "[Error]";
     console.warn(`${prefix} ${error.type}:`, error.message);
@@ -165,9 +165,9 @@ export class ErrorHandler {
     }
   }
 
-  /**
-   * Check if error is recoverable with mock data
-   */
+  
+
+
   static isRecoverable(error: AppError): boolean {
     return error.shouldUseMockData || error.canRetry;
   }

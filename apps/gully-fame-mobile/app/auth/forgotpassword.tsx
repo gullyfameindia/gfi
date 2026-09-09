@@ -103,7 +103,7 @@ export default function ForgotPassword() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {/* Header with Back Arrow and Logo */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
             <Svg width={20} height={20} viewBox="0 0 16 16" fill="none">
@@ -115,7 +115,7 @@ export default function ForgotPassword() {
           </TouchableOpacity>
         </View>
 
-        {/* Logo */}
+        {}
         <View style={styles.logoContainer}>
           <Image
             source={require("@assets/images/gfi.png")}
@@ -124,17 +124,17 @@ export default function ForgotPassword() {
           />
         </View>
 
-        {/* Title */}
+        {}
         <Text style={[styles.title, { fontFamily: "PlayfairDisplay_700Bold" }]}>
           Forgot Password
         </Text>
 
-        {/* Description */}
+        {}
         <Text style={styles.subtitle}>
           Enter the email or mobile number linked to your Gully Fame account and we&apos;ll send you an OTP to reset your password.
         </Text>
 
-        {/* Email/Mobile Input */}
+        {}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Email Address / Mobile Number</Text>
           <TextInput
@@ -160,7 +160,7 @@ export default function ForgotPassword() {
           </View>
         ) : null}
 
-        {/* Send Reset Link Button */}
+        {}
         <TouchableOpacity
           style={[styles.primaryButton, isLoading && styles.primaryButtonDisabled]}
           activeOpacity={0.85}

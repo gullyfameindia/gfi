@@ -77,13 +77,13 @@ export default function CommunityScreen() {
   };
 
   return (
-    // Container now holds the main ScrollView and the BottomNav
+    
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
 
-      {/* 2. Main ScrollView for all page content */}
+      {}
       <ScrollView contentContainerStyle={styles.mainScrollContainer}>
-        {/* Header with BackIcon + Centered Title */}
+        {}
         <View style={styles.header}>
           <TouchableOpacity
             onPress={() => router.push("/(main)")}
@@ -94,12 +94,12 @@ export default function CommunityScreen() {
           <Text style={styles.headerTitle}>Communities</Text>
         </View>
 
-        {/* Subtitle */}
+        {}
         <Text style={styles.subtitle}>
           Where creators and fans connect, cheer, and collab.
         </Text>
 
-        {/* "All communities" Section Header */}
+        {}
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>All communities</Text>
           <TouchableOpacity>
@@ -107,7 +107,7 @@ export default function CommunityScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Horizontal communities scroller */}
+        {}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -123,10 +123,10 @@ export default function CommunityScreen() {
           ))}
         </ScrollView>
 
-        {/* 4. Corrected Feed Tab Section */}
+        {}
         <View style={styles.sectionfeed}>
           <View style={styles.feedTabsContainer}>
-            {/* Tab 1: My feed */}
+            {}
             <TouchableOpacity
               style={styles.feedTab}
               onPress={() => setActiveFeedTab("My feed")}
@@ -146,7 +146,7 @@ export default function CommunityScreen() {
               )}
             </TouchableOpacity>
 
-            {/* Tab 2: My communities */}
+            {}
             <TouchableOpacity
               style={styles.feedTab}
               onPress={() => setActiveFeedTab("My communities")}
@@ -177,9 +177,9 @@ export default function CommunityScreen() {
                 </View>
               </View>
 
-              {/* Input and Actions */}
+              {}
               <View style={styles.postInputContent}>
-                {/* Placeholder Text */}
+                {}
                 <TextInput
                   style={styles.postInput}
                   placeholder="Share your latest win, idea, or challenge..."
@@ -188,7 +188,7 @@ export default function CommunityScreen() {
                   textAlignVertical="top"
                 />
                 <View style={styles.postdivider} />
-                {/* Bottom Row: Add post dropdown and Publish button */}
+                {}
                 <View style={styles.postActionsRow}>
                   <TouchableOpacity style={styles.addPostButton}>
                     <GlobeIcon color="#6B7280" />
@@ -222,9 +222,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#3C2610",
     position: "relative",
   },
-  // New style for the main scrollable content area
+  
   mainScrollContainer: {
-    paddingBottom: 100, // Ensures content isn't hidden by BottomNav
+    paddingBottom: 100, 
   },
   header: {
     flexDirection: "row",
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 12,
     marginTop: 12,
-    paddingTop: 60, // Moved from container
+    paddingTop: 60, 
   },
   sectionHeader: {
     flexDirection: "row",
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: 20,
     padding: 4,
-    paddingTop: 60, // Align with header paddingTop
+    paddingTop: 60, 
   },
   headerTitle: {
     fontSize: 20,
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
     opacity: 0.8,
     marginTop: height * 0.05,
   },
-  // Renamed from 'scrollContainer' for clarity
+  
   horizontalScrollContainer: {
     flexDirection: "row",
     gap: 5,
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     height: "100%",
     resizeMode: "cover",
   },
-  // Restored badge styles
+  
   hotBadge: {
     position: "absolute",
     right: -5,
@@ -325,10 +325,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  // --- New Feed Tab Styles ---
+  
   sectionfeed: {
     backgroundColor: "white",
-    marginTop: 40, // Space above the tabs
+    marginTop: 40, 
     position: "relative",
   },
   feedTabsContainer: {
@@ -339,20 +339,20 @@ const styles = StyleSheet.create({
   },
   feedTab: {
     paddingVertical: 15,
-    position: "relative", // For the underline
+    position: "relative", 
   },
   feedTabText: {
     fontSize: width * 0.04,
   },
   feedTabActiveText: {
-    color: "#EC9A15", // Orange color for active tab
+    color: "#EC9A15", 
   },
   feedTabInactiveText: {
-    color: "#4B5563", // Gray color for inactive tab
+    color: "#4B5563", 
   },
   activeTabUnderline: {
     height: 5,
-    backgroundColor: "#EC9A15", // Matching orange
+    backgroundColor: "#EC9A15", 
     position: "absolute",
     bottom: 0,
     left: 0,
@@ -360,10 +360,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
-  // --- Placeholder Content Styles ---
+  
   feedContent: {
     padding: 20,
-    minHeight: 300, // Just to show some space
+    minHeight: 300, 
     alignItems: "center",
     justifyContent: "center",
   },
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
 
-  // --- Post Input Section Styles ---
+  
   sectionpost: {
     backgroundColor: "white",
     borderRadius: 12,

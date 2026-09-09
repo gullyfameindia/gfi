@@ -5,13 +5,21 @@ import TimelineEditor from '../components/timeline/TimelineEditor';
 import { useUndoRedo } from '../hooks/useUndoRedo';
 import { cameraStyles } from '../styles/cameraStyles';
 import { calculateTimelinePositions } from '../utils/timelineHelpers';
-import type { CameraClip, CameraClipArray } from '../types/camera.types';
+import type { CameraClip, CameraClipArray, VideoOverlay } from '../types/camera.types';
 
-// Dynamic transformable overlays ka contract type structure
+
 interface ActiveOverlay {
   id: string;
-  type: 'image' | 'emoji';
+  type: 'image' | 'emoji' | 'text';
   content: string | number;
+  x?: number;
+  y?: number;
+  scale?: number;
+  rotation?: number;
+  opacity?: number;
+  fontSize?: number;
+  fontColor?: string;
+  fontFamily?: string;
 }
 
 interface PreviewScreenProps {
@@ -31,10 +39,10 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
   const [updatedClips, setUpdatedClips] = useState<CameraClipArray>(clips);
   const [showExport, setShowExport] = useState(false);
   
-  // 🔥 GESTURE ENGINE STATES: Multiple stickers ko handle aur active overlay track karne ke liye
+  
   const [overlays, setOverlays] = useState<ActiveOverlay[]>([]);
   const [activeOverlayId, setActiveOverlayId] = useState<string | null>(null);
-  const overlayCounterRef = useRef(0); // Counter to ensure unique IDs
+  const overlayCounterRef = useRef(0); 
 
   const undoRedo = useUndoRedo(clips);
 
@@ -51,23 +59,32 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
     }
   }, [clips]); 
 
-  // 🔥 STICKER/EMOJI ADDING HANDLER: `StickerButton` se data lekar direct canvas me feed karega
+  
   const handleSelectOverlay = useCallback((type: 'image' | 'emoji', content: string | number) => {
     overlayCounterRef.current += 1;
     const newOverlay: ActiveOverlay = {
-      id: `overlay-${Date.now()}-${overlayCounterRef.current}`, // UNIQUE ID with counter to avoid duplicates
+      id: `overlay-${Date.now()}-${overlayCounterRef.current}`, 
       type,
       content,
     };
     console.log(`🎨 New overlay added: ${newOverlay.id}`);
     setOverlays(prev => [...prev, newOverlay]);
-    setActiveOverlayId(newOverlay.id); // Add karte hi active pointer focus karega
+    setActiveOverlayId(newOverlay.id); 
   }, []);
 
-  // 🔥 STICKER REMOVE HANDLER: Active cross button par click hote hi delete karega
+  
   const handleDeleteOverlay = useCallback((id: string) => {
     setOverlays(prev => prev.filter(item => item.id !== id));
     setActiveOverlayId(null);
+  }, []);
+
+  
+  const handleOverlayTransformEnd = useCallback((id: string, transform: { x: number; y: number; scale: number; rotation: number }) => {
+    setOverlays(prev => prev.map(overlay => 
+      overlay.id === id 
+        ? { ...overlay, x: transform.x, y: transform.y, scale: transform.scale, rotation: transform.rotation }
+        : overlay
+    ));
   }, []);
 
   const handleDelete = useCallback(() => {
@@ -130,8 +147,33 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
   }, [undoRedo, onClipUpdate, currentClipIndex]);
 
   const handleNext = useCallback(() => {
+    
+    
+    const clipsWithOverlays = updatedClips.map((clip) => {
+      const videoOverlays: VideoOverlay[] = overlays.map((overlay) => ({
+        id: overlay.id,
+        type: overlay.type as 'text' | 'image' | 'emoji',
+        content: String(overlay.content),
+        x: overlay.x ?? 50, 
+        y: overlay.y ?? 50,
+        scale: overlay.scale ?? 1,
+        rotation: overlay.rotation ?? 0,
+        opacity: overlay.opacity ?? 1,
+        fontSize: overlay.fontSize,
+        fontColor: overlay.fontColor,
+        fontFamily: overlay.fontFamily,
+      }));
+      
+      return {
+        ...clip,
+        overlays: videoOverlays,
+      };
+    });
+    
+    setUpdatedClips(clipsWithOverlays);
+    onClipUpdate?.(clipsWithOverlays);
     setShowExport(true);
-  }, []);
+  }, [overlays, updatedClips, onClipUpdate]);
 
   const handleExportComplete = useCallback(() => {
     setShowExport(false);
@@ -178,12 +220,13 @@ const PreviewScreen: React.FC<PreviewScreenProps> = ({
         canUndo={undoRedo.canUndo}
         canRedo={undoRedo.canRedo}
         
-        // 🔥 INJECTING STATE LAYERS: Ye data niche TimelineEditor ke canvas layer me pass hoga
+        
         overlays={overlays}
         activeOverlayId={activeOverlayId}
         onSelectOverlay={handleSelectOverlay}
         onDeleteOverlay={handleDeleteOverlay}
         setActiveOverlayId={setActiveOverlayId}
+        onOverlayTransformEnd={handleOverlayTransformEnd}
       />
     </View>
   );

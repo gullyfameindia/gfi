@@ -24,21 +24,21 @@ import SafeImage from "@/components/SafeImage";
 import { apiClient } from "@/api";
 import { upcomingCompetitionStyles as styles } from "@/styles/upcomingCompetitionStyles";
 
-// Enable LayoutAnimation for Android
-// NOTE: setLayoutAnimationEnabledExperimental is deprecated in New Architecture
-// and doesn't have any effect. Use Reanimated for animations instead if needed.
-// if (
-//     Platform.OS === "android" &&
-//     UIManager.setLayoutAnimationEnabledExperimental
-// ) {
-//     UIManager.setLayoutAnimationEnabledExperimental(true);
-// }
+
+
+
+
+
+
+
+
+
 const formatPrizeBreakdown = (
     prizeAmount: number,
     winnerSlots: number = 1,
 ): Array<{ position: string; amount: string }> => {
-    // Simple breakdown: distribute prize pool among winner slots
-    // In real implementation, this would come from Admin API
+    
+    
     const slots = winnerSlots || 1;
     const perSlot = Math.floor(prizeAmount / slots);
     const breakdown = [];
@@ -121,7 +121,7 @@ const CountdownTimer = ({ targetDate }: { targetDate: string }) => {
 };
 const { width, height } = Dimensions.get("window");
 
-// --- Formatters ---
+
 const formatDateShort = (dateString: string): string => {
     if (!dateString) return "";
     const date = new Date(dateString);
@@ -158,7 +158,7 @@ const getImageSource = (source: any) => {
     return source;
 };
 
-// --- Fallback Mock Data matching the API Contract ---
+
 const MOCK_UPCOMING_DATA = {
     _id: "comp_003",
     status: "UPCOMING",
@@ -255,7 +255,7 @@ export default function UpcomingCompetitionScreen() {
     };
 
     const handleShare = async (platform: string) => {
-        // ... (Keep your exact handleShare switch statement logic here!)
+        
         setShareModalVisible(false);
     };
 
@@ -276,7 +276,7 @@ export default function UpcomingCompetitionScreen() {
         <View style={styles.container}>
             <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-            {/* Floating Action Bar (Sticky CTA) */}
+            {}
             <View
                 style={[
                     styles.stickyBottomCTA,
@@ -311,7 +311,7 @@ export default function UpcomingCompetitionScreen() {
                 )}
             </View>
 
-            {/* Header */}
+            {}
             <View style={styles.header}>
                 <TouchableOpacity
                     onPress={() => {
@@ -348,7 +348,7 @@ export default function UpcomingCompetitionScreen() {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{ paddingBottom: 140 }}
             >
-                {/* Banner */}
+                {}
                 <View style={styles.compCardContainer}>
                     <View style={styles.titleCard}>
                         <View style={styles.compCardImageWrapper}>
@@ -381,7 +381,7 @@ export default function UpcomingCompetitionScreen() {
                                 </Text>
                             </View>
 
-                            {/* THE HERO STAT: Prize Pool */}
+                            {}
                             <View style={styles.heroPrizeContainer}>
                                 <Text style={styles.heroPrizeLabel}>
                                     TOTAL PRIZE POOL
@@ -393,7 +393,7 @@ export default function UpcomingCompetitionScreen() {
                                 </Text>
                             </View>
 
-                            {/* FOMO Social Proof (Face Pile) */}
+                            {}
                             {competitionData.participantsPreview &&
                                 competitionData.participantsPreview.length >
                                     0 && (
@@ -437,7 +437,7 @@ export default function UpcomingCompetitionScreen() {
                                     </View>
                                 )}
 
-                            {/* Event Specs: Entry Fee & Timeline */}
+                            {}
                             <View style={styles.specsRow}>
                                 <View style={styles.specBox}>
                                     <View style={styles.specHeader}>
@@ -477,12 +477,12 @@ export default function UpcomingCompetitionScreen() {
                                     </Text>
                                 </View>
                             </View>
-                            {/* NEW: Countdown Timer */}
+                            {}
                             <CountdownTimer
                                 targetDate={competitionData.startDate}
                             />
 
-                            {/* NEW: Prize Breakdown Podiums */}
+                            {}
                             <View
                                 style={{
                                     marginHorizontal: 16,
@@ -500,7 +500,7 @@ export default function UpcomingCompetitionScreen() {
                                 <View style={styles.podiumContainer}>
                                     {formatPrizeBreakdown(
                                         competitionData.prizePool || 0,
-                                        3, // Hardcoded to 3 slots for visual hype
+                                        3, 
                                     ).map((prize, index) => {
                                         const medals = ["🥇", "🥈", "🥉"];
                                         const medal = medals[index] || "🏅";
@@ -539,7 +539,7 @@ export default function UpcomingCompetitionScreen() {
                                     })}
                                 </View>
                             </View>
-                            {/* Event Details & Rules Accordion */}
+                            {}
                             {(competitionData.description ||
                                 competitionData.rules) && (
                                 <TouchableOpacity
@@ -633,7 +633,7 @@ export default function UpcomingCompetitionScreen() {
                 </View>
             </ScrollView>
 
-            {/* Share Modal (Keep your existing Modal JSX here) */}
+            {}
         </View>
     );
 }

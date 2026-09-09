@@ -1,4 +1,4 @@
-// File Route: apps/gully-fame-mobile/screens/RegisterScreen.tsx (Or your auth/register file path)
+
 
 import React, { useState } from 'react';
 import {
@@ -24,7 +24,7 @@ export default function RegisterScreen({ navigation }: any) {
   const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  // Naya State: Referral Code save karne ke liye
+  
   const [referralCode, setReferralCode] = useState('');
   const [role, setRole] = useState<'participants' | 'fan'>('participants');
   const [isLoading, setIsLoading] = useState(false);
@@ -37,19 +37,19 @@ export default function RegisterScreen({ navigation }: any) {
     confirmPassword?: string;
   }>({});
 
-  // Email validation
+  
   const isValidEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  // Mobile validation (10 digits)
+  
   const isValidMobile = (mobile: string) => {
     const mobileRegex = /^[0-9]{10}$/;
     return mobileRegex.test(mobile.replace(/\D/g, ''));
   };
 
-  // Form validation
+  
   const validateForm = () => {
     const newErrors: typeof errors = {};
 
@@ -89,7 +89,7 @@ export default function RegisterScreen({ navigation }: any) {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle registration
+  
   const handleRegister = async () => {
     if (!validateForm()) {
       return;
@@ -99,7 +99,7 @@ export default function RegisterScreen({ navigation }: any) {
     try {
       console.log('[RegisterScreen] Attempting registration with referral logic');
 
-      // Call register API - referralCode ko body me add kar diya hai
+      
       const response = await authService.registerUser({
         firstName: firstName.trim(),
         lastName: lastName.trim(),
@@ -107,7 +107,7 @@ export default function RegisterScreen({ navigation }: any) {
         mobile: mobile.trim(),
         password,
         role,
-        referralCode: referralCode.trim() || undefined, // Agar blank hoga to nahi jayega
+        referralCode: referralCode.trim() || undefined, 
       });
 
       if (response.success && response.data?.token) {
@@ -134,15 +134,15 @@ export default function RegisterScreen({ navigation }: any) {
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Header */}
+        {}
         <View style={styles.header}>
           <Text style={styles.title}>Create Account</Text>
           <Text style={styles.subtitle}>Join Gully Fame</Text>
         </View>
 
-        {/* Form */}
+        {}
         <View style={styles.form}>
-          {/* First Name Input */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>First Name</Text>
             <TextInput
@@ -161,7 +161,7 @@ export default function RegisterScreen({ navigation }: any) {
             {errors.firstName && <Text style={styles.errorText}>{errors.firstName}</Text>}
           </View>
 
-          {/* Last Name Input */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Last Name</Text>
             <TextInput
@@ -180,7 +180,7 @@ export default function RegisterScreen({ navigation }: any) {
             {errors.lastName && <Text style={styles.errorText}>{errors.lastName}</Text>}
           </View>
 
-          {/* Email Input */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Email</Text>
             <TextInput
@@ -200,7 +200,7 @@ export default function RegisterScreen({ navigation }: any) {
             {errors.email && <Text style={styles.errorText}>{errors.email}</Text>}
           </View>
 
-          {/* Mobile Input */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Mobile Number</Text>
             <TextInput
@@ -221,7 +221,7 @@ export default function RegisterScreen({ navigation }: any) {
             {errors.mobile && <Text style={styles.errorText}>{errors.mobile}</Text>}
           </View>
 
-          {/* Password Input */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Password</Text>
             <TextInput
@@ -241,7 +241,7 @@ export default function RegisterScreen({ navigation }: any) {
             {errors.password && <Text style={styles.errorText}>{errors.password}</Text>}
           </View>
 
-          {/* Confirm Password Input */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Confirm Password</Text>
             <TextInput
@@ -261,21 +261,21 @@ export default function RegisterScreen({ navigation }: any) {
             {errors.confirmPassword && <Text style={styles.errorText}>{errors.confirmPassword}</Text>}
           </View>
 
-          {/* Naya UI Box: Referral Code Input (Optional) */}
+          {}
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Referral Code <Text style={styles.optionalText}>(Optional)</Text></Text>
             <TextInput
               style={[styles.input, styles.referralInput]}
               placeholder="e.g. GULLY-8X9P"
               value={referralCode}
-              onChangeText={(text) => setReferralCode(text.toUpperCase())} // Automatic capital letters
+              onChangeText={(text) => setReferralCode(text.toUpperCase())} 
               editable={!isLoading}
               placeholderTextColor="#999"
               autoCapitalize="characters"
             />
           </View>
 
-          {/* Role Selection */}
+          {}
           <View style={styles.roleContainer}>
             <Text style={styles.label}>I am a</Text>
             <View style={styles.roleButtons}>
@@ -317,7 +317,7 @@ export default function RegisterScreen({ navigation }: any) {
             </View>
           </View>
 
-          {/* Register Button */}
+          {}
           <TouchableOpacity
             style={[styles.registerButton, isLoading && styles.registerButtonDisabled]}
             onPress={handleRegister}
@@ -330,7 +330,7 @@ export default function RegisterScreen({ navigation }: any) {
             )}
           </TouchableOpacity>
 
-          {/* Login Link */}
+          {}
           <View style={styles.loginContainer}>
             <Text style={styles.loginText}>Already have an account? </Text>
             <TouchableOpacity
@@ -397,8 +397,8 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   referralInput: {
-    borderColor: '#EC9A15', // Gully Fame theme color highlight for referral bonus
-    borderStyle: 'dashed',  // Premium feel dene ke liye dashed border
+    borderColor: '#EC9A15', 
+    borderStyle: 'dashed',  
     fontWeight: '600',
     letterSpacing: 1,
   },

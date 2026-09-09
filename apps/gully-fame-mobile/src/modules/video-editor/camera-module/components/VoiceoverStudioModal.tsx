@@ -1,4 +1,4 @@
-// PATH: apps/gully-fame-mobile/src/modules/video-editor/camera-module/components/VoiceoverStudioModal.tsx
+
 
 import React, { useState, useRef, useEffect } from 'react';
 import {
@@ -33,13 +33,13 @@ const VoiceoverStudioModal: React.FC<VoiceoverStudioModalProps> = ({
   const [isRecording, setIsRecording] = useState(false);
   const [recordedSeconds, setRecordingSeconds] = useState(0);
   
-  // Animation state for the pulse effect on Mic hold
+  
   const pulseAnim = useRef(new Animated.Value(1)).current;
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (isRecording) {
-      // Continuous scaling pulsing effect when holding mic
+      
       Animated.loop(
         Animated.sequence([
           Animated.timing(pulseAnim, {
@@ -55,7 +55,7 @@ const VoiceoverStudioModal: React.FC<VoiceoverStudioModalProps> = ({
         ])
       ).start();
 
-      // Start recording duration timer
+      
       timerRef.current = setInterval(() => {
         setRecordingSeconds(prev => prev + 1);
       }, 1000);
@@ -81,7 +81,7 @@ const VoiceoverStudioModal: React.FC<VoiceoverStudioModalProps> = ({
     if (isRecording) {
       setIsRecording(false);
       console.log(`🎙️ Voiceover stopped. Recorded duration: ${recordedSeconds}s`);
-      // Production ready mockup uri trigger
+      
       onSaveVoiceover(`mock-audio-${Date.now()}.mp3`, recordedSeconds);
     }
   };
@@ -97,7 +97,7 @@ const VoiceoverStudioModal: React.FC<VoiceoverStudioModalProps> = ({
       <View style={styles.modalOverlay}>
         <View style={styles.sheetContainer}>
           
-          {/* Header Row */}
+          {}
           <SafeAreaView style={styles.headerRow}>
             <TouchableOpacity onPress={onClose} style={styles.headerBtn}>
               <Text style={styles.headerBtnText}>Cancel</Text>
@@ -108,7 +108,7 @@ const VoiceoverStudioModal: React.FC<VoiceoverStudioModalProps> = ({
             </TouchableOpacity>
           </SafeAreaView>
 
-          {/* Minimal tracking visual cue zone */}
+          {}
           <View style={styles.infoZone}>
             <Text style={styles.timeText}>
               {isRecording ? formatTime(recordedSeconds) : formatTime(currentTime)} / {formatTime(totalDuration)}
@@ -118,7 +118,7 @@ const VoiceoverStudioModal: React.FC<VoiceoverStudioModalProps> = ({
             </Text>
           </View>
 
-          {/* Dynamic Floating Mic Interface Area */}
+          {}
           <View style={styles.micInteractionArea}>
             <Animated.View style={[styles.pulseCircle, { transform: [{ scale: pulseAnim }] }, isRecording && styles.pulseCircleActive]}>
               <TouchableOpacity

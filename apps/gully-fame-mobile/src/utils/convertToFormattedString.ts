@@ -1,5 +1,5 @@
 export function convertToFormattedString(views: number | string | undefined) {
-  // To prevent conflicts from what type of data the API sends. The intended data type should be number.
+  
   if (typeof views !== "number") {
     console.warn(
       "[convertToFormattedString] Data pased to Convert Views is not a number",

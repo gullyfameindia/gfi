@@ -32,7 +32,7 @@ export default function OnboardingPersonalDetails() {
   const [dob, setDob] = useState("");
   const [selectedGender, setSelectedGender] = useState(genders[0]);
   
-  // Load existing values if coming from verified page
+  
   useEffect(() => {
     if (fromVerified) {
       AsyncStorage.getItem("userDateOfBirth").then((savedDob) => {
@@ -45,10 +45,10 @@ export default function OnboardingPersonalDetails() {
   }, [fromVerified]);
 
   const formatDOB = (text: string) => {
-    // Remove all non-digits
+    
     const digits = text.replace(/\D/g, "");
     
-    // Format as DD/MM/YYYY
+    
     if (digits.length <= 2) {
       return digits;
     } else if (digits.length <= 4) {
@@ -86,7 +86,7 @@ export default function OnboardingPersonalDetails() {
       ["userGender", selectedGender],
     ]);
 
-    // Sync to backend if logged in
+    
     try {
       const { authService } = await import("@api/services/authService");
       await authService.updateProfile({
@@ -97,7 +97,7 @@ export default function OnboardingPersonalDetails() {
       console.log("Could not sync DOB/Gender to backend:", error);
     }
 
-    // If coming from KYC flow, navigate to next step (Select Category)
+    
     if (fromKycFlow) {
       const query = [
         `role=${encodeURIComponent(role)}`,
@@ -112,13 +112,13 @@ export default function OnboardingPersonalDetails() {
       return;
     }
 
-    // If coming from verified page, go back to verified page after saving
+    
     if (fromVerified) {
       router.replace("/(main)/verified" as any);
       return;
     }
 
-    // Otherwise, continue with normal onboarding flow
+    
     const query = [
       `role=${encodeURIComponent(role)}`,
       `firstName=${encodeURIComponent(firstName)}`,

@@ -10,9 +10,9 @@ interface ClipListProps {
   onPressClip?: (clip: CameraClip) => void;
 }
 
-/**
- * Horizontal list of captured clips shown below the camera preview.
- */
+
+
+
 const ClipList: React.FC<ClipListProps> = ({ clips, onDeleteClip, onPressClip }) => {
   if (clips.length === 0) {
     return <View style={cameraStyles.clipListEmptySpace} />;

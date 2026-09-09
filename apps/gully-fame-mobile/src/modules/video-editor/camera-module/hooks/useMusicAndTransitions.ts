@@ -2,16 +2,16 @@ import { useCallback, useState } from "react";
 import type { AudioTrack } from "../types/music.types";
 import type { Transition, ClipTransition } from "../types/transitions.types";
 
-/**
- * Hook for managing music and transitions in video editor
- */
+
+
+
 export const useMusicAndTransitions = () => {
   const [audioTracks, setAudioTracks] = useState<AudioTrack[]>([]);
   const [transitions, setTransitions] = useState<ClipTransition[]>([]);
   const [showMusicModal, setShowMusicModal] = useState(false);
   const [showTransitionModal, setShowTransitionModal] = useState(false);
 
-  // Audio track management
+  
   const addAudioTrack = useCallback((track: AudioTrack) => {
     setAudioTracks((prev) => [...prev, track]);
   }, []);
@@ -30,7 +30,7 @@ export const useMusicAndTransitions = () => {
     setAudioTracks([]);
   }, []);
 
-  // Transition management
+  
   const addTransition = useCallback((clipTransition: ClipTransition) => {
     setTransitions((prev) => [...prev, clipTransition]);
   }, []);
@@ -51,7 +51,7 @@ export const useMusicAndTransitions = () => {
     setTransitions([]);
   }, []);
 
-  // Modal management
+  
   const openMusicModal = useCallback(() => {
     setShowMusicModal(true);
   }, []);
@@ -69,21 +69,21 @@ export const useMusicAndTransitions = () => {
   }, []);
 
   return {
-    // Audio tracks
+    
     audioTracks,
     addAudioTrack,
     updateAudioTrack,
     removeAudioTrack,
     clearAudioTracks,
 
-    // Transitions
+    
     transitions,
     addTransition,
     updateTransition,
     removeTransition,
     clearTransitions,
 
-    // Modals
+    
     showMusicModal,
     openMusicModal,
     closeMusicModal,

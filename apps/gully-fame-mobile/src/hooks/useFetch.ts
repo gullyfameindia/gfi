@@ -1,5 +1,5 @@
-// Created by Kiro
-// useFetch Hook - Wrapper around useAsync with retry logic and caching
+
+
 
 import { useState, useCallback, useRef } from 'react';
 import { useAsync, AsyncState } from './useAsync';
@@ -19,16 +19,16 @@ interface CacheEntry<T> {
   timestamp: number;
 }
 
-// Global cache for fetch results
+
 const fetchCache = new Map<string, CacheEntry<any>>();
 
-/**
- * Hook for fetching data with retry logic and caching
- * @param url - URL or cache key to fetch
- * @param fetchFunction - Function that performs the fetch
- * @param options - Configuration options
- * @returns Object with data, loading, error, and refetch function
- */
+
+
+
+
+
+
+
 export const useFetch = <T,>(
   url: string,
   fetchFunction: () => Promise<T>,
@@ -39,7 +39,7 @@ export const useFetch = <T,>(
     retries = 3,
     retryDelay = 1000,
     cache = true,
-    cacheTime = 5 * 60 * 1000, // 5 minutes default
+    cacheTime = 5 * 60 * 1000, 
     onSuccess,
     onError,
   } = options;
@@ -47,7 +47,7 @@ export const useFetch = <T,>(
   const [retryCount, setRetryCount] = useState(0);
   const retryTimeoutRef = useRef<NodeJS.Timeout>();
 
-  // Check cache
+  
   const getCachedData = useCallback((): T | null => {
     if (!cache) return null;
 
@@ -63,7 +63,7 @@ export const useFetch = <T,>(
     return null;
   }, [url, cache, cacheTime]);
 
-  // Set cache
+  
   const setCachedData = useCallback(
     (data: T) => {
       if (cache) {
@@ -76,33 +76,33 @@ export const useFetch = <T,>(
     [url, cache]
   );
 
-  // Fetch with retry logic
+  
   const fetchWithRetry = useCallback(async (): Promise<T> => {
     try {
-      // Check cache first
+      
       const cachedData = getCachedData();
       if (cachedData) {
         return cachedData;
       }
 
-      // Perform fetch
+      
       const data = await fetchFunction();
 
-      // Cache the result
+      
       setCachedData(data);
 
-      // Reset retry count on success
+      
       setRetryCount(0);
 
       return data;
     } catch (error: any) {
-      // Retry logic
+      
       if (retryCount < retries) {
         return new Promise((resolve, reject) => {
           retryTimeoutRef.current = setTimeout(() => {
             setRetryCount((prev) => prev + 1);
             fetchWithRetry().then(resolve).catch(reject);
-          }, retryDelay * (retryCount + 1)); // Exponential backoff
+          }, retryDelay * (retryCount + 1)); 
         });
       }
 
@@ -110,26 +110,26 @@ export const useFetch = <T,>(
     }
   }, [fetchFunction, retryCount, retries, retryDelay, getCachedData, setCachedData]);
 
-  // Use async hook
+  
   const asyncState = useAsync<T>(fetchWithRetry, {
     immediate,
     onSuccess,
     onError,
   });
 
-  // Cleanup retry timeout on unmount
+  
   const cleanup = useCallback(() => {
     if (retryTimeoutRef.current) {
       clearTimeout(retryTimeoutRef.current);
     }
   }, []);
 
-  // Clear cache
+  
   const clearCache = useCallback(() => {
     fetchCache.delete(url);
   }, [url]);
 
-  // Refetch with cache clear
+  
   const refetch = useCallback(async () => {
     clearCache();
     setRetryCount(0);

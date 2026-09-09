@@ -1,5 +1,5 @@
-// Created by Kiro
-// Competition Context - Manage competitions state globally
+
+
 
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import { competitionService } from '../api/services/competitionService';
@@ -18,18 +18,18 @@ export interface Competition {
 }
 
 interface CompetitionContextType {
-  // State
+  
   competitions: Competition[];
   filteredCompetitions: Competition[];
   selectedCompetition: Competition | null;
   loading: boolean;
   error: string | null;
 
-  // Filters
+  
   searchQuery: string;
   selectedFilter: 'all' | 'active' | 'upcoming' | 'ended';
 
-  // Actions
+  
   fetchCompetitions: () => Promise<void>;
   fetchCompetitionById: (id: string) => Promise<Competition | null>;
   setSearchQuery: (query: string) => void;
@@ -42,18 +42,18 @@ interface CompetitionContextType {
 const CompetitionContext = createContext<CompetitionContextType | undefined>(undefined);
 
 export const CompetitionProvider = ({ children }: { children: React.ReactNode }) => {
-  // State
+  
   const [competitions, setCompetitions] = useState<Competition[]>([]);
   const [filteredCompetitions, setFilteredCompetitions] = useState<Competition[]>([]);
   const [selectedCompetition, setSelectedCompetition] = useState<Competition | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Filters
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'active' | 'upcoming' | 'ended'>('all');
 
-  // Fetch all competitions
+  
   const fetchCompetitions = useCallback(async () => {
     try {
       setLoading(true);
@@ -75,21 +75,21 @@ export const CompetitionProvider = ({ children }: { children: React.ReactNode })
     }
   }, []);
 
-  // Fetch single competition by ID
+  
   const fetchCompetitionById = useCallback(
     async (id: string): Promise<Competition | null> => {
       try {
         setLoading(true);
         setError(null);
 
-        // Find in existing competitions first
+        
         const existing = competitions.find((c) => c.id === id);
         if (existing) {
           setSelectedCompetition(existing);
           return existing;
         }
 
-        // If not found, fetch from API
+        
         const result = await competitionService.getCompetitions();
         if (result.success && result.data) {
           const competition = result.data.find((c) => c.id === id);
@@ -112,16 +112,16 @@ export const CompetitionProvider = ({ children }: { children: React.ReactNode })
     [competitions]
   );
 
-  // Filter competitions based on search and status
+  
   const filterCompetitions = useCallback(() => {
     let filtered = competitions;
 
-    // Filter by status
+    
     if (selectedFilter !== 'all') {
       filtered = filtered.filter((comp) => comp.status === selectedFilter);
     }
 
-    // Filter by search query
+    
     if (searchQuery.trim()) {
       filtered = filtered.filter((comp) =>
         comp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -132,36 +132,36 @@ export const CompetitionProvider = ({ children }: { children: React.ReactNode })
     setFilteredCompetitions(filtered);
   }, [competitions, searchQuery, selectedFilter]);
 
-  // Clear all filters
+  
   const clearFilters = useCallback(() => {
     setSearchQuery('');
     setSelectedFilter('all');
     setFilteredCompetitions(competitions);
   }, [competitions]);
 
-  // Clear error
+  
   const clearError = useCallback(() => {
     setError(null);
   }, []);
 
-  // Update filtered competitions when filters change
+  
   React.useEffect(() => {
     filterCompetitions();
   }, [searchQuery, selectedFilter, competitions, filterCompetitions]);
 
   const value: CompetitionContextType = {
-    // State
+    
     competitions,
     filteredCompetitions,
     selectedCompetition,
     loading,
     error,
 
-    // Filters
+    
     searchQuery,
     selectedFilter,
 
-    // Actions
+    
     fetchCompetitions,
     fetchCompetitionById,
     setSearchQuery,
@@ -178,7 +178,7 @@ export const CompetitionProvider = ({ children }: { children: React.ReactNode })
   );
 };
 
-// Custom hook to use CompetitionContext
+
 export const useCompetition = () => {
   const context = useContext(CompetitionContext);
   if (context === undefined) {

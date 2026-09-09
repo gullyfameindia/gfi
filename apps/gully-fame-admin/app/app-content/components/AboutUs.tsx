@@ -15,7 +15,7 @@ export default function AboutUs() {
       setLoading(false);
       
       if (response.success && response.data) {
-        // Handle both string and object responses
+        
         const content = typeof response.data === 'string' 
           ? response.data 
           : (response.data.aboutUs || response.data.content || '');

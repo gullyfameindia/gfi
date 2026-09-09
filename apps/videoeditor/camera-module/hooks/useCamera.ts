@@ -11,9 +11,9 @@ export interface UseCameraResult {
   stopRecording: () => Promise<void>;
 }
 
-/**
- * Hook that encapsulates expo-camera capture logic.
- */
+
+
+
 export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResult => {
   const cameraRef = useRef<any>(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -43,7 +43,7 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
         source: 'camera',
       };
     } catch (error) {
-      // eslint-disable-next-line no-console
+      
       console.warn('Failed to take photo', error);
       return null;
     }
@@ -61,7 +61,7 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
       setIsRecording(true);
       isRecordingRef.current = true;
 
-      // Clear any existing timer
+      
       if (maxDurationTimerRef.current) {
         clearTimeout(maxDurationTimerRef.current);
         maxDurationTimerRef.current = null;
@@ -71,14 +71,14 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
         const options: CameraRecordingOptions = {};
         const recordingPromise = cameraRef.current.recordAsync(options);
 
-        // Set up auto-stop timer if maxDuration is provided
+        
         if (maxDurationSeconds && maxDurationSeconds > 0) {
           maxDurationTimerRef.current = setTimeout(async () => {
             if (cameraRef.current && isRecordingRef.current) {
               try {
                 await cameraRef.current.stopRecording();
               } catch (error) {
-                // eslint-disable-next-line no-console
+                
                 console.warn('Failed to auto-stop recording', error);
               }
             }
@@ -87,7 +87,7 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
 
         recordingPromise
           .then((video: any) => {
-            // Clear timer if recording finishes before timeout
+            
             if (maxDurationTimerRef.current) {
               clearTimeout(maxDurationTimerRef.current);
               maxDurationTimerRef.current = null;
@@ -106,29 +106,29 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
                 duration,
                 type: 'video',
                 source: 'camera',
-                speed: speed ?? 1, // Store speed multiplier with clip
+                speed: speed ?? 1, 
               });
             }
           })
           .catch((error: any) => {
-            // Clear timer on error
+            
             if (maxDurationTimerRef.current) {
               clearTimeout(maxDurationTimerRef.current);
               maxDurationTimerRef.current = null;
             }
-            // eslint-disable-next-line no-console
+            
             console.error('Recording error', error);
             setIsRecording(false);
             isRecordingRef.current = false;
             void onFinished(null);
           });
       } catch (error) {
-        // Clear timer on error
+        
         if (maxDurationTimerRef.current) {
           clearTimeout(maxDurationTimerRef.current);
           maxDurationTimerRef.current = null;
         }
-        // eslint-disable-next-line no-console
+        
         console.error('Failed to start recording', error);
         setIsRecording(false);
         isRecordingRef.current = false;
@@ -143,7 +143,7 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
       return;
     }
 
-    // Clear auto-stop timer
+    
     if (maxDurationTimerRef.current) {
       clearTimeout(maxDurationTimerRef.current);
       maxDurationTimerRef.current = null;
@@ -154,7 +154,7 @@ export const useCamera = (mode: CameraModeEnum, _flash: unknown): UseCameraResul
     try {
       await cameraRef.current.stopRecording();
     } catch (error) {
-      // eslint-disable-next-line no-console
+      
       console.warn('Failed to stop recording', error);
     }
   }, [isRecording]);

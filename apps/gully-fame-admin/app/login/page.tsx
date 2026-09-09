@@ -32,13 +32,13 @@ export default function LoginPage() {
         return;
       }
 
-      // For sponsors, fetch their full details to get sponsorCode/_id
+      
       if (role === 'sponsor' && result.data?.token) {
         try {
           const { getCurrentAdmin } = await import('@/lib/authApi');
           const adminResult = await getCurrentAdmin();
           if (adminResult.success && adminResult.data) {
-            // Sponsor details are now stored in localStorage via getCurrentAdmin
+            
             if (process.env.NODE_ENV === 'development') {
               console.log('[Login] Sponsor details fetched:', {
                 id: adminResult.data.id || adminResult.data._id,
@@ -49,7 +49,7 @@ export default function LoginPage() {
           }
         } catch (err) {
           console.warn('Failed to fetch sponsor details after login:', err);
-          // Continue anyway - sponsor can still use the app
+          
         }
       }
 

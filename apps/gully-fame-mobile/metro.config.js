@@ -12,7 +12,7 @@ config.resolver.nodeModulesPaths = [
   path.resolve(monorepoRoot, "node_modules"),
 ];
 
-// 🔥 YE LINE SABSE ZAROORI HAI: Duplicate React Native modules ko rokne ke liye
+
 config.resolver.disableHierarchicalLookup = true;
 
 module.exports = config;

@@ -42,15 +42,15 @@ export default function SplashScreen() {
           const isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
           let hasSeenOnboarding = await AsyncStorage.getItem("hasSeenOnboarding");
           
-          // Debug logging
+          
           console.log("[SplashScreen] Navigation check:", {
             isLoggedIn,
             hasSeenOnboarding,
             __DEV__,
           });
           
-          // DEVELOPMENT MODE: Clear onboarding flag to always show onboarding in development
-          // This is useful for testing the onboarding flow
+          
+          
           if (__DEV__) {
             await AsyncStorage.removeItem("hasSeenOnboarding");
             hasSeenOnboarding = null;

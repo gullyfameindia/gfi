@@ -1,12 +1,12 @@
-/**
- * Mock Data Manager
- * Hybrid approach: Easily switch between mock data and real API
- * 
- * Usage:
- * - Development: Use mock data (works without backend)
- * - Production: Falls back to real API
- * - Testing: Can force mock data even if API is available
- */
+
+
+
+
+
+
+
+
+
 
 import * as musicTracks from './musicTracks';
 import * as videoFilters from './videoFilters';
@@ -14,21 +14,21 @@ import * as reels from './reels';
 import * as categories from './categories';
 
 export interface MockDataConfig {
-  useMockData: boolean; // Force use of mock data
-  enableLogging: boolean; // Log when using mock data
-  fallbackToMock: boolean; // Fall back to mock if API fails
+  useMockData: boolean; 
+  enableLogging: boolean; 
+  fallbackToMock: boolean; 
 }
 
 class MockDataManager {
   private config: MockDataConfig = {
-    useMockData: __DEV__, // Use mock data in development
+    useMockData: __DEV__, 
     enableLogging: __DEV__,
-    fallbackToMock: true, // Always fall back to mock if API fails
+    fallbackToMock: true, 
   };
 
-  /**
-   * Configure mock data behavior
-   */
+  
+
+
   setConfig(config: Partial<MockDataConfig>) {
     this.config = { ...this.config, ...config };
     if (this.config.enableLogging) {
@@ -36,30 +36,30 @@ class MockDataManager {
     }
   }
 
-  /**
-   * Get current configuration
-   */
+  
+
+
   getConfig(): MockDataConfig {
     return { ...this.config };
   }
 
-  /**
-   * Check if mock data should be used
-   */
+  
+
+
   shouldUseMockData(): boolean {
     return this.config.useMockData || this.config.fallbackToMock;
   }
 
-  /**
-   * Log mock data usage (development only)
-   */
+  
+
+
   private logMockUsage(source: string) {
     if (this.config.enableLogging) {
       console.log(`[MockData] Using mock data for: ${source}`);
     }
   }
 
-  // ============ MUSIC TRACKS ============
+  
 
   getMusicTracks(category?: string) {
     this.logMockUsage(`getMusicTracks(${category})`);
@@ -94,7 +94,7 @@ class MockDataManager {
     return musicTracks.musicCategories;
   }
 
-  // ============ VIDEO FILTERS & EFFECTS ============
+  
 
   getVideoFilters() {
     this.logMockUsage('getVideoFilters');
@@ -126,7 +126,7 @@ class MockDataManager {
     return videoFilters.getPopularFilters();
   }
 
-  // ============ REELS / FEED ============
+  
 
   getTrendingReels() {
     this.logMockUsage('getTrendingReels');
@@ -163,7 +163,7 @@ class MockDataManager {
     return reels.mockReels;
   }
 
-  // ============ CATEGORIES ============
+  
 
   getTrendingCategories() {
     this.logMockUsage('getTrendingCategories');
@@ -195,19 +195,19 @@ class MockDataManager {
     return categories.getCollectionById(id);
   }
 
-  // ============ UTILITY METHODS ============
+  
 
-  /**
-   * Reset all mock data to default state
-   */
+  
+
+
   resetMockData() {
     console.log('[MockDataManager] Mock data reset');
-    // In a real implementation, you might want to refresh or reload data
+    
   }
 
-  /**
-   * Get mock data statistics
-   */
+  
+
+
   getStats() {
     return {
       musicTracks: musicTracks.mockMusicTracks.length,
@@ -219,9 +219,9 @@ class MockDataManager {
     };
   }
 
-  /**
-   * Log all available mock data
-   */
+  
+
+
   logAvailableData() {
     const stats = this.getStats();
     console.log('========== MOCK DATA AVAILABLE ==========');
@@ -235,10 +235,10 @@ class MockDataManager {
   }
 }
 
-// Export singleton instance
+
 export const mockDataManager = new MockDataManager();
 
-// Development helper: Make globally accessible
+
 if (__DEV__ && typeof global !== 'undefined') {
   (global as any).__MOCK_DATA__ = mockDataManager;
 }

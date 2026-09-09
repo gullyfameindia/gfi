@@ -18,9 +18,9 @@ interface DraggableTextOverlaysProps {
   selectedOverlayId?: string | null;
 }
 
-/**
- * Manages draggable text overlays on the preview
- */
+
+
+
 const DraggableTextOverlays: React.FC<DraggableTextOverlaysProps> = ({
   overlays,
   containerWidth,
@@ -35,10 +35,10 @@ const DraggableTextOverlays: React.FC<DraggableTextOverlaysProps> = ({
 }) => {
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const dragStartPos = useRef({ x: 0, y: 0 });
-  const dragThreshold = 10; // Minimum pixels to move before considering it a drag
+  const dragThreshold = 10; 
   const isDragRef = useRef(false);
 
-  // Check if text should be visible (for video timing)
+  
   const getVisibleOverlays = useCallback(() => {
     return overlays.filter(
       (overlay) =>
@@ -57,18 +57,18 @@ const DraggableTextOverlays: React.FC<DraggableTextOverlaysProps> = ({
       if (!panRespondersRef.current.has(overlay.id)) {
         const panResponder = PanResponder.create({
           onStartShouldSetPanResponder: () => {
-            // Only allow pan responder if text is selected
+            
             return selectedOverlayId === overlay.id;
           },
           onMoveShouldSetPanResponder: (_, gestureState) => {
-            // Only start dragging if text is selected AND movement exceeds threshold
+            
             if (selectedOverlayId !== overlay.id) return false;
             return (
               Math.abs(gestureState.dx) > dragThreshold || Math.abs(gestureState.dy) > dragThreshold
             );
           },
           onPanResponderGrant: (evt) => {
-            // Only allow dragging if text is selected
+            
             if (selectedOverlayId !== overlay.id) return;
             isDragRef.current = false;
             dragStartPos.current = {
@@ -77,7 +77,7 @@ const DraggableTextOverlays: React.FC<DraggableTextOverlaysProps> = ({
             };
           },
           onPanResponderMove: (evt) => {
-            // Only allow dragging if text is selected
+            
             if (selectedOverlayId !== overlay.id) return;
 
             const deltaX = evt.nativeEvent.pageX - dragStartPos.current.x;
@@ -91,7 +91,7 @@ const DraggableTextOverlays: React.FC<DraggableTextOverlaysProps> = ({
               }
 
               if (isDragRef.current && draggingId === overlay.id) {
-                // Convert pixel movement to relative coordinates (0-1)
+                
                 const newX = Math.max(0, Math.min(1, overlay.x + deltaX / containerWidth));
                 const newY = Math.max(0, Math.min(1, overlay.y + deltaY / containerHeight));
 
@@ -110,7 +110,7 @@ const DraggableTextOverlays: React.FC<DraggableTextOverlaysProps> = ({
           },
           onPanResponderRelease: (evt) => {
             if (!isDragRef.current) {
-              // It was a tap, open editor or select text
+              
               onOverlayPress(overlay);
             }
             setDraggingId(null);

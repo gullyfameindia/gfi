@@ -1,5 +1,5 @@
-// Created by Kiro
-// All Competitions Screen - Display all competitions with filtering and search
+
+
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -47,7 +47,7 @@ export default function AllCompetitionsScreen({ navigation }: any) {
     filterCompetitions();
   }, [competitions, searchQuery, selectedFilter]);
 
-  // Fetch competitions
+  
   const fetchCompetitions = async (pageNum: number = 1) => {
     try {
       if (pageNum === 1) {
@@ -74,7 +74,7 @@ export default function AllCompetitionsScreen({ navigation }: any) {
     }
   };
 
-  // Handle refresh
+  
   const handleRefresh = async () => {
     setRefreshing(true);
     setPage(1);
@@ -82,16 +82,16 @@ export default function AllCompetitionsScreen({ navigation }: any) {
     setRefreshing(false);
   };
 
-  // Filter competitions
+  
   const filterCompetitions = () => {
     let filtered = competitions;
 
-    // Filter by status
+    
     if (selectedFilter !== 'all') {
       filtered = filtered.filter((comp) => comp.status === selectedFilter);
     }
 
-    // Filter by search query
+    
     if (searchQuery.trim()) {
       filtered = filtered.filter((comp) =>
         comp.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -101,7 +101,7 @@ export default function AllCompetitionsScreen({ navigation }: any) {
     setFilteredCompetitions(filtered);
   };
 
-  // Handle load more
+  
   const handleLoadMore = () => {
     if (hasMore && !loading) {
       const nextPage = page + 1;
@@ -110,12 +110,12 @@ export default function AllCompetitionsScreen({ navigation }: any) {
     }
   };
 
-  // Handle competition tap
+  
   const handleCompetitionTap = (competition: Competition) => {
     navigation.navigate('CompetitionDetail', { competition });
   };
 
-  // Render competition item
+  
   const renderCompetitionItem = ({ item }: { item: Competition }) => (
     <TouchableOpacity
       style={styles.competitionCard}
@@ -173,7 +173,7 @@ export default function AllCompetitionsScreen({ navigation }: any) {
     </TouchableOpacity>
   );
 
-  // Render footer (load more button)
+  
   const renderFooter = () => {
     if (!hasMore) return null;
 
@@ -209,7 +209,7 @@ export default function AllCompetitionsScreen({ navigation }: any) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        {/* Search Bar */}
+        {}
         <View style={styles.searchContainer}>
           <Ionicons name="search" size={20} color="#999" />
           <TextInput
@@ -226,7 +226,7 @@ export default function AllCompetitionsScreen({ navigation }: any) {
           ) : null}
         </View>
 
-        {/* Filter Tabs */}
+        {}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -254,7 +254,7 @@ export default function AllCompetitionsScreen({ navigation }: any) {
         </ScrollView>
       </View>
 
-      {/* Competitions List */}
+      {}
       {filteredCompetitions.length > 0 ? (
         <FlatList
           data={filteredCompetitions}

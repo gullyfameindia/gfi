@@ -1,8 +1,8 @@
-/**
- * Test Features Utility
- * Comprehensive test suite for mock data features
- * Run in console: testFeatures.runAllTests()
- */
+
+
+
+
+
 
 import musicLibraryService from "../api/services/musicLibraryService";
 import videoEditorService from "../api/services/videoEditorService";
@@ -29,17 +29,17 @@ class TestFeatures {
 
     this.results = [];
 
-    // Initialize mock data loader
+    
     await mockDataLoader.initialize();
-    mockDataLoader.forceMockData(); // Force mock mode for testing
+    mockDataLoader.forceMockData(); 
 
-    // Run all test suites
+    
     await this.testMusicLibrary();
     await this.testVideoEditor();
     await this.testFeed();
     await this.testErrorHandling();
 
-    // Print results
+    
     this.printResults();
 
     return this.results;
@@ -48,7 +48,7 @@ class TestFeatures {
   private async testMusicLibrary() {
     console.log("\n📀 TESTING MUSIC LIBRARY SERVICE\n");
 
-    // Test 1: Get audio list
+    
     await this.runTest("Music Library", "Get Audio List", async () => {
       const result = await musicLibraryService.getAudioList();
       if (!result.success || !result.data || result.data.length === 0) {
@@ -60,7 +60,7 @@ class TestFeatures {
       };
     });
 
-    // Test 2: Get audio by category
+    
     await this.runTest("Music Library", "Get Audio by Category", async () => {
       const result = await musicLibraryService.getAudioList(undefined, "hip-hop");
       if (!result.success) {
@@ -72,7 +72,7 @@ class TestFeatures {
       };
     });
 
-    // Test 3: Search audio
+    
     await this.runTest("Music Library", "Search Audio", async () => {
       const result = await musicLibraryService.getAudioList(undefined, undefined, "beats");
       if (!result.success) {
@@ -84,7 +84,7 @@ class TestFeatures {
       };
     });
 
-    // Test 4: Get categories
+    
     await this.runTest("Music Library", "Get Categories", async () => {
       const result = await musicLibraryService.getCategories();
       if (!result.success || !result.data || result.data.length === 0) {
@@ -100,7 +100,7 @@ class TestFeatures {
   private async testVideoEditor() {
     console.log("\n🎬 TESTING VIDEO EDITOR SERVICE\n");
 
-    // Test 1: Get filters
+    
     await this.runTest("Video Editor", "Get Video Filters", async () => {
       const result = await videoEditorService.getVideoFilters();
       if (!result.success || !result.data || result.data.length === 0) {
@@ -112,7 +112,7 @@ class TestFeatures {
       };
     });
 
-    // Test 2: Get effects
+    
     await this.runTest("Video Editor", "Get Effects", async () => {
       const result = await videoEditorService.getEffects();
       if (!result.success || !result.data || result.data.length === 0) {
@@ -124,7 +124,7 @@ class TestFeatures {
       };
     });
 
-    // Test 3: Get transitions
+    
     await this.runTest("Video Editor", "Get Transitions", async () => {
       const result = await videoEditorService.getTransitions();
       if (!result.success || !result.data || result.data.length === 0) {
@@ -136,7 +136,7 @@ class TestFeatures {
       };
     });
 
-    // Test 4: Get stickers
+    
     await this.runTest("Video Editor", "Get Stickers", async () => {
       const result = await videoEditorService.getStickers();
       if (!result.success || !result.data || result.data.length === 0) {
@@ -152,7 +152,7 @@ class TestFeatures {
   private async testFeed() {
     console.log("\n📱 TESTING FEED SERVICE\n");
 
-    // Test 1: Get trending reels
+    
     await this.runTest("Feed", "Get Trending Reels", async () => {
       const result = await feedService.getTrendingReels();
       if (!result.success || !result.data || result.data.length === 0) {
@@ -164,7 +164,7 @@ class TestFeatures {
       };
     });
 
-    // Test 2: Get for you reels
+    
     await this.runTest("Feed", "Get For You Reels", async () => {
       const result = await feedService.getForYouReels();
       if (!result.success || !result.data || result.data.length === 0) {
@@ -176,7 +176,7 @@ class TestFeatures {
       };
     });
 
-    // Test 3: Get popular reels
+    
     await this.runTest("Feed", "Get Popular Reels", async () => {
       const result = await feedService.getPopularReels();
       if (!result.success || !result.data || result.data.length === 0) {
@@ -188,7 +188,7 @@ class TestFeatures {
       };
     });
 
-    // Test 4: Get categories
+    
     await this.runTest("Feed", "Get Categories", async () => {
       const result = await feedService.getCategories();
       if (!result.success || !result.data || result.data.length === 0) {
@@ -200,7 +200,7 @@ class TestFeatures {
       };
     });
 
-    // Test 5: Get featured collections
+    
     await this.runTest("Feed", "Get Featured Collections", async () => {
       const result = await feedService.getFeaturedCollections();
       if (!result.success || !result.data || result.data.length === 0) {
@@ -212,7 +212,7 @@ class TestFeatures {
       };
     });
 
-    // Test 6: Toggle like reel
+    
     await this.runTest("Feed", "Toggle Like Reel", async () => {
       const reelsResult = await feedService.getTrendingReels();
       if (!reelsResult.data || reelsResult.data.length === 0) {
@@ -229,7 +229,7 @@ class TestFeatures {
       };
     });
 
-    // Test 7: Toggle save reel
+    
     await this.runTest("Feed", "Toggle Save Reel", async () => {
       const reelsResult = await feedService.getTrendingReels();
       if (!reelsResult.data || reelsResult.data.length === 0) {
@@ -250,7 +250,7 @@ class TestFeatures {
   private async testErrorHandling() {
     console.log("\n⚠️ TESTING ERROR HANDLING\n");
 
-    // Test 1: Parse network error
+    
     await this.runTest("Error Handler", "Parse Network Error", async () => {
       const error = new Error("Network Error");
       (error as any).code = "NETWORK_ERROR";
@@ -264,7 +264,7 @@ class TestFeatures {
       };
     });
 
-    // Test 2: Parse timeout error
+    
     await this.runTest("Error Handler", "Parse Timeout Error", async () => {
       const error = new Error("Request timeout");
       const parsed = ErrorHandler.parseError(error);
@@ -277,7 +277,7 @@ class TestFeatures {
       };
     });
 
-    // Test 3: Get user message
+    
     await this.runTest("Error Handler", "Get User Message", async () => {
       const error = new Error("Network Error");
       (error as any).code = "NETWORK_ERROR";
@@ -384,9 +384,9 @@ class TestFeatures {
     };
   }
 
-  /**
-   * Export test results as JSON
-   */
+  
+
+
   getResults() {
     return {
       totalTests: this.results.length,
@@ -397,10 +397,10 @@ class TestFeatures {
   }
 }
 
-// Export singleton instance
+
 const testFeatures = new TestFeatures();
 
-// Make globally available for console testing
+
 if (typeof global !== "undefined") {
   (global as any).__TEST_FEATURES__ = testFeatures;
 }

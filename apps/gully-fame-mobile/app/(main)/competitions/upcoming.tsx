@@ -14,7 +14,7 @@ import Svg, { Path, Circle, G, Rect } from "react-native-svg";
 
 const { width, height } = Dimensions.get("window");
 
-// Sample upcoming competitions data
+
 const upcomingCompetitions = [
   {
     id: 1,
@@ -66,7 +66,7 @@ const topPerformersOfWeek = [
     image: require("@assets/images/user1.png"),
     wins: 10,
   },
-  // ... other performers
+  
 ];
 
 export default function UpcomingCompetitionsScreen() {
@@ -74,7 +74,7 @@ export default function UpcomingCompetitionsScreen() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#3C2610" />
 
-      {/* Header */}
+      {}
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => router.back()}
@@ -122,12 +122,12 @@ export default function UpcomingCompetitionsScreen() {
                     resizeMode="cover"
                   />
 
-                  {/* Upcoming Badge */}
+                  {}
                   <View style={styles.upcomingBadge}>
                     <Text style={styles.upcomingBadgeText}>Upcoming</Text>
                   </View>
 
-                  {/* Date Badge */}
+                  {}
                   <View style={styles.dateBadge}>
                     <Text style={styles.dateBadgeText}>{comp.startsOn}</Text>
                   </View>
@@ -142,7 +142,7 @@ export default function UpcomingCompetitionsScreen() {
                   </Text>
                   <View style={styles.compCardDetailsNew}>
                     <View style={styles.compDetailItemNew}>
-                      {/* Users Icon */}
+                      {}
                       <Svg
                         width={14}
                         height={14}
@@ -191,7 +191,7 @@ export default function UpcomingCompetitionsScreen() {
           </ScrollView>
         </View>
 
-        {/* Top Performers Section */}
+        {}
         <View style={styles.topPerformersSection}>
           <View style={styles.sectionHeader}>
             <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -211,7 +211,7 @@ export default function UpcomingCompetitionsScreen() {
           </View>
 
           <View style={styles.topDancersContainer}>
-            {/* Rank 2 - Left Side */}
+            {}
             <View style={styles.topDancerSide}>
               <View style={styles.dancerImageWrapper}>
                 <Image
@@ -230,10 +230,10 @@ export default function UpcomingCompetitionsScreen() {
               </Text>
             </View>
 
-            {/* Rank 1 - Center (Larger) */}
+            {}
             <View style={styles.topDancerCenter}>
               <View style={styles.dancerImageWrapper}>
-                {/* Star Icon Above Head */}
+                {}
                 <View style={styles.starIconWrapper}>
                   <Image
                     source={require("@assets/images/star.png")}
@@ -257,7 +257,7 @@ export default function UpcomingCompetitionsScreen() {
               </Text>
             </View>
 
-            {/* Rank 3 - Right Side */}
+            {}
             <View style={styles.topDancerSide}>
               <View style={styles.dancerImageWrapper}>
                 <Image
@@ -282,14 +282,14 @@ export default function UpcomingCompetitionsScreen() {
   );
 }
 
-// ... Use the exact same styles object, adding the upcoming badge styles:
+
 const styles = StyleSheet.create({
-  /* ... copy all your original styles here ... */
+  
   upcomingBadge: {
     position: "absolute",
     top: 12,
     left: 12,
-    backgroundColor: "#1E88E5", // Blue for Upcoming
+    backgroundColor: "#1E88E5", 
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 20,
@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "600",
   },
-  // Top Performers Section
+  
   topPerformersSection: {
     padding: 16,
     paddingHorizontal: 16,
@@ -592,5 +592,5 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontWeight: "400",
   },
-  /* ... rest of your styles ... */
+  
 });

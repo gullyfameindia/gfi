@@ -43,9 +43,9 @@ export default function Dashboard() {
         const isSponsor = role === 'sponsor';
 
         if (isSponsor) {
-          // For sponsors, fetch their competitions
+          
           const adminData = getStoredAdmin();
-          // Try to get sponsor ID from various possible fields
+          
           const sponsorId = adminData?._id || adminData?.id || adminData?.sponsorCode;
           
           if (process.env.NODE_ENV === 'development') {
@@ -62,7 +62,7 @@ export default function Dashboard() {
               const competitions = compResult.data.items || [];
               setSponsorCompetitions(competitions);
               
-              // Calculate sponsor stats
+              
               const liveComps = competitions.filter((c: Competition) => 
                 c.status === 'LIVE' || c.status === 'live'
               );
@@ -74,7 +74,7 @@ export default function Dashboard() {
                 totalCompetitions: competitions.length,
                 liveCompetitions: liveComps.length,
                 totalEntries,
-                totalViews: 0, // This would come from analytics API if available
+                totalViews: 0, 
               });
             } else {
               console.warn('[Dashboard] Failed to fetch sponsor competitions:', compResult.message);
@@ -83,7 +83,7 @@ export default function Dashboard() {
             console.warn('[Dashboard] No sponsor ID found in stored admin data');
           }
         } else {
-          // For admin, fetch dashboard stats (platform-wide)
+          
           const [activityResult, statsResult] = await Promise.all([
             getRecentActivity(),
             getQuickStats(),
@@ -128,7 +128,7 @@ export default function Dashboard() {
           </p>
         </div>
 
-        {/* Recent Activity and Quick Stats at Top */}
+        {}
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <div className="rounded-lg bg-white p-4 shadow-sm border border-gray-200">
             <h2 className="text-sm font-semibold text-gray-900 mb-3">Recent Activity</h2>
@@ -238,7 +238,7 @@ export default function Dashboard() {
         </div>
 
         {isSponsor ? (
-          // Sponsor Dashboard - Only show their competition data
+          
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {loading ? (
               <div className="col-span-full text-center py-4">
@@ -276,7 +276,7 @@ export default function Dashboard() {
             )}
           </div>
         ) : (
-          // Admin Dashboard - Show all platform data
+          
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             <StatCard title="Top Trending Category" value="Dance" icon={TrendingUp} color="purple" />
             <StatCard title="Top Winner (Week)" value="Dancer Pro" icon={Trophy} color="yellow" />
