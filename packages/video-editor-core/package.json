@@ -6,7 +6,7 @@
   "description": "Unified Video Editor - Shared across all apps in GFM monorepo",
   "dependencies": {
     "@react-native-community/slider": "5.0.1",
-    "expo": "~54.0.19",
+    "expo": "~57.0.20",
     "expo-av": "~16.0.8",
     "expo-camera": "~17.0.10",
     "expo-image-picker": "~17.0.10",
