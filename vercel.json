@@ -1,9 +1,0 @@
-{
-  "buildCommand": "npm run build:admin",
-  "outputDirectory": "apps/gully-fame-admin/.next",
-  "framework": "nextjs",
-  "installCommand": "npm install",
-  "env": {
-    "BACKEND_URL": "@backend_url"
-  }
-}
