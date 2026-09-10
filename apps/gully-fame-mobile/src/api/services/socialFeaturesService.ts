@@ -1,8 +1,8 @@
-
-
-
-
-
+/**
+ * Social Features Service
+ * KIRO: Complete social features integration
+ * Handles: Follow/Unfollow, Search, Recommendations, User Discovery
+ */
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
@@ -33,10 +33,10 @@ export interface UserRecommendation extends UserProfile {
   reason?: string;
 }
 
-
-
-
-
+/**
+ * Follow user
+ * KIRO: Follow another user
+ */
 export async function followUser(userId: string): Promise<ApiResponse<{ status: string }>> {
   try {
     console.log("[socialFeaturesService] Following user:", userId);
@@ -69,10 +69,10 @@ export async function followUser(userId: string): Promise<ApiResponse<{ status: 
   }
 }
 
-
-
-
-
+/**
+ * Unfollow user
+ * KIRO: Unfollow another user
+ */
 export async function unfollowUser(userId: string): Promise<ApiResponse<{ status: string }>> {
   try {
     console.log("[socialFeaturesService] Unfollowing user:", userId);
@@ -105,10 +105,10 @@ export async function unfollowUser(userId: string): Promise<ApiResponse<{ status
   }
 }
 
-
-
-
-
+/**
+ * Get followers
+ * KIRO: Fetch user's followers list
+ */
 export async function getFollowers(
   userId?: string,
   limit: number = 20,
@@ -148,10 +148,10 @@ export async function getFollowers(
   }
 }
 
-
-
-
-
+/**
+ * Get following
+ * KIRO: Fetch users that current user is following
+ */
 export async function getFollowing(
   userId?: string,
   limit: number = 20,
@@ -191,10 +191,10 @@ export async function getFollowing(
   }
 }
 
-
-
-
-
+/**
+ * Search users
+ * KIRO: Search for users by name or username
+ */
 export async function searchUsers(
   query: string,
   limit: number = 20,
@@ -233,10 +233,10 @@ export async function searchUsers(
   }
 }
 
-
-
-
-
+/**
+ * Search reels
+ * KIRO: Search for reels by title, description, or tags
+ */
 export async function searchReels(
   query: string,
   limit: number = 20,
@@ -275,10 +275,10 @@ export async function searchReels(
   }
 }
 
-
-
-
-
+/**
+ * Global search
+ * KIRO: Search across users, reels, and competitions
+ */
 export async function globalSearch(
   query: string,
   limit: number = 10
@@ -320,10 +320,10 @@ export async function globalSearch(
   }
 }
 
-
-
-
-
+/**
+ * Get user recommendations
+ * KIRO: Get recommended users to follow
+ */
 export async function getUserRecommendations(
   limit: number = 10
 ): Promise<ApiResponse<UserRecommendation[]>> {
@@ -360,10 +360,10 @@ export async function getUserRecommendations(
   }
 }
 
-
-
-
-
+/**
+ * Get trending users
+ * KIRO: Get trending/popular users
+ */
 export async function getTrendingUsers(limit: number = 10): Promise<ApiResponse<UserProfile[]>> {
   try {
     console.log("[socialFeaturesService] Fetching trending users");
@@ -398,10 +398,10 @@ export async function getTrendingUsers(limit: number = 10): Promise<ApiResponse<
   }
 }
 
-
-
-
-
+/**
+ * Get user profile
+ * KIRO: Fetch detailed user profile
+ */
 export async function getUserProfile(userId: string): Promise<ApiResponse<UserProfile>> {
   try {
     console.log("[socialFeaturesService] Fetching user profile:", userId);

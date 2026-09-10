@@ -11,24 +11,23 @@ export interface CMSContentResponse {
 }
 
 export async function getTermsAndConditions(): Promise<ApiResponse<CMSContentResponse>> {
-  try {
-    let response: any;
-    try {
-      response = await apiClient.get<any>('public/termAndCondition', { skipAuth: true });
-    } catch {
-      response = await apiClient.get<any>('admin/termAndCondition', { skipAuth: true });
-    }
+  const endpoint = 'admin/termAndCondition';
 
+  try {
+    const response = await apiClient.get<any>(endpoint);
     const responseData = response.data as any;
 
-    if (responseData.code === 1 || responseData.success) {
+    if (responseData.code === 1) {
+      // Handle different response formats
       let content = '';
       if (typeof responseData.data === 'string') {
+        // If data is a string directly
         content = responseData.data;
       } else if (responseData.data && typeof responseData.data === 'object') {
+        // If data is an object, check for termsAndConditions or content field
         content = responseData.data.termsAndConditions || responseData.data.content || '';
       }
-
+      
       return {
         success: true,
         data: { content, termsAndConditions: content },
@@ -54,24 +53,21 @@ export async function getTermsAndConditions(): Promise<ApiResponse<CMSContentRes
 }
 
 export async function getAboutUs(): Promise<ApiResponse<CMSContentResponse>> {
-  try {
-    let response: any;
-    try {
-      response = await apiClient.get<any>('public/aboutUs', { skipAuth: true });
-    } catch {
-      response = await apiClient.get<any>('admin/aboutUs', { skipAuth: true });
-    }
+  const endpoint = 'admin/aboutUs';
 
+  try {
+    const response = await apiClient.get<any>(endpoint);
     const responseData = response.data as any;
 
-    if (responseData.code === 1 || responseData.success) {
+    if (responseData.code === 1) {
+      // Handle different response formats
       let content = '';
       if (typeof responseData.data === 'string') {
         content = responseData.data;
       } else if (responseData.data && typeof responseData.data === 'object') {
         content = responseData.data.aboutUs || responseData.data.content || '';
       }
-
+      
       return {
         success: true,
         data: { content, aboutUs: content },
@@ -97,24 +93,21 @@ export async function getAboutUs(): Promise<ApiResponse<CMSContentResponse>> {
 }
 
 export async function getPrivacyPolicy(): Promise<ApiResponse<CMSContentResponse>> {
-  try {
-    let response: any;
-    try {
-      response = await apiClient.get<any>('public/privacyPolicy', { skipAuth: true });
-    } catch {
-      response = await apiClient.get<any>('admin/privacyPolicy', { skipAuth: true });
-    }
+  const endpoint = 'admin/privacyPolicy';
 
+  try {
+    const response = await apiClient.get<any>(endpoint);
     const responseData = response.data as any;
 
-    if (responseData.code === 1 || responseData.success) {
+    if (responseData.code === 1) {
+      // Handle different response formats
       let content = '';
       if (typeof responseData.data === 'string') {
         content = responseData.data;
       } else if (responseData.data && typeof responseData.data === 'object') {
         content = responseData.data.privacyPolicy || responseData.data.content || '';
       }
-
+      
       return {
         success: true,
         data: { content, privacyPolicy: content },
@@ -140,24 +133,21 @@ export async function getPrivacyPolicy(): Promise<ApiResponse<CMSContentResponse
 }
 
 export async function getCompetitionRules(): Promise<ApiResponse<CMSContentResponse>> {
-  try {
-    let response: any;
-    try {
-      response = await apiClient.get<any>('public/competitionRules', { skipAuth: true });
-    } catch {
-      response = await apiClient.get<any>('admin/competitionRules', { skipAuth: true });
-    }
+  const endpoint = 'admin/competitionRules';
 
+  try {
+    const response = await apiClient.get<any>(endpoint);
     const responseData = response.data as any;
 
-    if (responseData.code === 1 || responseData.success) {
+    if (responseData.code === 1) {
+      // Handle different response formats
       let content = '';
       if (typeof responseData.data === 'string') {
         content = responseData.data;
       } else if (responseData.data && typeof responseData.data === 'object') {
         content = responseData.data.competitionRules || responseData.data.content || '';
       }
-
+      
       return {
         success: true,
         data: { content, competitionRules: content },
@@ -189,4 +179,3 @@ export const cmsService = {
   getCompetitionRules,
 };
 
-export default cmsService;

@@ -1,8 +1,8 @@
-
-
-
-
-
+/**
+ * Sound Effects Service
+ * Manages sound effects available in the video editor
+ * Real-time backend integration for production
+ */
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
@@ -33,9 +33,9 @@ export interface SoundFXListResponse {
   data?: SoundEffect[];
 }
 
-
-
-
+/**
+ * Fetch all available sound effects from backend
+ */
 export async function listSoundFX(
   category?: string,
   page = 1,
@@ -55,7 +55,7 @@ export async function listSoundFX(
     if (responseData.code === 1 && responseData.data) {
       const raw = responseData.data;
 
-      
+      // Handle array or wrapped response
       const rawEffects: any[] = Array.isArray(raw)
         ? raw
         : raw?.soundEffects ?? raw?.effects ?? raw?.data ?? [];
@@ -100,9 +100,9 @@ export async function listSoundFX(
   }
 }
 
-
-
-
+/**
+ * Get sound effect details by ID
+ */
 export async function getSoundFXById(effectId: string): Promise<ApiResponse<SoundEffect>> {
   try {
     console.log("[soundFXService] Getting sound effect:", effectId);
@@ -152,9 +152,9 @@ export async function getSoundFXById(effectId: string): Promise<ApiResponse<Soun
   }
 }
 
-
-
-
+/**
+ * Search sound effects by name or tags
+ */
 export async function searchSoundFX(query: string, limit = 20): Promise<ApiResponse<SoundEffect[]>> {
   try {
     console.log("[soundFXService] Searching sound effects:", query);

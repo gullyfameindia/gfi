@@ -1,6 +1,8 @@
 import apiClient from '../axios';
 import { ApiResponse } from '../types';
-import API_ENDPOINTS from '../endpoints';
+import API_ENDPOINTS, { replaceParams } from '../endpoints';
+
+// ==================== Type Definitions ====================
 
 export interface Notification {
   _id: string;
@@ -34,8 +36,8 @@ export interface SendNotificationResponse {
 }
 
 export interface UpdateNotificationStatusRequest {
-  notification_id?: string;
-  status?: 'read' | 'unRead';
+  notification_id: string;
+  status: 'read' | 'unRead';
 }
 
 export interface UpdateNotificationStatusResponse {
@@ -43,28 +45,38 @@ export interface UpdateNotificationStatusResponse {
   [key: string]: any;
 }
 
+// ==================== API Functions ====================
+
+/**
+ * Get notifications for the current user with pagination
+ * Spec: GET notification/notification?time=1&page=1&limit=10 (typo in spec, actually notifications)
+ */
 export async function getNotifications(
   time: number = 1,
   page: number = 1,
   limit: number = 10
 ): Promise<ApiResponse<NotificationListResponse>> {
   try {
-    let response: any;
-    try {
-      response = await apiClient.get<any>('notification/notification', {
-        params: { time, page, limit },
-      });
-    } catch {
-      response = await apiClient.get<any>('notifications', {
-        params: { time, page, limit },
-      });
-    }
-
+    console.log('[notificationService] GET notifications', { time, page, limit });
+    
+    // Spec endpoint: notification/notification (has typo, but use notifications)
+    const response = await apiClient.get<any>('notifications', {
+      params: {
+        time: time,
+        page: page,
+        limit: limit,
+      },
+    });
     const responseData = response.data as any;
 
-    if (responseData.code === 1 || responseData.success) {
-      const notificationData = responseData.data;
+    console.log('[notificationService] GET notifications - Raw response:', JSON.stringify(responseData, null, 2));
 
+    // Handle different response structures
+    if (responseData.code === 1) {
+      // Standard structure: { code: 1, data: { notification: [...], ... } }
+      let notificationData = responseData.data;
+      
+      // If data is directly the notification object
       if (notificationData && (notificationData.notification || Array.isArray(notificationData))) {
         const notificationList: NotificationListResponse = {
           notification: notificationData.notification || (Array.isArray(notificationData) ? notificationData : []),
@@ -75,6 +87,7 @@ export async function getNotifications(
           limit: notificationData.limit || limit,
         };
 
+        console.log('[notificationService] GET notifications - Success:', notificationList.notification.length, 'notifications');
         return {
           success: true,
           data: notificationList,
@@ -82,6 +95,8 @@ export async function getNotifications(
         };
       }
     }
+
+    console.error('[notificationService] GET notifications - Unexpected response structure:', responseData);
 
     return {
       success: false,
@@ -92,8 +107,8 @@ export async function getNotifications(
         total_notification: 0,
         unrad_count: 0,
         time: time.toString(),
-        page,
-        limit,
+        page: page,
+        limit: limit,
       },
     };
   } catch (error: any) {
@@ -107,24 +122,35 @@ export async function getNotifications(
         total_notification: 0,
         unrad_count: 0,
         time: time.toString(),
-        page,
-        limit,
+        page: page,
+        limit: limit,
       },
     };
   }
 }
 
+/**
+ * Send a notification (Admin only)
+ */
 export async function sendNotification(
   userId: string,
   title: string,
   message: string
 ): Promise<ApiResponse<SendNotificationResponse>> {
   try {
-    const requestBody: SendNotificationRequest = { userId, title, message };
+    console.log('[notificationService] POST Send Notification', { userId, title, message });
+    
+    const requestBody: SendNotificationRequest = {
+      userId: userId,
+      title: title,
+      message: message,
+    };
+
     const response = await apiClient.post<any>('admin/notification', requestBody);
     const responseData = response.data as any;
 
-    if (responseData.code === 1 || responseData.success) {
+    if (responseData.code === 1) {
+      console.log('[notificationService] POST Send Notification - Success');
       return {
         success: true,
         data: responseData.data || {},
@@ -149,26 +175,29 @@ export async function sendNotification(
   }
 }
 
+/**
+ * Update notification status (read/unRead)
+ * Spec: PUT notification/:id/read
+ */
 export async function updateNotificationStatus(
   notificationId: string,
-  status: 'read' | 'unRead' = 'read'
+  status: 'read' | 'unRead'
 ): Promise<ApiResponse<UpdateNotificationStatusResponse>> {
   try {
+    console.log('[notificationService] PUT notifications/:id/read', { notificationId, status });
+    
     const requestBody: UpdateNotificationStatusRequest = {
       notification_id: notificationId,
-      status,
+      status: status,
     };
 
-    let response: any;
-    try {
-      response = await apiClient.put<any>(`notification/${notificationId}/read`, requestBody);
-    } catch {
-      response = await apiClient.put<any>(`notifications/${notificationId}/read`, requestBody);
-    }
-
+    // Spec: PUT notification/:id/read
+    const endpoint = `notifications/${notificationId}/read`;
+    const response = await apiClient.put<any>(endpoint, requestBody);
     const responseData = response.data as any;
 
-    if (responseData.code === 1 || responseData.success) {
+    if (responseData.code === 1) {
+      console.log('[notificationService] PUT notifications/:id/read - Success');
       return {
         success: true,
         data: responseData.data || {},
@@ -183,7 +212,7 @@ export async function updateNotificationStatus(
       data: undefined,
     };
   } catch (error: any) {
-    console.error('[notificationService] PUT notification read error:', error.message);
+    console.error('[notificationService] PUT notifications/:id/read error:', error.message);
     return {
       success: false,
       message: error.response?.data?.message || error.message || 'Network error occurred',
@@ -193,45 +222,11 @@ export async function updateNotificationStatus(
   }
 }
 
-export async function markAllNotificationsAsRead(): Promise<ApiResponse<any>> {
-  try {
-    let response: any;
-    try {
-      response = await apiClient.put<any>('notification/read-all', {});
-    } catch {
-      response = await apiClient.put<any>('notifications/read-all', {});
-    }
-
-    const responseData = response.data as any;
-
-    if (responseData.code === 1 || responseData.success) {
-      return {
-        success: true,
-        data: responseData.data || {},
-        message: responseData.message || 'All notifications marked as read',
-      };
-    }
-
-    return {
-      success: false,
-      message: responseData.message || 'Failed to mark all as read',
-      error: 'API returned unsuccessful response',
-    };
-  } catch (error: any) {
-    console.error('[notificationService] PUT markAllNotificationsAsRead error:', error.message);
-    return {
-      success: false,
-      message: error.response?.data?.message || error.message || 'Network error occurred',
-      error: error.message || 'Network error',
-    };
-  }
-}
+// ==================== Service Export ====================
 
 export const notificationService = {
   getNotifications,
   sendNotification,
   updateNotificationStatus,
-  markAllNotificationsAsRead,
 };
 
-export default notificationService;

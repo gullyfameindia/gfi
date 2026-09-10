@@ -1,8 +1,8 @@
-
-
-
-
-
+/**
+ * Socket.IO Chat Service
+ * Real-time message delivery via websocket
+ * Replaces HTTP polling with instant message events
+ */
 
 import { io, Socket } from "socket.io-client";
 import { BASE_URL } from "../axios";
@@ -10,13 +10,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const TOKEN_STORAGE_KEY = "authToken";
 
-
-
+// Infer websocket URL from REST API base URL
+// If API is https://gullyfame.com/v1/api/, websocket should be https://gullyfame.com
 const getSocketUrl = (): string => {
   if (!BASE_URL) return "https://gullyfame.com";
   
-  
-  
+  // Extract protocol + domain from API URL
+  // e.g., "https://gullyfame.com/v1/api/" → "https://gullyfame.com"
   try {
     const url = new URL(BASE_URL);
     return `${url.protocol}//${url.host}`;
@@ -49,10 +49,10 @@ class SocketChatService {
   private callbacks: SocketChatCallbacks = {};
   private currentConversationId: string | null = null;
 
-  
-
-
-
+  /**
+   * Initialize socket connection
+   * Connects to /chat namespace on first call
+   */
   async connect(conversationId: string, callbacks?: SocketChatCallbacks): Promise<void> {
     if (this.socket?.connected && this.currentConversationId === conversationId) {
       console.log("[socketChatService] Already connected to conversation:", conversationId);
@@ -62,14 +62,14 @@ class SocketChatService {
     try {
       console.log("[socketChatService] Connecting to websocket:", SOCKET_URL);
 
-      
+      // Get auth token
       const token = await AsyncStorage.getItem(TOKEN_STORAGE_KEY);
 
-      
-      
+      // Create socket connection with auth token
+      // Note: namespace is passed as part of the URL (/chat)
       const socketUrl = `${SOCKET_URL}/chat`;
       this.socket = io(socketUrl, {
-        path: "/socket.io/", 
+        path: "/socket.io/", // Standard Socket.IO path
         auth: {
           token: token || "",
           conversationId: conversationId,
@@ -78,7 +78,7 @@ class SocketChatService {
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
         reconnectionAttempts: 10,
-        transports: ["websocket", "polling"], 
+        transports: ["websocket", "polling"], // Try websocket first, fallback to polling
       });
 
       this.currentConversationId = conversationId;
@@ -86,7 +86,7 @@ class SocketChatService {
         this.callbacks = callbacks;
       }
 
-      
+      // Setup event listeners
       this.setupListeners();
 
       console.log("[socketChatService] Socket connection initiated");
@@ -97,13 +97,13 @@ class SocketChatService {
     }
   }
 
-  
-
-
+  /**
+   * Setup socket event listeners
+   */
   private setupListeners(): void {
     if (!this.socket) return;
 
-    
+    // Connection events
     this.socket.on("connect", () => {
       console.log("[socketChatService] Socket connected, ID:", this.socket?.id);
       this.callbacks.onConnected?.();
@@ -119,7 +119,7 @@ class SocketChatService {
       this.callbacks.onError?.(error.message);
     });
 
-    
+    // Chat events
     this.socket.on("message", (message: ChatSocketMessage) => {
       console.log("[socketChatService] Message received:", message._id, message.message);
       this.callbacks.onMessageReceived?.(message);
@@ -141,10 +141,10 @@ class SocketChatService {
     });
   }
 
-  
-
-
-
+  /**
+   * Send message via socket
+   * Falls back to REST if socket not connected
+   */
   async sendMessage(
     conversationId: string,
     receiverId: string,
@@ -170,7 +170,7 @@ class SocketChatService {
         });
       } else {
         console.warn("[socketChatService] Socket not connected, falling back to REST");
-        
+        // Will be handled by caller using REST API
         return { success: false, error: "Socket not connected" };
       }
     } catch (error: any) {
@@ -179,9 +179,9 @@ class SocketChatService {
     }
   }
 
-  
-
-
+  /**
+   * Delete message
+   */
   async deleteMessage(messageId: string): Promise<{ success: boolean; error?: string }> {
     try {
       if (this.socket?.connected) {
@@ -197,7 +197,7 @@ class SocketChatService {
           });
         });
       } else {
-        
+        // Will be handled by caller using REST API
         return { success: false, error: "Socket not connected" };
       }
     } catch (error: any) {
@@ -206,9 +206,9 @@ class SocketChatService {
     }
   }
 
-  
-
-
+  /**
+   * Mark conversation as read
+   */
   async markConversationRead(conversationId: string): Promise<{ success: boolean; error?: string }> {
     try {
       if (this.socket?.connected) {
@@ -224,7 +224,7 @@ class SocketChatService {
           });
         });
       } else {
-        
+        // Will be handled by caller using REST API
         return { success: false, error: "Socket not connected" };
       }
     } catch (error: any) {
@@ -233,17 +233,17 @@ class SocketChatService {
     }
   }
 
-  
-
-
+  /**
+   * Check if socket is connected
+   */
   isConnected(): boolean {
     return this.socket?.connected ?? false;
   }
 
-  
-
-
-
+  /**
+   * Disconnect socket
+   * Call this when closing chat screen
+   */
   disconnect(): void {
     if (this.socket?.connected) {
       console.log("[socketChatService] Disconnecting socket");
@@ -253,9 +253,9 @@ class SocketChatService {
     }
   }
 
-  
-
-
+  /**
+   * Reconnect to a different conversation
+   */
   async switchConversation(
     conversationId: string,
     callbacks?: SocketChatCallbacks
@@ -270,5 +270,5 @@ class SocketChatService {
   }
 }
 
-
+// Export singleton instance
 export const socketChatService = new SocketChatService();

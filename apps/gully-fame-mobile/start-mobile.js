@@ -1,17 +1,15 @@
 #!/usr/bin/env node
 
 const { spawn } = require('child_process');
+const path = require('path');
 
 const args = process.argv.slice(2);
 
-const command = 'npx';
-const commandArgs = ['expo', 'start', '--dev-client', ...args];
-
-const expo = spawn(command, commandArgs, {
+const expo = spawn('npx', ['expo', 'start', '--dev-client', '--clear', ...args], {
   stdio: 'inherit',
-  shell: true
+  cwd: __dirname
 });
 
 expo.on('exit', (code) => {
-  process.exit(code);
+  process.exit(code || 0);
 });

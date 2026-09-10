@@ -1,0 +1,13 @@
+import React from "react";
+import { Svg, Circle, Path, Rect, G, Defs, LinearGradient, Stop, Pattern, Image } from "react-native-svg";
+
+export const ResizeIcon = ({ color = '#fff' }) => (
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <Path
+      d="M8.5 14.1L4 18.6V17C4 16.4 3.6 16 3 16C2.4 16 2 16.4 2 17V21C2 21.1 2 21.3 2.1 21.4C2.2 21.6 2.4 21.8 2.6 21.9C2.7 22 2.9 22 3 22H7C7.6 22 8 21.6 8 21C8 20.4 7.6 20 7 20H5.4L9.9 15.5C10.3 15.1 10.3 14.5 9.9 14.1C9.5 13.7 8.9 13.7 8.5 14.1ZM21.7 2.3C21.5 2.1 21.2 2 21 2H17C16.4 2 16 2.4 16 3C16 3.6 16.4 4 17 4H18.6L14.1 8.5C13.7 8.9 13.7 9.5 14.1 9.9C14.3 10.1 14.5 10.2 14.8 10.2C15.1 10.2 15.3 10.1 15.5 9.9L20 5.4V7C20 7.6 20.4 8 21 8C21.6 8 22 7.6 22 7V3C22 2.8 21.9 2.5 21.7 2.3Z"
+      fill={color}
+    />
+  </Svg>
+);
+
+// Bottom Navigation Icons - For use with bottom nav

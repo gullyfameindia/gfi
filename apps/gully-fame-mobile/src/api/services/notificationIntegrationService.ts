@@ -1,21 +1,14 @@
-
-
-
-
-
+/**
+ * Notification Integration Service
+ * KIRO: Complete notification system
+ * Handles: Push notifications, In-app notifications, Notification preferences
+ */
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
+import * as Notifications from "expo-notifications";
 
-let Notifications: any = null;
 let Device: any = null;
-
-try {
-  Notifications = require("expo-notifications");
-} catch (e) {
-  console.warn("[notificationIntegrationService] expo-notifications not available (requires dev build, not Expo Go):", (e as any)?.message);
-}
-
 try {
   Device = require("expo-device");
 } catch (e) {
@@ -44,27 +37,17 @@ export interface NotificationPreferences {
   systemNotifications: boolean;
 }
 
-
-
-
-
+/**
+ * Register device for push notifications
+ * KIRO: Register device token with backend
+ */
 export async function registerDeviceForNotifications(): Promise<
   ApiResponse<{ deviceToken: string }>
 > {
   try {
     console.log("[notificationIntegrationService] Registering device for notifications");
 
-    if (!Notifications) {
-      console.warn("[notificationIntegrationService] expo-notifications not available, skipping registration");
-      return {
-        success: false,
-        message: "Notifications not available (requires dev build)",
-        error: "expo-notifications not loaded",
-        data: { deviceToken: "" },
-      };
-    }
-
-    
+    // Get device token
     if (!Device || !Device.isDevice) {
       console.warn("[notificationIntegrationService] Not a physical device or Device module not available, skipping registration");
       return {
@@ -78,7 +61,7 @@ export async function registerDeviceForNotifications(): Promise<
     const token = (await Notifications.getExpoPushTokenAsync()).data;
     console.log("[notificationIntegrationService] Device token:", token);
 
-    
+    // Register with backend
     const response = await apiClient.post<any>("notifications/register-device", {
       deviceToken: token,
       deviceType: Device?.osName || "unknown",
@@ -112,10 +95,10 @@ export async function registerDeviceForNotifications(): Promise<
   }
 }
 
-
-
-
-
+/**
+ * Get notifications
+ * KIRO: Fetch user's notifications
+ */
 export async function getNotifications(
   limit: number = 20,
   offset: number = 0,
@@ -154,10 +137,10 @@ export async function getNotifications(
   }
 }
 
-
-
-
-
+/**
+ * Mark notification as read
+ * KIRO: Mark single notification as read
+ */
 export async function markNotificationAsRead(
   notificationId: string
 ): Promise<ApiResponse<{ status: string }>> {
@@ -192,10 +175,10 @@ export async function markNotificationAsRead(
   }
 }
 
-
-
-
-
+/**
+ * Mark all notifications as read
+ * KIRO: Mark all notifications as read
+ */
 export async function markAllNotificationsAsRead(): Promise<ApiResponse<{ count: number }>> {
   try {
     console.log("[notificationIntegrationService] Marking all notifications as read");
@@ -228,10 +211,10 @@ export async function markAllNotificationsAsRead(): Promise<ApiResponse<{ count:
   }
 }
 
-
-
-
-
+/**
+ * Delete notification
+ * KIRO: Delete single notification
+ */
 export async function deleteNotification(
   notificationId: string
 ): Promise<ApiResponse<{ status: string }>> {
@@ -266,10 +249,10 @@ export async function deleteNotification(
   }
 }
 
-
-
-
-
+/**
+ * Get notification preferences
+ * KIRO: Fetch user's notification preferences
+ */
 export async function getNotificationPreferences(): Promise<ApiResponse<NotificationPreferences>> {
   try {
     console.log("[notificationIntegrationService] Fetching notification preferences");
@@ -320,10 +303,10 @@ export async function getNotificationPreferences(): Promise<ApiResponse<Notifica
   }
 }
 
-
-
-
-
+/**
+ * Update notification preferences
+ * KIRO: Update user's notification preferences
+ */
 export async function updateNotificationPreferences(
   preferences: Partial<NotificationPreferences>
 ): Promise<ApiResponse<NotificationPreferences>> {
@@ -358,10 +341,10 @@ export async function updateNotificationPreferences(
   }
 }
 
-
-
-
-
+/**
+ * Get unread notification count
+ * KIRO: Get count of unread notifications
+ */
 export async function getUnreadNotificationCount(): Promise<ApiResponse<{ count: number }>> {
   try {
     console.log("[notificationIntegrationService] Fetching unread count");
@@ -394,27 +377,21 @@ export async function getUnreadNotificationCount(): Promise<ApiResponse<{ count:
   }
 }
 
-
-
-
-
+/**
+ * Setup notification listeners
+ * KIRO: Setup local notification handlers
+ */
 export function setupNotificationListeners(
   onNotificationReceived?: (notification: Notification) => void,
   onNotificationTapped?: (notification: Notification) => void
 ): () => void {
-  
-  if (!Notifications) {
-    console.warn("[notificationIntegrationService] expo-notifications not available, skipping listener setup");
-    return () => {};
-  }
-
-  
+  // Handle notification when app is in foreground
   const foregroundSubscription = Notifications.addNotificationReceivedListener((notification) => {
     console.log("[notificationIntegrationService] Notification received:", notification);
     onNotificationReceived?.(notification.request.content as any);
   });
 
-  
+  // Handle notification tap
   const backgroundSubscription = Notifications.addNotificationResponseReceivedListener(
     (response) => {
       console.log("[notificationIntegrationService] Notification tapped:", response);
@@ -422,7 +399,7 @@ export function setupNotificationListeners(
     }
   );
 
-  
+  // Return cleanup function
   return () => {
     foregroundSubscription.remove();
     backgroundSubscription.remove();

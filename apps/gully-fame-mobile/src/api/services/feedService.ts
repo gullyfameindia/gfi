@@ -69,14 +69,14 @@ export interface Collection {
   featured: boolean;
 }
 
+// ─────────────────────────────────────────────
+// Trending Reels
+// ─────────────────────────────────────────────
 
-
-
-
-
-
-
-
+/**
+ * Fetch trending reels for home screen
+ * Shows most viewed and engaged content
+ */
 export async function getTrendingReels(
   page: number = 1,
   limit: number = 20
@@ -109,7 +109,7 @@ export async function getTrendingReels(
       };
     }
 
-    
+    // Fall back to mock data
     console.warn("[feedService] API returned error for trending reels, using mock data");
     return _getMockTrendingReels(page, limit);
   } catch (error: any) {
@@ -151,7 +151,7 @@ export async function getForYouReels(
       };
     }
 
-    
+    // Fall back to mock data
     console.warn("[feedService] API returned error for For You feed, using mock data");
     return _getMockForYouReels(page, limit);
   } catch (error: any) {
@@ -168,7 +168,7 @@ export async function getPopularReels(
   try {
     console.log("[feedService] Fetching popular reels:", { page, limit });
 
-    const response = await apiClient.get<any>("reels", {
+    const response = await apiClient.get<any>("public/feed/popular", {
       params: { page, limit },
     });
     const responseData = response.data as any;
@@ -193,7 +193,7 @@ export async function getPopularReels(
       };
     }
 
-    
+    // Fall back to mock data
     console.warn("[feedService] API returned error for popular reels, using mock data");
     return _getMockPopularReels(page, limit);
   } catch (error: any) {
@@ -210,8 +210,8 @@ export async function getSavedReels(
   try {
     console.log("[feedService] Fetching saved reels:", { page, limit });
 
-    
-    
+    // Spec: GET reels with saved filter or user/audio/saved for audio
+    // Using reels endpoint with filter param
     const response = await apiClient.get<any>("reels", {
       params: { page, limit, saved: true },
     });
@@ -237,7 +237,7 @@ export async function getSavedReels(
       };
     }
 
-    
+    // Fall back to mock data
     console.warn("[feedService] API returned error for saved reels, using mock data");
     return _getMockSavedReels(page, limit);
   } catch (error: any) {
@@ -251,18 +251,13 @@ export async function getCategories(): Promise<ApiResponse<Category[]>> {
   try {
     console.log("[feedService] Fetching categories");
 
-    let response: any;
-    try {
-      response = await apiClient.get<any>("user/categories");
-    } catch {
-      response = await apiClient.get<any>("public/categories");
-    }
+    const response = await apiClient.get<any>("public/categories");
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
       const categories = Array.isArray(responseData.data)
         ? responseData.data
-        : responseData.data.categories || responseData.data.items || [];
+        : responseData.data.categories || [];
 
       console.log(`[feedService] Loaded ${categories.length} categories from API`);
 
@@ -273,7 +268,7 @@ export async function getCategories(): Promise<ApiResponse<Category[]>> {
       };
     }
 
-    
+    // Fall back to mock data
     console.warn("[feedService] API returned error for categories, using mock data");
     return _getMockCategories();
   } catch (error: any) {
@@ -305,7 +300,7 @@ export async function getFeaturedCollections(): Promise<ApiResponse<Collection[]
       };
     }
 
-    
+    // Fall back to mock data
     console.warn("[feedService] API returned error for collections, using mock data");
     return _getMockFeaturedCollections();
   } catch (error: any) {
@@ -323,37 +318,34 @@ export async function toggleLikeReel(
   try {
     console.log("[feedService] Toggling like for reel:", reelId);
 
-    let response: any;
-    try {
-      response = await apiClient.post<any>(`reels/${reelId}/action`, { action_type: "like" });
-    } catch {
-      const endpoint = replaceParams(API_ENDPOINTS.REELS.LIKE, { id: reelId });
-      response = await apiClient.post<any>(endpoint);
-    }
+    const endpoint = replaceParams(API_ENDPOINTS.REELS.LIKE, { id: reelId });
+    const response = await apiClient.post<any>(endpoint);
     const responseData = response.data as any;
 
-    if (responseData.code === 1 || responseData.success) {
+    if (responseData.code === 1 && responseData.data) {
       return {
         success: true,
         data: {
-          isLiked: responseData.data?.isLiked ?? true,
-          likeCount: responseData.data?.likeCount ?? 0,
+          isLiked: responseData.data.isLiked ?? true,
+          likeCount: responseData.data.likeCount ?? 0,
         },
         message: responseData.message || "Like toggled successfully",
       };
     }
 
+    // Mock behavior
+    console.warn("[feedService] API error for like toggle, using mock behavior");
     return {
       success: true,
       data: { isLiked: true, likeCount: 1 },
-      message: "Like toggled",
+      message: "Like toggled (mock)",
     };
   } catch (error: any) {
     console.warn("[feedService] Failed to toggle like:", error.message);
     return {
       success: true,
       data: { isLiked: true, likeCount: 1 },
-      message: "Like toggled",
+      message: "Like toggled (mock behavior)",
     };
   }
 }
@@ -365,33 +357,31 @@ export async function toggleSaveReel(
   try {
     console.log("[feedService] Toggling save for reel:", reelId);
 
-    let response: any;
-    try {
-      response = await apiClient.post<any>(`reels/${reelId}/action`, { action_type: "save" });
-    } catch {
-      response = await apiClient.post<any>(`reels/${reelId}/save`);
-    }
+    const endpoint = replaceParams(API_ENDPOINTS.REELS.GET_BY_ID, { id: `${reelId}/save` });
+    const response = await apiClient.post<any>(endpoint);
     const responseData = response.data as any;
 
-    if (responseData.code === 1 || responseData.success) {
+    if (responseData.code === 1 && responseData.data) {
       return {
         success: true,
-        data: { isSaved: responseData.data?.isSaved ?? true },
+        data: { isSaved: responseData.data.isSaved ?? true },
         message: responseData.message || "Save toggled successfully",
       };
     }
 
+    // Mock behavior
+    console.warn("[feedService] API error for save toggle, using mock behavior");
     return {
       success: true,
       data: { isSaved: true },
-      message: "Saved",
+      message: "Saved (mock)",
     };
   } catch (error: any) {
     console.warn("[feedService] Failed to toggle save:", error.message);
     return {
       success: true,
       data: { isSaved: true },
-      message: "Saved",
+      message: "Saved (mock behavior)",
     };
   }
 }
@@ -487,7 +477,7 @@ function _getMockPopularReels(page: number, limit: number): ApiResponse<FeedResp
 }
 
 function _getMockSavedReels(page: number, limit: number): ApiResponse<FeedResponse> {
-  
+  // Return empty for saved as user hasn't saved anything in mock
   console.log(`[feedService] Using mock saved reels - Empty (user hasn't saved any)`);
 
   return {

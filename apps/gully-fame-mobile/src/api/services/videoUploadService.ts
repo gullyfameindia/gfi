@@ -1,16 +1,13 @@
-
-
-
-
-
-
+/**
+ * Video Upload Service
+ * KIRO: Complete video upload pipeline integration
+ * Handles: Camera → Compression → Upload → Reel Creation
+ * PRODUCTION READY: Error handling, retry logic, state management
+ */
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
 import * as FileSystem from "expo-file-system/legacy";
-
-
-
 import * as MediaLibrary from "expo-media-library";
 
 export interface VideoUploadRequest {
@@ -48,12 +45,12 @@ export interface UploadProgress {
   stage?: "uploading" | "processing" | "creating" | "saving";
 }
 
-
-
-
-
+/**
+ * Get presigned upload URL from backend
+ * KIRO: Gets temporary URL to upload directly to storage service
+ */
 async function getUploadUrl(videoUri: string): Promise<{ uploadUrl: string; uploadId: string }> {
-  
+  // Extract filename from URI
   const fileName = videoUri.split('/').pop() || `video_${Date.now()}.mp4`;
   
   console.log('[videoUploadService] 📹 Getting upload URL - fileName:', fileName);
@@ -64,14 +61,14 @@ async function getUploadUrl(videoUri: string): Promise<{ uploadUrl: string; uplo
   });
   const responseData = response.data as any;
   
-  
+  // Log full response for debugging
   console.log('[videoUploadService] 📹 Full response from POST /reels/upload-url:', JSON.stringify(responseData, null, 2));
   
   if (responseData.code === 1 && responseData.data) {
     console.log('[videoUploadService] 📹 Response.data keys:', Object.keys(responseData.data));
     console.log('[videoUploadService] 📹 Response.data:', JSON.stringify(responseData.data, null, 2));
     
-    
+    // Try multiple possible field names
     const uploadId = responseData.data.uploadId || responseData.data.id || responseData.data.fileId || responseData.data.assetId || responseData.data.key;
     const uploadUrl = responseData.data.uploadUrl || responseData.data.url || responseData.data.presignedUrl || responseData.data.uploadUri;
     
@@ -97,17 +94,17 @@ async function getUploadUrl(videoUri: string): Promise<{ uploadUrl: string; uplo
   throw new Error(responseData.message || "Failed to get upload URL");
 }
 
-
-
-
-
-
+/**
+ * Upload video file directly to presigned URL
+ * KIRO: Uploads file to S3/storage using presigned URL from backend via streaming
+ * Uses FileSystem.uploadAsync to avoid loading entire file into memory
+ */
 async function uploadToPresignedUrl(
   videoUri: string,
   uploadUrl: string,
   onProgress?: (progress: UploadProgress) => void
 ): Promise<void> {
-  
+  // Validate file exists
   const fileInfo = await FileSystem.getInfoAsync(videoUri);
   if (!fileInfo.exists) {
     throw new Error("Video file not found");
@@ -117,8 +114,8 @@ async function uploadToPresignedUrl(
   console.log(`[videoUploadService] 📹 Uploading to presigned URL - size: ${fileSizeInMB.toFixed(2)}MB`);
   console.log(`[videoUploadService] 📹 Using streaming upload (uploadAsync) to avoid memory issues`);
 
-  
-  
+  // Use FileSystem.uploadAsync for streaming upload to presigned URL
+  // This streams the file from disk without loading entire content into memory
   const result = await FileSystem.uploadAsync(uploadUrl, videoUri, {
     httpMethod: "PUT",
     uploadType: FileSystem.FileSystemUploadType.BINARY_CONTENT,
@@ -130,7 +127,7 @@ async function uploadToPresignedUrl(
   console.log(`[videoUploadService] 📹 Upload response status:`, result.status);
   console.log(`[videoUploadService] 📹 Upload body:`, result.body);
 
-  
+  // Check for upload success (S3 presigned URLs typically return 200)
   if (result.status !== 200) {
     throw new Error(`Upload to storage failed: HTTP ${result.status} - ${result.body}`);
   }
@@ -138,10 +135,10 @@ async function uploadToPresignedUrl(
   console.log(`[videoUploadService] ✅ Upload to presigned URL successful`);
 }
 
-
-
-
-
+/**
+ * Upload video file to server with retry logic
+ * KIRO: Handles presigned URL flow: get URL → upload to storage → return uploadId
+ */
 export async function uploadVideoFile(
   videoUri: string,
   onProgress?: (progress: UploadProgress) => void,
@@ -153,13 +150,13 @@ export async function uploadVideoFile(
     try {
       console.log(`[videoUploadService] Upload attempt ${attempt}/${retries}:`, videoUri);
 
-      
+      // Validate file exists
       const fileInfo = await FileSystem.getInfoAsync(videoUri);
       if (!fileInfo.exists) {
         throw new Error("Video file not found");
       }
 
-      
+      // Check file size (limit to 500MB)
       const fileSizeInMB = (fileInfo.size || 0) / (1024 * 1024);
       console.log(`[videoUploadService] 📹 [VERIFICATION] File validation - exists: true, size: ${fileSizeInMB.toFixed(2)}MB`);
       
@@ -167,7 +164,7 @@ export async function uploadVideoFile(
         throw new Error(`Video file too large: ${fileSizeInMB.toFixed(2)}MB (max 500MB)`);
       }
 
-      
+      // Stage 1: Get presigned upload URL
       console.log('[videoUploadService] 📹 [VERIFICATION] Stage 1: Getting presigned upload URL');
       onProgress?.({
         loaded: 0,
@@ -179,7 +176,7 @@ export async function uploadVideoFile(
       const { uploadUrl, uploadId } = await getUploadUrl(videoUri);
       console.log('[videoUploadService] ✅ Got presigned URL, uploadId:', uploadId);
 
-      
+      // Stage 2: Upload to presigned URL
       console.log('[videoUploadService] 📹 [VERIFICATION] Stage 2: Uploading to presigned URL');
       onProgress?.({
         loaded: 0,
@@ -189,7 +186,7 @@ export async function uploadVideoFile(
       });
 
       await uploadToPresignedUrl(videoUri, uploadUrl, (progress) => {
-        
+        // Scale progress from 20% to 90%
         const scaledProgress = 20 + (progress.percentage * 0.7);
         onProgress?.({
           ...progress,
@@ -212,7 +209,7 @@ export async function uploadVideoFile(
     } catch (error: any) {
       lastError = error;
       
-      
+      // Log detailed error info for debugging
       const status = error.response?.status;
       const statusText = error.response?.statusText;
       console.error(`[videoUploadService] Attempt ${attempt} failed:`, error.message);
@@ -220,20 +217,20 @@ export async function uploadVideoFile(
         console.error(`  HTTP Status: ${status} ${statusText}`);
       }
 
-      
+      // Don't retry on certain errors
       if (
         error.message?.includes("not found") ||
         error.message?.includes("too large") ||
         error.response?.status === 400 ||
         error.response?.status === 401 ||
-        error.response?.status === 413 
+        error.response?.status === 413 // Payload Too Large - don't retry
       ) {
         break;
       }
 
-      
+      // Wait before retrying (exponential backoff)
       if (attempt < retries) {
-        const waitTime = Math.pow(2, attempt) * 1000; 
+        const waitTime = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
         console.log(`[videoUploadService] Retrying in ${waitTime}ms...`);
         await new Promise(resolve => setTimeout(resolve, waitTime));
       }
@@ -242,7 +239,7 @@ export async function uploadVideoFile(
 
   console.error("[videoUploadService] All upload attempts failed");
   
-  
+  // Provide better error message based on error type
   let errorMessage = lastError?.message || "Failed to upload video after multiple attempts";
   
   if (lastError?.response?.status === 413) {
@@ -261,10 +258,10 @@ export async function uploadVideoFile(
   };
 }
 
-
-
-
-
+/**
+ * Create reel from uploaded video
+ * KIRO: Creates reel metadata after successful upload
+ */
 export async function createReelFromUpload(
   videoUrl: string,
   request: VideoUploadRequest
@@ -289,19 +286,19 @@ export async function createReelFromUpload(
       tags: request.tags || [],
     };
 
-    
+    // Add competition if present
     if (request.competitionId) {
       (payload as any).competitionId = request.competitionId;
     }
 
-    
+    // Add music if present
     if ((request as any).music) {
       console.log('[videoUploadService] 🎵 [VERIFICATION] Adding music to reel payload');
       (payload as any).music = (request as any).music;
       console.log('  music:', JSON.stringify((payload as any).music));
     }
 
-    
+    // Spec: POST reels/publish
     console.log('[videoUploadService] 📊 [VERIFICATION] Posting to /reels/publish with payload:', JSON.stringify(payload));
     const response = await apiClient.post<any>("reels/publish", payload);
     const responseData = response.data as any;
@@ -356,11 +353,11 @@ export async function createReelFromUpload(
   }
 }
 
-
-
-
-
-
+/**
+ * Complete video upload pipeline
+ * KIRO: Handles entire flow: Upload → Create Reel → Save to Gallery
+ * PRODUCTION READY: Comprehensive error handling and progress tracking
+ */
 export async function uploadVideoComplete(
   videoUri: string,
   request: VideoUploadRequest,
@@ -376,7 +373,7 @@ export async function uploadVideoComplete(
       music: (request as any).music
     }));
 
-    
+    // Validate input
     if (!videoUri || !request.title) {
       console.error('[videoUploadService] ❌ [VERIFICATION FAILED] Missing required fields');
       return {
@@ -392,7 +389,7 @@ export async function uploadVideoComplete(
       };
     }
 
-    
+    // Stage 1: Upload video file with retry logic
     console.log('[videoUploadService] 📊 [VERIFICATION] Stage 1: File upload starting');
     onProgress?.("uploading", 0);
     const uploadResult = await uploadVideoFile(videoUri, (prog) => {
@@ -417,7 +414,7 @@ export async function uploadVideoComplete(
     console.log('[videoUploadService] ✅ [VERIFICATION] Stage 1 complete - uploadId:', uploadResult.data?.uploadId);
     console.log('[videoUploadService] ✅ [VERIFICATION] Stage 1 complete - videoUrl:', uploadResult.data?.videoUrl?.substring(0, 60));
 
-    
+    // Stage 2: Create reel metadata
     console.log('[videoUploadService] 📊 [VERIFICATION] Stage 2: Creating reel metadata');
     console.log('  videoUrl:', uploadResult.data?.videoUrl);
     console.log('  title:', request.title);
@@ -425,7 +422,7 @@ export async function uploadVideoComplete(
     console.log('  music:', (request as any).music);
     
     onProgress?.("creating_reel", 60);
-    
+    // Pass videoUrl directly to create reel (backend expects video_url in publish payload)
     const reelResult = await createReelFromUpload(uploadResult.data?.videoUrl || "", request);
 
     if (!reelResult.success) {
@@ -447,20 +444,16 @@ export async function uploadVideoComplete(
     console.log('  videoUrl:', reelResult.data?.videoUrl?.substring(0, 60));
     console.log('  status:', reelResult.data?.status);
 
-    
+    // Stage 3: Save to gallery (optional, don't fail if it fails)
     console.log('[videoUploadService] 📊 [VERIFICATION] Stage 3: Saving to gallery (optional)');
     onProgress?.("saving_gallery", 85);
     try {
-      if (MediaLibrary) {
-        const { status } = await MediaLibrary.requestPermissionsAsync();
-        if (status === "granted") {
-          await MediaLibrary.saveToLibraryAsync(videoUri);
-          console.log("[videoUploadService] ✅ [VERIFICATION] Video saved to gallery");
-        } else {
-          console.warn("[videoUploadService] ⚠️ Gallery permission not granted");
-        }
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status === "granted") {
+        await MediaLibrary.saveToLibraryAsync(videoUri);
+        console.log("[videoUploadService] ✅ [VERIFICATION] Video saved to gallery");
       } else {
-        console.warn("[videoUploadService] ⚠️ MediaLibrary not available, skipping gallery save");
+        console.warn("[videoUploadService] ⚠️ Gallery permission not granted");
       }
     } catch (galleryError) {
       console.warn("[videoUploadService] ⚠️ Failed to save to gallery:", galleryError);
@@ -495,10 +488,10 @@ export async function uploadVideoComplete(
   }
 }
 
-
-
-
-
+/**
+ * Get upload status
+ * KIRO: Check status of ongoing upload
+ */
 export async function getUploadStatus(
   uploadId: string
 ): Promise<ApiResponse<{ status: string; progress: number }>> {
@@ -536,10 +529,10 @@ export async function getUploadStatus(
   }
 }
 
-
-
-
-
+/**
+ * Cancel upload
+ * KIRO: Cancel ongoing upload
+ */
 export async function cancelUpload(uploadId: string): Promise<ApiResponse<void>> {
   try {
     console.log("[videoUploadService] Cancelling upload:", uploadId);
@@ -570,10 +563,10 @@ export async function cancelUpload(uploadId: string): Promise<ApiResponse<void>>
 }
 
 
-
-
-
-
+/**
+ * Save reel as draft
+ * Spec: POST reels/draft
+ */
 export async function saveDraft(data: {
   video_url: string;
   caption?: string;
@@ -614,10 +607,10 @@ export async function saveDraft(data: {
   }
 }
 
-
-
-
-
+/**
+ * Get saved drafts
+ * Spec: GET reels/draft
+ */
 export async function getDrafts(): Promise<ApiResponse<any[]>> {
   try {
     console.log("[videoUploadService] Fetching saved drafts");

@@ -1,5 +1,5 @@
-
-
+// Created by Kiro - Comment Service
+// Handles comment operations: add, delete, get, like comments on reels
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
@@ -29,7 +29,7 @@ export interface CommentsResponse {
 
 export interface AddCommentRequest {
   text: string;
-  parentCommentId?: string; 
+  parentCommentId?: string; // For nested replies
 }
 
 export interface AddCommentResponse {
@@ -43,7 +43,7 @@ export interface AddCommentResponse {
   createdAt: string;
 }
 
-
+//   Add comment to reel
 export async function addComment(
   reelId: string,
   commentData: AddCommentRequest
@@ -93,7 +93,7 @@ export async function addComment(
   }
 }
 
-
+//   Get comments for a reel
 export async function getComments(
   reelId: string,
   params?: { page?: number; limit?: number }
@@ -149,7 +149,7 @@ export async function getComments(
   }
 }
 
-
+//   Delete comment
 export async function deleteComment(commentId: string): Promise<ApiResponse<boolean>> {
   try {
     console.log("[commentService] Deleting comment:", commentId);
@@ -185,7 +185,7 @@ export async function deleteComment(commentId: string): Promise<ApiResponse<bool
   }
 }
 
-
+//  Like comment
 export async function likeComment(commentId: string): Promise<ApiResponse<number>> {
   try {
     console.log("[commentService] Liking comment:", commentId);
@@ -223,7 +223,7 @@ export async function likeComment(commentId: string): Promise<ApiResponse<number
   }
 }
 
-
+//   Unlike comment
 export async function unlikeComment(commentId: string): Promise<ApiResponse<number>> {
   try {
     console.log("[commentService] Unliking comment:", commentId);
@@ -261,7 +261,7 @@ export async function unlikeComment(commentId: string): Promise<ApiResponse<numb
   }
 }
 
-
+// Reply to comment
 export async function replyToComment(
   commentId: string,
   replyText: string
@@ -313,7 +313,7 @@ export async function replyToComment(
   }
 }
 
-
+//  Get comment count for reel
 export async function getCommentCount(reelId: string): Promise<ApiResponse<number>> {
   try {
     console.log("[commentService] Getting comment count for reel:", reelId);

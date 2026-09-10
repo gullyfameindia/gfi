@@ -64,7 +64,7 @@ export async function getChatList(): Promise<ApiResponse<ChatListResponse>> {
       "";
     console.log("[chatService] Response Content-Type:", contentType);
 
-    
+    // If response is a string (HTML/text), reject it
     if (typeof response.data === "string") {
       console.error("[chatService] Received HTML instead of JSON");
       return {
@@ -103,14 +103,14 @@ export async function getChatList(): Promise<ApiResponse<ChatListResponse>> {
       responseData?.data?.chatlist,
     );
 
-    
+    // Handle different response structures
     let chatlistData: any = null;
 
-    
+    // Check if response has code === 1
     if (responseData && responseData.code === 1) {
       console.log("[chatService] Response code is 1, parsing data...");
 
-      
+      // Standard structure: { code: 1, data: { chatlist: [...] } }
       if (responseData.data) {
         if (
           responseData.data.chatlist &&
@@ -121,12 +121,12 @@ export async function getChatList(): Promise<ApiResponse<ChatListResponse>> {
           );
           chatlistData = responseData.data.chatlist;
         }
-        
+        // Alternative: { code: 1, data: [...] } (direct array)
         else if (Array.isArray(responseData.data)) {
           console.log("[chatService] Found array in responseData.data");
           chatlistData = responseData.data;
         }
-        
+        // Check if data is an object with chatlist property
         else if (
           typeof responseData.data === "object" &&
           responseData.data.chatlist
@@ -135,7 +135,7 @@ export async function getChatList(): Promise<ApiResponse<ChatListResponse>> {
           chatlistData = responseData.data.chatlist;
         }
       }
-      
+      // Alternative: { code: 1, chatlist: [...] } (chatlist at root)
       else if (responseData.chatlist && Array.isArray(responseData.chatlist)) {
         console.log("[chatService] Found chatlist at root level");
         chatlistData = responseData.chatlist;
@@ -201,9 +201,9 @@ export async function getChatList(): Promise<ApiResponse<ChatListResponse>> {
   }
 }
 
-
-
-
+/**
+ * Send a chat message
+ */
 export async function sendChat(
   receiverId: string,
   message: string,
@@ -277,10 +277,10 @@ export async function getChatDetails(
       },
     });
 
-    
+    // Explicitly assign responseData
     let responseData = response.data;
 
-    
+    // If response is a string (HTML/text), reject it
     if (typeof responseData === "string") {
       console.error("[chatService] Received HTML instead of JSON");
       return {
@@ -343,7 +343,7 @@ export async function getChatDetails(
   }
 }
 
-
+// ==================== DELETE MESSAGE ====================
 
 export async function deleteMessage(
   messageId: string
@@ -382,7 +382,7 @@ export async function deleteMessage(
   }
 }
 
-
+// ==================== MARK CONVERSATION AS READ ====================
 
 export async function markConversationRead(
   conversationId: string
@@ -422,7 +422,7 @@ export async function markConversationRead(
   }
 }
 
-
+// ==================== Service Export ====================
 
 export const chatService = {
   getChatList,

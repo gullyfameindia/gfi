@@ -1,47 +1,47 @@
-
-
-
-
-
-
-
-
-
-
+/**
+ * Music Library Service
+ * Connects the Video Editor's music picker to the Gully Fame backend.
+ *
+ * Postman collection endpoints implemented:
+ *  - Public  : GET  /public/audio?sort=trending|newest|popular  → listAudio()
+ *  - User    : POST /user/audio/:id/save                        → toggleSaveAudio()
+ *  - User    : GET  /user/audio/saved                           → getSavedAudio()
+ *  - Helper  : buildReelMusicPayload()  ← converts MusicTrack → reel publish shape
+ */
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
 import { mockDataManager } from "../../mockData/mockDataManager";
 import * as mockMusicTracks from "../../mockData/musicTracks";
 
-
-
-
+// ─────────────────────────────────────────────
+// Types
+// ─────────────────────────────────────────────
 
 export type AudioSortOption = "trending" | "newest" | "popular";
 
-
+/** A single audio/music track as returned by the backend */
 export interface MusicTrack {
   _id: string;
-  
+  /** Track title shown in the music library picker */
   title: string;
-  
+  /** Artist / creator name */
   artist?: string;
-  
+  /** Duration in seconds */
   duration: number;
-  
+  /** Streamable / playable URL */
   audioUrl: string;
-  
+  /** Optional waveform / cover art */
   coverImage?: string;
-  
+  /** How many reels use this track */
   usageCount?: number;
-  
+  /** Whether the current logged-in user has saved this track */
   isSaved?: boolean;
   isActive?: boolean;
   createdAt?: string;
 }
 
-
+/** Paginated list response for audio tracks */
 export interface AudioListData {
   page: number;
   limit: number;
@@ -49,17 +49,17 @@ export interface AudioListData {
   tracks: MusicTrack[];
 }
 
-
+/** Minimal music object embedded inside a reel publish payload */
 export interface ReelMusicPayload {
   id: string;
   name: string;
 }
 
+// ─────────────────────────────────────────────
+// Helpers
+// ─────────────────────────────────────────────
 
-
-
-
-
+/** Normalise a raw API audio object → MusicTrack */
 function normaliseTrack(raw: any): MusicTrack {
   return {
     _id: raw._id ?? raw.id ?? "",
@@ -75,23 +75,23 @@ function normaliseTrack(raw: any): MusicTrack {
   };
 }
 
+// ─────────────────────────────────────────────
+// Public API – GET /public/audio
+// ─────────────────────────────────────────────
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Fetch the public audio / music library.
+ * Used by the Music Picker inside the Video Editor.
+ * 
+ * Hybrid Approach:
+ * - Try to fetch from real API first
+ * - If API fails, automatically fall back to mock data
+ *
+ * @param sort    Sort order  – "trending" | "newest" | "popular"  (default: "trending")
+ * @param page    Page number (default: 1)
+ * @param limit   Items per page (default: 20)
+ * @param search  Optional search keyword to filter tracks by title / artist
+ */
 export async function listAudio(
   sort: AudioSortOption = "trending",
   page = 1,
@@ -113,7 +113,7 @@ export async function listAudio(
     if (responseData.code === 1) {
       const raw = responseData.data;
 
-      
+      // Backend returns response with 'audios' key, check all possible keys
       const rawTracks: any[] = Array.isArray(raw)
         ? raw
         : raw?.audios ?? raw?.tracks ?? raw?.audio ?? raw?.data ?? [];
@@ -143,21 +143,21 @@ export async function listAudio(
       };
     }
 
-    
+    // API returned error response - fall back to mock
     console.warn('[musicLibraryService] ⚠️ [VERIFICATION] API returned error code:', responseData.code, '- falling back to mock data');
     return _getMockAudioList(sort, page, limit, search);
   } catch (error: any) {
     console.warn('[musicLibraryService] ⚠️ [VERIFICATION] API call failed:', error.message, '- falling back to mock data');
     
-    
+    // Fall back to mock data on any error
     return _getMockAudioList(sort, page, limit, search);
   }
 }
 
-
-
-
-
+/**
+ * Internal helper - Get audio list from mock data
+ * Supports sorting, pagination, and search
+ */
 function _getMockAudioList(
   sort: AudioSortOption = "trending",
   page = 1,
@@ -166,7 +166,7 @@ function _getMockAudioList(
 ): ApiResponse<AudioListData> {
   let tracks: mockMusicTracks.MusicTrack[] = [];
 
-  
+  // Get tracks based on sort option
   switch (sort) {
     case "trending":
       tracks = mockMusicTracks.getTrendingTracks();
@@ -181,12 +181,12 @@ function _getMockAudioList(
       tracks = mockMusicTracks.mockMusicTracks;
   }
 
-  
+  // Apply search filter if provided
   if (search && search.trim()) {
     tracks = mockMusicTracks.searchMusicTracks(search);
   }
 
-  
+  // Convert mock tracks to MusicTrack format
   const convertedTracks: MusicTrack[] = tracks.map((mockTrack) => ({
     _id: mockTrack.id,
     title: mockTrack.title,
@@ -199,7 +199,7 @@ function _getMockAudioList(
     isActive: true,
   }));
 
-  
+  // Apply pagination
   const start = (page - 1) * limit;
   const paginatedTracks = convertedTracks.slice(start, start + limit);
 
@@ -223,32 +223,32 @@ function _getMockAudioList(
   };
 }
 
+// ─────────────────────────────────────────────
+// User API – POST /user/audio/:id/save (toggle)
+// ─────────────────────────────────────────────
 
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Toggle save / unsave an audio track for the current user.
+ * The backend handles the toggle logic; returns the new saved state.
+ * 
+ * Falls back to mock behavior if API is unavailable.
+ *
+ * @param audioId  The `_id` of the MusicTrack to save / unsave
+ */
 export async function toggleSaveAudio(
   audioId: string
 ): Promise<ApiResponse<{ isSaved: boolean }>> {
   try {
     console.log("[musicLibraryService] POST user/audio/:id/save", { audioId });
 
-    
+    // Spec: POST user/audio/:id/save (with Bearer token)
     const response = await apiClient.post<any>(`user/audio/${audioId}/save`, {}, {
-      skipAuth: false,  
+      skipAuth: false,  // Explicitly require auth
     });
     const responseData = response.data as any;
 
     if (responseData.code === 1) {
-      
+      // Backend may return { isSaved: boolean } or just a success message
       const isSaved: boolean =
         responseData.data?.isSaved ??
         responseData.data?.is_saved ??
@@ -264,7 +264,7 @@ export async function toggleSaveAudio(
       };
     }
 
-    
+    // API error - fall back to mock behavior (just toggle locally)
     console.warn("[musicLibraryService] API returned error for save, using mock behavior");
     return _getMockToggleSaveAudio(audioId);
   } catch (error: any) {
@@ -273,10 +273,10 @@ export async function toggleSaveAudio(
   }
 }
 
-
-
-
-
+/**
+ * Internal helper - Mock behavior for toggle save
+ * Simply returns true (saved) for mock data
+ */
 function _getMockToggleSaveAudio(audioId: string): ApiResponse<{ isSaved: boolean }> {
   console.log(`[musicLibraryService] Mock toggle: Audio ${audioId} saved (mock behavior)`);
   return {
@@ -286,19 +286,19 @@ function _getMockToggleSaveAudio(audioId: string): ApiResponse<{ isSaved: boolea
   };
 }
 
+// ─────────────────────────────────────────────
+// User API – GET /user/audio/saved
+// ─────────────────────────────────────────────
 
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Fetch all audio tracks saved by the current user.
+ * Shown in the "Saved" / "My Music" tab inside the music picker.
+ * 
+ * Falls back to mock data if API is unavailable.
+ *
+ * @param page   Page number  (default: 1)
+ * @param limit  Items per page (default: 20)
+ */
 export async function getSavedAudio(
   page = 1,
   limit = 20
@@ -320,7 +320,7 @@ export async function getSavedAudio(
 
       const tracks: MusicTrack[] = rawTracks.map((t) => ({
         ...normaliseTrack(t),
-        isSaved: true, 
+        isSaved: true, // All tracks from /saved are by definition saved
       }));
 
       const listData: AudioListData = {
@@ -339,7 +339,7 @@ export async function getSavedAudio(
       };
     }
 
-    
+    // API returned error response - fall back to mock
     console.warn("[musicLibraryService] API returned error for saved audio, using mock data");
     return _getMockSavedAudioList(page, limit);
   } catch (error: any) {
@@ -348,14 +348,14 @@ export async function getSavedAudio(
   }
 }
 
-
-
-
+/**
+ * Internal helper - Get saved audio list from mock data
+ */
 function _getMockSavedAudioList(page = 1, limit = 20): ApiResponse<AudioListData> {
-  
+  // Return a subset of popular/trending tracks as "saved"
   let tracks = mockMusicTracks.getPopularTracks().slice(0, 5);
 
-  
+  // Convert to MusicTrack format
   const convertedTracks: MusicTrack[] = tracks.map((mockTrack) => ({
     _id: mockTrack.id,
     title: mockTrack.title,
@@ -368,7 +368,7 @@ function _getMockSavedAudioList(page = 1, limit = 20): ApiResponse<AudioListData
     isActive: true,
   }));
 
-  
+  // Apply pagination
   const start = (page - 1) * limit;
   const paginatedTracks = convertedTracks.slice(start, start + limit);
 
@@ -388,22 +388,22 @@ function _getMockSavedAudioList(page = 1, limit = 20): ApiResponse<AudioListData
   };
 }
 
+// ─────────────────────────────────────────────
+// Helper – Build music payload for reel publish
+// ─────────────────────────────────────────────
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**
+ * Converts a selected MusicTrack into the compact shape expected
+ * by the `POST /reels/publish` endpoint:
+ *
+ * ```json
+ * {
+ *   "music": { "id": "<audioId>", "name": "<title>" }
+ * }
+ * ```
+ *
+ * Returns `null` when no track is selected (music is optional on reels).
+ */
 export function buildReelMusicPayload(
   track: MusicTrack | null | undefined
 ): ReelMusicPayload | null {
@@ -415,14 +415,14 @@ export function buildReelMusicPayload(
   };
 }
 
+// ─────────────────────────────────────────────
+// Search helper (client-side fallback)
+// ─────────────────────────────────────────────
 
-
-
-
-
-
-
-
+/**
+ * Filter a local list of MusicTrack objects by a search term.
+ * Useful for instant search before the backend query resolves.
+ */
 export function filterTracksBySearch(
   tracks: MusicTrack[],
   query: string
@@ -436,20 +436,20 @@ export function filterTracksBySearch(
   );
 }
 
-
-
-
+// ─────────────────────────────────────────────
+// Default export – namespaced service object
+// ─────────────────────────────────────────────
 
 export const musicLibraryService = {
-  
+  /** Fetch public audio library (trending / newest / popular) */
   listAudio,
-  
+  /** Toggle save / unsave an audio track for the logged-in user */
   toggleSaveAudio,
-  
+  /** Get all audio tracks saved by the logged-in user */
   getSavedAudio,
-  
+  /** Build the `{ id, name }` payload for reel publish */
   buildReelMusicPayload,
-  
+  /** Client-side search filter helper */
   filterTracksBySearch,
 };
 

@@ -57,7 +57,7 @@ export {
   formatAmount,
 } from "./services/paymentService";
 
-
+// ✅ ADDED: Missing service exports
 export { userService } from "./services/userService";
 export { competitionService } from "./services/competitionService";
 export { reelsService } from "./services/reelsService";

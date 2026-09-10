@@ -1,8 +1,8 @@
-
-
-
-
-
+/**
+ * Filter Library Service
+ * Manages video filters and effects available in the editor
+ *  Real-time backend integration for production
+ */
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
@@ -57,9 +57,9 @@ export interface FilterListResponse {
   filters: FilterPreset[];
 }
 
-
-
-
+/**
+ * Fetch all available video filters from backend
+ */
 export async function listFilters(
   category?: string,
   page = 1,
@@ -77,7 +77,7 @@ export async function listFilters(
     if (responseData.code === 1 && responseData.data) {
       const raw = responseData.data;
 
-      
+      // Handle array or wrapped response
       const rawFilters: any[] = Array.isArray(raw)
         ? raw
         : raw?.filters ?? raw?.data ?? [];
@@ -126,9 +126,9 @@ export async function listFilters(
   }
 }
 
-
-
-
+/**
+ * Get filter details by ID
+ */
 export async function getFilterById(filterId: string): Promise<ApiResponse<FilterPreset>> {
   try {
     console.log("[filterLibraryService] Getting filter:", filterId);
@@ -176,9 +176,9 @@ export async function getFilterById(filterId: string): Promise<ApiResponse<Filte
   }
 }
 
-
-
-
+/**
+ * Search filters by name
+ */
 export async function searchFilters(query: string, limit = 20): Promise<ApiResponse<FilterPreset[]>> {
   try {
     console.log("[filterLibraryService] Searching filters:", query);

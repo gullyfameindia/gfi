@@ -3,7 +3,7 @@ import { ApiResponse } from '../types';
 import API_ENDPOINTS from '../endpoints';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
+// ==================== Type Definitions ====================
 
 export interface User {
   _id: string;
@@ -49,7 +49,7 @@ export interface WalletBalance {
   [key: string]: any;
 }
 
-
+// ==================== API Functions ====================
 
 export async function getCurrentUser(): Promise<ApiResponse<User>> {
   try {
@@ -133,7 +133,7 @@ export async function getUserKycStatus(): Promise<ApiResponse<KycStatus>> {
   try {
     console.log('[userService] GET User KYC Status');
     
-    
+    // Get current user ID from storage
     const userId = await AsyncStorage.getItem('userId');
     
     if (!userId) {
@@ -168,7 +168,7 @@ export async function getUserKycStatus(): Promise<ApiResponse<KycStatus>> {
   } catch (error: any) {
     console.error('[userService] GET User KYC Status error:', error.message);
     
-    
+    // KYC might not exist yet, return pending status
     if (error.response?.status === 404) {
       return {
         success: true,

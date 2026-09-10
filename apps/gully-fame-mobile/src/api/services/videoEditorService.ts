@@ -1,5 +1,5 @@
-
-
+// Created by Kiro - Video Editor Service
+// Handles video editing operations like trimming, filtering, effects, and export
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
@@ -76,7 +76,7 @@ export interface EditingSession {
   updatedAt: string;
 }
 
-
+// ✅ CREATED BY KIRO - Create new editing session
 export async function createEditingSession(videoUri: string): Promise<ApiResponse<EditingSession>> {
   try {
     console.log("[videoEditorService] Creating editing session:", videoUri);
@@ -126,7 +126,7 @@ export async function createEditingSession(videoUri: string): Promise<ApiRespons
   }
 }
 
-
+// ✅ CREATED BY KIRO - Trim video
 export async function trimVideo(
   sessionId: string,
   startTime: number,
@@ -181,7 +181,7 @@ export async function trimVideo(
   }
 }
 
-
+// ✅ CREATED BY KIRO - Apply filter to video
 export async function applyFilter(
   sessionId: string,
   filter: VideoFilter
@@ -228,7 +228,7 @@ export async function applyFilter(
   }
 }
 
-
+// ✅ CREATED BY KIRO - Add text overlay to video
 export async function addTextOverlay(
   sessionId: string,
   text: VideoText
@@ -278,7 +278,7 @@ export async function addTextOverlay(
   }
 }
 
-
+// ✅ CREATED BY KIRO - Add music to video
 export async function addMusic(
   sessionId: string,
   music: VideoMusic
@@ -326,7 +326,7 @@ export async function addMusic(
   }
 }
 
-
+// ✅ CREATED BY KIRO - Add transition effect
 export async function addTransition(
   sessionId: string,
   effect: VideoEffect
@@ -374,7 +374,7 @@ export async function addTransition(
   }
 }
 
-
+// ✅ CREATED BY KIRO - Export edited video
 export async function exportVideo(
   sessionId: string,
   options: VideoExportOptions
@@ -417,7 +417,7 @@ export async function exportVideo(
   }
 }
 
-
+// ✅ CREATED BY KIRO - Get editing session
 export async function getEditingSession(sessionId: string): Promise<ApiResponse<EditingSession>> {
   try {
     console.log("[videoEditorService] Getting editing session:", sessionId);
@@ -465,7 +465,7 @@ export async function getEditingSession(sessionId: string): Promise<ApiResponse<
   }
 }
 
-
+// ✅ CREATED BY KIRO - Delete editing session
 export async function deleteEditingSession(sessionId: string): Promise<ApiResponse<boolean>> {
   try {
     console.log("[videoEditorService] Deleting editing session:", sessionId);
@@ -500,17 +500,12 @@ export async function deleteEditingSession(sessionId: string): Promise<ApiRespon
   }
 }
 
-
+// ✅ CREATED BY KIRO - Get all available video filters with mock fallback
 export async function getVideoFilters(): Promise<ApiResponse<mockVideoFilters.VideoFilter[]>> {
   try {
     console.log("[videoEditorService] Fetching video filters");
 
-    let response: any;
-    try {
-      response = await apiClient.get<any>("public/filters", { skipAuth: true });
-    } catch {
-      response = await apiClient.get<any>("video-editor/filters");
-    }
+    const response = await apiClient.get<any>("video-editor/filters");
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -527,16 +522,16 @@ export async function getVideoFilters(): Promise<ApiResponse<mockVideoFilters.Vi
       };
     }
 
-    
-    console.warn("[videoEditorService] API returned error for filters, using fallback data");
+    // Fall back to mock data
+    console.warn("[videoEditorService] API returned error for filters, using mock data");
     return _getMockFilters();
   } catch (error: any) {
-    console.warn("[videoEditorService] Failed to fetch filters, falling back:", error.message);
+    console.warn("[videoEditorService] Failed to fetch filters, falling back to mock data:", error.message);
     return _getMockFilters();
   }
 }
 
-
+// ✅ CREATED BY KIRO - Get all available video effects with mock fallback
 export async function getVideoEffects(): Promise<ApiResponse<mockVideoFilters.VideoFilter[]>> {
   try {
     console.log("[videoEditorService] Fetching video effects");
@@ -558,16 +553,16 @@ export async function getVideoEffects(): Promise<ApiResponse<mockVideoFilters.Vi
       };
     }
 
-    
-    console.warn("[videoEditorService] API returned error for effects, using fallback data");
+    // Fall back to mock data
+    console.warn("[videoEditorService] API returned error for effects, using mock data");
     return _getMockEffects();
   } catch (error: any) {
-    console.warn("[videoEditorService] Failed to fetch effects, falling back:", error.message);
+    console.warn("[videoEditorService] Failed to fetch effects, falling back to mock data:", error.message);
     return _getMockEffects();
   }
 }
 
-
+// ✅ CREATED BY KIRO - Get all available transitions with mock fallback
 export async function getVideoTransitions(): Promise<ApiResponse<mockVideoFilters.VideoFilter[]>> {
   try {
     console.log("[videoEditorService] Fetching video transitions");
@@ -589,26 +584,21 @@ export async function getVideoTransitions(): Promise<ApiResponse<mockVideoFilter
       };
     }
 
-    
-    console.warn("[videoEditorService] API returned error for transitions, using fallback data");
+    // Fall back to mock data
+    console.warn("[videoEditorService] API returned error for transitions, using mock data");
     return _getMockTransitions();
   } catch (error: any) {
-    console.warn("[videoEditorService] Failed to fetch transitions, falling back:", error.message);
+    console.warn("[videoEditorService] Failed to fetch transitions, falling back to mock data:", error.message);
     return _getMockTransitions();
   }
 }
 
-
+// ✅ CREATED BY KIRO - Get all available stickers with mock fallback
 export async function getVideoStickers(): Promise<ApiResponse<mockVideoFilters.VideoFilter[]>> {
   try {
     console.log("[videoEditorService] Fetching video stickers");
 
-    let response: any;
-    try {
-      response = await apiClient.get<any>("public/stickers", { skipAuth: true });
-    } catch {
-      response = await apiClient.get<any>("video-editor/stickers");
-    }
+    const response = await apiClient.get<any>("video-editor/stickers");
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -625,55 +615,16 @@ export async function getVideoStickers(): Promise<ApiResponse<mockVideoFilters.V
       };
     }
 
-    
-    console.warn("[videoEditorService] API returned error for stickers, using fallback data");
+    // Fall back to mock data
+    console.warn("[videoEditorService] API returned error for stickers, using mock data");
     return _getMockStickers();
   } catch (error: any) {
-    console.warn("[videoEditorService] Failed to fetch stickers, falling back:", error.message);
+    console.warn("[videoEditorService] Failed to fetch stickers, falling back to mock data:", error.message);
     return _getMockStickers();
   }
 }
 
-export async function getVideoAudio(sort: string = "trending"): Promise<ApiResponse<any[]>> {
-  try {
-    console.log("[videoEditorService] Fetching audio library:", sort);
-
-    const response = await apiClient.get<any>("public/audio", {
-      params: { sort },
-      skipAuth: true,
-    });
-    const responseData = response.data as any;
-
-    if (responseData.code === 1 && responseData.data) {
-      const audioList = Array.isArray(responseData.data)
-        ? responseData.data
-        : responseData.data.audio || responseData.data.items || [];
-
-      return {
-        success: true,
-        data: audioList,
-        message: responseData.message || "Audio fetched successfully",
-      };
-    }
-
-    return {
-      success: false,
-      message: responseData.message || "Failed to fetch audio",
-      error: "API error",
-      data: [],
-    };
-  } catch (error: any) {
-    console.warn("[videoEditorService] Failed to fetch audio:", error.message);
-    return {
-      success: false,
-      message: error.message || "Network error",
-      error: error.message,
-      data: [],
-    };
-  }
-}
-
-
+// ✅ Internal helpers for mock data fallback
 
 function _getMockFilters(): ApiResponse<mockVideoFilters.VideoFilter[]> {
   const filters = mockVideoFilters.getAllFilters();
@@ -729,5 +680,4 @@ export const videoEditorService = {
   getVideoEffects,
   getVideoTransitions,
   getVideoStickers,
-  getVideoAudio,
 };

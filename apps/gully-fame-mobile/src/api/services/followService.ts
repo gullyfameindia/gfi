@@ -1,5 +1,5 @@
-
-
+// Follow Service
+// Handles follow/unfollow, followers, and following list functionality
 
 import apiClient from "../axios";
 import { ApiResponse } from "../types";
@@ -32,7 +32,7 @@ export interface FollowersResponse {
   limit?: number;
 }
 
-
+//  Follow a user
 export async function followUser(userId: string): Promise<ApiResponse<FollowResponse>> {
   try {
     console.log("[followService] Following user:", userId);
@@ -74,7 +74,7 @@ export async function followUser(userId: string): Promise<ApiResponse<FollowResp
   }
 }
 
-
+// Unfollow a user
 export async function unfollowUser(userId: string): Promise<ApiResponse<FollowResponse>> {
   try {
     console.log("[followService] Unfollowing user:", userId);
@@ -116,7 +116,7 @@ export async function unfollowUser(userId: string): Promise<ApiResponse<FollowRe
   }
 }
 
-
+//  Get followers list
 export async function getFollowers(
   userId: string,
   params?: { page?: number; limit?: number }
@@ -124,8 +124,7 @@ export async function getFollowers(
   try {
     console.log("[followService] Getting followers:", { userId, params });
 
-    const endpoint = replaceParams(API_ENDPOINTS.USER.GET_FOLLOWERS, { userId });
-    const response = await apiClient.get<any>(endpoint, { params });
+    const response = await apiClient.get<any>(`user/${userId}/followers`, { params });
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -172,7 +171,7 @@ export async function getFollowers(
   }
 }
 
-
+// ✅ CREATED BY KIRO - Get following list
 export async function getFollowing(
   userId: string,
   params?: { page?: number; limit?: number }
@@ -180,8 +179,7 @@ export async function getFollowing(
   try {
     console.log("[followService] Getting following:", { userId, params });
 
-    const endpoint = replaceParams(API_ENDPOINTS.USER.GET_FOLLOWING, { userId });
-    const response = await apiClient.get<any>(endpoint, { params });
+    const response = await apiClient.get<any>(`user/${userId}/following`, { params });
     const responseData = response.data as any;
 
     if (responseData.code === 1 && responseData.data) {
@@ -228,7 +226,7 @@ export async function getFollowing(
   }
 }
 
-
+// ✅ CREATED BY KIRO - Check if following a user
 export async function isFollowing(userId: string): Promise<ApiResponse<boolean>> {
   try {
     console.log("[followService] Checking if following user:", userId);
@@ -265,7 +263,7 @@ export async function isFollowing(userId: string): Promise<ApiResponse<boolean>>
   }
 }
 
-
+// ✅ CREATED BY KIRO - Get follow statistics
 export async function getFollowStats(userId: string): Promise<ApiResponse<any>> {
   try {
     console.log("[followService] Getting follow stats:", userId);

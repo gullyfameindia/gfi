@@ -1,0 +1,879 @@
+import { wp, scaleVertical, scale, getFontSize, hp } from "@/utils/responsive";
+import { Dimensions, Platform, StyleSheet } from "react-native";
+
+const getDimensions = () => Dimensions.get("window");
+const { width, height } = getDimensions();
+
+export const homeScreenStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#3C2610",
+  },
+  // Header Navbar - Clean Design
+  navbar: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: wp(5),
+    paddingBottom: scaleVertical(10),
+    marginTop: scaleVertical(30),
+    position: "relative",
+    backgroundColor: "#3C2610",
+  },
+  headerLogo: {
+    width: wp(35),
+    height: scale(40),
+  },
+  headerIcons: {
+    position: "absolute",
+    right: wp(5),
+    flexDirection: "row",
+    gap: scale(18),
+  },
+  headerIconButton: {
+    width: scale(40),
+    height: scale(40),
+    minWidth: scale(40),
+    minHeight: scale(40),
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+  notificationBadge: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    backgroundColor: "#FF0000",
+    minWidth: scale(18),
+    height: scale(18),
+    borderRadius: scale(9),
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: scale(4),
+    borderWidth: 2,
+    borderColor: "#1a0a00",
+  },
+  notificationBadgeText: {
+    color: "#fff",
+    fontSize: getFontSize(10),
+  },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: scaleVertical(20),
+  },
+  // Hero Section - Premium Design with Radial Gradient
+  heroSection: {
+    height: hp(45),
+    minHeight: hp(45),
+    marginTop: -1,
+    marginBottom: scaleVertical(25),
+    position: "relative",
+    overflow: "hidden",
+    borderBottomLeftRadius: scale(20),
+    borderBottomRightRadius: scale(20),
+  },
+  radialGradientContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: "100%",
+    height: "100%",
+    zIndex: 0,
+  },
+  radialGradientSvg: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+  },
+  heroHeaderIcons: {
+    position: "absolute",
+    top: wp(3),
+    right: wp(6),
+    flexDirection: "row",
+    gap: scale(10),
+    zIndex: 10,
+  },
+  heroIconButton: {
+    width: scale(40),
+    height: scale(40),
+    minWidth: scale(40),
+    minHeight: scale(40),
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+
+  gfiLogoImage: {
+    width: wp(25),
+    height: wp(25),
+    maxWidth: 120,
+    maxHeight: 120,
+    marginBottom: scaleVertical(20),
+  },
+
+  heroButton: {
+    borderRadius: scale(30),
+    overflow: "hidden",
+  },
+  heroButtonGradient: {
+    paddingHorizontal: scale(24),
+    paddingVertical: scaleVertical(8),
+  },
+  heroButtonText: {
+    color: "#FF6B35",
+    fontSize: getFontSize(13),
+    letterSpacing: 0.3,
+  },
+
+  // Section Styles - Enhanced
+
+  sectionHeaderWithIcon: {
+    marginBottom: 16,
+  },
+  sectionTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+
+  viewAllContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  viewAllButton: {
+    color: "#ffffff",
+    fontSize: width * 0.035,
+  },
+  viewAllLink: {
+    color: "#ffffff",
+    fontSize: width * 0.045,
+  },
+  subsectionContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+    marginTop: 8,
+  },
+  subsectionTitle: {
+    fontSize: width * 0.038,
+    color: "#fff",
+  },
+  // Circular Categories - Premium Design
+  sectionTitle: {
+    fontSize: width * 0.044,
+    color: "#fff",
+    letterSpacing: 0.2,
+    fontFamily: "Inter_600SemiBold",
+  },
+  section: {
+    paddingHorizontal: width * 0.05,
+    marginBottom: 30,
+  },
+  sectionHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  // Trending Reels - TOP Event Cards Design
+  trendingScroll: {
+    paddingRight: wp(5),
+    paddingBottom: scaleVertical(5),
+    paddingLeft: wp(1),
+  },
+  trendingReelCardWrapper: {
+    marginRight: wp(4),
+    width: wp(45), // Fixed width for consistent card sizing
+  },
+  trendingReelCard: {
+    width: "100%",
+    height: hp(30),
+    overflow: "hidden",
+    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  topBadge: {
+    position: "absolute",
+    top: 0,
+    left: -width * 0.014,
+    zIndex: 10,
+    width: scale(35),
+    height: scale(35),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  topBadgeContent: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  topBadgeText: {
+    color: "#fff",
+    fontSize: getFontSize(7),
+    fontFamily: "Inter_700Bold",
+    marginTop: scale(2),
+  },
+  topBadgeNumber: {
+    color: "#fff",
+    fontSize: getFontSize(15),
+    fontFamily: "Inter_700Bold",
+    marginTop: scale(-5),
+  },
+  trendingReelImage: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
+  },
+  participateButtonContainer: {
+    position: "absolute",
+    bottom: scale(25),
+    left: 0,
+    right: 0,
+    alignItems: "center",
+    zIndex: 5,
+  },
+  participateButton: {
+    width: wp(20),
+    minWidth: scale(100),
+    borderRadius: scale(25),
+    borderColor: "#ffffff",
+    overflow: "hidden",
+    borderWidth: 2,
+  },
+  participateButtonGradient: {
+    paddingVertical: scaleVertical(7),
+    paddingHorizontal: scale(14),
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  participateButtonText: {
+    color: "#fff",
+    fontSize: getFontSize(11),
+    fontFamily: "Inter_700Bold",
+  },
+  trendingReelTitleBelow: {
+    color: "#fff",
+    fontSize: getFontSize(15),
+    marginTop: scaleVertical(5),
+    marginBottom: scaleVertical(10),
+    fontFamily: "Inter_700Bold",
+  },
+  trendingReelStatsBelow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(8),
+  },
+  statItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(6),
+  },
+  statText: {
+    color: "#fff",
+    fontSize: getFontSize(12),
+    fontFamily: "Inter_500Medium",
+  },
+  // Trending Competitions - Enhanced Design
+  trendingCompCard: {
+    width: width * 0.45,
+    marginRight: width * 0.025,
+    borderRadius: 12,
+    backgroundColor: "#1a1a1a",
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "rgba(255, 107, 53, 0.3)",
+    shadowColor: "#FF6B35",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  trendingCompImage: {
+    width: "100%",
+    height: height * 0.12,
+  },
+  liveStatusBadge: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 0, 0, 0.9)",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    gap: 4,
+  },
+  liveDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: "#fff",
+  },
+  liveStatusText: {
+    color: "#fff",
+    fontSize: width * 0.025,
+  },
+  trendingCompOverlay: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 8,
+  },
+  trendingCompTitle: {
+    color: "#fff",
+    fontSize: width * 0.033,
+    marginBottom: 4,
+  },
+  trendingCompDetails: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  compDetailItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+  },
+  trendingCompPrize: {
+    color: "#EC9A15",
+    fontSize: width * 0.03,
+  },
+  trendingCompParticipants: {
+    color: "#fff",
+    fontSize: width * 0.028,
+    opacity: 0.9,
+  },
+  // Upcoming Competitions - Premium Design
+  competitionsScroll: {
+    paddingRight: wp(5),
+    paddingBottom: scaleVertical(5),
+    paddingLeft: wp(1),
+  },
+  upcomingCompCardWrapper: {
+    marginRight: wp(2.5),
+    width: wp(45),
+  },
+  upcomingCompCard: {
+    width: "100%",
+    borderRadius: scale(0),
+    backgroundColor: "#3C2610",
+    overflow: "hidden",
+  },
+  upcomingCompImageWrapper: {
+    position: "relative",
+    width: "100%",
+    height: hp(30),
+    backgroundColor: "#3C2610",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: scale(8),
+  },
+  upcomingCompImage: {
+    width: "100%",
+    height: "100%",
+  },
+  joinButtonOverlay: {
+    position: "absolute",
+    bottom: scale(18),
+    left: 0,
+    right: 0,
+    alignItems: "center",
+    zIndex: 5,
+    paddingHorizontal: scale(12),
+  },
+  joinButtonOnImage: {
+    width: "100%",
+    maxWidth: wp(35),
+    borderRadius: scale(20),
+    overflow: "hidden",
+    borderWidth: 2,
+    borderColor: "#fff",
+  },
+  joinButtonGradientOnImage: {
+    paddingVertical: scaleVertical(1),
+    paddingHorizontal: scale(0),
+    alignItems: "center",
+    paddingTop: scaleVertical(4),
+    paddingBottom: scaleVertical(4),
+  },
+  joinButtonTextOnImage: {
+    color: "#fff",
+    fontSize: getFontSize(11),
+    fontFamily: "Inter_700Bold",
+  },
+  joinButtonPrizeText: {
+    color: "#fff",
+    fontSize: getFontSize(10),
+    fontFamily: "Inter_500Medium",
+    marginTop: scale(0),
+    paddingBottom: scaleVertical(0),
+  },
+  upcomingCompContent: {
+    padding: scale(3),
+  },
+  upcomingCompTitle: {
+    color: "#fff",
+    fontSize: getFontSize(14),
+    marginBottom: scale(2),
+    fontFamily: "Inter_700Bold",
+  },
+  compInfoRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: scale(6),
+  },
+  compInfoItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(4),
+  },
+  upcomingCompDeadline: {
+    color: "#EC9A15",
+    fontSize: getFontSize(11),
+    fontFamily: "Inter_500Medium",
+  },
+  upcomingCompParticipants: {
+    color: "#EC9A15",
+    fontSize: getFontSize(11),
+    fontFamily: "Inter_500Medium",
+  },
+  // Past Competitions - Enhanced Design
+  pastCompScroll: {
+    paddingRight: width * 0.05,
+    paddingBottom: 5,
+  },
+  pastCompCard: {
+    width: wp(45),
+    marginRight: wp(4),
+    borderRadius: scale(0),
+    backgroundColor: "#3C2610",
+    overflow: "hidden",
+  },
+  pastCompImageWrapper: {
+    position: "relative",
+    width: "100%",
+    height: hp(30),
+    backgroundColor: "#3C2610",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  pastCompImage: {
+    width: "100%",
+    height: "100%",
+  },
+  pastCompBadge: {
+    position: "absolute",
+    top: 5,
+    left: 5,
+    backgroundColor: "rgba(150, 150, 150, 0.9)",
+    paddingHorizontal: scale(8),
+    paddingVertical: scale(4),
+    borderRadius: scale(25),
+    zIndex: 10,
+  },
+  pastCompBadgeText: {
+    color: "#fff",
+    fontSize: getFontSize(10),
+    fontFamily: "Inter_700Bold",
+  },
+  pastCompContent: {
+    padding: scale(3),
+    gap: scale(1),
+  },
+  pastCompTitle: {
+    color: "#fff",
+    fontSize: getFontSize(13),
+    marginBottom: scale(2),
+    fontFamily: "Inter_700Bold",
+  },
+  winnerViewsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: scale(4),
+  },
+  winnerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(1),
+    flex: 1,
+  },
+  pastCompWinnerLabel: {
+    color: "#CAD7D8",
+    fontSize: getFontSize(8),
+    fontFamily: "Inter_400Regular",
+  },
+  pastCompWinner: {
+    color: "#EC9A15",
+    fontSize: getFontSize(8),
+    fontFamily: "Inter_600SemiBold",
+  },
+  viewsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(1),
+  },
+  pastCompViews: {
+    color: "#CAD7D8",
+    fontSize: getFontSize(8),
+    fontFamily: "Inter_500Medium",
+  },
+  viewResultsButtonOverlay: {
+    position: "absolute",
+    bottom: scale(8),
+    left: 0,
+    right: 0,
+    alignItems: "center",
+    zIndex: 5,
+    paddingHorizontal: scale(4),
+  },
+  viewResultsButton: {
+    borderRadius: scale(20),
+    overflow: "hidden",
+    width: "100%",
+    maxWidth: wp(30),
+    borderWidth: 2,
+    borderColor: "#fff",
+  },
+  viewResultsButtonGradient: {
+    paddingVertical: scaleVertical(8),
+    paddingHorizontal: scale(5),
+    alignItems: "center",
+  },
+  viewResultsButtonText: {
+    color: "#fff",
+    fontSize: getFontSize(11),
+    fontFamily: "Inter_700Bold",
+  },
+
+  // ------------------------------------------------------------------
+  // Hall of Fame (Replaces Top Dancers Container)
+  // ------------------------------------------------------------------
+  hallOfFameSection: {
+    paddingBottom: scaleVertical(15),
+  },
+  hallOfFameSubtitle: {
+    color: "#CAD7D8",
+    paddingHorizontal: wp(5),
+    marginBottom: scaleVertical(15),
+    fontSize: getFontSize(13),
+    fontFamily: "Inter_400Regular",
+  },
+  hallOfFameCard: {
+    backgroundColor: "#1E1111",
+    borderRadius: scale(16),
+    padding: scale(15),
+    marginRight: wp(4),
+    alignItems: "center",
+    width: wp(35),
+    borderWidth: 1,
+  },
+  hallOfFameRank: {
+    fontFamily: "Inter_700Bold",
+    fontSize: getFontSize(18),
+    marginBottom: scaleVertical(8),
+  },
+  hallOfFameImage: {
+    width: scale(64),
+    height: scale(64),
+    borderRadius: scale(32),
+    marginBottom: scaleVertical(10),
+  },
+  hallOfFameName: {
+    color: "#fff",
+    fontSize: getFontSize(14),
+    fontFamily: "Inter_700Bold",
+    textAlign: "center",
+  },
+  hallOfFamePoints: {
+    color: "#EC9A15",
+    fontSize: getFontSize(12),
+    marginTop: scaleVertical(4),
+    fontFamily: "Inter_600SemiBold",
+  },
+
+  // ------------------------------------------------------------------
+
+  stickyHeader: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "#3C2610",
+    zIndex: 1000,
+    paddingBottom: scale(10),
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255, 255, 255, 0.1)",
+  },
+  stickyHeaderContent: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    paddingHorizontal: wp(6),
+    paddingTop: scale(10),
+    gap: scale(10),
+  },
+  stickyHeaderIconButton: {
+    width: scale(40),
+    height: scale(40),
+    minWidth: scale(40),
+    minHeight: scale(40),
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  },
+  // Full Screen Reels Container (replaces ScrollView when scrolled past banner)
+  reelsFullScreenContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: width,
+    height: height,
+    backgroundColor: "#000",
+    zIndex: 1000,
+  },
+  reelsBackButtonContainer: {
+    position: "absolute",
+    top: Platform.OS === "ios" ? 50 : 20,
+    left: 12,
+    zIndex: 10,
+  },
+  reelsBackButton: {
+    padding: 8,
+    borderRadius: 20,
+  },
+  reelsFlatList: {
+    width: width,
+    height: height,
+  },
+  reelsFlatListContent: {
+    // Content container for FlatList
+  },
+  reelInlineItem: {
+    width: width,
+    height: height,
+    position: "relative",
+    backgroundColor: "#000",
+  },
+  reelInlineImage: {
+    width: "100%",
+    height: "100%",
+  },
+  reelInlineOverlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "space-between",
+    paddingBottom: height * 0.15, // Space for bottom nav
+  },
+  reelInlineBottomContent: {
+    position: "absolute",
+    bottom: height * 0.15,
+    left: 0,
+    right: 0,
+    padding: scale(20),
+  },
+  reelInlineProfileRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: scale(12),
+  },
+  reelInlineProfileImageContainer: {
+    position: "relative",
+    marginRight: scale(8),
+  },
+  reelInlineProfileImage: {
+    width: scale(32),
+    height: scale(32),
+    borderRadius: scale(16),
+    borderWidth: 2,
+    borderColor: "#fff",
+  },
+  reelInlineFollowButton: {
+    position: "absolute",
+    bottom: -4,
+    right: -4,
+    width: scale(16),
+    height: scale(16),
+    borderRadius: scale(8),
+    backgroundColor: "#EC9A15",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#000",
+  },
+  reelInlineFollowButtonText: {
+    color: "#fff",
+    fontSize: getFontSize(10),
+    fontFamily: "Inter_700Bold",
+  },
+  reelInlineUsername: {
+    color: "#fff",
+    fontSize: getFontSize(16),
+    fontFamily: "Inter_700Bold",
+    marginRight: scale(8),
+  },
+  reelInlineFollowButtonBox: {
+    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    paddingHorizontal: scale(12),
+    paddingVertical: scale(6),
+    borderRadius: scale(8),
+  },
+  reelInlineFollowButtonBoxText: {
+    color: "#fff",
+    fontSize: getFontSize(12),
+    fontFamily: "Inter_600SemiBold",
+  },
+  reelInlineCaption: {
+    color: "#fff",
+    fontSize: getFontSize(14),
+    fontFamily: "Inter_400Regular",
+    marginBottom: scale(8),
+  },
+  reelInlineMusicRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(8),
+  },
+  reelInlineMusicName: {
+    color: "#fff",
+    fontSize: getFontSize(12),
+    fontFamily: "Inter_400Regular",
+  },
+  reelInlineActionButtons: {
+    position: "absolute",
+    right: scale(12),
+    bottom: height * 0.15,
+    alignItems: "center",
+    gap: scale(20),
+  },
+  reelInlineActionButton: {
+    alignItems: "center",
+    gap: scale(4),
+  },
+  reelInlineActionCount: {
+    color: "#fff",
+    fontSize: getFontSize(12),
+    fontFamily: "Inter_400Regular",
+  },
+  gamificationCardWrapper: {
+    paddingHorizontal: wp(5),
+    marginTop: hp(-6), // Overlaps the hero banner beautifully
+    marginBottom: scaleVertical(20),
+    zIndex: 20,
+  },
+  gamificationCard: {
+    borderRadius: scale(16),
+    padding: scale(16),
+    borderWidth: 1,
+    borderColor: "rgba(236, 154, 21, 0.3)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 8,
+  },
+  gamificationHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: scaleVertical(12),
+  },
+  gamificationLevelTitle: {
+    color: "#fff",
+    fontSize: getFontSize(16),
+    fontFamily: "Inter_700Bold",
+  },
+  gamificationLevelSub: {
+    color: "#EC9A15",
+    fontSize: getFontSize(12),
+    fontFamily: "Inter_600SemiBold",
+    marginTop: scaleVertical(2),
+  },
+  streakBadge: {
+    backgroundColor: "rgba(255, 59, 48, 0.15)",
+    paddingHorizontal: scale(10),
+    paddingVertical: scale(5),
+    borderRadius: scale(20),
+    borderWidth: 1,
+    borderColor: "rgba(255, 59, 48, 0.4)",
+  },
+  streakText: {
+    color: "#FF6B35",
+    fontSize: getFontSize(11),
+    fontFamily: "Inter_700Bold",
+  },
+  progressBarBackground: {
+    height: scaleVertical(8),
+    backgroundColor: "rgba(255,255,255,0.1)",
+    borderRadius: scale(4),
+    overflow: "hidden",
+    marginBottom: scaleVertical(8),
+  },
+  progressBarFill: {
+    height: "100%",
+    borderRadius: scale(4),
+  },
+  gamificationFooter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  gamificationSubtext: {
+    color: "#CAD7D8",
+    fontSize: getFontSize(11),
+    fontFamily: "Inter_500Medium",
+  },
+  gamificationActionText: {
+    color: "#EC9A15",
+    fontSize: getFontSize(12),
+    fontFamily: "Inter_700Bold",
+  },
+
+  // ------------------------------------------------------------------
+  // Gamification Updates for existing Cards
+  // ------------------------------------------------------------------
+  glowingCard: {
+    borderWidth: 1,
+    borderColor: "rgba(255, 59, 48, 0.5)",
+    shadowColor: "#FF3B30",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  personalRankBar: {
+    backgroundColor: "rgba(234, 176, 75, 0.1)",
+    marginHorizontal: wp(5),
+    padding: scale(12),
+    borderRadius: scale(10),
+    marginBottom: scaleVertical(15),
+    borderLeftWidth: 4,
+    borderLeftColor: "#EAB04B",
+  },
+  personalRankText: {
+    color: "#fff",
+    fontSize: getFontSize(14),
+    fontFamily: "Inter_600SemiBold",
+  },
+  personalRankSubtext: {
+    color: "#CAD7D8",
+    fontSize: getFontSize(11),
+    marginTop: scaleVertical(2),
+  },
+});

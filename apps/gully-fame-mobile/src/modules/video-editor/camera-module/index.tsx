@@ -14,26 +14,8 @@ import type { CameraClipArray, CameraModuleScreenName } from './types/camera.typ
  * Camera-specific UI state (mode, flash, clips) lives inside `CameraScreen`.
  * PreviewScreen receives a snapshot of clips when the user presses Next.
  */
-export interface CameraModuleProps {
-  onExport?: (result: any) => void;
-  onCancel?: () => void;
-  initialMode?: 'camera' | 'gallery' | 'home';
-  competitionId?: string;
-  competitionName?: string;
-  entryFee?: string;
-}
-
-const CameraModule: React.FC<CameraModuleProps> = ({
-  onExport,
-  onCancel,
-  initialMode = 'Camera',
-  competitionId,
-  competitionName,
-  entryFee,
-}) => {
-  const initialScreen: CameraModuleScreenName = 
-    initialMode === 'home' ? 'Home' : 'Camera';
-  const [screen, setScreen] = useState<CameraModuleScreenName>(initialScreen);
+const CameraModule: React.FC = () => {
+  const [screen, setScreen] = useState<CameraModuleScreenName>('Home');
   const [previewClips, setPreviewClips] = useState<CameraClipArray>([]);
   const [cameraClips, setCameraClips] = useState<CameraClipArray>([]);
 
@@ -43,17 +25,17 @@ const CameraModule: React.FC<CameraModuleProps> = ({
   }, []);
 
   const handleBackToHome = useCallback(() => {
-    if (onCancel) {
-      onCancel();
-    } else {
-      setScreen('Home');
-      setCameraClips([]);
-      setPreviewClips([]);
-    }
-  }, [onCancel]);
+    setScreen('Home');
+    setCameraClips([]);
+    setPreviewClips([]);
+  }, []);
 
   const handleNextFromCamera = useCallback((clips: CameraClipArray) => {
     console.log('🎥 CameraModule: handleNextFromCamera called with', clips?.length ?? 0, 'clips');
+    console.log('🎥 CameraModule: Raw clips array:', JSON.stringify(clips, null, 2));
+    if (clips && clips.length > 0) {
+      console.log('📹 CameraModule: First clip:', JSON.stringify(clips[0], null, 2));
+    }
     setCameraClips(clips);
     setPreviewClips(clips);
     setScreen('Preview');
@@ -61,11 +43,16 @@ const CameraModule: React.FC<CameraModuleProps> = ({
 
   const handleAddClipFromPreview = useCallback((source: 'camera' | 'gallery') => {
     if (source === 'camera') {
+      // Navigate back to camera screen to record new clip
+      // Pass existing clips so they're preserved
       setScreen('Camera');
     }
+    // Gallery is handled in PreviewScreen via onAddClipFromGallery
   }, []);
 
   const handleBackFromPreview = useCallback(() => {
+    // Go back to camera screen (not home) so user can continue adding clips
+    // Pass existing clips so they're preserved (use cameraClips which should be synced)
     setScreen('Camera');
   }, []);
 
